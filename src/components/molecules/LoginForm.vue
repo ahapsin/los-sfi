@@ -1,25 +1,30 @@
 <template>
-    <n-form :model="dynamicForm" ref="formRef">
-
-        <div class="flex gap-4 items-center py-8">
-            <img class="h-16 " src="../../assets/logo.png" alt="logo_company">
-            <span class="text-2xl">LOS - KSPDJAYA</span>
-        </div>
-        <n-form-item label="username" path="username" :rule="rules.username">
-            <n-input v-model:value="dynamicForm.username" placeholder="username" />
-        </n-form-item>
-        <n-form-item label="password" path="password" :rule="rules.password">
-            <n-input type="password" v-model:value="dynamicForm.password" show-password-on="mousedown"
-                placeholder="Password" :maxlength="8" />
-        </n-form-item>
-        <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary" @click="handleLogin">
-            Login
-        </n-button>
-    </n-form>
+    <div class="w-full">
+        <n-form :model="dynamicForm" ref="formRef">
+            <div class="flex gap-4 items-center pb-8">
+                <img class="h-16 " src="../../assets/logo.png" alt="logo_company">
+                <span class="md:text-2xl font-bold">LOS - KSPDJAYA</span>
+            </div>
+            <div class=" h-full flex flex-col py-4">
+                <n-form-item label="username" path="username" :rule="rules.username">
+                    <n-input v-model:value="dynamicForm.username" placeholder="username" />
+                </n-form-item>
+                <n-form-item label="password" path="password" :rule="rules.password">
+                    <n-input type="password" v-model:value="dynamicForm.password" show-password-on="mousedown"
+                        placeholder="Password" :maxlength="8" />
+                </n-form-item>
+                <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary" @click="handleLogin">
+                    Login
+                </n-button>
+            </div>
+        </n-form>
+    </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useMessage } from "naive-ui";
+import router from '../../router';
+import { useApi } from "../../helpers/axios";
 const dynamicForm = reactive({
     username: "",
     password: "",
@@ -42,34 +47,34 @@ const rules = {
 }
 const handleLogin = async (e) => {
     e.preventDefault(e);
-
-    let apibase = import.meta.env.VITE_APP_API_BASE;
-
-    loading.value = true
-
     formRef.value?.validate((errors) => {
-        if (!errors) {
-
-            message.info("silahkan tunggu..");
-
-            try {
-                let login = await axios.post(`${apibase}/auth/login`, credential);
-                credential.response = login.data.response.token;
-                localStorage.token = credential.response;
-                localStorage.sideMenu = "expand";
-                router.replace('/beranda');
-            } catch (error) {
-                console.log(error.response);
-                credential.error = true;
-                credential.errorMessage = error.response.data.message;
-            }
-
-        } else {
-            loading.value = false;
-            console.log(errors);
-            message.error("Login Gagal, silahkan coba lagi");
+        if (errors) {
+            loading.value = false
         }
     });
-
-};
+    loading.value = true;
+    const response = await useApi({
+        method: 'POST',
+        api: 'auth/login',
+        data: {
+            username: dynamicForm.username,
+            password: dynamicForm.password,
+            device_info: dynamicForm.device_info
+        }
+    });
+    if (!response.ok) {
+        message.error("login gagal,periksa username dan password anda !");
+        loading.value = false;
+    } else {
+        message.success("login berhasil");
+        loading.value = false;
+        localStorage.token = response.data.response.token;
+        router.push('dashboard');
+    }
+}
+onMounted(() => {
+    if (localStorage.getItem("token")) {
+        router.push('dashboard');
+    }
+});
 </script>

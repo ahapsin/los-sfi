@@ -1,10 +1,10 @@
 <template>
-    <div class="h-screen bg-pr max-h-screen p-20">
-        <div class="flex w-full bg-white h-full rounded-lg overflow-clip">
-            <div class="w-1/2 p-10 h-full">
+    <div class="h-screen flex items-center justify-center bg-pr max-h-screen p-20">
+        <div class="flex w-full md:w-3/4 h-fit md:h-full bg-white rounded-lg overflow-clip">
+            <div class="items-center flex w-full md:w-1/2 p-8 md:p-10 h-full">
                 <LoginForm />
             </div>
-            <div class="w-1/2">
+            <div class="hidden md:flex w-1/2">
                 <QuoteSection />
             </div>
         </div>

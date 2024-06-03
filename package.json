@@ -9,8 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.22",
+    "@vicons/material": "^0.12.0",
     "@vueuse/core": "^10.10.0",
     "axios": "^1.7.2",
+    "oh-vue-icons": "^1.0.0-rc3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2"
   },

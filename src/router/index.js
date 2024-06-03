@@ -12,6 +12,33 @@ const routes = [
     name: "testview",
     component: () => import("../views/pages/TestView.vue"),
   },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: () => import("../views/pages/DashboardPage.vue"),
+  },
+  {
+    path: "/task",
+    name: "task",
+    component: () => import("../views/pages/DashboardPage.vue"),
+    children: [
+      {
+        path: "apply-credit",
+        name: "apply credit",
+        component: () => import("../views/pages/DashboardPage.vue"),
+      },
+      {
+        path: "survey",
+        name: "survey",
+        component: () => import("../views/pages/task/SurveyPage.vue"),
+      },
+      {
+        path: "new-survey",
+        name: "tambah survey",
+        component: () => import("../views/pages/task/AddSurveyPage.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
