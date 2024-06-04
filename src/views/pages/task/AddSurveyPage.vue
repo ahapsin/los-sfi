@@ -1,5 +1,5 @@
 <template>
-        <n-space vertical class="pt-4">
+        <n-space vertical>
                 <n-steps :current="current" :status="currentStatus">
                         <n-step title="Informasi Order" />
                         <n-step title="Data Pelanggan" />
@@ -25,6 +25,9 @@
                                 </n-form-item>
                                 <n-form-item>
                                         <upload-wall />
+                                </n-form-item>
+                                <n-form-item>
+                                        <custom-request />
                                 </n-form-item>
                         </n-form>
                 </n-card>

@@ -7,9 +7,9 @@
                         </div>
                         <AccountButton />
                 </div>
-                <div class="w-full overflow-auto content bg-sc-50 p-4">
+                <div class="w-full overflow-auto content bg-sc-50">
                         <n-page-header @back="handleBack" :subtitle="`halaman ${$route.name}`"
-                                class="sticky -top-4 z-50 bg-sc-50/80 backdrop-blur border-b py-2">
+                                class="sticky top-0 z-50 bg-sc-50/80 backdrop-blur border-b p-2">
                                 <template #title>
                                         {{ $route.name }}
                                 </template>
@@ -17,7 +17,9 @@
                                         <account-avatar />
                                 </template>
                         </n-page-header>
-                        <RouterView />
+                        <div class="p-4">
+                                <RouterView />
+                        </div>
                 </div>
         </div>
 </template>

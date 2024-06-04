@@ -100,6 +100,18 @@
   resolved "https://registry.npmjs.org/@juggle/resize-observer/-/resize-observer-3.4.0.tgz"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
+"@lylajs/core@1.12.0":
+  version "1.12.0"
+  resolved "https://registry.npmjs.org/@lylajs/core/-/core-1.12.0.tgz"
+  integrity sha512-rEzO6+xv+aWpB2lb7jzOn0wLiN/Ao5awR/r28WwtubTLcvul468VuBBdYmJwgIl/ANP4ZBUgx5E1pA8+Wg0nkg==
+
+"@lylajs/web@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.npmjs.org/@lylajs/web/-/web-1.12.0.tgz"
+  integrity sha512-d6cbia3+vln7dMspzgbRAEj2xs2jIFBE3JBUwtAbcLzevP6W/oU4GHg7UaDc4MvmiUHUt2bMWXOjDgQ1NaKpaw==
+  dependencies:
+    "@lylajs/core" "1.12.0"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"

@@ -1,14 +1,7 @@
 <template>
-        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :default-file-list="fileList"
-                list-type="image-card">
+        <n-upload action="https://kspdjaya.id/image_upload_prospect" :default-file-list="fileList" list-type="image-card">
                 Foto Depan
         </n-upload>
-        <n-divider />
-        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :default-file-list="previewFileList"
-                list-type="image-card" @preview="handlePreview" />
-        <n-modal v-model:show="showModal" preset="card" style="width: 600px" title="A Cool Picture">
-                <img :src="previewImageUrl" style="width: 100%">
-        </n-modal>
 </template>
 
 <script>
@@ -49,7 +42,7 @@ export default defineComponent({
                                         id: "d",
                                         name: "我是上传进度99%的文本.doc",
                                         status: "uploading",
-                                        percentage: 99
+                                        percentage: 70
                                 }
                         ]),
                         previewFileList: ref([
