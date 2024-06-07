@@ -1,9 +1,5 @@
 <template>
-        <n-upload action="https://kspdjaya.id/image_upload_prospect" :headers="{
-                'naive-info': 'hello!'
-        }" :data="{
-        'naive-data': 'cool! naive!'
-}" :custom-request="customRequest">
+        <n-upload action="https://api.kspdjaya.id/image" :custom-request="customRequest">
                 <n-button>Upload</n-button>
         </n-upload>
 </template>
@@ -19,14 +15,11 @@ export default defineComponent({
                 const customRequest = ({
                         file,
                         data,
-                        headers,
-                        withCredentials,
                         action,
                         onFinish,
                         onError,
                         onProgress
                 }) => {
-
                         const formData = new FormData();
                         if (data) {
                                 Object.keys(data).forEach((key) => {
@@ -38,9 +31,6 @@ export default defineComponent({
                         }
                         formData.append(file.name, file.file);
                         lyla.post(action, {
-                                withCredentials,
-                                headers,
-                                body: formData,
                                 onUploadProgress: ({ percent }) => {
                                         onProgress({ percent: Math.ceil(percent) });
                                 }

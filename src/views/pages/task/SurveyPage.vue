@@ -4,18 +4,13 @@
                         <n-card :title="`Tabel ${$route.name}`">
                                 <template #header-extra>
                                         <n-space>
+
                                                 <n-input-group>
-                                                        <!-- <n-input /> -->
-                                                        <n-button round text>
-                                                                <template #icon>
-                                                                        <n-icon>
-                                                                                <search-icon />
-                                                                        </n-icon>
-                                                                </template>
-                                                                cari
-                                                        </n-button>
+                                                        <n-input placeholder="cari..." />
+                                                        <n-input-group-label>cari</n-input-group-label>
                                                 </n-input-group>
-                                                <n-button round text>
+
+                                                <n-button>
                                                         <template #icon>
                                                                 <n-icon>
                                                                         <download-icon />
@@ -23,7 +18,7 @@
                                                         </template>
                                                         download
                                                 </n-button>
-                                                <n-button round type="primary" @click="handleAdd">
+                                                <n-button type="primary" @click="handleAdd">
                                                         <template #icon>
                                                                 <n-icon>
                                                                         <add-icon />
@@ -45,7 +40,7 @@
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
 import {
         AddCircleOutlineRound as AddIcon,
         SearchOutlined as SearchIcon,
@@ -111,7 +106,11 @@ const columns = [
                                                 handleSelect(row.id);
                                         },
                                 },
-                                { default: renderIcon(MoreIcon) }
+                                {
+                                        default: h(NButton, {
+                                                size: "small",
+                                        }, { default: () => 'Action' })
+                                }
                         );
                 }
         }
@@ -120,9 +119,9 @@ const columns = [
 const statusTag = (e) => {
         let status = e.at(0);
         if (status === "1") {
-                return "info";
-        } else if (status === "2") {
                 return "success";
+        } else if (status === "2") {
+                return "info";
         }
 
 }

@@ -29,6 +29,6 @@ const handleBack = () => router.go(-1);
 </script>
 <style scoped>
 .sidebar {
-        @apply p-2 bg-white flex flex-col justify-between border-r;
+        @apply p-2 bg-white md:flex flex-col justify-between border-r hidden;
 }
 </style>

@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useLoadingBar } from "naive-ui";
+
+const loadingBar = useLoadingBar();
 // slice
 
 const routes = [
@@ -25,12 +28,17 @@ const routes = [
       {
         path: "apply-credit",
         name: "apply credit",
-        component: () => import("../views/pages/DashboardPage.vue"),
+        component: () => import("../views/pages/task/FpkPage.vue"),
       },
       {
         path: "survey",
         name: "survey",
         component: () => import("../views/pages/task/SurveyPage.vue"),
+      },
+      {
+        path: "Approval",
+        name: "Approval",
+        component: () => import("../views/pages/task/ApprovalPage.vue"),
       },
       {
         path: "new-survey",
@@ -46,22 +54,26 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = () => {
-//     if (localStorage.getItem("token")) {
-//       return true;
-//     }
-//     return false;
-//   };
-//   if (to.matched.some((record) => record.meta.requiresAuth)) {
-//     if (!isAuthenticated) {
-//       next("/login");
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = () => {
+    if (localStorage.getItem("token")) {
+      return true;
+    }
+    return false;
+  };
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next("/login");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+router.afterEach((to, from) => {
+  loadingBar.start();
+  console.log("aftereach");
+});
 
 export default router;
