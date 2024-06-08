@@ -1,7 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useLoadingBar } from "naive-ui";
-
-const loadingBar = useLoadingBar();
 // slice
 
 const routes = [
@@ -71,9 +68,9 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-router.afterEach((to, from) => {
-  loadingBar.start();
-  console.log("aftereach");
-});
+// router.afterEach((to, from) => {
+//   loadingBar.start();
+//   console.log("aftereach");
+// });
 
 export default router;

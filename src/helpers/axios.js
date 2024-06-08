@@ -7,6 +7,7 @@ export async function useApi({ ...args }) {
       params: args.params,
       headers: {
         ...args.header,
+        "Content-type": "application/json",
         Authorization: `Bearer ${args.token}`,
       },
       baseURL: import.meta.env.VITE_APP_API_BASE + args.api,
@@ -16,3 +17,23 @@ export async function useApi({ ...args }) {
     return { ok: false, error: error.response };
   }
 }
+
+const useAPIPost = async (route, payload, token) => {
+  const apibase = import.meta.env.VITE_APP_API_BASE;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const data = [];
+  try {
+    await axios.post(`${apibase}${route}`, payload, config).then((res) => {
+      data.push(res.data.response);
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { useAPIPost };
