@@ -16,6 +16,7 @@
                                 content: true,
                                 footer: 'soft'
                         }">
+
                                 <n-form-item label="id" path="plafond">
                                         <n-input placeholder="plafond" v-model:value="uuid" disabled />
                                 </n-form-item>
@@ -64,17 +65,17 @@
                                         Dokumen Identitas
                                 </n-divider>
                                 <n-space>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
+                                        <n-upload :data="{ 'type': 'ktp' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
                                                 Upload KTP
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
+                                        <n-upload :data="{ 'type': 'ktp pasangan' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
                                                 Upload KTP Pasangan
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                Upload Kartu keluarga
+                                        <n-upload :data="{ 'type': 'kartu keluarga' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload Kartu Keluarga
                                         </n-upload>
                                 </n-space>
                         </n-card>
@@ -115,36 +116,36 @@
                                         Dokumen Jaminan
                                 </n-divider>
                                 <n-space>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                NO Rangka
+                                        <n-upload :data="{ 'type': 'no rangka' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload No Rangka
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                NO Mesin
+                                        <n-upload :data="{ 'type': 'no mesin' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload No Mesin
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                STNK
+                                        <n-upload :data="{ 'type': 'stnk' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload STNK
                                         </n-upload>
                                 </n-space>
                                 <n-divider />
                                 <n-space>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                Tampak Depan
+                                        <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload tampak depan
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                Tampak Belakang
+                                        <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload tampak belakang
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                Tampak Kanan
+                                        <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload tampak kanan
                                         </n-upload>
-                                        <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                                                :default-file-list="fileList" list-type="image-card">
-                                                Tampak Kiri
+                                        <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                                                :custom-request="handleImagePost">
+                                                Upload tampak kiri
                                         </n-upload>
                                 </n-space>
                         </n-card>
@@ -164,29 +165,28 @@
                                                 </template>
                                         </n-input>
                                 </n-form-item>
-                                <n-form-item label="Pendapatan Pelanggan" path="pendapatan_pelanggan">
-                                        <n-input placeholder="pendapatan pelanggan"
-                                                v-model:value="survey.penghasilan.pribadi">
-                                                <template #suffix>
-                                                        perbulan
-                                                </template>
-                                        </n-input>
-                                </n-form-item>
-                                <n-form-item label="Pendapatan Pasangan" path="pendapatan_pasangan">
-                                        <n-input placeholder="pendaptan pasangan"
-                                                v-model:value="survey.penghasilan.pasangan">
-                                                <template #suffix>
-                                                        perbulan
-                                                </template>
-                                        </n-input>
-                                </n-form-item>
-                                <n-form-item label="Pendapatan Lain-lain" path="pendapatan_lain">
-                                        <n-input placeholder="pendapatan lain-lain"
-                                                v-model:value="survey.penghasilan.lainnya">
-                                                <template #suffix>
-                                                        perbulan
-                                                </template>
-                                        </n-input>
+                                <n-form-item label="Pendapatan" path="pendapatan">
+                                        <n-input-group>
+                                                <n-input placeholder="pendapatan pelanggan"
+                                                        v-model:value="survey.penghasilan.pribadi">
+                                                        <template #suffix>
+                                                                perbulan
+                                                        </template>
+                                                </n-input>
+                                                <n-input placeholder="pendapatan pasangan"
+                                                        v-model:value="survey.penghasilan.pasangan">
+                                                        <template #suffix>
+                                                                perbulan
+                                                        </template>
+                                                </n-input>
+                                                <n-input placeholder="pendapatan lain-lain"
+                                                        v-model:value="survey.penghasilan.lainnya">
+                                                        <template #suffix>
+                                                                perbulan
+                                                        </template>
+                                                </n-input>
+                                        </n-input-group>
+
                                 </n-form-item>
                                 <n-form-item label="Pengeluaran" path="pengeluaran">
                                         <n-input placeholder="pengeluaran" v-model:value="survey.pengeluaran">
@@ -203,8 +203,15 @@
                                 </n-form-item>
                                 <n-form-item label="Catatan Survey" path="cat_survey">
                                         <n-input v-model:value="survey.catatan_survey" type="textarea"
-                                                placeholder="Basic Textarea" />
+                                                placeholder="catatan survey" />
                                 </n-form-item>
+                                <n-divider title-placement="left">
+                                        Dokumen Pendukung
+                                </n-divider>
+                                <n-upload :data="{ 'type': 'dokumen pendukung' }" list-type="image-card"
+                                        :custom-request="handleImagePost">
+                                </n-upload>
+
                         </n-card>
                 </n-form>
                 <!-- <n-space>
@@ -253,6 +260,7 @@ const message = useMessage();
 const uuid = uuidv4();
 const current = ref(1);
 const loading = ref(false);
+const userToken = localStorage.getItem("token");
 
 const currentStatus = ref("process");
 
@@ -302,7 +310,7 @@ const pelanggan = reactive({
 });
 const jaminan = ref({
         tipe: "",
-        tahun: "",
+        tahun: null,
         merk: "",
         warna: "",
         atas_nama: "",
@@ -341,7 +349,6 @@ const handleSave = async (e) => {
         //         }
         // });
         loading.value = true;
-        let userToken = localStorage.getItem("token");
         const response = await useApi({
                 method: 'POST',
                 api: 'kunjungan',
@@ -354,12 +361,28 @@ const handleSave = async (e) => {
         } else {
                 message.success("data berhasil disimpan");
                 loading.value = false;
-                router.push('dashboard');
+                router.push('task/survey');
         }
-        let post = useAPIPost('kunjungan', dynamicForm, userToken).then(([res]) => {
-                loading.value = false;
-                router.push('dashboard');
+}
+const handleImagePost = async ({ file, data, onError, onFinish }) => {
+        const imageForm = {
+                image: file.file,
+                type: data.type,
+                cr_prospect_id: uuid
+        }
+        const response = await useApi({
+                method: 'POST',
+                api: 'image_upload_prospect',
+                data: imageForm,
+                token: userToken
         });
+        if (!response.ok) {
+                message.error("gagal upload image");
+                onError();
+        } else {
+                message.success("image berhasil upload");
+                onFinish();
+        }
 
 }
 </script>

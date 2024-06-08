@@ -4,7 +4,7 @@
                         <div class="flex items-center gap-2">
                                 <span class="flex flex-col items-end">
                                         <strong>{{ dataUser?.NAMA }}</strong>
-                                        <small class="text-pr">{{ dataUser?.EMAIL }}</small>
+                                        <small class="text-pr hidden md:flex">{{ dataUser?.EMAIL }}</small>
                                 </span>
                                 <n-avatar round size="medium" class="aspect-square"
                                         :src="dataUser ? dataUser.PHOTO_URL : 'https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-vert.png'">

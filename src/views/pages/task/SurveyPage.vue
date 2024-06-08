@@ -3,39 +3,63 @@
                 <n-space vertical>
                         <n-card :title="`Tabel ${$route.name}`">
                                 <template #header-extra>
-                                        <n-space>
-                                                <n-popover trigger="click" placement="bottom-end">
-                                                        <template #trigger>
-                                                                <n-button>
+                                        <n-space class="!gap-1">
+                                                <div class="me-1">
+                                                        <n-popover trigger="click" placement="bottom-end">
+                                                                <template #trigger>
+                                                                        <n-button>
+                                                                                <n-icon>
+                                                                                        <search-icon />
+                                                                                </n-icon>
+                                                                        </n-button>
+                                                                </template>
+                                                                <n-input autofocus="true" clearable
+                                                                        placeholder="cari disini.." />
+                                                        </n-popover>
+                                                </div>
+                                                <div class="hidden md:flex">
+                                                        <n-button>
+                                                                <template #icon>
                                                                         <n-icon>
-                                                                                <search-icon />
+                                                                                <download-icon />
                                                                         </n-icon>
-                                                                </n-button>
-                                                        </template>
-                                                        <n-input autofocus="true" clearable
-                                                                placeholder="cari disini.." />
-                                                </n-popover>
-                                                <n-button>
-                                                        <template #icon>
-                                                                <n-icon>
-                                                                        <download-icon />
-                                                                </n-icon>
-                                                        </template>
-                                                        download
-                                                </n-button>
-                                                <n-button type="primary" @click="handleAdd">
-                                                        <template #icon>
-                                                                <n-icon>
-                                                                        <add-icon />
-                                                                </n-icon>
-                                                        </template>
-                                                        tambah
-                                                </n-button>
+                                                                </template>
+                                                                <strong class="hidden md:!block">download</strong>
+                                                        </n-button>
+                                                </div>
+                                                <div class="md:hidden">
+                                                        <n-button>
+                                                                <template #icon>
+                                                                        <n-icon>
+                                                                                <download-icon />
+                                                                        </n-icon>
+                                                                </template>
+                                                        </n-button>
+                                                </div>
+                                                <div class="hidden md:flex">
+                                                        <n-button type="primary" @click="handleAdd">
+                                                                <template #icon>
+                                                                        <n-icon>
+                                                                                <add-icon />
+                                                                        </n-icon>
+                                                                </template>
+                                                                <strong>tambah</strong>
+                                                        </n-button>
+                                                </div>
+                                                <div class=" md:hidden">
+                                                        <n-button type="primary" @click="handleAdd">
+                                                                <template #icon>
+                                                                        <n-icon>
+                                                                                <add-icon />
+                                                                        </n-icon>
+                                                                </template>
+                                                        </n-button>
+                                                </div>
                                         </n-space>
                                 </template>
                                 <n-space vertical :size="12" class="pt-4">
-                                        <n-data-table size="small" :columns="columns" :data="dataTable"
-                                                :pagination="pagination" />
+                                        <n-data-table striped :scroll-x="500" size="small" :columns="columns"
+                                                :data="dataTable" :pagination="pagination" />
                                 </n-space>
                         </n-card>
                 </n-space>
@@ -67,19 +91,26 @@ const dataTable = ref();
 const columns = [
         {
                 title: "Tanggal",
-                key: "visit_date"
+                key: "visit_date",
+                width: 100,
+                fixed: 'left'
         },
         {
                 title: "Nama",
-                key: "nama_debitur"
+                key: "nama_debitur",
+                width: 100,
+                fixed: 'left',
+                ellipsis: true
         },
         {
                 title: "Plafond",
-                key: "plafond"
+                key: "plafond",
+                width: 100,
         },
         {
                 title: "Status",
                 key: "status",
+                width: 100,
                 render(row) {
                         return h(
                                 NTag,
@@ -95,6 +126,8 @@ const columns = [
                 title: "",
                 align: "right",
                 key: "more",
+                width: 80,
+                fixed: 'left',
                 render(row) {
                         return h(
                                 NDropdown,
