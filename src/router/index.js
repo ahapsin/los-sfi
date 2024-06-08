@@ -24,7 +24,7 @@ const routes = [
     children: [
       {
         path: "apply-credit",
-        name: "apply credit",
+        name: "Pengajuan Kredit",
         component: () => import("../views/pages/task/FpkPage.vue"),
       },
       {
@@ -41,6 +41,23 @@ const routes = [
         path: "new-survey",
         name: "tambah survey",
         component: () => import("../views/pages/task/AddSurveyPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/master",
+    name: "master",
+    component: () => import("../views/pages/DashboardPage.vue"),
+    children: [
+      {
+        path: "employees",
+        name: "karyawan",
+        component: () => import("../views/pages/master/EmployeesPage.vue"),
+      },
+      {
+        path: "branch",
+        name: "cabang",
+        component: () => import("../views/pages/master/BranchPage.vue"),
       },
     ],
   },

@@ -4,12 +4,17 @@
                         <n-card :title="`Tabel ${$route.name}`">
                                 <template #header-extra>
                                         <n-space>
-
-                                                <n-input-group>
-                                                        <n-input placeholder="cari..." />
-                                                        <n-input-group-label>cari</n-input-group-label>
-                                                </n-input-group>
-
+                                                <n-popover trigger="click" placement="bottom-end">
+                                                        <template #trigger>
+                                                                <n-button>
+                                                                        <n-icon>
+                                                                                <search-icon />
+                                                                        </n-icon>
+                                                                </n-button>
+                                                        </template>
+                                                        <n-input autofocus="true" clearable
+                                                                placeholder="cari disini.." />
+                                                </n-popover>
                                                 <n-button>
                                                         <template #icon>
                                                                 <n-icon>
@@ -79,6 +84,7 @@ const columns = [
                         return h(
                                 NTag,
                                 {
+                                        bordered: false,
                                         type: statusTag(row.status),
                                         size: "small",
                                 },
@@ -119,7 +125,7 @@ const columns = [
 const statusTag = (e) => {
         let status = e.at(0);
         if (status === "1") {
-                return "success";
+                return "warning";
         } else if (status === "2") {
                 return "info";
         }
@@ -128,7 +134,7 @@ const statusTag = (e) => {
 const statusLabel = (e) => {
         let status = e.at(0);
         if (status === "1") {
-                return "survey disetujui";
+                return "menunggu PFK";
         } else if (status === "2") {
                 return "pembuatan PFK";
         }

@@ -1,19 +1,24 @@
 <template>
-        <n-space vertical>
-                <n-steps :current="current" :status="currentStatus">
-                        <n-step title="Informasi Order" />
-                        <n-step title="Data Pelanggan" />
-                        <n-step title="Data Jaminan" />
-                        <n-step title="Data Survey" />
-                </n-steps>
-        </n-space>
+        <n-scrollbar x-scrollable>
+                <n-space class="p-4">
+                        <n-steps :current="current" :status="currentStatus">
+                                <n-step title="Informasi Order" />
+                                <n-step title="Data Pelanggan" />
+                                <n-step title="Data Jaminan" />
+                                <n-step title="Data Survey" />
+                        </n-steps>
+                </n-space>
+        </n-scrollbar>
         <n-space vertical class="pt-4">
                 <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
                         require-mark-placement="right-hanging" :size="size" label-width="auto">
-                        <n-card v-if="current == 1" title="Informasi Kredit" :segmented="{
+                        <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
+                                <n-form-item label="id" path="plafond">
+                                        <n-input placeholder="plafond" v-model:value="uuid" disabled />
+                                </n-form-item>
                                 <n-form-item label="plafond" path="plafond">
                                         <n-input placeholder="plafond" v-model:value="order.plafond" />
                                 </n-form-item>
@@ -30,7 +35,7 @@
                                                 v-model:value="order.category" />
                                 </n-form-item>
                         </n-card>
-                        <n-card v-if="current == 2" title="Data Pelanggan" :segmented="{
+                        <n-card v-show="current == 2" title="Data Pelanggan" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
@@ -73,7 +78,7 @@
                                         </n-upload>
                                 </n-space>
                         </n-card>
-                        <n-card v-if="current == 3" title="Data Jaminan" :segmented="{
+                        <n-card v-show="current == 3" title="Data Jaminan" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
@@ -143,7 +148,7 @@
                                         </n-upload>
                                 </n-space>
                         </n-card>
-                        <n-card v-if="current == 4" title="Data Survey" :segmented="{
+                        <n-card v-show="current == 4" title="Data Survey" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
@@ -211,7 +216,7 @@
                 </n-space> -->
 
                 <n-flex justify="between">
-                        <n-button @click="prev" type="secondary">
+                        <n-button @click="prev" type="secondary" v-if="current > 1">
                                 <template #icon>
                                         <n-icon>
                                                 <arrow-back />
@@ -219,7 +224,7 @@
                                 </template>
                                 kembali
                         </n-button>
-                        <n-button @click="next" type="primary" v-if="current < 3">
+                        <n-button @click="next" type="primary" v-if="current < 4">
                                 <template #icon>
                                         <n-icon>
                                                 <arrow-forward />
@@ -245,6 +250,7 @@ import { useApi } from "../../../helpers/axios";
 import { useAPIPost } from "../../../helpers/axios";
 
 const message = useMessage();
+const uuid = uuidv4();
 const current = ref(1);
 const loading = ref(false);
 
@@ -274,20 +280,20 @@ const tipeKendaraan = ["motor", "mobil"].map(
                 value: v
         }));
 const order = ref({
-        tujuan_kredit: "fsdf",
-        plafond: "2452",
-        tenor: "255",
-        category: "jasfjajj"
+        tujuan_kredit: "",
+        plafond: "",
+        tenor: "",
+        category: ""
 });
 const pelanggan = reactive({
-        nama: "asdasd",
-        no_ktp: "545287215",
+        nama: "",
+        no_ktp: "",
         no_hp: "",
-        tgl_lahir: "2024-06-06",
+        tgl_lahir: null,
         data_alamat: {
-                alamat: "a",
-                rt: "rt",
-                rw: "rw",
+                alamat: "",
+                rt: "",
+                rw: "",
                 provinsi: "",
                 kota: "",
                 kecamatan: "",
@@ -295,36 +301,36 @@ const pelanggan = reactive({
         }
 });
 const jaminan = ref({
-        tipe: "t",
-        tahun: "2024",
-        merk: "m",
-        warna: "w",
-        atas_nama: "a",
-        no_polisi: "np",
-        no_rangka: "nr",
-        no_mesin: "nm",
-        no_bpkb: "nb",
-        nilai: "n"
+        tipe: "",
+        tahun: "",
+        merk: "",
+        warna: "",
+        atas_nama: "",
+        no_polisi: "",
+        no_rangka: "",
+        no_mesin: "",
+        no_bpkb: "",
+        nilai: ""
 });
 const survey = reactive({
-        lama_bekerja: "1",
+        lama_bekerja: "",
         penghasilan: {
-                pribadi: "1",
-                pasangan: "1",
-                lainnya: "1"
+                pribadi: "",
+                pasangan: "",
+                lainnya: ""
         },
-        pengeluaran: "1",
-        usaha: "apa",
-        sektor: "s",
-        catatan_survey: "c",
+        pengeluaran: "",
+        usaha: "",
+        sektor: "",
+        catatan_survey: "",
         tgl_survey: null,
 });
 const dynamicForm = reactive({
-        id: uuidv4(),
+        id: uuid,
         order: order.value,
         data_nasabah: pelanggan,
         data_survey: survey,
-        jaminan_kendaraan: jaminan.value
+        jaminan_kendaraan: [jaminan.value]
 });
 
 const handleSave = async (e) => {
@@ -350,10 +356,10 @@ const handleSave = async (e) => {
                 loading.value = false;
                 router.push('dashboard');
         }
-        // let post = useAPIPost('kunjungan', dynamicForm, userToken).then(([res]) => {
-        //         loading.value = false;
-        //         router.push('dashboard');
-        // });
+        let post = useAPIPost('kunjungan', dynamicForm, userToken).then(([res]) => {
+                loading.value = false;
+                router.push('dashboard');
+        });
 
 }
 </script>

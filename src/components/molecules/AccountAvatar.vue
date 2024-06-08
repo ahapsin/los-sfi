@@ -2,11 +2,15 @@
         <div class="p-2 rounded-md">
                 <n-dropdown trigger="hover" :options="options">
                         <div class="flex items-center gap-2">
-                                {{ dataUser?.NAMA }}
+                                <span class="flex flex-col items-end">
+                                        <strong>{{ dataUser?.NAMA }}</strong>
+                                        <small class="text-pr">{{ dataUser?.EMAIL }}</small>
+                                </span>
                                 <n-avatar round size="medium" class="aspect-square"
                                         :src="dataUser ? dataUser.PHOTO_URL : 'https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-vert.png'">
                                         {{ dataUser?.NAMA.at(0) }}
                                 </n-avatar>
+
                         </div>
                 </n-dropdown>
         </div>

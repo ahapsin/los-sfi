@@ -22,14 +22,14 @@
                             </template>
                             download
                         </n-button>
-                        <!-- <n-button type="primary" @click="handleAdd">
+                        <n-button type="primary" @click="handleAdd">
                             <template #icon>
                                 <n-icon>
                                     <add-icon />
                                 </n-icon>
                             </template>
                             tambah
-                        </n-button> -->
+                        </n-button>
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
@@ -64,16 +64,20 @@ const dataTable = ref();
 
 const columns = [
     {
-        title: "Tanggal",
-        key: "visit_date"
+        title: "NIK",
+        key: "nik"
     },
     {
         title: "Nama",
-        key: "nama_debitur"
+        key: "nama"
     },
     {
-        title: "Plafond",
-        key: "plafond"
+        title: "No Handphone",
+        key: "no_hp"
+    },
+    {
+        title: "Email",
+        key: "email"
     },
     {
         title: "Status",
@@ -86,25 +90,34 @@ const columns = [
                     type: statusTag(row.status),
                     size: "small",
                 },
-                { default: () => statusLabel(row.status) }
+                { default: () => row.status }
             );
         }
     }, {
-        title: "Action",
+        title: "",
         align: "right",
         key: "more",
         render(row) {
             return h(
-                NButton,
+                NDropdown,
                 {
-                    type: typeAction(row.status),
+                    options: options,
                     size: "small",
-                    onClick: (e) => {
-                        handleAction(row.status, row)
+                    onSelect: (e) => {
+                        if (e === "hapus") {
+                            handleConfirm(row);
+                        }
+                        if (e === "detail") {
+                            handleDetail(row);
+                        }
+                        console.log(e);
+                        handleSelect(row.id);
                     },
                 },
                 {
-                    default: () => actionLabel(row.status)
+                    default: h(NButton, {
+                        size: "small",
+                    }, { default: () => 'Action' })
                 }
             );
         }
@@ -112,48 +125,23 @@ const columns = [
 ];
 
 const statusTag = (e) => {
-    let status = e.at(0);
-    if (status === "1") {
+    if (e === "Active") {
+        return "success";
+    } else if (e === "Non-Active") {
         return "warning";
-    } else if (status === "2") {
-        return "info";
     }
 
 }
 const statusLabel = (e) => {
     let status = e.at(0);
     if (status === "1") {
-        return "menunggu PFK";
+        return "survey disetujui";
     } else if (status === "2") {
         return "pembuatan PFK";
-    }
-}
-const typeAction = (e) => {
-    let status = e.at(0);
-    if (status === "1") {
-        return "warning";
-    } else if (status === "2") {
-        return "info";
-    }
-}
-const actionLabel = (e) => {
-    let status = e.at(0);
-    if (status === "1") {
-        return "Buat PFK";
-    } else if (status === "2") {
-        return "Update PFK";
     }
 
 }
 const handleSelect = (e) => console.log(e);
-const handleAction = (e, data) => {
-    let status = e.at(0);
-    if (status === "1") {
-
-    }
-    console.log(status);
-    console.log(data);
-};
 const statusHandle = (e) => console.log(e);
 const handleConfirm = (evt) => {
     dialog.warning({
@@ -186,18 +174,19 @@ const handleDetail = (evt) => {
     console.log("mau cek detail");
 }
 const handleAdd = () => {
-    router.push('/task/new-survey');
+    router.push('/task/new-employee');
 }
 const getData = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
-        api: 'kunjungan_admin',
+        api: 'karyawan',
         token: userToken
     });
     if (!response.ok) {
         message.error("error patch data");
     } else {
+        // console.log(response.data.response)
         dataTable.value = response.data.response;
     }
 }

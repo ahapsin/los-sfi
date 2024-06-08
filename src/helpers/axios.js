@@ -7,7 +7,7 @@ export async function useApi({ ...args }) {
       params: args.params,
       headers: {
         ...args.header,
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${args.token}`,
       },
       baseURL: import.meta.env.VITE_APP_API_BASE + args.api,

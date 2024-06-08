@@ -4,13 +4,16 @@
             <n-card :title="`Tabel ${$route.name}`" class="bg-white">
                 <template #header-extra>
                     <n-space>
-                        <n-input-group>
-                            <n-input-group>
-                                <n-input placeholder="cari..." />
-                                <n-input-group-label>cari</n-input-group-label>
-                            </n-input-group>
-
-                        </n-input-group>
+                        <n-popover trigger="click" placement="bottom-end">
+                            <template #trigger>
+                                <n-button>
+                                    <n-icon>
+                                        <search-icon />
+                                    </n-icon>
+                                </n-button>
+                            </template>
+                            <n-input autofocus="true" clearable placeholder="cari disini.." />
+                        </n-popover>
                         <n-button>
                             <template #icon>
                                 <n-icon>
@@ -79,6 +82,7 @@ const columns = [
             return h(
                 NTag,
                 {
+                    bordered: false,
                     type: statusTag(row.status),
                     size: "small",
                 },
