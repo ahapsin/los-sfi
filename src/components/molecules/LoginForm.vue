@@ -1,8 +1,8 @@
 <template>
     <div class="w-full">
         <n-form :model="dynamicForm" ref="formRef">
-            <div class="flex gap-4 items-center pb-8">
-                <img class="h-16 " src="../../assets/logo.png" alt="logo_company">
+            <div class="flex flex-col md:flex-row gap-4 items-center pb-8">
+                <img class="h-14 md:h-16 " src="../../assets/logo.png" alt="logo_company">
                 <span class="md:text-2xl font-bold">LOS - KSPDJAYA</span>
             </div>
             <div class=" h-full flex flex-col py-4">
@@ -13,7 +13,8 @@
                     <n-input type="password" v-model:value="dynamicForm.password" show-password-on="mousedown"
                         placeholder="Password" :maxlength="8" />
                 </n-form-item>
-                <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary" @click="handleLogin">
+                <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary"
+                    @click="handleLogin">
                     Login
                 </n-button>
             </div>

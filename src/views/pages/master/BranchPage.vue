@@ -53,7 +53,6 @@ import {
 import {
     EditOutlined as EditIcon,
     DeleteOutlined as DeleteIcon,
-    MoreVertRound as MoreIcon,
     ListAltOutlined as DetailIcon
 } from "@vicons/material";
 
@@ -110,8 +109,9 @@ const columns = [
                         if (e === "detail") {
                             handleDetail(row);
                         }
-                        console.log(e);
-                        handleSelect(row.id);
+                        if (e === "edit") {
+                            handleUpdate(row);
+                        }
                     },
                 },
                 {
@@ -132,17 +132,6 @@ const statusTag = (e) => {
     }
 
 }
-const statusLabel = (e) => {
-    let status = e.at(0);
-    if (status === "1") {
-        return "survey disetujui";
-    } else if (status === "2") {
-        return "pembuatan PFK";
-    }
-
-}
-const handleSelect = (e) => console.log(e);
-const statusHandle = (e) => console.log(e);
 const handleConfirm = (evt) => {
     dialog.warning({
         title: "Confirm",
@@ -153,7 +142,7 @@ const handleConfirm = (evt) => {
             let userToken = localStorage.getItem("token");
             const response = await useApi({
                 method: 'DELETE',
-                api: `kunjungan/${evt.id}`,
+                api: `cabang/${evt.id}`,
                 token: userToken
             });
             if (!response.ok) {
@@ -170,11 +159,13 @@ const handleConfirm = (evt) => {
     });
 }
 const handleDetail = (evt) => {
-    console.log(evt);
-    console.log("mau cek detail");
+    router.replace(`/master/branch-action/${evt.id}/detail`);
+}
+const handleUpdate = (evt) => {
+    router.replace(`/master/branch-action/${evt.id}`);
 }
 const handleAdd = () => {
-    router.push('/task/new-branch');
+    router.replace('/master/branch-action');
 }
 const getData = async () => {
     let userToken = localStorage.getItem("token");

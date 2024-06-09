@@ -85,6 +85,7 @@ const GetMe = async () => {
         });
         if (!response.ok) {
                 message.error("error 1: patch data");
+                localStorage.removeItem("token");
         } else {
                 [dataUser.value] = response.data.response;
         }
@@ -97,9 +98,7 @@ const LogOut = async () => {
                 api: 'auth/logout',
                 token: userToken
         });
-        if (!response.ok) {
-                message.error("error 1: patch data");
-        } else {
+        if (response.ok) {
                 localStorage.removeItem("token");
                 message.success("logout berhasil");
                 router.replace('/');

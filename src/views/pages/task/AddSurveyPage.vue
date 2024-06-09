@@ -17,11 +17,9 @@
                                 footer: 'soft'
                         }">
 
-                                <n-form-item label="id" path="plafond">
-                                        <n-input placeholder="plafond" v-model:value="uuid" disabled />
-                                </n-form-item>
-                                <n-form-item label="plafond" path="plafond">
-                                        <n-input placeholder="plafond" v-model:value="order.plafond" />
+                                <n-form-item label="Plafond" path="plafond">
+                                        <n-input-number :parse="parse" :format="format" v-model:value="order.plafond"
+                                                placeholder="plafond" :show-button="false" class="flex !w-full" />
                                 </n-form-item>
                                 <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
                                         <n-select placeholder="Tujuan Kredit" :options="tujuanKredit"
@@ -47,8 +45,9 @@
                                         <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
                                 </n-form-item>
                                 <n-form-item label="Tanggal lahir" path="tgl_lahir">
-                                        <n-date-picker v-model:formatted-value="pelanggan.tgl_lahir"
-                                                value-format="yyyy-MM-dd" type="date" />
+                                        <n-date-picker placeholder="Tanggal Lahir"
+                                                v-model:formatted-value="pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
+                                                type="date" />
                                 </n-form-item>
                                 <n-form-item label="Alamat" path="alamat">
                                         <n-input-group>
@@ -89,7 +88,7 @@
                                 </n-form-item>
                                 <n-form-item label="Tahun" path="tahun_kendaraan">
                                         <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
-                                                type="year" clearable />
+                                                type="year" placeholder="Tahun jaminan" clearable />
                                 </n-form-item>
                                 <n-form-item label="Warna" path="warna">
                                         <n-input placeholder="warna" v-model:value="jaminan.warna" />
@@ -98,7 +97,9 @@
                                         <n-input placeholder="Atas Nama" v-model:value="jaminan.atas_nama" />
                                 </n-form-item>
                                 <n-form-item label="Nilai Jaminan" path="nilai_jaminan">
-                                        <n-input placeholder="Nilai Jaminan" v-model:value="jaminan.nilai" />
+                                        <n-input-number :parse="parse" :format="format" v-model:value="jaminan.nilai"
+                                                placeholder="Nilai Jaminan" :show-button="false">
+                                        </n-input-number>
                                 </n-form-item>
                                 <n-form-item label="NO Polisi" path="no_polisi">
                                         <n-input placeholder="No Polisi" v-model:value="jaminan.no_polisi" />
@@ -155,7 +156,8 @@
                         }">
                                 <n-form-item label="Tanggal survey" path="tgl_survey">
                                         <n-date-picker v-model:formatted-value="survey.tgl_survey"
-                                                value-format="yyyy-MM-dd" type="date" clearable />
+                                                placeholder="Tanggal Survey" value-format="yyyy-MM-dd" type="date"
+                                                clearable />
                                 </n-form-item>
 
                                 <n-form-item label="Lama Bekerja" path="lama_berkerja">
@@ -167,33 +169,38 @@
                                 </n-form-item>
                                 <n-form-item label="Pendapatan" path="pendapatan">
                                         <n-input-group>
-                                                <n-input placeholder="pendapatan pelanggan"
-                                                        v-model:value="survey.penghasilan.pribadi">
+                                                <n-input-number :parse="parse" :format="format"
+                                                        v-model:value="survey.penghasilan.pribadi"
+                                                        placeholder="pendapatan pelanggan" :show-button="false">
                                                         <template #suffix>
                                                                 perbulan
                                                         </template>
-                                                </n-input>
-                                                <n-input placeholder="pendapatan pasangan"
-                                                        v-model:value="survey.penghasilan.pasangan">
+                                                </n-input-number>
+                                                <n-input-number :parse="parse" :format="format"
+                                                        v-model:value="survey.penghasilan.pasangan"
+                                                        placeholder="pendapatan pasangan" :show-button="false">
                                                         <template #suffix>
                                                                 perbulan
                                                         </template>
-                                                </n-input>
-                                                <n-input placeholder="pendapatan lain-lain"
-                                                        v-model:value="survey.penghasilan.lainnya">
+                                                </n-input-number>
+                                                <n-input-number :parse="parse" :format="format"
+                                                        v-model:value="survey.penghasilan.lainnya"
+                                                        placeholder="pendapatan lain-lain" :show-button="false">
                                                         <template #suffix>
                                                                 perbulan
                                                         </template>
-                                                </n-input>
+                                                </n-input-number>
                                         </n-input-group>
 
                                 </n-form-item>
                                 <n-form-item label="Pengeluaran" path="pengeluaran">
-                                        <n-input placeholder="pengeluaran" v-model:value="survey.pengeluaran">
+                                        <n-input-number :parse="parse" :format="format"
+                                                v-model:value="survey.pengeluaran" placeholder="pengeluaran"
+                                                :show-button="false">
                                                 <template #suffix>
                                                         perbulan
                                                 </template>
-                                        </n-input>
+                                        </n-input-number>
                                 </n-form-item>
                                 <n-form-item label="Usaha" path="usaha">
                                         <n-input placeholder="usaha" v-model:value="survey.usaha" />
@@ -254,7 +261,6 @@ import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward } 
 import { useMessage } from "naive-ui";
 import router from '../../../router';
 import { useApi } from "../../../helpers/axios";
-import { useAPIPost } from "../../../helpers/axios";
 
 const message = useMessage();
 const uuid = uuidv4();
@@ -288,10 +294,10 @@ const tipeKendaraan = ["motor", "mobil"].map(
                 value: v
         }));
 const order = ref({
-        tujuan_kredit: "",
+        tujuan_kredit: null,
         plafond: "",
-        tenor: "",
-        category: ""
+        tenor: null,
+        category: null
 });
 const pelanggan = reactive({
         nama: "",
@@ -309,7 +315,7 @@ const pelanggan = reactive({
         }
 });
 const jaminan = ref({
-        tipe: "",
+        tipe: null,
         tahun: null,
         merk: "",
         warna: "",
@@ -361,7 +367,7 @@ const handleSave = async (e) => {
         } else {
                 message.success("data berhasil disimpan");
                 loading.value = false;
-                router.push('task/survey');
+                router.push('survey');
         }
 }
 const handleImagePost = async ({ file, data, onError, onFinish }) => {
@@ -384,5 +390,24 @@ const handleImagePost = async ({ file, data, onError, onFinish }) => {
                 onFinish();
         }
 
+}
+const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
+
+const seprator = (value) => {
+        let nums = value.replace(/,/g, '');
+        // if (nums.endsWith('.')) return;
+        // if (!nums) return;
+        return parseFloat(nums).toLocaleString();
+}
+const parse = (input) => {
+        const nums = input.replace(/,/g, "").trim();
+        if (/^\d+(\.(\d+)?)?$/.test(nums))
+                return Number(nums);
+        return nums === "" ? null : Number.NaN;
+}
+const format = (value) => {
+        if (value === null)
+                return "";
+        return value.toLocaleString("en-US");
 }
 </script>

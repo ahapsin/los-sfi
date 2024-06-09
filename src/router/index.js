@@ -28,9 +28,19 @@ const routes = [
         component: () => import("../views/pages/task/FpkPage.vue"),
       },
       {
+        path: "apply-credit/:idapplication",
+        name: "Form Pengajuan Kredit",
+        component: () => import("../views/pages/task/AddFpkPage.vue"),
+      },
+      {
         path: "survey",
         name: "survey",
         component: () => import("../views/pages/task/SurveyPage.vue"),
+      },
+      {
+        path: "survey/:idsurvey",
+        name: "detail survey",
+        component: () => import("../views/pages/task/DetailSurveyPage.vue"),
       },
       {
         path: "Approval",
@@ -55,9 +65,39 @@ const routes = [
         component: () => import("../views/pages/master/EmployeesPage.vue"),
       },
       {
+        path: "employee-action",
+        name: "karyawan baru",
+        component: () => import("../views/pages/master/ActionEmployeePage.vue"),
+      },
+      {
+        path: "employee-action/:idemployee",
+        name: "update karyawan",
+        component: () => import("../views/pages/master/ActionEmployeePage.vue"),
+      },
+      {
+        path: "employee-action/:idemployee/detail",
+        name: "detail karyawan",
+        component: () => import("../views/pages/master/ActionEmployeePage.vue"),
+      },
+      {
         path: "branch",
         name: "cabang",
         component: () => import("../views/pages/master/BranchPage.vue"),
+      },
+      {
+        path: "branch-action",
+        name: "cabang baru",
+        component: () => import("../views/pages/master/ActionBranchPage.vue"),
+      },
+      {
+        path: "branch-action/:idbranch",
+        name: "update cabang",
+        component: () => import("../views/pages/master/ActionBranchPage.vue"),
+      },
+      {
+        path: "branch-action/:idbranch/detail",
+        name: "detail cabang",
+        component: () => import("../views/pages/master/ActionBranchPage.vue"),
       },
     ],
   },

@@ -8,8 +8,8 @@
         </n-steps>
     </n-space>
     <n-space vertical class="pt-4">
-        <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
-            require-mark-placement="right-hanging" :size="size" label-width="auto">
+        <n-form ref="formRef" :model="model" :rules="rules" label-placement="top" require-mark-placement="right-hanging"
+            :size="size" label-width="auto">
             <n-card v-if="current == 1" title="Informasi Pelanggan" :segmented="{
                 content: true,
                 footer: 'soft'
@@ -419,9 +419,147 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon } from "@vicons/material";
+import { useRoute } from "vue-router";
+import { useMessage } from "naive-ui";
+import { useApi } from "../../../helpers/axios";
+
+const message = useMessage();
+const baseRoute = useRoute();
+const dynamicForm = reactive({
+    pelanggan: {
+        nama: '',
+        nama_panggilan: '',
+        jenis_kelamin: '',
+        tgl_lahir: '',
+        gol_darah: '',
+        status_kawin: '',
+        tgl_kawin: '',
+        tipe_identitas: '',
+        no_identitas: '',
+        no_kk: '',
+        warganegara: '',
+    },
+    alamat_identitas: {
+        alamat: '',
+        rt: '',
+        rw: '',
+        provinsi: '',
+        kecamatan: '',
+        kabupaten: '',
+        desa: '',
+        kode_pos: ''
+    },
+    alamat_tagih: {
+        alamat: '',
+        rt: '',
+        rw: '',
+        provinsi: '',
+        kecamatan: '',
+        kabupaten: '',
+        desa: '',
+        kode_pos: ''
+    },
+    pekerjaan: {
+        pekerjaan: '',
+        pekerjaan_id: '',
+        agama: '',
+        pendidikan: '',
+        telepon_rumah: '',
+        telepon_selular: '',
+        telepon_kantor: '',
+        ekstra1: '',
+        ekstra2: ''
+    },
+    order: {
+        tgl_order: '',
+        status_order: '',
+        tipe_order: '',
+        pelanggan_group: '',
+        unit_bisnis: '',
+        cust_service: '',
+        reff_pelanggan: '',
+        surveyor: '',
+        catatan_survey: '',
+        platform: '',
+        prog_marketing: '',
+        cara_bayar: '',
+        nama_ibu_kandung: '',
+        kategori: '',
+        pendidikan: '',
+        lama_bekerja: '',
+        jml_tanggungan: '',
+        pendapatan_pribadi: '',
+        pendapatan_pasangan: '',
+        pendapatan_lainnya: '',
+        pengeluaran: '',
+    },
+    npwp: {
+        no: '',
+        alamat: '',
+        rt: '',
+        rw: '',
+        provinsi: '',
+        kecamatan: '',
+        kabupaten: '',
+        desa: '',
+        kode_pos: ''
+    },
+    barang_taksasi: {
+        kode_barang: '',
+        id_tipe: '',
+        tahun: '',
+        harga_pasar: '',
+    },
+    tambahan: {
+        nama_bi: '',
+        email: '',
+        info_khusus: '',
+        usaha_lain1: '',
+        usaha_lain2: '',
+        usaha_lain3: '',
+        usaha_lain4: '',
+    },
+    kerabat_darurat: {
+        nama: '',
+        alamat: '',
+        rt: '',
+        rw: '',
+        provinsi: '',
+        kecamatan: '',
+        kabupaten: '',
+        desa: '',
+        kode_pos: ''
+    },
+    info_bank: [{
+
+    }],
+    ekstra: {
+        pokok_pembayaran: '',
+        tipe_angsuran: '',
+        cara_pembayaran: '',
+        periode: '',
+        angsuran: '',
+        provisi: '',
+        asuransi: '',
+        biaya_transfer: '',
+        bunga_margin_eff: '',
+        bunga_margin_flat: '',
+        bunga_margin: '',
+        pokok_margin: '',
+        angsuran_terakhir: '',
+        bunga_margin_eff_actual: '',
+        bunga_margin_eff_flat: '',
+        nett_admin: '',
+        nilai_yang_diterima: ''
+    }
+});
+const pageData = ref();
+const suspense = ref(false);
 const current = ref(1);
+const idApplication = baseRoute.params.idapplication;
+const userToken = localStorage.getItem("token");
 
 const currentStatus = ref("process");
 
@@ -443,4 +581,26 @@ const kategoriKredit = ["biaya kuliah", "investasi"].map(
         label: v,
         value: v
     }));
-</script>v
+
+
+const dynamicBody = {
+    cr_prospect_id: idApplication,
+}
+const response = useApi({
+    method: 'POST',
+    api: 'cr_application',
+    data: dynamicBody,
+    token: userToken
+}).then(res => {
+    console.log(dynamicBody);
+    // pageData.value = [res.data.response];
+    if (!res.ok) {
+        message.error("halaman tidak ditemukan");
+        suspense.value = true;
+    } else {
+        message.success("halaman ditemukan");
+        suspense.value = false;
+        pageData.value = [res.data.response];
+    }
+});
+</script>

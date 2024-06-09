@@ -106,6 +106,9 @@ const columns = [
                 title: "Plafond",
                 key: "plafond",
                 width: 100,
+                render(row) {
+                        return h('div', format(row.plafond));
+                }
         },
         {
                 title: "Status",
@@ -141,8 +144,7 @@ const columns = [
                                                 if (e === "detail") {
                                                         handleDetail(row);
                                                 }
-                                                console.log(e);
-                                                handleSelect(row.id);
+
                                         },
                                 },
                                 {
@@ -173,8 +175,10 @@ const statusLabel = (e) => {
         }
 
 }
-const handleSelect = (e) => console.log(e);
-const statusHandle = (e) => console.log(e);
+const format = (e) => {
+        const toNum = parseInt(e);
+        return toNum.toLocaleString("en-US");
+};
 const handleConfirm = (evt) => {
         dialog.warning({
                 title: "Confirm",
@@ -202,8 +206,7 @@ const handleConfirm = (evt) => {
         });
 }
 const handleDetail = (evt) => {
-        console.log(evt);
-        console.log("mau cek detail");
+        router.replace({ name: 'detail survey', params: { idsurvey: evt.id } });
 }
 const handleAdd = () => {
         router.push('/task/new-survey');

@@ -40,10 +40,10 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, h } from "vue";
+import { ref, reactive, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
+import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -61,6 +61,11 @@ import {
 const message = useMessage();
 const dialog = useDialog();
 const dataTable = ref();
+const loadingRef = reactive({
+    type: "loading",
+    messagePost: null,
+});
+const userToken = localStorage.getItem("token");
 
 const columns = [
     {
@@ -73,7 +78,10 @@ const columns = [
     },
     {
         title: "Plafond",
-        key: "plafond"
+        key: "plafond",
+        render(row) {
+            return h('div', format(row.plafond));
+        }
     },
     {
         title: "Status",
@@ -98,7 +106,7 @@ const columns = [
                 NButton,
                 {
                     type: typeAction(row.status),
-                    size: "small",
+                    size: "tiny",
                     onClick: (e) => {
                         handleAction(row.status, row)
                     },
@@ -145,42 +153,35 @@ const actionLabel = (e) => {
     }
 
 }
+const format = (e) => {
+    const toNum = parseInt(e);
+    return toNum.toLocaleString("en-US");
+};
 const handleSelect = (e) => console.log(e);
 const handleAction = (e, data) => {
     let status = e.at(0);
-    if (status === "1") {
-
+    const dynamicBody = {
+        cr_prospect_id: data.id
     }
-    console.log(status);
-    console.log(data);
-};
-const statusHandle = (e) => console.log(e);
-const handleConfirm = (evt) => {
-    dialog.warning({
-        title: "Confirm",
-        content: "Apakah anda yakin ingin menghapus data ?",
-        positiveText: "Ya",
-        negativeText: "Batal",
-        onPositiveClick: async () => {
-            let userToken = localStorage.getItem("token");
-            const response = await useApi({
-                method: 'DELETE',
-                api: `kunjungan/${evt.id}`,
-                token: userToken
-            });
-            if (!response.ok) {
-                message.error("api transaction error");
+    if (status === "1") {
+        message.create('membuat FPK, silakan tunggu !', { type: loadingRef.type });
+        useApi({
+            method: 'POST',
+            data: dynamicBody,
+            api: `cr_application_generate`,
+            token: userToken,
+        }).then((res) => {
+            if (res.ok) {
+                message.success('FPK berhsil dibuat');
+                router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
             } else {
-                dataTable.value.splice(evt, 1);
-                message.success("Data berhasil dihapus");
+                message.error('FPK gagal dibuat!')
             }
-
-        },
-        onNegativeClick: () => {
-            message.error("Batal hapus data !");
-        }
-    });
-}
+        });
+    } else {
+        router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+    }
+};
 const handleDetail = (evt) => {
     console.log(evt);
     console.log("mau cek detail");
@@ -189,7 +190,7 @@ const handleAdd = () => {
     router.push('/task/new-survey');
 }
 const getData = async () => {
-    let userToken = localStorage.getItem("token");
+
     const response = await useApi({
         method: 'GET',
         api: 'kunjungan_admin',

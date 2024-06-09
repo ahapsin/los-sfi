@@ -53,7 +53,6 @@ import {
 import {
     EditOutlined as EditIcon,
     DeleteOutlined as DeleteIcon,
-    MoreVertRound as MoreIcon,
     ListAltOutlined as DetailIcon
 } from "@vicons/material";
 
@@ -110,8 +109,9 @@ const columns = [
                         if (e === "detail") {
                             handleDetail(row);
                         }
-                        console.log(e);
-                        handleSelect(row.id);
+                        if (e === "edit") {
+                            handleUpdate(row);
+                        }
                     },
                 },
                 {
@@ -121,8 +121,7 @@ const columns = [
                 }
             );
         }
-    }
-];
+    }];
 
 const statusTag = (e) => {
     if (e === "Active") {
@@ -132,17 +131,6 @@ const statusTag = (e) => {
     }
 
 }
-const statusLabel = (e) => {
-    let status = e.at(0);
-    if (status === "1") {
-        return "survey disetujui";
-    } else if (status === "2") {
-        return "pembuatan PFK";
-    }
-
-}
-const handleSelect = (e) => console.log(e);
-const statusHandle = (e) => console.log(e);
 const handleConfirm = (evt) => {
     dialog.warning({
         title: "Confirm",
@@ -153,7 +141,7 @@ const handleConfirm = (evt) => {
             let userToken = localStorage.getItem("token");
             const response = await useApi({
                 method: 'DELETE',
-                api: `kunjungan/${evt.id}`,
+                api: `karyawan/${evt.id}`,
                 token: userToken
             });
             if (!response.ok) {
@@ -170,11 +158,13 @@ const handleConfirm = (evt) => {
     });
 }
 const handleDetail = (evt) => {
-    console.log(evt);
-    console.log("mau cek detail");
+    router.replace(`/master/employee-action/${evt.id}/detail`);
+}
+const handleUpdate = (evt) => {
+    router.replace(`/master/employee-action/${evt.id}`);
 }
 const handleAdd = () => {
-    router.push('/task/new-employee');
+    router.replace('/master/employee-action');
 }
 const getData = async () => {
     let userToken = localStorage.getItem("token");
