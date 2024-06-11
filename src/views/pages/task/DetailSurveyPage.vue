@@ -155,7 +155,8 @@
                 <n-card>
                     <n-flex justify="start" v-if="data.dokumen_jaminan.length > 0">
                         <n-flex vertical v-for="dok_identitas in data.dokumen_indentitas">
-                            <n-image lazy width="100" :src="dok_identitas.PATH" />
+                            <n-image lazy :src="dok_identitas.PATH" class="w-24 border-b border-2 border-pr h-24" />
+
                             <n-tag type="success" size="small" :bordered="false">
                                 <template #icon>
                                     <n-icon :component="FileIcon" />

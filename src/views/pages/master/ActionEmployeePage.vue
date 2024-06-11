@@ -5,6 +5,14 @@
     }" :title="`Form ${$route.name}`">
         <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
+            <n-form-item label="Photo personal" path="photo_personal">
+                <n-upload :data="{ 'type': 'personal' }" list-type="image-card" :custom-request="handleImagePost">
+                    Upload Photo Personal
+                </n-upload>
+            </n-form-item>
+            <n-form-item label="Cabang" path="cabang">
+                <n-select placeholder="Pilih Provinsi" label-field="nama" value-field="id" :options="dataBranch" />
+            </n-form-item>
             <n-form-item label="No KTP" path="no_ktp">
                 <n-input placeholder="No KTP" v-model:value="dynamicForm.no_ktp" />
             </n-form-item>
@@ -110,6 +118,10 @@
             <n-form-item label="IPK" path="ipk">
                 <n-input placeholder="IPK" v-model:value="dynamicForm.ipk" />
             </n-form-item>
+            <n-form-item label="Dokumen" path="ipk">
+                <n-upload :data="{ 'type': 'file_kary' }" list-type="image-card" :custom-request="handleImagePost">
+                </n-upload>
+            </n-form-item>
         </n-form>
         <template #action>
             <n-space>
@@ -125,24 +137,26 @@
     </n-card>
 </template>
 <script setup>
+import { v4 as uuidv4 } from 'uuid';
 import { useMessage } from 'naive-ui';
 import { ref, reactive } from 'vue';
 import { useApi } from '../../../helpers/axios';
 import router from '../../../router';
 import { useRoute } from 'vue-router';
-
+const uuid = uuidv4();
 const dynamicForm = reactive({
-    nama: "Hayabusa",
-    blood_type: "A",
-    gender: "gk jelas",
-    pendidikan: "militer",
-    universitas: "itb",
-    jurusan: "bandung",
-    ipk: "4.5",
-    ibu_kandung: "mama",
-    status_karyawan: "selamanya",
-    nama_pasangan: "asdsad",
-    tanggungan: "banyak",
+    employee_id: uuid,
+    nama: "",
+    blood_type: "",
+    gender: "",
+    pendidikan: "",
+    universitas: "",
+    jurusan: "",
+    ipk: "",
+    ibu_kandung: "",
+    status_karyawan: "",
+    nama_pasangan: "",
+    tanggungan: "",
     no_ktp: "2155341245",
     nama_ktp: "siapa",
     alamat_ktp: "dmna aja",
@@ -183,6 +197,8 @@ const dynamicForm = reactive({
 const loading = ref(false);
 const message = useMessage();
 const baseRoute = useRoute();
+const suspense = ref();
+const dataBranch = ref();
 const param = baseRoute.params.idemployee;
 const userToken = localStorage.getItem("token");
 const status = [{
@@ -208,7 +224,56 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.replace({ name: 'cabang' });
+        router.replace({ name: 'karyawan' });
     }
+}
+
+const getEmployees = async () => {
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: 'GET',
+        api: 'karyawan',
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("error patch data");
+    } else {
+        dataBranch.value = response.data.response;
+    }
+}
+const getBranch = useApi({
+    method: 'GET',
+    api: `cabang`,
+    token: userToken
+}).then(res => {
+
+    if (!res.ok) {
+        message.error("halaman tidak ditemuskan");
+        suspense.value = true;
+    } else {
+        suspense.value = false;
+        dataBranch.value = res.data.response;
+    }
+});
+const handleImagePost = async ({ file, data, onError, onFinish }) => {
+    const imageForm = {
+        image: file.file,
+        type: data.type,
+        employee_id: uuid
+    }
+    const response = await useApi({
+        method: 'POST',
+        api: 'image_upload_employee',
+        data: imageForm,
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("gagal upload");
+        onError();
+    } else {
+        message.success("berhasil upload");
+        onFinish();
+    }
+
 }
 </script>

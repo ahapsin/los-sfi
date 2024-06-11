@@ -176,7 +176,6 @@ const getData = async () => {
     if (!response.ok) {
         message.error("error patch data");
     } else {
-        // console.log(response.data.response)
         dataTable.value = response.data.response;
     }
 }

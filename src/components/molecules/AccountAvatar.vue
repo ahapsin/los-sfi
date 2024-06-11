@@ -87,7 +87,7 @@ const GetMe = async () => {
                 message.error("error 1: patch data");
                 localStorage.removeItem("token");
         } else {
-                [dataUser.value] = response.data.response;
+                dataUser.value = response.data.response;
         }
 }
 

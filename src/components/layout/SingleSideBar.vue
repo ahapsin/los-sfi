@@ -5,7 +5,6 @@
                                 <LogoHeader />
                                 <SideMenu />
                         </div>
-                        <AccountButton />
                 </div>
                 <div class="w-full overflow-auto content bg-sc-50">
                         <n-page-header class="sticky top-0 z-50 bg-sc-50/80 backdrop-blur border-b p-2">

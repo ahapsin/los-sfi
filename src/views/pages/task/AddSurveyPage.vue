@@ -378,7 +378,7 @@ const handleImagePost = async ({ file, data, onError, onFinish }) => {
         }
         const response = await useApi({
                 method: 'POST',
-                api: 'image_upload_prospect',
+                api: 'image_upload_employee',
                 data: imageForm,
                 token: userToken
         });
