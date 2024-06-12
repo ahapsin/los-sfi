@@ -133,7 +133,7 @@
                     <span v-if="!param">Simpan</span>
                     <span v-else>Ubah</span>
                 </n-button>
-                <n-button type="warning" secondary @click="handleCancel">
+                <n-button type="error" @click="handleCancel">
                     Batal
                 </n-button>
             </n-space>
@@ -276,11 +276,7 @@ const getBranch = useApi({
 }).then(res => {
 
     if (!res.ok) {
-        message.error("halaman tidak ditemukan");
-    } else {
-        message.success("halaman ditemukan");
-
-        dataBranch.value = res.data.response;
+        message.error("error koneksi api");
     }
 });
 onMounted(() => {

@@ -10,7 +10,7 @@
                 </n-space>
         </n-scrollbar>
         <n-space vertical class="pt-4">
-                <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
+                <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
                         require-mark-placement="right-hanging" :size="size" label-width="auto">
                         <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                                 content: true,
@@ -167,31 +167,32 @@
                                                 </template>
                                         </n-input>
                                 </n-form-item>
-                                <n-form-item label="Pendapatan" path="pendapatan">
-                                        <n-input-group>
-                                                <n-input-number :parse="parse" :format="format"
-                                                        v-model:value="survey.penghasilan.pribadi"
-                                                        placeholder="pendapatan pelanggan" :show-button="false">
-                                                        <template #suffix>
-                                                                perbulan
-                                                        </template>
-                                                </n-input-number>
-                                                <n-input-number :parse="parse" :format="format"
-                                                        v-model:value="survey.penghasilan.pasangan"
-                                                        placeholder="pendapatan pasangan" :show-button="false">
-                                                        <template #suffix>
-                                                                perbulan
-                                                        </template>
-                                                </n-input-number>
-                                                <n-input-number :parse="parse" :format="format"
-                                                        v-model:value="survey.penghasilan.lainnya"
-                                                        placeholder="pendapatan lain-lain" :show-button="false">
-                                                        <template #suffix>
-                                                                perbulan
-                                                        </template>
-                                                </n-input-number>
-                                        </n-input-group>
-
+                                <n-form-item label="Pendapatan " path="pendapatan">
+                                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                                                v-model:value="survey.penghasilan.pribadi"
+                                                placeholder="pendapatan pelanggan" :show-button="false">
+                                                <template #suffix>
+                                                        perbulan
+                                                </template>
+                                        </n-input-number>
+                                </n-form-item>
+                                <n-form-item label=" pasangan" path="pendapatan">
+                                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                                                v-model:value="survey.penghasilan.pasangan"
+                                                placeholder="pendapatan pasangan" :show-button="false">
+                                                <template #suffix>
+                                                        perbulan
+                                                </template>
+                                        </n-input-number>
+                                </n-form-item>
+                                <n-form-item label="lainnya" path="pendapatan">
+                                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                                                v-model:value="survey.penghasilan.lainnya"
+                                                placeholder="pendapatan lain-lain" :show-button="false">
+                                                <template #suffix>
+                                                        perbulan
+                                                </template>
+                                        </n-input-number>
                                 </n-form-item>
                                 <n-form-item label="Pengeluaran" path="pengeluaran">
                                         <n-input-number :parse="parse" :format="format"
@@ -260,8 +261,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward } from "@vicons/material";
 import { useMessage } from "naive-ui";
 import router from '../../../router';
+import { useWindowSize } from '@vueuse/core';
 import { useApi } from "../../../helpers/axios";
-
+const { width, height } = useWindowSize()
 const message = useMessage();
 const uuid = uuidv4();
 const current = ref(1);

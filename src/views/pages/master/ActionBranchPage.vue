@@ -26,7 +26,7 @@
                     </n-input>
                     <n-input placeholder="rw" v-model:value="dynamicForm.RW">
                         <template #prefix>
-                            <n-text depth="3">
+                            <n-text>
                                 RW
                             </n-text>
                         </template>
@@ -68,7 +68,7 @@
                     <span v-if="!param">Simpan</span>
                     <span v-else>Ubah</span>
                 </n-button>
-                <n-button type="warning" secondary @click="handleCancel">
+                <n-button type="error" @click="handleCancel">
                     Batal
                 </n-button>
             </n-space>
