@@ -17,16 +17,24 @@
                 <n-form-item label="Nama" path="nama">
                     <n-input-group>
                         <n-input placeholder="nama" v-model:value="dynamicForm.pelanggan.nama" />
-                        <n-input placeholder="nama panggilan" v-model:value="dynamicForm.pelanggan.nama_panggilan" />
+                        <n-input placeholder="nama panggilan" v-model:value="dynamicForm.pelanggan.nama_panggilan">
+                            <template #prefix>
+                                Panggilan
+                            </template>
+                        </n-input>
                     </n-input-group>
                 </n-form-item>
                 <n-form-item label="jenis kelamin" path="jenis_kelamin">
                     <n-input-group>
                         <n-select placeholder="Jenis Kelamin" :options="optJenisKelamin" />
-                        <!-- <n-date-picker placeholder="Tanggal Lahir"
+                        <n-date-picker placeholder="Tanggal Lahir"
                             v-model:formatted-value="dynamicForm.pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
-                            type="date" /> -->
-                        <n-input placeholder="golongan darah" v-model:value="dynamicForm.pelanggan.gol_darah" />
+                            type="date" />
+                        <n-input placeholder="golongan darah" v-model:value="dynamicForm.pelanggan.gol_darah">
+                            <template #prefix>
+                                Golongan Darah
+                            </template>
+                        </n-input>
                     </n-input-group>
                 </n-form-item>
                 <n-form-item label="Status Kawin" path="jenis_kelamin">
@@ -40,13 +48,21 @@
                 <n-form-item label="Identitas" path="plafond">
                     <n-input-group>
                         <n-select placeholder="Jenis Identitas" :options="optJenisIdentitas" />
-                        <n-input placeholder="No Identitas" v-model:value="dynamicForm.pelanggan.no_identitas" />
+                        <n-input placeholder="No Identitas" v-model:value="dynamicForm.pelanggan.no_identitas">
+                            <template #prefix>
+                                No
+                            </template>
+                        </n-input>
                     </n-input-group>
                 </n-form-item>
                 <n-form-item label="No KK" path="plafond">
                     <n-input-group>
                         <n-input placeholder="No Kartu Keluarga" v-model:value="dynamicForm.pelanggan.no_kk" />
-                        <n-input placeholder="Warganegara" v-model:value="dynamicForm.pelanggan.warganegara" />
+                        <n-input placeholder="Warganegara" v-model:value="dynamicForm.pelanggan.warganegara">
+                            <template #prefix>
+                                Warganegara
+                            </template>
+                        </n-input>
                     </n-input-group>
                 </n-form-item>
                 <n-divider title-placement="left">
@@ -113,7 +129,7 @@
                     <n-select placeholder="agama" :options="optAgama" />
                 </n-form-item>
                 <n-form-item label="Pendidikan" path="pendidikan">
-                    <n-select placeholder="agama" :options="optPendidikan" />
+                    <n-select placeholder="pendidikan" :options="optPendidikan" />
                 </n-form-item>
                 <n-form-item label="Telepon" path="telepon">
                     <n-input-group>
@@ -142,11 +158,11 @@
             }">
                 <n-form-item label="Order" path="order">
                     <n-input-group>
-                        <!-- <n-date-picker placeholder="Tanggal Lahir"
+                        <n-date-picker placeholder="Tanggal order" style="width: 30%;"
                             v-model:formatted-value="dynamicForm.pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
-                            type="date" /> -->
-                        <n-select placeholder="status order" :options="optStatus" />
-                        <n-select placeholder="tipe" :options="tipeKendaraan" />
+                            type="date" />
+                        <n-select placeholder="status order" :options="optStatusOrder" />
+                        <n-select placeholder="tipe" :options="optTipeOrder" />
                     </n-input-group>
                 </n-form-item>
                 <n-form-item label="Pelanggan Group" path="pelanggan_group"
@@ -177,10 +193,10 @@
                 </n-form-item>
                 <n-divider />
                 <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
-                    <n-input placeholder="Nama" v-model:value="dynamicForm.order.nama_ibu_kandung" />
+                    <n-input placeholder="Nama Ibu Kandung" v-model:value="dynamicForm.order.nama_ibu_kandung" />
                 </n-form-item>
                 <n-form-item label="Kategori" path="agama">
-                    <n-select placeholder="agama" :options="optAgama" />
+                    <n-select placeholder="agama" :options="optKategori" />
                 </n-form-item>
                 <n-form-item label="pendidikan" path="pendidikan">
                     <n-select placeholder="agama" :options="optPendidikan" />
@@ -316,7 +332,8 @@
                 footer: 'soft'
             }">
                 <n-form-item label="Tanggal survey" path="tgl_survey">
-                    <n-input placeholder="tanggal survey" />
+                    <n-date-picker placeholder="Tanggal Survey" v-model:formatted-value="calcCredit.tgl_survey"
+                        value-format="yyyy-MM-dd" type="date" />
                 </n-form-item>
                 <n-form-item label="Pokok pembayaran" path="Pokok Pembayaran">
                     <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_pembayaran"
@@ -414,7 +431,7 @@
                 </template>
                 Selanjutnya
             </n-button>
-            <n-button :loading="loading" icon-placement="left" type="info" @click="handleSave" v-else>
+            <n-button :loading="loading" icon-placement="left" type="info" @click="handleSave">
                 simpan
             </n-button>
             <n-button :loading="lodingSend" @click="handleSend" type="primary" v-if="current == 4">
@@ -446,7 +463,7 @@ const dynamicForm = reactive({
         nama: '',
         nama_panggilan: '',
         jenis_kelamin: '',
-        tgl_lahir: '',
+        tgl_lahir: null,
         gol_darah: '',
         status_kawin: '',
         tgl_kawin: '',
@@ -574,6 +591,7 @@ const dynamicForm = reactive({
     }
 });
 const calcCredit = reactive({
+    tgl_survey: null,
     plafond: 0,
     total_admin: 0,
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
@@ -609,6 +627,46 @@ const tenorKredit = ["12", "24", "36"].map(
         value: v
     }));
 const kategoriKredit = ["biaya kuliah", "investasi"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optJenisKelamin = ["Laki-laki", "perempuan"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optJenisIdentitas = ["KTP", "SIM", 'PASPOR'].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optStatusOrder = ["KTP", "SIM", 'PASPOR'].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optTipeOrder = ["RETAIL"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optKategori = ["Karyawan", "Bukan Karyawan"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optStatusKawin = ["Kawin", "Belum Kawin", "Janda", "Duda"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optAgama = ["ISLAM", "KRISTEN"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optPendidikan = ["SMA", "SD"].map(
     (v) => ({
         label: v,
         value: v

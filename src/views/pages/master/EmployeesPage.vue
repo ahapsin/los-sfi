@@ -63,6 +63,10 @@ const dataTable = ref();
 
 const columns = [
     {
+        title: "Cabang",
+        key: "cabang_nama"
+    },
+    {
         title: "NIK",
         key: "nik"
     },
@@ -72,26 +76,11 @@ const columns = [
     },
     {
         title: "No Handphone",
-        key: "no_hp"
+        key: "hp"
     },
     {
         title: "Email",
         key: "email"
-    },
-    {
-        title: "Status",
-        key: "status",
-        render(row) {
-            return h(
-                NTag,
-                {
-                    bordered: false,
-                    type: statusTag(row.status),
-                    size: "small",
-                },
-                { default: () => row.status }
-            );
-        }
     }, {
         title: "",
         align: "right",
@@ -158,10 +147,10 @@ const handleConfirm = (evt) => {
     });
 }
 const handleDetail = (evt) => {
-    router.replace(`/master/employee-action/${evt.id}/detail`);
+    router.replace(`/master/employee-action/${evt.employee_id}/detail`);
 }
 const handleUpdate = (evt) => {
-    router.replace(`/master/employee-action/${evt.id}`);
+    router.replace(`/master/employee-action/${evt.employee_id}`);
 }
 const handleAdd = () => {
     router.replace('/master/employee-action');
@@ -187,11 +176,6 @@ const renderIcon = (icon) => {
     };
 };
 const options = [
-    {
-        label: "Edit",
-        key: "edit",
-        icon: renderIcon(EditIcon),
-    },
     {
         label: "Hapus",
         key: "hapus",

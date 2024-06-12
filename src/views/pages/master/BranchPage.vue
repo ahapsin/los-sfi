@@ -79,20 +79,6 @@ const columns = [
         key: "kota"
     },
     {
-        title: "Status",
-        key: "status",
-        render(row) {
-            return h(
-                NTag,
-                {
-                    bordered: false,
-                    type: statusTag(row.status),
-                    size: "small",
-                },
-                { default: () => row.status }
-            );
-        }
-    }, {
         title: "",
         align: "right",
         key: "more",
@@ -112,7 +98,7 @@ const columns = [
                         if (e === "edit") {
                             handleUpdate(row);
                         }
-                    },
+                    }
                 },
                 {
                     default: h(NButton, {
@@ -189,11 +175,6 @@ const renderIcon = (icon) => {
     };
 };
 const options = [
-    {
-        label: "Edit",
-        key: "edit",
-        icon: renderIcon(EditIcon),
-    },
     {
         label: "Hapus",
         key: "hapus",

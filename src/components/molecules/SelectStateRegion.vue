@@ -33,41 +33,6 @@ const col_kec = ref();
 const col_desa = ref();
 
 const emit = defineEmits(['update:provinsi', 'update:kota', 'update:kecamatan', 'update:desa']);
-
-
-const provinsiChanged = async (value, option) => {
-    try {
-        let getKota = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${value}.json`);
-        col_kota.value = getKota.data;
-        emit('update:provinsi', option.name);
-    } catch (error) {
-        console.log(error);
-    }
-};
-const kotaChanged = async (value, option) => {
-
-    try {
-        let getKec = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${value}.json`);
-        col_kec.value = getKec.data;
-        emit('update:kota', option.name);
-    } catch (error) {
-        console.log(error);
-    }
-};
-const kecChanged = async (value, option) => {
-    try {
-        let getKec = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${value}.json`);
-        col_desa.value = getKec.data;
-        emit('update:kecamatan', option.name);
-    } catch (error) {
-        console.log(error);
-    }
-};
-const desaChanged = (option) => {
-    emit('update:desa', option.nam);
-};
-
-const getProvinsi = useOpenAPIget("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json").then(([res]) => { col_provinsi.value = res; });
 const props = defineProps({
     label: {
         type: [String, Boolean],
@@ -96,4 +61,45 @@ const props = defineProps({
         type: [Number, Boolean]
     }
 });
+const dataAlamat = reactive({
+    provinsi: props.kota,
+});
+const provinsiChanged = async (value, option) => {
+    try {
+        console.log(props.kota);
+        console.log(dataAlamat);
+        let getKota = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${value}.json`);
+        col_kota.value = getKota.data;
+
+        emit('update:provinsi', option.name);
+    } catch (error) {
+        console.log(error);
+    }
+};
+const kotaChanged = async (value, option) => {
+
+    try {
+        let getKec = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${value}.json`);
+        col_kec.value = getKec.data;
+        emit('update:kota', option.name);
+    } catch (error) {
+        console.log(error);
+    }
+};
+const kecChanged = async (value, option) => {
+    try {
+        let getKec = await axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${value}.json`);
+        col_desa.value = getKec.data;
+        emit('update:kecamatan', option.name);
+    } catch (error) {
+        console.log(error);
+    }
+};
+const desaChanged = (value, option) => {
+    // console.log(option.name);
+    emit('update:desa', option.name);
+};
+
+const getProvinsi = useOpenAPIget("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json").then(([res]) => { col_provinsi.value = res; });
+
 </script>

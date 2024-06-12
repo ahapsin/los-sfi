@@ -11,7 +11,11 @@
                 </n-upload>
             </n-form-item>
             <n-form-item label="Cabang" path="cabang">
-                <n-select placeholder="Pilih Provinsi" label-field="nama" value-field="id" :options="dataBranch" />
+                <n-select placeholder="Pilih Cabang" label-field="nama" value-field="id" :options="dataBranch"
+                    v-model:value="dynamicForm.cabang_nama" />
+            </n-form-item>
+            <n-form-item label="Jabatan" path="jabatan">
+                <n-select placeholder="Pilih Jabatan" :options="optJabatan" v-model:value="dynamicForm.jabatan" />
             </n-form-item>
             <n-form-item label="No KTP" path="no_ktp">
                 <n-input placeholder="No KTP" v-model:value="dynamicForm.no_ktp" />
@@ -98,7 +102,7 @@
                 <n-input placeholder="Jumlah Tanggungan" v-model:value="dynamicForm.tanggungan" />
             </n-form-item>
             <n-form-item label="No Handphone" path="handphone">
-                <n-input placeholder="No Handphone" v-model:value="dynamicForm.telp" />
+                <n-input placeholder="No Handphone" v-model:value="dynamicForm.hp" />
             </n-form-item>
             <n-form-item label="Email" path="email">
                 <n-input placeholder="Email" v-model:value="dynamicForm.email" />
@@ -139,16 +143,37 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid';
 import { useMessage } from 'naive-ui';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useApi } from '../../../helpers/axios';
 import router from '../../../router';
 import { useRoute } from 'vue-router';
+
 const uuid = uuidv4();
+const status = [{
+    label: 'Aktif',
+    value: 'Aktif'
+}, {
+    label: 'Tidak Aktif',
+    value: 'Tidak Aktif'
+}];
+const optJabatan = ["MCF", "ADMIN", "KAPOS", "HO", "SUPERADMIN"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optJenisKelamin = ["Laki-laki", "Perempuan"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+
 const dynamicForm = reactive({
     employee_id: uuid,
+    cabang_nama: null,
     nama: "",
+    jabatan: null,
     blood_type: "",
-    gender: "",
+    gender: null,
     pendidikan: "",
     universitas: "",
     jurusan: "",
@@ -157,64 +182,81 @@ const dynamicForm = reactive({
     status_karyawan: "",
     nama_pasangan: "",
     tanggungan: "",
-    no_ktp: "2155341245",
-    nama_ktp: "siapa",
-    alamat_ktp: "dmna aja",
-    rt_ktp: "010",
-    rw_ktp: "020",
-    provinsi_ktp: "jawa barat",
-    kota_ktp: "cirebon",
-    kelurahan_ktp: "kecapi",
-    kecamatan_ktp: "harjamukti",
-    kode_pos_ktp: "25215",
-    alamat_tinggal: "Jl.Iskandar Muda",
-    rt: "001",
-    rw: "002",
-    provinsi: "Jakarta",
-    kota: "Jakarta",
-    kelurahan: "Dadap",
-    kecamatan: "Kosambi",
-    kode_pos: "255416",
-    tgl_lahir: "1945-08-17",
-    tempat_lahir: "Belanda",
-    agama: "setan",
-    telp: "124141",
-    hp: "41542454",
-    no_rek_cf: "2522525",
-    no_rek_tf: "4521525",
-    email: "ajkah@gmail.com",
-    npwp: "12521545",
-    sumber_loker: "IG",
-    ket_loker: "Loker",
-    interview: "asaas",
-    tgl_keluar: "2024-02-02",
-    alasan_keluar: "gaji tinggi",
-    cuti: "50",
+    no_ktp: "",
+    nama_ktp: "",
+    alamat_ktp: " ",
+    rt_ktp: "",
+    rw_ktp: "",
+    provinsi_ktp: "",
+    kota_ktp: "",
+    kelurahan_ktp: "",
+    kecamatan_ktp: "",
+    kode_pos_ktp: "",
+    alamat_tinggal: "",
+    rt: "",
+    rw: "",
+    provinsi: "",
+    kota: "",
+    kelurahan: "",
+    kecamatan: "",
+    kode_pos: "",
+    tgl_lahir: null,
+    tempat_lahir: "",
+    agama: "",
+    telp: "",
+    hp: "",
+    no_rek_cf: "",
+    no_rek_tf: "",
+    email: "",
+    npwp: "",
+    sumber_loker: "",
+    ket_loker: "",
+    interview: "",
+    tgl_keluar: null,
+    alasan_keluar: "",
+    cuti: "",
     photo_loc: "",
     spv_id: "",
-    status_mst: "Active"
+    status_mst: "",
+    photo_personal: "",
+    dokumen: []
 });
 const loading = ref(false);
+const action = ref("POST");
+const url = ref();
 const message = useMessage();
+const PageData = ref();
 const baseRoute = useRoute();
-const suspense = ref();
-const dataBranch = ref();
 const param = baseRoute.params.idemployee;
+const dataBranch = ref();
 const userToken = localStorage.getItem("token");
-const status = [{
-    label: 'Aktif',
-    value: 'Aktif'
-}, {
-    label: 'Tidak Aktif',
-    value: 'Tidak Aktif'
-}];
-const handleCancel = () => router.replace('/master/employees');
+const handleCancel = () => router.replace('/master/branch');
+
+const response = () => useApi({
+    method: 'get',
+    api: `karyawan/${param}`,
+    token: userToken
+}).then(res => {
+    if (res.ok) {
+        message.loading("memuat data karyawan");
+        PageData.value = res.data.response;
+        Object.assign(dynamicForm, res.data.response);
+    }
+});
+
 const handleSave = async (e) => {
     e.preventDefault(e);
     loading.value = true;
+    if (param) {
+        action.value = "PUT";
+        url.value = `karyawan/${param}`;
+    } else {
+        url.value = `karyawan`;
+        action.value = "POST";
+    }
     const response = await useApi({
-        method: 'POST',
-        api: 'karyawan',
+        method: action.value,
+        api: url.value,
         data: dynamicForm,
         token: userToken
     });
@@ -227,20 +269,6 @@ const handleSave = async (e) => {
         router.replace({ name: 'karyawan' });
     }
 }
-
-const getEmployees = async () => {
-    let userToken = localStorage.getItem("token");
-    const response = await useApi({
-        method: 'GET',
-        api: 'karyawan',
-        token: userToken
-    });
-    if (!response.ok) {
-        message.error("error patch data");
-    } else {
-        dataBranch.value = response.data.response;
-    }
-}
 const getBranch = useApi({
     method: 'GET',
     api: `cabang`,
@@ -248,32 +276,14 @@ const getBranch = useApi({
 }).then(res => {
 
     if (!res.ok) {
-        message.error("halaman tidak ditemuskan");
-        suspense.value = true;
+        message.error("halaman tidak ditemukan");
     } else {
-        suspense.value = false;
+        message.success("halaman ditemukan");
+
         dataBranch.value = res.data.response;
     }
 });
-const handleImagePost = async ({ file, data, onError, onFinish }) => {
-    const imageForm = {
-        image: file.file,
-        type: data.type,
-        employee_id: uuid
-    }
-    const response = await useApi({
-        method: 'POST',
-        api: 'image_upload_employee',
-        data: imageForm,
-        token: userToken
-    });
-    if (!response.ok) {
-        message.error("gagal upload");
-        onError();
-    } else {
-        message.success("berhasil upload");
-        onFinish();
-    }
-
-}
+onMounted(() => {
+    if (param) { response() }
+});
 </script>
