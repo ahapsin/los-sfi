@@ -348,7 +348,6 @@ const dynamicForm = reactive({
         data_survey: survey,
         jaminan_kendaraan: [jaminan.value]
 });
-
 const handleSave = async (e) => {
         e.preventDefault(e);
         // formRef.value?.validate((errors) => {

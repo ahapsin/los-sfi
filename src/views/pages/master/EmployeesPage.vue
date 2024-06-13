@@ -163,7 +163,9 @@ const getData = async () => {
         token: userToken
     });
     if (!response.ok) {
-        message.error("error patch data");
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
     } else {
         dataTable.value = response.data.response;
     }

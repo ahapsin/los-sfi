@@ -70,6 +70,26 @@ const routes = [
         component: () => import("../views/pages/master/ActionEmployeePage.vue"),
       },
       {
+        path: "users",
+        name: "pengguna",
+        component: () => import("../views/pages/master/UsersPage.vue"),
+      },
+      {
+        path: "users-action",
+        name: "pengguna baru",
+        component: () => import("../views/pages/master/ActionUsersPage.vue"),
+      },
+      {
+        path: "users-action/:iduser",
+        name: "update pengguna",
+        component: () => import("../views/pages/master/ActionUsersPage.vue"),
+      },
+      {
+        path: "users-action/:iduser/detail",
+        name: "detail pengguna",
+        component: () => import("../views/pages/master/ActionUsersPage.vue"),
+      },
+      {
         path: "employee-action/:idemployee",
         name: "update karyawan",
         component: () => import("../views/pages/master/ActionEmployeePage.vue"),
@@ -125,9 +145,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-// router.afterEach((to, from) => {
-//   loadingBar.start();
-//   console.log("aftereach");
-// });
 
 export default router;

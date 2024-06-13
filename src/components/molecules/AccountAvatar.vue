@@ -84,7 +84,6 @@ const GetMe = async () => {
                 token: userToken
         });
         if (!response.ok) {
-                message.error("error 1: patch data");
                 localStorage.removeItem("token");
         } else {
                 dataUser.value = response.data.response;

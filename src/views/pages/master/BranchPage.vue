@@ -43,7 +43,7 @@
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -72,11 +72,21 @@ const columns = [
     },
     {
         title: "Alamat",
-        key: "alamat"
+        key: "alamat",
+        render(row) {
+            return h(NEllipsis, {
+                style: "max-width:80px"
+            }, { default: () => row.alamat })
+        }
     },
     {
         title: "Kota",
-        key: "kota"
+        key: "kota",
+        render(row) {
+            return h(NEllipsis, {
+                style: "max-width:80px"
+            }, { default: () => row.kota })
+        }
     },
     {
         title: "",
@@ -161,9 +171,10 @@ const getData = async () => {
         token: userToken
     });
     if (!response.ok) {
-        message.error("error patch data");
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
     } else {
-        // console.log(response.data.response)
         dataTable.value = response.data.response;
     }
 }

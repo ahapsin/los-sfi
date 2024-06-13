@@ -3,60 +3,48 @@
         content: true,
         footer: 'soft'
     }" :title="`Form ${$route.name}`">
-        <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
+        <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
-            <n-form-item label="Kode" path="kode">
+            <n-alert v-show="errorAPI" title="Peringatan" type="warning" closable class="my-4">
+                {{ errorAPI }}
+            </n-alert>
+            <n-form-item label="Kode" path="CODE">
                 <n-input placeholder="kode" v-model:value="dynamicForm.CODE" />
             </n-form-item>
-            <n-form-item label="Nama" path="nama">
+            <n-form-item label="Nama" path="NAME">
                 <n-input placeholder="nama" v-model:value="dynamicForm.NAME" />
             </n-form-item>
             <n-form-item label="Lokasi" path="lokasi">
                 <n-input placeholder="lokasi" v-model:value="dynamicForm.LOCATION" />
             </n-form-item>
-            <n-form-item label="Alamat" path="alamat">
-                <n-input-group>
+            <div class="flex gap-2">
+                <n-form-item label="Alamat" path="alamat">
                     <n-input placeholder="alamat" v-model:value="dynamicForm.ADDRESS" />
-                    <n-input placeholder="rt" v-model:value="dynamicForm.RT">
-                        <template #prefix>
-                            <n-text depth="3">
-                                RT
-                            </n-text>
-                        </template>
-                    </n-input>
-                    <n-input placeholder="rw" v-model:value="dynamicForm.RW">
-                        <template #prefix>
-                            <n-text>
-                                RW
-                            </n-text>
-                        </template>
-                    </n-input>
-                </n-input-group>
-            </n-form-item>
+                </n-form-item>
+                <n-form-item label="RT" path="rt">
+                    <n-input placeholder="RT" v-model:value="dynamicForm.RT" />
+                </n-form-item>
+                <n-form-item label="RW" path="rw">
+                    <n-input placeholder="RW" v-model:value="dynamicForm.RW" />
+                </n-form-item>
+            </div>
+
             <select-state-region v-model:provinsi="dynamicForm.PROVINCE" v-model:kota="dynamicForm.CITY"
                 v-model:kecamatan="dynamicForm.KECAMATAN" v-model:desa="dynamicForm.KELURAHAN" />
             <n-form-item label="Kode POS" path="kodepos">
                 <n-input placeholder="kodepos" v-model:value="dynamicForm.ZIP_CODE" />
             </n-form-item>
-            <n-form-item label="Telepon" path="telepon">
-                <n-input-group>
+            <div class="flex gap-2">
+                <n-form-item label="Telepon" path="telepon">
                     <n-input placeholder="Telepon" v-model:value="dynamicForm.PHONE_1" />
-                    <n-input placeholder="Telepon 2" v-model:value="dynamicForm.PHONE_2">
-                        <template #prefix>
-                            <n-text depth="3">
-                                Telepon2
-                            </n-text>
-                        </template>
-                    </n-input>
-                    <n-input placeholder="Telepon 3" v-model:value="dynamicForm.PHONE_3">
-                        <template #prefix>
-                            <n-text depth="3">
-                                Telepon3
-                            </n-text>
-                        </template>
-                    </n-input>
-                </n-input-group>
-            </n-form-item>
+                </n-form-item>
+                <n-form-item label="Telepon 2" path="telepon2">
+                    <n-input placeholder="Telepon 2" v-model:value="dynamicForm.PHONE_2" />
+                </n-form-item>
+                <n-form-item label="Telepon 3" path="telepon3">
+                    <n-input placeholder="Telepon 2" v-model:value="dynamicForm.PHONE_3" />
+                </n-form-item>
+            </div>
             <n-form-item label="Deskripsi">
                 <n-input type="textarea" v-model:value="dynamicForm.DESCR" placeholder="Deskripsi" />
             </n-form-item>
@@ -78,6 +66,8 @@
 <script setup>
 import { useMessage } from 'naive-ui';
 import { ref, reactive, onMounted } from 'vue';
+import { useWindowSize } from '@vueuse/core';
+const { width, height } = useWindowSize();
 import { useApi } from '../../../helpers/axios';
 import router from '../../../router';
 import { useRoute } from 'vue-router';
@@ -103,11 +93,27 @@ const dynamicForm = reactive({
 const loading = ref(false);
 const action = ref("POST");
 const url = ref();
+const formRef = ref(null);
+const errorAPI = ref(null);
 const message = useMessage();
 const PageData = ref();
 const baseRoute = useRoute();
 const param = baseRoute.params.idbranch;
 const userToken = localStorage.getItem("token");
+
+const rules = {
+    CODE: {
+        required: true,
+        trigger: ["blur", "input"],
+        message: "nama wajib diisi"
+    },
+    NAME: {
+        required: true,
+        trigger: ["blur"],
+        message: "nama wajib diisi"
+    }
+}
+
 const handleCancel = () => router.replace('/master/branch');
 
 const response = () => useApi({
@@ -124,6 +130,9 @@ const response = () => useApi({
 
 const handleSave = async (e) => {
     e.preventDefault(e);
+    formRef.value?.validate((errors) => {
+        return null;
+    });
     loading.value = true;
     if (param) {
         action.value = "PUT";
@@ -138,9 +147,11 @@ const handleSave = async (e) => {
         data: dynamicForm,
         token: userToken
     });
+
     if (!response.ok) {
         message.error("data gagal disimpan");
         loading.value = false;
+        errorAPI.value = response.error.data.message;
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;

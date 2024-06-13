@@ -80,7 +80,7 @@ const GetMe = async () => {
                 token: userToken
         });
         if (!response.ok) {
-                message.error("error 1: patch data");
+                message.error("error");
         } else {
                 [dataUser.value] = response.data.response;
         }

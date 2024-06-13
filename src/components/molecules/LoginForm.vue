@@ -11,9 +11,9 @@
                 </n-form-item>
                 <n-form-item label="password" path="password" :rule="rules.password">
                     <n-input type="password" v-model:value="dynamicForm.password" show-password-on="mousedown"
-                        placeholder="Password" :maxlength="8" />
+                        placeholder="Password" :maxlength="8" @keyup.enter="handleLogin" />
                 </n-form-item>
-                <n-button :keyboard="true" class="flex w-full" :loading="loading" icon-placement="left" type="primary"
+                <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary"
                     @click="handleLogin">
                     Login
                 </n-button>

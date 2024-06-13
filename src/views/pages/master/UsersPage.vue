@@ -1,7 +1,8 @@
 <template>
     <div class="pt-4">
         <n-space vertical>
-            <n-card :title="`Tabel ${$route.name}`" class="bg-white">
+            <n-card :title="`Tabel ${$route.name}`">
+
                 <template #header-extra>
                     <n-space>
                         <n-popover trigger="click" placement="bottom-end">
@@ -22,10 +23,18 @@
                             </template>
                             download
                         </n-button>
+                        <n-button type="primary" @click="handleAdd">
+                            <template #icon>
+                                <n-icon>
+                                    <add-icon />
+                                </n-icon>
+                            </template>
+                            tambah
+                        </n-button>
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :columns="columns" :data="dataTable" :pagination="pagination" ellipsis />
+                    <n-data-table size="small" :columns="columns" :data="dataTable" :pagination="pagination" />
                 </n-space>
             </n-card>
         </n-space>
@@ -35,7 +44,7 @@
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -43,9 +52,7 @@ import {
 
 } from "@vicons/material"
 import {
-    EditOutlined as EditIcon,
     DeleteOutlined as DeleteIcon,
-    MoreVertRound as MoreIcon,
     ListAltOutlined as DetailIcon
 } from "@vicons/material";
 
@@ -56,40 +63,27 @@ const dataTable = ref();
 
 const columns = [
     {
+        title: "Username",
+        key: "username"
+    },
+    {
+        title: "Nama",
+        key: "nama",
+    },
+    {
         title: "Cabang",
-        key: "cabang"
-    },
-    {
-        title: "AO",
-        key: "nama_ao"
-    },
-    {
-        title: "Nama Debitur",
-        key: "nama_debitur"
-    },
-    {
-        title: "Plafond",
-        key: "plafond"
-    },
-    {
-        title: "Tenor",
-        key: "tenor"
-    },
-    {
-        title: "Status",
-        key: "status",
+        key: "cabang_nama",
         render(row) {
-            return h(
-                NTag,
-                {
-                    bordered: false,
-                    type: statusTag(row.status),
-                    size: "small",
-                },
-                { default: () => statusLabel(row.status) }
-            );
+            return h(NEllipsis, {
+                style: "max-width:150px"
+            }, { default: () => row.cabang_nama })
         }
-    }, {
+    },
+    {
+        title: "Hp",
+        key: "no_hp",
+    },
+    {
         title: "",
         align: "right",
         key: "more",
@@ -106,9 +100,10 @@ const columns = [
                         if (e === "detail") {
                             handleDetail(row);
                         }
-                        console.log(e);
-                        handleSelect(row.id);
-                    },
+                        if (e === "edit") {
+                            handleUpdate(row);
+                        }
+                    }
                 },
                 {
                     default: h(NButton, {
@@ -121,33 +116,13 @@ const columns = [
 ];
 
 const statusTag = (e) => {
-    let status = e.at(0);
-    if (status === "1" || status === "2") {
-        return "warning";
-    } else if (status === "3") {
+    if (e === "Active") {
         return "success";
+    } else if (e === "Non-Active") {
+        return "warning";
     }
+
 }
-const statusLabel = (e) => {
-    let status = e.at(0);
-    if (status === "0") {
-        return "DRAFT";
-    } else if (status === "1") {
-        return "waiting KAPOS";
-    } else if (status === "2") {
-        return "waiting HO";
-    } else if (status === "3") {
-        return "APPROVED HO";
-    } else if (status === "4") {
-        return "REJECT HO";
-    } else if (status === "5") {
-        return "CLOSED HO";
-    } else if (status === "6") {
-        return "CLOSED KAPOS";
-    }
-}
-const handleSelect = (e) => console.log(e);
-const statusHandle = (e) => console.log(e);
 const handleConfirm = (evt) => {
     dialog.warning({
         title: "Confirm",
@@ -158,7 +133,7 @@ const handleConfirm = (evt) => {
             let userToken = localStorage.getItem("token");
             const response = await useApi({
                 method: 'DELETE',
-                api: `kunjungan/${evt.id}`,
+                api: `cabang/${evt.id}`,
                 token: userToken
             });
             if (!response.ok) {
@@ -175,17 +150,16 @@ const handleConfirm = (evt) => {
     });
 }
 const handleDetail = (evt) => {
-    console.log(evt);
-    console.log("mau cek detail");
+    router.replace(`/master/users-action/${evt.id}/detail`);
 }
 const handleAdd = () => {
-    router.push('/task/new-survey');
+    router.replace('/master/users-action');
 }
 const getData = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
-        api: 'cr_application',
+        api: 'karyawan',
         token: userToken
     });
     if (!response.ok) {
@@ -193,6 +167,7 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.replace('/');
     } else {
+        // console.log(response.data.response)
         dataTable.value = response.data.response;
     }
 }
@@ -204,11 +179,6 @@ const renderIcon = (icon) => {
     };
 };
 const options = [
-    {
-        label: "Edit",
-        key: "edit",
-        icon: renderIcon(EditIcon),
-    },
     {
         label: "Hapus",
         key: "hapus",
