@@ -8,6 +8,14 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
+        <n-collapse>
+            <n-collapse-item title="get" name="1">
+                <pre>{{ pageData }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="post" name="2">
+                <pre>{{ formAssign }}</pre>
+            </n-collapse-item>
+        </n-collapse>
         <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,
@@ -70,7 +78,7 @@
                 Dokumen
             </n-divider>
             <n-space>
-                <n-image v-for="attachment in dynamicForm.attachment" :key="attachment"
+                <n-image v-for="attachment in dataAttachment" :key="attachment"
                     class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH"></n-image>
                 <n-upload :data="{ 'type': 'ktp' }" list-type="image-card" :custom-request="handleImagePost">
                 </n-upload>
@@ -114,10 +122,10 @@
                 </n-form-item>
             </div>
 
-            <select-state-region v-model:provinsi="dynamicForm.provinsi" v-model:kota="dynamicForm.kota"
-                v-model:kecamatan="dynamicForm.kecamatan" v-model:desa="dynamicForm.kelurahan" />
+            <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
+                v-model:kecamatan="alamatTagih.kecamatan" v-model:desa="alamatTagih.kelurahan" />
             <n-form-item label="Kode Pos" path="desa">
-                <n-input placeholder="Kode Pos" />
+                <n-input placeholder="Kode Pos" v-model:value="alamatTagih.kode_pos" />
             </n-form-item>
 
             <n-divider title-placement="left">
@@ -176,25 +184,24 @@
                 </n-form-item>
                 <n-form-item label="Status Order" path="status_order" class="w-full">
                     <n-select placeholder="status order" :options="optStatusOrder"
-                        v-model:formatted-value="dataOrder.order_status" />
+                        v-model:value="dataOrder.order_status" />
                 </n-form-item>
-                <n-form-item label="Tanggal Order" path="order" class="w-full">
-                    <n-select placeholder="tipe" :options="optTipeOrder"
-                        v-model:formatted-value="dataOrder.order_tipe" />
+                <n-form-item label="Tipe Order" path="order" class="w-full">
+                    <n-select placeholder="tipe" :options="optTipeOrder" v-model:value="dataOrder.order_tipe" />
                 </n-form-item>
             </div>
             <n-form-item label="Unit Bisnis" path="unit_bisnis">
                 <n-input placeholder="Unit bisnis" v-model:value="dataOrder.unit_bisnis" />
             </n-form-item>
             <n-form-item label="Reff Pelanggan" path="reff_pelanggan">
-                <n-input placeholder="Reff Pelanggan" v-model:value="dataOrder.reff_pelanggan" />
+                <n-input placeholder="Reff Pelanggan" v-model:value="dataOrder.ref_pelanggan" />
             </n-form-item>
             <n-form-item label="Surveyor" path="surveyor">
-                <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" />
+                <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" disabled />
             </n-form-item>
             <n-form-item label="Catatan Survey" path="cat_survey">
                 <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
-                    v-model:value="dataOrder.catatan_survey" />
+                    v-model:value="dataOrder.catatan_survey" disabled />
             </n-form-item>
             <n-form-item label="Prog. Marketing" path="prog_marketing">
                 <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" />
@@ -237,7 +244,7 @@
                 NPWP
             </n-divider>
             <n-form-item label="No NPWP" path="no_npwp">
-                <n-input placeholder="No NPWP" v-model:value="dataPelanggan.no_npwp" />
+                <n-input placeholder="No NPWP" v-model:value="dataOrder.no_npwp" />
             </n-form-item>
             <n-divider title-placement="left">
                 Barang Taksasi
@@ -325,17 +332,27 @@
             <n-divider title-placement="left">
                 Informasi Bank
             </n-divider>
-            <n-dynamic-input v-model:value="customValue" :on-create="onCreate">
+            <n-dynamic-input v-model:value="formAssign.info_bank" :on-create="onCreate">
                 <template #create-button-default>
-                    Tambah data bank
+                    Tambah Bank
                 </template>
                 <template #default="{ value }">
-                    <div style="display: flex; align-items: center; width: 100%">
-                        <n-input type="text" placeholder="Kode Bank" />
-                        <n-input type="text" placeholder="Nama Bank" />
-                        <n-input type="text" placeholder="No Rekening" />
-                        <n-input type="text" placeholder="Atas Nama" />
-                        <n-input type="text" placeholder="Status" />
+                    <div class="flex w-full gap-2 bg-pr-50 p-2 pb-0 rounded-md">
+                        <n-form-item label="Kode Bank" path="kode Bank" class="w-full">
+                            <n-input v-model:value="value.kode_bank" type="text" />
+                        </n-form-item>
+                        <n-form-item label="Nama Bank" path="Nama Bank" class="w-full">
+                            <n-input v-model:value="value.nama_bank" type="text" />
+                        </n-form-item>
+                        <n-form-item label="No Rekening" path="norkening" class="w-full">
+                            <n-input v-model:value="value.no_rekening" type="text" />
+                        </n-form-item>
+                        <n-form-item label="Atas Nama" path="atasnama" class="w-full">
+                            <n-input v-model:value="value.atas_nama" type="text" />
+                        </n-form-item>
+                        <n-form-item label="Status" path="Nama Bank" class="w-full">
+                            <n-input v-model:value="value.status" type="text" />
+                        </n-form-item>
                     </div>
                 </template>
             </n-dynamic-input>
@@ -478,158 +495,18 @@ import { useApi } from "../../../helpers/axios";
 
 const message = useMessage();
 const loading = ref(false);
+const loadingSend = ref(false);
 const baseRoute = useRoute();
-
-const dynamicForm = reactive({
-    flag_pengajuan: "no",
-    pelanggan: {
-        nama: '',
-        nama_panggilan: '',
-        jenis_kelamin: '',
-        tgl_lahir: null,
-        gol_darah: '',
-        status_kawin: '',
-        tgl_kawin: '',
-        tipe_identitas: '',
-        no_identitas: '',
-        no_kk: '',
-        warganegara: '',
-    },
-    alamat_identitas: {
-        alamat: '',
-        rt: '',
-        rw: '',
-        provinsi: '',
-        kecamatan: '',
-        kabupaten: '',
-        desa: '',
-        kode_pos: ''
-    },
-    alamat_tagih: {
-        alamat: '',
-        rt: '',
-        rw: '',
-        provinsi: '',
-        kecamatan: '',
-        kabupaten: '',
-        desa: '',
-        kode_pos: ''
-    },
-    pekerjaan: {
-        pekerjaan: '',
-        pekerjaan_id: '',
-        agama: '',
-        pendidikan: '',
-        telepon_rumah: '',
-        telepon_selular: '',
-        telepon_kantor: '',
-        ekstra1: '',
-        ekstra2: ''
-    },
-    order: {
-        periode: '1',
-        opt_periode: 'bulan',
-        tgl_order: '',
-        status_order: '',
-        tipe_order: '',
-        pelanggan_group: '',
-        unit_bisnis: '',
-        cust_service: '',
-        reff_pelanggan: '',
-        surveyor: '',
-        catatan_survey: '',
-        platform: '',
-        prog_marketing: '',
-        cara_bayar: '',
-        nama_ibu_kandung: '',
-        kategori: '',
-        pendidikan: '',
-        lama_bekerja: '',
-        jml_tanggungan: '',
-        pendapatan_pribadi: '',
-        pendapatan_pasangan: '',
-        pendapatan_lainnya: '',
-        pengeluaran: '',
-    },
-    npwp: {
-        no: '',
-        alamat: '',
-        rt: '',
-        rw: '',
-        provinsi: '',
-        kecamatan: '',
-        kabupaten: '',
-        desa: '',
-        kode_pos: ''
-    },
-    barang_taksasi: {
-        kode_barang: '',
-        id_tipe: '',
-        tahun: '',
-        harga_pasar: '',
-    },
-    tambahan: {
-        nama_bi: '',
-        email: '',
-        info_khusus: '',
-        usaha_lain1: '',
-        usaha_lain2: '',
-        usaha_lain3: '',
-        usaha_lain4: '',
-    },
-    kerabat_darurat: {
-        nama: '',
-        alamat: '',
-        rt: '',
-        rw: '',
-        provinsi: '',
-        kecamatan: '',
-        kabupaten: '',
-        desa: '',
-        kode_pos: ''
-    },
-    info_bank: [{
-        kode_bank: "014",
-        nama_bank: "BCA",
-        no_rekening: "20156288",
-        nama_di_rekening: "Ucok",
-        status: "active"
-    }],
-    ekstra:
-    {
-        nilai_yang_diterima: '',
-        periode: '1',
-        opt_periode: 'Bulan',
-        pokok_pembayaran: '',
-        tipe_angsuran: 'Tetap',
-        cara_pembayaran: 'Arrear',
-        angsuran: '',
-        provisi: '',
-        asuransi: '',
-        biaya_transfer: '',
-        bunga_margin_eff: '',
-        bunga_margin_flat: '',
-        bunga_margin: '',
-        pokok_margin: '',
-        angsuran_terakhir: '',
-        bunga_margin_eff_actual: '',
-        bunga_margin_eff_flat: '',
-    }
-});
 
 
 const calcCredit = reactive({
-    tgl_survey: null,
-    plafond: null,
-    total_admin: null,
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
-    bunga_eff: null,
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
     bunga_margin: computed(() => calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
-    angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.tenor)),
-    bunga_flat: computed(() => (((calcCredit.tenor * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.tenor))) - 1) * (12 / calcCredit.tenor) * 100),
+    angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
+    bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
 const dataPelanggan = ref({});
 const alamatIdentitas = ref({});
@@ -640,7 +517,19 @@ const dataTaksasi = ref({});
 const dataTambahan = ref({});
 const dataKerabat = ref({});
 const dataSurat = ref({});
-const dataBank = ref(null);
+const dataAttachment = ref({});
+const dataEkstra = ref({});
+
+const dataBank = ref([]);
+const onCreate = () => {
+    return {
+        kode_bank: null,
+        nama_bank: null,
+        no_rekening: null,
+        atas_nama: null,
+        status: null
+    }
+}
 
 const pageData = ref();
 
@@ -764,7 +653,7 @@ const response = useApi({
         Object.assign(dataTambahan.value, pageData.value.tambahan);
         Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
         Object.assign(dataSurat.value, pageData.value.surat);
-        // Object.assign(dataBank.value, pageData.value.info_bank);
+        Object.assign(dataBank.value, pageData.value.info_bank);
     }
 });
 
@@ -778,7 +667,7 @@ const formAssign = reactive({
     barang_taksasi: dataTaksasi.value,
     tambahan: dataTambahan.value,
     kerabat_darurat: dataKerabat.value,
-    info_bank: null,
+    info_bank: dataBank.value,
     ekstra: calcCredit,
     surat: dataSurat.value,
 })
@@ -814,7 +703,25 @@ const handleSave = async (e) => {
         router.push('apply-credit');
     }
 }
-const handleSend = () => {
-
+const handleSend = async (e) => {
+    e.preventDefault(e);
+    formAssign.flag_pengajuan = "yes";
+    let idApp = pageData.value.id_application;
+    loadingSend.value = true;
+    const response = await useApi({
+        method: 'PUT',
+        api: `cr_application/${idApp}`,
+        data: formAssign,
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("data gagal dikirm");
+        loadingSend.value = false;
+    } else {
+        message.success("data berhasil dikirim");
+        loadingSend.value = false;
+        router.push('apply-credit');
+    }
 }
+
 </script>
