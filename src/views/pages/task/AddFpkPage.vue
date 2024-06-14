@@ -8,6 +8,7 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
+        <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,
             footer: 'soft'
@@ -15,30 +16,32 @@
 
             <div class="flex w-full gap-2">
                 <n-form-item label="Nama" path="nama" class="w-full">
-                    <n-input placeholder="nama" v-model:value="dynamicForm.pelanggan.nama" />
+                    <n-input placeholder="nama" v-model:value="dataPelanggan.nama" />
                 </n-form-item>
                 <n-form-item label="Nama Panggilan" path="nama_panggilan" class="w-full">
-                    <n-input placeholder="nama panggilan" v-model:value="dynamicForm.pelanggan.nama_panggilan" />
+                    <n-input placeholder="nama panggilan" v-model:value="dataPelanggan.nama_panggilan" />
                 </n-form-item>
             </div>
 
             <div class="flex w-full gap-2">
                 <n-form-item label="Jenis kelamin" path="jenis_kelamin" class="w-full">
-                    <n-select placeholder="Jenis Kelamin" :options="optJenisKelamin" />
+                    <n-select placeholder="Jenis Kelamin" :options="optJenisKelamin"
+                        v-model:value="dataPelanggan.jenis_kelamin" />
                 </n-form-item>
                 <n-form-item label="Tanggal Lahir" path="tgl_lahir" class="w-full">
-                    <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dynamicForm.pelanggan.tgl_lahir"
+                    <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                         value-format="yyyy-MM-dd" type="date" class="w-full" />
                 </n-form-item>
                 <n-form-item label="Golonga Darah" path="gol_darah" class="w-full">
-                    <n-input placeholder="golongan darah" v-model:value="dynamicForm.pelanggan.gol_darah">
+                    <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah">
                     </n-input>
                 </n-form-item>
             </div>
 
             <n-form-item label="Status Kawin" path="jenis_kelamin">
                 <n-input-group>
-                    <n-select placeholder="Status Kawin" :options="optStatusKawin" />
+                    <n-select placeholder="Status Kawin" :options="optStatusKawin"
+                        v-model:value="dataPelanggan.status_kawin" />
                     <!-- <n-date-picker placeholder="Tanggal Kawin"
                             v-model:formatted-value="dynamicForm.pelanggan.tgl_kawin" value-format="yyyy-MM-dd"
                             type="date" /> -->
@@ -46,19 +49,20 @@
             </n-form-item>
             <div class="flex w-full gap-2">
                 <n-form-item label="Identitas" path="plafond" class="w-full">
-                    <n-select placeholder="Jenis Identitas" :options="optJenisIdentitas" />
+                    <n-select placeholder="Jenis Identitas" :options="optJenisIdentitas"
+                        v-model:value="dataPelanggan.tipe_identitas" />
                 </n-form-item>
                 <n-form-item label="No Identitas" path="no_identitas" class="w-full">
-                    <n-input placeholder="No Identitas" v-model:value="dynamicForm.pelanggan.no_identitas">
+                    <n-input placeholder="No Identitas" v-model:value="dataPelanggan.no_identitas">
                     </n-input>
                 </n-form-item>
             </div>
             <div class="flex w-full gap-2">
                 <n-form-item label="No KK" path="no KK" class="w-full">
-                    <n-input placeholder="No Kartu Keluarga" v-model:value="dynamicForm.pelanggan.no_kk" />
+                    <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk" />
                 </n-form-item>
                 <n-form-item label="Warganegara" path="warganegara" class="w-full">
-                    <n-input placeholder="Warganegara" v-model:value="dynamicForm.pelanggan.warganegara">
+                    <n-input placeholder="Warganegara" v-model:value="dataPelanggan.warganegara">
                     </n-input>
                 </n-form-item>
             </div>
@@ -76,21 +80,21 @@
             </n-divider>
             <div class="flex gap-2">
                 <n-form-item label="Alamat" class="w-full">
-                    <n-input placeholder="Alamat" v-model:value="dynamicForm.alamat_identitas.alamat" />
+                    <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat" />
                 </n-form-item>
                 <n-form-item label="RT">
-                    <n-input placeholder="RT" v-model:value="dynamicForm.alamat_identitas.rt">
+                    <n-input placeholder="RT" v-model:value="alamatIdentitas.rt">
                     </n-input>
                 </n-form-item>
                 <n-form-item label="RW">
-                    <n-input placeholder="RW" v-model:value="dynamicForm.alamat_identitas.rw">
+                    <n-input placeholder="RW" v-model:value="alamatIdentitas.rw">
                     </n-input>
                 </n-form-item>
             </div>
-            <select-state-region v-model:provinsi="dynamicForm.provinsi" v-model:kota="dynamicForm.kota"
-                v-model:kecamatan="dynamicForm.kecamatan" v-model:desa="dynamicForm.kelurahan" />
+            <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
+                v-model:kecamatan="alamatIdentitas.kecamatan" v-model:desa="alamatIdentitas.kelurahan" />
             <n-form-item label="Kode Pos" path="desa">
-                <n-input placeholder="Kode Pos" />
+                <n-input placeholder="Kode Pos" v-model:value="alamatIdentitas.kode_pos" />
             </n-form-item>
             <n-divider title-placement="left">
                 Informasi Alamat Tagih
@@ -98,14 +102,14 @@
 
             <div class="flex gap-2">
                 <n-form-item label="Alamat" class="w-full">
-                    <n-input placeholder="Alamat" v-model:value="dynamicForm.alamat_tagih.alamat" />
+                    <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat" />
                 </n-form-item>
                 <n-form-item label="RT">
-                    <n-input placeholder="RT" v-model:value="dynamicForm.alamat_tagih.rt">
+                    <n-input placeholder="RT" v-model:value="alamatTagih.rt">
                     </n-input>
                 </n-form-item>
                 <n-form-item label="RW">
-                    <n-input placeholder="RW" v-model:value="dynamicForm.alamat_tagih.rw">
+                    <n-input placeholder="RW" v-model:value="alamatTagih.rw">
                     </n-input>
                 </n-form-item>
             </div>
@@ -121,45 +125,45 @@
             </n-divider>
             <div class="flex gap-2">
                 <n-form-item label="Pekerjaan" path="nama" class="w-full">
-                    <n-input placeholder="pekerjaan" v-model:value="dynamicForm.pekerjaan.pekerjaan" />
+                    <n-input placeholder="pekerjaan" v-model:value="dataPekerjaan.pekerjaan" />
                 </n-form-item>
                 <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
-                    <n-input placeholder="Pekerjaan ID" v-model:value="dynamicForm.pekerjaan.pekerjaan_id">
+                    <n-input placeholder="Pekerjaan ID" v-model:value="dataPekerjaan.pekerjaan_id">
                     </n-input>
                 </n-form-item>
             </div>
             <n-form-item label="Agama" path="agama">
-                <n-select placeholder="agama" :options="optAgama" />
+                <n-select placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
             </n-form-item>
             <n-form-item label="Pendidikan" path="pendidikan">
-                <n-select placeholder="pendidikan" :options="optPendidikan" />
+                <n-select placeholder="pendidikan" :options="optPendidikan" v-model:value="dataPekerjaan.pendidikan" />
             </n-form-item>
             <div class="flex gap-2">
                 <n-form-item label="Telepon" path="telepon" class="w-full">
-                    <n-input placeholder="Telepon Rumah" v-model:value="dynamicForm.pekerjaan.telepon_rumah" />
+                    <n-input placeholder="Telepon Rumah" v-model:value="dataPekerjaan.telepon_rumah" />
                 </n-form-item>
                 <n-form-item label="Telepon Selullar" path="telepon_selullar" class="w-full">
-                    <n-input placeholder="Telepon Selular" v-model:value="dynamicForm.pekerjaan.telepon_selular">
-                        <template #prefix>Selular</template>
+                    <n-input placeholder="Telepon Selular" v-model:value="dataPekerjaan.telepon_selular">
+
                     </n-input>
                 </n-form-item>
                 <n-form-item label="Telepon" path="Kantor" class="w-full">
-                    <n-input placeholder="Telepon Kantor" v-model:value="dynamicForm.pekerjaan.telepon_kantor">
-                        <template #prefix>Kantor</template>
+                    <n-input placeholder="Telepon Kantor" v-model:value="dataPekerjaan.telepon_kantor">
+
                     </n-input>
                 </n-form-item>
             </div>
             <div class="flex gap-2">
                 <n-form-item label="Ekstra" path="ekstra" class="w-full">
-                    <n-input placeholder="Ekstra 1" v-model:value="dynamicForm.pekerjaan.ekstra1" />
+                    <n-input placeholder="Ekstra 1" v-model:value="dataPekerjaan.ekstra1" />
                 </n-form-item>
                 <n-form-item label="Ekstra 2" path="ekstra" class="w-full">
-                    <n-input placeholder="Ekstra 2" v-model:value="dynamicForm.pekerjaan.ekstra2">
+                    <n-input placeholder="Ekstra 2" v-model:value="dataPekerjaan.ekstra2">
                     </n-input>
                 </n-form-item>
             </div>
         </n-card>
-
+        <!-- info order -->
         <n-card v-if="current == 2" title="Informasi Order" :segmented="{
             content: true,
             footer: 'soft'
@@ -167,97 +171,88 @@
 
             <div class="flex gap-2">
                 <n-form-item label="Tanggal Order" path="order" class="w-full">
-                    <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.pelanggan.tgl_lahir"
+                    <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataOrder.order_tanggal"
                         value-format="yyyy-MM-dd" type="date" class="w-full" />
                 </n-form-item>
                 <n-form-item label="Status Order" path="status_order" class="w-full">
-                    <n-select placeholder="status order" :options="optStatusOrder" />
+                    <n-select placeholder="status order" :options="optStatusOrder"
+                        v-model:formatted-value="dataOrder.order_status" />
                 </n-form-item>
                 <n-form-item label="Tanggal Order" path="order" class="w-full">
-                    <n-select placeholder="tipe" :options="optTipeOrder" />
+                    <n-select placeholder="tipe" :options="optTipeOrder"
+                        v-model:formatted-value="dataOrder.order_tipe" />
                 </n-form-item>
             </div>
-            <n-form-item label="Pelanggan Group" path="pelanggan_group"
-                v-model:value="dynamicForm.order.pelanggan_group">
-                <n-input placeholder="Pelanggan Group" />
-            </n-form-item>
             <n-form-item label="Unit Bisnis" path="unit_bisnis">
-                <n-input placeholder="Unit bisnis" v-model:value="dynamicForm.order.unit_bisnis" />
+                <n-input placeholder="Unit bisnis" v-model:value="dataOrder.unit_bisnis" />
             </n-form-item>
             <n-form-item label="Reff Pelanggan" path="reff_pelanggan">
-                <n-input placeholder="Reff Pelanggan" v-model:value="dynamicForm.order.reff_pelanggan" />
+                <n-input placeholder="Reff Pelanggan" v-model:value="dataOrder.reff_pelanggan" />
             </n-form-item>
             <n-form-item label="Surveyor" path="surveyor">
-                <n-input placeholder="Surveyor" v-model:value="dynamicForm.order.surveyor" />
+                <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" />
             </n-form-item>
             <n-form-item label="Catatan Survey" path="cat_survey">
                 <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
-                    v-model:value="dynamicForm.order.catatan_survey" />
-            </n-form-item>
-            <n-form-item label="Platform" path="platform">
-                <n-input placeholder="Platform" v-model:value="dynamicForm.order.platform" />
+                    v-model:value="dataOrder.catatan_survey" />
             </n-form-item>
             <n-form-item label="Prog. Marketing" path="prog_marketing">
-                <n-input placeholder="Program Marketing" v-model:value="dynamicForm.order.prog_marketing" />
+                <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" />
             </n-form-item>
             <n-form-item label="Cara Bayar" path="cara_bayar">
-                <n-input placeholder="Cara Bayar" v-model:value="dynamicForm.order.cara_bayar" />
+                <n-input placeholder="Cara Bayar" v-model:value="dataOrder.cara_bayar" />
             </n-form-item>
             <n-divider />
             <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
-                <n-input placeholder="Nama Ibu Kandung" v-model:value="dynamicForm.order.nama_ibu_kandung" />
+                <n-input placeholder="Nama Ibu Kandung" v-model:value="dataOrder.nama_ibu" />
             </n-form-item>
-            <n-form-item label="Kategori" path="agama">
-                <n-select placeholder="agama" :options="optKategori" />
-            </n-form-item>
-            <n-form-item label="pendidikan" path="pendidikan">
-                <n-select placeholder="agama" :options="optPendidikan" />
+            <n-form-item label="Kategori" path="kategori">
+                <n-select placeholder="agama" :options="optKategori" v-model:value="dataOrder.kategori" />
             </n-form-item>
             <n-form-item label="Lama Bekerja" path="lama_kerja">
-                <n-input placeholder="lama bekerja" v-model:value="dynamicForm.order.lama_bekerja" />
+                <n-input placeholder="lama bekerja" v-model:value="dataOrder.lama_bekerja" />
             </n-form-item>
             <n-form-item label="Tanggungan" path="tanggungan">
-                <n-input placeholder="Jumlah Tanggungan" v-model:value="dynamicForm.order.jml_tanggungan" />
+                <n-input placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan" />
             </n-form-item>
             <div class="flex gap-2">
                 <n-form-item label="Pendapatan Pelanggan" path="pendapatan_pribadi" class="w-full">
-                    <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.order.pendapatan_pribadi"
+                    <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_pribadi"
                         :show-button="false" class="flex !w-full" placeholder="Pribadi" />
                 </n-form-item>
                 <n-form-item label="Pendapatan Pasangan" path="pendapatan_pasangan" class="w-full">
-                    <n-input-number :parse="parse" :format="format"
-                        v-model:value="dynamicForm.order.pendapatan_pasangan" :show-button="false" class="flex !w-full"
-                        placeholder="Pasangan" />
+                    <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_pasangan"
+                        :show-button="false" class="flex !w-full" placeholder="Pasangan" />
                 </n-form-item>
                 <n-form-item label="Pendapatan Lainnya" path="pendapatan_lainnya" class="w-full">
-                    <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.order.pendapatan_lainnya"
+                    <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_lainnya"
                         :show-button="false" class="flex !w-full" placeholder="Lainnya" />
                 </n-form-item>
             </div>
             <n-form-item label="Biaya" path="biaya">
-                <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.order.pengeluaran"
+                <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
                     :show-button="false" class="flex !w-full" placeholder="Pengeluaran" />
             </n-form-item>
             <n-divider title-placement="left">
                 NPWP
             </n-divider>
             <n-form-item label="No NPWP" path="no_npwp">
-                <n-input placeholder="No NPWP" v-model:value="dynamicForm.npwp.no" />
+                <n-input placeholder="No NPWP" v-model:value="dataPelanggan.no_npwp" />
             </n-form-item>
             <n-divider title-placement="left">
                 Barang Taksasi
             </n-divider>
             <n-form-item label="Kode Barang" path="kode_barang">
-                <n-input placeholder="Kode Barang" v-model:value="dynamicForm.barang_taksasi.kode_barang" />
+                <n-input placeholder="Kode Barang" v-model:value="dataTaksasi.kode_barang" />
             </n-form-item>
             <n-form-item label="ID Tipe" path="id_tipe">
-                <n-input placeholder="ID Tipe" v-model:value="dynamicForm.barang_taksasi.id_tipe" />
+                <n-input placeholder="ID Tipe" v-model:value="dataTaksasi.id_tipe" />
             </n-form-item>
             <n-form-item label="Tahun" path="tahun">
-                <n-input placeholder="Tahun" v-model:value="dynamicForm.barang_taksasi.tahun" />
+                <n-input placeholder="Tahun" v-model:value="dataTaksasi.tahun" />
             </n-form-item>
             <n-form-item label="Harga Pasar" path="harga_pasar">
-                <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.barang_taksasi.harga_pasar"
+                <n-input-number :parse="parse" :format="format" v-model:value="dataTaksasi.harga_pasar"
                     :show-button="false" class="flex !w-full" placeholder="harga pasar" />
             </n-form-item>
         </n-card>
@@ -267,49 +262,49 @@
             footer: 'soft'
         }">
             <n-form-item label="Nama BI" path="nama_bi">
-                <n-input placeholder="Nama BI" v-model:value="dynamicForm.tambahan.nama_bi" />
+                <n-input placeholder="Nama BI" v-model:value="dataTambahan.nama_bi" />
             </n-form-item>
             <n-form-item label="Email" path="email">
-                <n-input placeholder="Email" v-model:value="dynamicForm.tambahan.email" />
+                <n-input placeholder="Email" v-model:value="dataTambahan.email" />
             </n-form-item>
             <n-form-item label="Info Khusus" path="info_khusus">
-                <n-input placeholder="Info Khusus" v-model:value="dynamicForm.tambahan.info_khusus" />
+                <n-input placeholder="Info Khusus" v-model:value="dataTambahan.info_khusus" />
             </n-form-item>
             <n-form-item label="Usaha Lain 1" path="usaha_lain1">
-                <n-input placeholder="Usaha Lain 1" v-model:value="dynamicForm.tambahan.usaha_lain1" />
+                <n-input placeholder="Usaha Lain 1" v-model:value="dataTambahan.usaha_lain1" />
             </n-form-item>
             <n-form-item label="Usaha Lain 2" path="usaha_lain2">
-                <n-input placeholder="Usaha Lain 2" v-model:value="dynamicForm.tambahan.usaha_lain2" />
+                <n-input placeholder="Usaha Lain 2" v-model:value="dataTambahan.usaha_lain2" />
             </n-form-item>
             <n-form-item label="Usaha Lain 3" path="usaha_lain3">
-                <n-input placeholder="Usaha Lain 3" v-model:value="dynamicForm.tambahan.usaha_lain3" />
+                <n-input placeholder="Usaha Lain 3" v-model:value="dataTambahan.usaha_lain3" />
             </n-form-item>
             <n-form-item label="Usaha Lain 4" path="usaha_lain1">
-                <n-input placeholder="Usaha Lain 4" v-model:value="dynamicForm.tambahan.usaha_lain4" />
+                <n-input placeholder="Usaha Lain 4" v-model:value="dataTambahan.usaha_lain4" />
             </n-form-item>
             <n-divider title-placement="left">
                 Kerabat dalam kondisi darurat
             </n-divider>
             <n-form-item label="Nama Kerabat" path="nama_kerabat">
-                <n-input placeholder="Nama Kerbat" v-model:value="dynamicForm.kerabat_darurat.nama" />
+                <n-input placeholder="Nama Kerbat" v-model:value="dataKerabat.nama" />
             </n-form-item>
             <n-form-item label="Alamat" path="alamat">
                 <n-input-group>
-                    <n-input placeholder="Alamat" v-model:value="dynamicForm.kerabat_darurat.alamat" />
-                    <n-input placeholder="RT" v-model:value="dynamicForm.kerabat_darurat.rt" />
-                    <n-input placeholder="RW" v-model:value="dynamicForm.kerabat_darurat.rw" />
+                    <n-input placeholder="Alamat" v-model:value="dataKerabat.alamat" />
+                    <n-input placeholder="RT" v-model:value="dataKerabat.rt" />
+                    <n-input placeholder="RW" v-model:value="dataKerabat.rw" />
                 </n-input-group>
             </n-form-item>
-            <select-state-region v-model:provinsi="dynamicForm.provinsi" v-model:kota="dynamicForm.kota"
-                v-model:kecamatan="dynamicForm.kecamatan" v-model:desa="dynamicForm.kelurahan" />
-            <n-form-item label="Kode Pos" path="desa">
-                <n-input placeholder="Kode Pos" v-model:value="dynamicForm.kerabat_darurat.kode_pos" />
+            <select-state-region v-model:provinsi="dataKerabat.provinsi" v-model:kota="dataKerabat.kota"
+                v-model:kecamatan="dataKerabat.kecamatan" v-model:desa="dataKerabat.kelurahan" />
+            <n-form-item label="Kode Pos" path="kodepos">
+                <n-input placeholder="Kode Pos" v-model:value="dataKerabat.kode_pos" />
             </n-form-item>
 
-            <n-form-item label="Telepon" path="nama_kerabat">
+            <n-form-item label="Telepon" path="telepon">
                 <n-input-group>
-                    <n-input placeholder="Telepon Rumah" />
-                    <n-input placeholder="Telepon Selular" />
+                    <n-input placeholder="Telepon Rumah" v-model:value="dataKerabat.no_telp" />
+                    <n-input placeholder="Telepon Selular" v-model:value="dataKerabat.no_hp" />
                 </n-input-group>
             </n-form-item>
             <n-divider title-placement="left">
@@ -317,15 +312,15 @@
             </n-divider>
             <n-form-item label="Alamat">
                 <n-input-group>
-                    <n-input placeholder="Alamat" v-model:value="dynamicForm.surat.alamat" />
-                    <n-input placeholder="RT" v-model:value="dynamicForm.surat.rt" />
-                    <n-input placeholder="RW" v-model:value="dynamicForm.surat.rw" />
+                    <n-input placeholder="Alamat" v-model:value="dataSurat.alamat" />
+                    <n-input placeholder="RT" v-model:value="dataSurat.rt" />
+                    <n-input placeholder="RW" v-model:value="dataSurat.rw" />
                 </n-input-group>
             </n-form-item>
-            <select-state-region v-model:provinsi="dynamicForm.provinsi" v-model:kota="dynamicForm.kota"
-                v-model:kecamatan="dynamicForm.kecamatan" v-model:desa="dynamicForm.kelurahan" />
+            <select-state-region v-model:provinsi="dataSurat.provinsi" v-model:kota="dataSurat.kota"
+                v-model:kecamatan="dataSurat.kecamatan" v-model:desa="dataSurat.kelurahan" />
             <n-form-item label="Kode Pos" path="desa">
-                <n-input placeholder="Kode Pos" v-model:value="dynamicForm.surat.kode_pos" />
+                <n-input placeholder="Kode Pos" v-model:value="dataSurat.kode_pos" />
             </n-form-item>
             <n-divider title-placement="left">
                 Informasi Bank
@@ -357,19 +352,19 @@
                             :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" />
                     </n-form-item>
                     <n-form-item label="Tipe Angsuran" path="tipe_angsuran">
-                        <n-select v-model:value="dynamicForm.ekstra.tipe_angsuran" :options="optTipeAngsuran" />
+                        <n-select v-model:value="calcCredit.tipe_angsuran" :options="optTipeAngsuran" />
                     </n-form-item>
                     <n-form-item label="Cara Pembayaraan" path="cara_bayar">
                         <n-select placeholder="Cara Pembayaran" :options="optCaraBayar"
-                            v-model:value="dynamicForm.ekstra.cara_pembayaran" />
+                            v-model:value="calcCredit.cara_pembayaran" />
                     </n-form-item>
                     <n-form-item label="Jumlah Angsuran" path="jml_angsuran">
                         <n-input v-model:value="calcCredit.periode" placeholder="periode" />
                     </n-form-item>
                     <n-form-item label="Periode" path="periode">
-                        <n-input v-model:value="dynamicForm.ekstra.periode" placeholder="periode" />
+                        <n-input v-model:value="calcCredit.periode" placeholder="periode" />
                         <n-select placeholder="Pilih Periode" :options="optPeriode"
-                            v-model:value="dynamicForm.ekstra.opt_periode" />
+                            v-model:value="calcCredit.opt_periode" />
                     </n-form-item>
                     <n-form-item label="Angsuran" path="angsuran">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran"
@@ -380,25 +375,24 @@
                             placeholder="Total Admin" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Cadangan" path="cadangan">
-                        <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.ekstra.cadangan"
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
                             placeholder="Cadangan" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Biaya Broker" path="biaya_broker">
-                        <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.ekstra.cadangan"
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
                             placeholder="Cadangan" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Provisi" path="provisi">
-                        <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.ekstra.provisi"
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.provisi"
                             placeholder="Provisi" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Asuransi" path="asuransi">
-                        <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.ekstra.asuransi"
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.asuransi"
                             placeholder="Asuransi" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Biaya Transfer" path="biaya_transfer">
-                        <n-input-number :parse="parse" :format="format"
-                            v-model:value="dynamicForm.ekstra.biaya_transfer" placeholder="Biaya Transfer"
-                            :show-button="false" class="flex !w-full" />
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.biaya_transfer"
+                            placeholder="Biaya Transfer" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Eff" path="bunga_margin_eff">
                         <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" />
@@ -417,7 +411,7 @@
                             placeholder="Pokok + Margin" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <!-- <n-form-item label="Angsuran Terkahir" path="angsuran_terakhir">
-                            <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.ekstra.angsuran_terakhir"
+                            <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran_terakhir"
                                 placeholder="Angsuran Terakhir" :show-button="false" class="flex !w-full" />
                         </n-form-item> -->
                     <n-form-item label="Bunga / Margin Eff Actual" path="bunga_margin_eff_actual">
@@ -622,6 +616,8 @@ const dynamicForm = reactive({
         bunga_margin_eff_flat: '',
     }
 });
+
+
 const calcCredit = reactive({
     tgl_survey: null,
     plafond: null,
@@ -636,8 +632,15 @@ const calcCredit = reactive({
     bunga_flat: computed(() => (((calcCredit.tenor * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.tenor))) - 1) * (12 / calcCredit.tenor) * 100),
 });
 const dataPelanggan = ref({});
+const alamatIdentitas = ref({});
+const alamatTagih = ref({});
+const dataPekerjaan = ref({});
 const dataOrder = ref({});
+const dataTaksasi = ref({});
 const dataTambahan = ref({});
+const dataKerabat = ref({});
+const dataSurat = ref({});
+const dataBank = ref(null);
 
 const pageData = ref();
 
@@ -687,7 +690,7 @@ const optCaraBayar = ["Advance", "Arrear"].map(
         label: v,
         value: v
     }));
-const optStatusOrder = ["KTP", "SIM", 'PASPOR'].map(
+const optStatusOrder = ["Approve"].map(
     (v) => ({
         label: v,
         value: v
@@ -743,20 +746,42 @@ const response = useApi({
         message.loading("memuat fpk");
         suspense.value = false;
         pageData.value = res.data.response;
-        dynamicForm.pelanggan = pageData.value.pelanggan;
-        dynamicForm.alamat_identitas = pageData.value.alamat_identitas;
-        dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
-        dynamicForm.pekerjaan = pageData.value.pekerjaan;
-        dynamicForm.order = pageData.value.order;
-        dynamicForm.tambahan = pageData.value.tambahan;
-        dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
-        dynamicForm.surat = pageData.value.surat;
+        // dynamicForm.pelanggan = pageData.value.pelanggan;
+        // alamatIdentitas = pageData.value.alamat_identitas;
+        // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
+        // dynamicForm.pekerjaan = pageData.value.pekerjaan;
+        // dynamicForm.order = pageData.value.order;
+        // dynamicForm.tambahan = pageData.value.tambahan;
+        // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
+        // dynamicForm.surat = pageData.value.surat;
         Object.assign(calcCredit, pageData.value.ekstra);
-        Object.assign(dataOrder.value, pageData.value.order);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
+        Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
+        Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
+        Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
+        Object.assign(dataOrder.value, pageData.value.order);
+        Object.assign(dataTaksasi.value, pageData.value.barang_taksasi);
         Object.assign(dataTambahan.value, pageData.value.tambahan);
+        Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
+        Object.assign(dataSurat.value, pageData.value.surat);
+        // Object.assign(dataBank.value, pageData.value.info_bank);
     }
 });
+
+const formAssign = reactive({
+    flag_pengajuan: null,
+    pelanggan: dataPelanggan.value,
+    alamat_identitas: alamatIdentitas.value,
+    alamat_tagih: alamatTagih.value,
+    pekerjaan: dataPekerjaan.value,
+    order: dataOrder.value,
+    barang_taksasi: dataTaksasi.value,
+    tambahan: dataTambahan.value,
+    kerabat_darurat: dataKerabat.value,
+    info_bank: null,
+    ekstra: calcCredit,
+    surat: dataSurat.value,
+})
 const parse = (input) => {
     const nums = input.replace(/,/g, "").trim();
     if (/^\d+(\.(\d+)?)?$/.test(nums))
@@ -771,12 +796,13 @@ const format = (value) => {
 
 const handleSave = async (e) => {
     e.preventDefault(e);
+    formAssign.flag_pengajuan = "no";
     let idApp = pageData.value.id_application;
     loading.value = true;
     const response = await useApi({
         method: 'PUT',
         api: `cr_application/${idApp}`,
-        data: dynamicForm,
+        data: formAssign,
         token: userToken
     });
     if (!response.ok) {
