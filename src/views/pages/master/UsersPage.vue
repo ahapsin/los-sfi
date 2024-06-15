@@ -122,7 +122,7 @@ const columns = [
                     size: "small",
                     onSelect: (e) => {
                         if (e === "hapus") {
-                            handleConfirm(row);
+                            handleConfirm(row, index);
                         }
                         if (e === "detail") {
                             handleDetail(row);
@@ -150,7 +150,7 @@ const statusTag = (e) => {
     }
 
 }
-const handleConfirm = (evt) => {
+const handleConfirm = (row, index) => {
     dialog.warning({
         title: "Confirm",
         content: "Apakah anda yakin ingin menghapus data ?",
@@ -160,13 +160,13 @@ const handleConfirm = (evt) => {
             let userToken = localStorage.getItem("token");
             const response = await useApi({
                 method: 'DELETE',
-                api: `cabang/${evt.id}`,
+                api: `cabang/${row.id}`,
                 token: userToken
             });
             if (!response.ok) {
                 message.error("api transaction error");
             } else {
-                dataTable.value.splice(evt, 1);
+                dataTable.value.splice(index, 1);
                 message.success("Data berhasil dihapus");
             }
 

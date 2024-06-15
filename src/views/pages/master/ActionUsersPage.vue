@@ -82,7 +82,7 @@ const handleCancel = () => router.replace('/master/users');
 
 const response = () => useApi({
     method: 'get',
-    api: `karyawan/${param}`,
+    api: `users/${param}`,
     token: userToken
 }).then(res => {
     if (res.ok) {
@@ -99,9 +99,9 @@ const handleSave = async (e) => {
     loading.value = true;
     if (param) {
         action.value = "PUT";
-        url.value = `karyawan/${param}`;
+        url.value = `users/${param}`;
     } else {
-        url.value = `karyawan`;
+        url.value = `users`;
         action.value = "POST";
     }
     const response = await useApi({
