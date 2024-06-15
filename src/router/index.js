@@ -33,6 +33,11 @@ const routes = [
         component: () => import("../views/pages/task/AddFpkPage.vue"),
       },
       {
+        path: "approve-fpk/:idapplication",
+        name: "Konfirmasi Pengajuan Kredit",
+        component: () => import("../views/pages/task/ConfFpkPage.vue"),
+      },
+      {
         path: "survey",
         name: "survey",
         component: () => import("../views/pages/task/SurveyPage.vue"),
@@ -46,6 +51,11 @@ const routes = [
         path: "Approval",
         name: "Approval",
         component: () => import("../views/pages/task/ApprovalPage.vue"),
+      },
+      {
+        path: "approval_ho",
+        name: "Approval HO",
+        component: () => import("../views/pages/task/ApprovalHOPage.vue"),
       },
       {
         path: "new-survey",

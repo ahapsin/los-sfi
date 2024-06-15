@@ -4,15 +4,15 @@
             :options="col_provinsi" @update:value="provinsiChanged" />
     </n-form-item>
     <n-form-item label="Kota" path="kota">
-        <n-select placeholder="Pilih Kab/Kota" label-field="name" value-field="id" v-model:value="props.kota"
+        <n-select :disabled placeholder="Pilih Kab/Kota" label-field="name" value-field="id" v-model:value="props.kota"
             :options="col_kota" @update:value="kotaChanged" />
     </n-form-item>
     <n-form-item label="Kecamatan" path="kecamatan">
-        <n-select placeholder="Pilih Kecamatan" label-field="name" value-field="id" v-model:value="props.kecamatan"
-            :options="col_kec" @update:value="kecChanged" />
+        <n-select :disabled placeholder="Pilih Kecamatan" label-field="name" value-field="id"
+            v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" />
     </n-form-item>
     <n-form-item label="Desa" path="desa">
-        <n-select placeholder="Pilih Desa" label-field="name" value-field="id" v-model:value="props.desa"
+        <n-select :disabled placeholder="Pilih Desa" label-field="name" value-field="id" v-model:value="props.desa"
             :options="col_desa" @update:value="desaChanged" />
     </n-form-item>
 
@@ -41,6 +41,9 @@ const props = defineProps({
     error: {
         type: [String, Boolean],
         default: false,
+    },
+    active: {
+        type: Boolean,
     },
     options: {
         type: Object,

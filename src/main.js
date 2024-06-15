@@ -13,5 +13,6 @@ addIcons(...Hi, ...Ri);
 const app = createApp(App);
 app.use(naive);
 app.component("v-icon", OhVueIcon);
+// app.component("downloadExcel", JsonExcel);
 app.use(router);
 app.mount("#app");

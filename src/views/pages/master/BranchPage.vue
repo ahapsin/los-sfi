@@ -3,37 +3,62 @@
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
-                    <n-space>
-                        <n-popover trigger="click" placement="bottom-end">
-                            <template #trigger>
-                                <n-button>
+                    <n-space class="!gap-1">
+                        <div class="me-1">
+                            <n-popover trigger="click" placement="bottom-end">
+                                <template #trigger>
+                                    <n-button>
+                                        <n-icon>
+                                            <search-icon />
+                                        </n-icon>
+                                    </n-button>
+                                </template>
+                                <n-input autofocus="true" clearable placeholder="cari disini.."
+                                    v-model:value="searchBox" />
+                            </n-popover>
+                        </div>
+                        <div class="hidden md:flex">
+                            <n-button>
+                                <template #icon>
                                     <n-icon>
-                                        <search-icon />
+                                        <download-icon />
                                     </n-icon>
-                                </n-button>
-                            </template>
-                            <n-input autofocus="true" clearable placeholder="cari disini.." />
-                        </n-popover>
-                        <n-button>
-                            <template #icon>
-                                <n-icon>
-                                    <download-icon />
-                                </n-icon>
-                            </template>
-                            download
-                        </n-button>
-                        <n-button type="primary" @click="handleAdd">
-                            <template #icon>
-                                <n-icon>
-                                    <add-icon />
-                                </n-icon>
-                            </template>
-                            tambah
-                        </n-button>
+                                </template>
+                                <strong class="hidden md:!block">download</strong>
+                            </n-button>
+                        </div>
+                        <div class="md:hidden">
+                            <n-button>
+                                <template #icon>
+                                    <n-icon>
+                                        <download-icon />
+                                    </n-icon>
+                                </template>
+                            </n-button>
+                        </div>
+                        <div class="hidden md:flex">
+                            <n-button type="primary" @click="handleAdd">
+                                <template #icon>
+                                    <n-icon>
+                                        <add-icon />
+                                    </n-icon>
+                                </template>
+                                <strong>tambah</strong>
+                            </n-button>
+                        </div>
+                        <div class=" md:hidden">
+                            <n-button type="primary" @click="handleAdd">
+                                <template #icon>
+                                    <n-icon>
+                                        <add-icon />
+                                    </n-icon>
+                                </template>
+                            </n-button>
+                        </div>
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :columns="columns" :data="dataTable" :pagination="pagination" />
+                    <n-data-table size="small" :columns="columns" :data="showData" :pagination="pagination" />
                 </n-space>
             </n-card>
         </n-space>
@@ -42,6 +67,7 @@
 <script setup>
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
+import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
 import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
 import {
@@ -59,7 +85,8 @@ import {
 
 const message = useMessage();
 const dialog = useDialog();
-const dataTable = ref();
+const dataTable = ref([]);
+const searchBox = ref();
 
 const columns = [
     {
@@ -73,26 +100,22 @@ const columns = [
     {
         title: "Alamat",
         key: "alamat",
-        render(row) {
-            return h(NEllipsis, {
-                style: "max-width:80px"
-            }, { default: () => row.alamat })
+        ellipsis: {
+            tooltip: true,
         }
     },
     {
         title: "Kota",
         key: "kota",
-        render(row) {
-            return h(NEllipsis, {
-                style: "max-width:80px"
-            }, { default: () => row.kota })
+        ellipsis: {
+            tooltip: true,
         }
     },
     {
         title: "",
         align: "right",
         key: "more",
-        render(row) {
+        render(row, index) {
             return h(
                 NDropdown,
                 {
@@ -100,7 +123,7 @@ const columns = [
                     size: "small",
                     onSelect: (e) => {
                         if (e === "hapus") {
-                            handleConfirm(row);
+                            handleConfirm(row, index);
                         }
                         if (e === "detail") {
                             handleDetail(row);
@@ -128,7 +151,7 @@ const statusTag = (e) => {
     }
 
 }
-const handleConfirm = (evt) => {
+const handleConfirm = (row, index) => {
     dialog.warning({
         title: "Confirm",
         content: "Apakah anda yakin ingin menghapus data ?",
@@ -138,13 +161,13 @@ const handleConfirm = (evt) => {
             let userToken = localStorage.getItem("token");
             const response = await useApi({
                 method: 'DELETE',
-                api: `cabang/${evt.id}`,
+                api: `cabang/${row.id}`,
                 token: userToken
             });
             if (!response.ok) {
                 message.error("api transaction error");
             } else {
-                dataTable.value.splice(evt, 1);
+                dataTable.value.splice(index, 1);
                 message.success("Data berhasil dihapus");
             }
 
@@ -202,4 +225,8 @@ const pagination = {
 }
 
 onMounted(() => getData());
+const showData = computed(() => {
+    return useSearch(dataTable.value, searchBox.value);
+    // return filterIt(dataTable.value, searchBox.value);
+});
 </script>

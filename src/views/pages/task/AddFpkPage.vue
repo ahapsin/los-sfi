@@ -1,5 +1,5 @@
 <template>
-    <n-space vertical>
+    <n-space vertical class="p-2">
         <n-steps :current="current" :status="currentStatus">
             <n-step title="Pelanggan" />
             <n-step title="Order" />
@@ -8,14 +8,14 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ formAssign }}</pre>
             </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
         <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,
@@ -395,10 +395,6 @@
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
                             placeholder="Cadangan" :show-button="false" class="flex !w-full" />
                     </n-form-item>
-                    <n-form-item label="Biaya Broker" path="biaya_broker">
-                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
-                            placeholder="Cadangan" :show-button="false" class="flex !w-full" />
-                    </n-form-item>
                     <n-form-item label="Provisi" path="provisi">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.provisi"
                             placeholder="Provisi" :show-button="false" class="flex !w-full" />
@@ -492,7 +488,7 @@ import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, S
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
-
+import router from '../../../router';
 const message = useMessage();
 const loading = ref(false);
 const loadingSend = ref(false);
@@ -700,7 +696,7 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.push('apply-credit');
+        router.replace('/task/apply-credit');
     }
 }
 const handleSend = async (e) => {
@@ -720,7 +716,7 @@ const handleSend = async (e) => {
     } else {
         message.success("data berhasil dikirim");
         loadingSend.value = false;
-        router.push('apply-credit');
+        router.replace('/task/apply-credit');
     }
 }
 

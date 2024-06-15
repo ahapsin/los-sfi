@@ -3,29 +3,44 @@
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`" class="bg-white">
                 <template #header-extra>
-                    <n-space>
-                        <n-popover trigger="click" placement="bottom-end">
-                            <template #trigger>
-                                <n-button>
+                    <n-space class="!gap-1">
+                        <div class="me-1">
+                            <n-popover trigger="click" placement="bottom-end">
+                                <template #trigger>
+                                    <n-button>
+                                        <n-icon>
+                                            <search-icon />
+                                        </n-icon>
+                                    </n-button>
+                                </template>
+                                <n-input autofocus="true" clearable placeholder="cari disini.."
+                                    v-model:value="searchBox" />
+                            </n-popover>
+                        </div>
+                        <div class="hidden md:flex">
+                            <n-button>
+                                <template #icon>
                                     <n-icon>
-                                        <search-icon />
+                                        <download-icon />
                                     </n-icon>
-                                </n-button>
-                            </template>
-                            <n-input autofocus="true" clearable placeholder="cari disini.." />
-                        </n-popover>
-                        <n-button>
-                            <template #icon>
-                                <n-icon>
-                                    <download-icon />
-                                </n-icon>
-                            </template>
-                            download
-                        </n-button>
+                                </template>
+                                <strong class="hidden md:!block">download</strong>
+                            </n-button>
+                        </div>
+                        <div class="md:hidden">
+                            <n-button>
+                                <template #icon>
+                                    <n-icon>
+                                        <download-icon />
+                                    </n-icon>
+                                </template>
+                            </n-button>
+                        </div>
+
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :columns="columns" :data="dataTable" :pagination="pagination" ellipsis />
+                    <n-data-table size="small" :columns="columns" :data="showData" :pagination="pagination" ellipsis />
                 </n-space>
             </n-card>
         </n-space>
@@ -34,6 +49,7 @@
 <script setup>
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
+import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
 import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
 import {
@@ -52,7 +68,8 @@ import {
 
 const message = useMessage();
 const dialog = useDialog();
-const dataTable = ref();
+const dataTable = ref([]);
+const searchBox = ref();
 
 const columns = [
     {
@@ -69,7 +86,10 @@ const columns = [
     },
     {
         title: "Plafond",
-        key: "plafond"
+        key: "plafond",
+        render(row) {
+            return h('div', format(row.plafond));
+        }
     },
     {
         title: "Tenor",
@@ -94,32 +114,20 @@ const columns = [
         align: "right",
         key: "more",
         render(row) {
-            return h(
-                NDropdown,
-                {
-                    options: options,
-                    size: "small",
-                    onSelect: (e) => {
-                        if (e === "hapus") {
-                            handleConfirm(row);
-                        }
-                        if (e === "detail") {
-                            handleDetail(row);
-                        }
-                        console.log(e);
-                        handleSelect(row.id);
-                    },
+            return h(NButton, {
+                size: "small",
+                onClick: (e) => {
+                    handelAction(row);
                 },
-                {
-                    default: h(NButton, {
-                        size: "small",
-                    }, { default: () => 'Action' })
-                }
-            );
+            }, { default: statusHandle(row) });
         }
     }
 ];
 
+const format = (e) => {
+    const toNum = parseInt(e);
+    return toNum.toLocaleString("en-US");
+};
 const statusTag = (e) => {
     let status = e.at(0);
     if (status === "1" || status === "2") {
@@ -146,8 +154,13 @@ const statusLabel = (e) => {
         return "CLOSED KAPOS";
     }
 }
-const handleSelect = (e) => console.log(e);
-const statusHandle = (e) => console.log(e);
+const statusHandle = (e) => {
+    if (e.status.at(0) == 1) {
+        return "periksa";
+    } else {
+        return "lihat";
+    }
+};
 const handleConfirm = (evt) => {
     dialog.warning({
         title: "Confirm",
@@ -203,26 +216,43 @@ const renderIcon = (icon) => {
         });
     };
 };
-const options = [
-    {
-        label: "Edit",
-        key: "edit",
-        icon: renderIcon(EditIcon),
-    },
-    {
-        label: "Hapus",
-        key: "hapus",
-        icon: renderIcon(DeleteIcon)
-    },
-    {
-        label: "Detail",
-        key: "detail",
-        icon: renderIcon(DetailIcon)
+
+const handelAction = (e) => {
+    if (e.status.at(0) == 1) {
+        router.replace({ name: 'Konfirmasi Pengajuan Kredit', params: { idapplication: e.id } });
+    } else {
+        console.log("mau cek");
     }
-];
+    // let status = e.at(0);
+    // const dynamicBody = {
+    //     cr_prospect_id: data.id
+    // }
+    // if (status === "1") {
+    //     message.create('membuat FPK, silakan tunggu !', { type: loadingRef.type });
+    //     useApi({
+    //         method: 'POST',
+    //         data: dynamicBody,
+    //         api: `cr_application_generate`,
+    //         token: userToken,
+    //     }).then((res) => {
+    //         if (res.ok) {
+    //             message.success('FPK berhsil dibuat');
+    //             router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+    //         } else {
+    //             message.error('FPK gagal dibuat!')
+    //         }
+    //     });
+    // } else {
+    // router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+    // }
+};
 const pagination = {
     pageSize: 10
 }
 
 onMounted(() => getData());
+const showData = computed(() => {
+    return useSearch(dataTable.value, searchBox.value);
+    // return filterIt(dataTable.value, searchBox.value);
+});
 </script>

@@ -368,7 +368,7 @@ const handleSave = async (e) => {
         } else {
                 message.success("data berhasil disimpan");
                 loading.value = false;
-                router.push('survey');
+                router.replace('/task/survey');
         }
 }
 const handleImagePost = async ({ file, data, onError, onFinish }) => {

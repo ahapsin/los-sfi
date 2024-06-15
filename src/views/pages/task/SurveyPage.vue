@@ -14,7 +14,8 @@
                                                                         </n-button>
                                                                 </template>
                                                                 <n-input autofocus="true" clearable
-                                                                        placeholder="cari disini.." />
+                                                                        placeholder="cari disini.."
+                                                                        v-model:value="searchBox" />
                                                         </n-popover>
                                                 </div>
                                                 <div class="hidden md:flex">
@@ -59,7 +60,7 @@
                                 </template>
                                 <n-space vertical :size="12" class="pt-4">
                                         <n-data-table striped :scroll-x="500" size="small" :columns="columns"
-                                                :data="dataTable" :pagination="pagination" />
+                                                :data="showData" :pagination="pagination" />
                                 </n-space>
                         </n-card>
                 </n-space>
@@ -68,8 +69,10 @@
 <script setup>
 import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
+import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
+import _ from "lodash";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, rowProps } from "naive-ui";
 import {
         AddCircleOutlineRound as AddIcon,
         SearchOutlined as SearchIcon,
@@ -86,26 +89,25 @@ import {
 
 const message = useMessage();
 const dialog = useDialog();
-const dataTable = ref();
+const dataTable = ref([]);
 
 const columns = [
         {
                 title: "Tanggal",
                 key: "visit_date",
                 width: 100,
-                fixed: 'left'
         },
         {
                 title: "Nama",
                 key: "nama_debitur",
-                width: 100,
                 fixed: 'left',
-                ellipsis: true
+                ellipsis: {
+                        tooltip: true,
+                }
         },
         {
                 title: "Plafond",
                 key: "plafond",
-                width: 100,
                 render(row) {
                         return h('div', format(row.plafond));
                 }
@@ -113,7 +115,6 @@ const columns = [
         {
                 title: "Status",
                 key: "status",
-                width: 100,
                 render(row) {
                         return h(
                                 NTag,
@@ -129,9 +130,8 @@ const columns = [
                 title: "",
                 align: "right",
                 key: "more",
-                width: 80,
                 fixed: 'left',
-                render(row) {
+                render(row, index) {
                         return h(
                                 NDropdown,
                                 {
@@ -139,7 +139,7 @@ const columns = [
                                         size: "small",
                                         onSelect: (e) => {
                                                 if (e === "hapus") {
-                                                        handleConfirm(row);
+                                                        handleConfirm(row, index);
                                                 }
                                                 if (e === "detail") {
                                                         handleDetail(row);
@@ -157,6 +157,7 @@ const columns = [
         }
 ];
 
+const searchBox = ref();
 const statusTag = (e) => {
         let status = e.at(0);
         if (status === "1") {
@@ -172,6 +173,8 @@ const statusLabel = (e) => {
                 return "menunggu PFK";
         } else if (status === "2") {
                 return "pembuatan PFK";
+        } else {
+                return e;
         }
 
 }
@@ -179,7 +182,7 @@ const format = (e) => {
         const toNum = parseInt(e);
         return toNum.toLocaleString("en-US");
 };
-const handleConfirm = (evt) => {
+const handleConfirm = (row, index) => {
         dialog.warning({
                 title: "Confirm",
                 content: "Apakah anda yakin ingin menghapus data ?",
@@ -189,16 +192,15 @@ const handleConfirm = (evt) => {
                         let userToken = localStorage.getItem("token");
                         const response = await useApi({
                                 method: 'DELETE',
-                                api: `kunjungan/${evt.id}`,
+                                api: `kunjungan/${row.id}`,
                                 token: userToken
                         });
                         if (!response.ok) {
                                 message.error("api transaction error");
                         } else {
-                                dataTable.value.splice(evt, 1);
+                                dataTable.value.splice(index, 1);
                                 message.success("Data berhasil dihapus");
                         }
-
                 },
                 onNegativeClick: () => {
                         message.error("Batal hapus data !");
@@ -226,6 +228,11 @@ const getData = async () => {
                 dataTable.value = response.data.response;
         }
 }
+onMounted(() => getData());
+const showData = computed(() => {
+        return useSearch(dataTable.value, searchBox.value);
+        // return filterIt(dataTable.value, searchBox.value);
+});
 const renderIcon = (icon) => {
         return () => {
                 return h(NIcon, null, {
@@ -234,11 +241,11 @@ const renderIcon = (icon) => {
         };
 };
 const options = [
-        {
-                label: "Edit",
-                key: "edit",
-                icon: renderIcon(EditIcon),
-        },
+        // {
+        //         label: "Edit",
+        //         key: "edit",
+        //         icon: renderIcon(EditIcon),
+        // },
         {
                 label: "Hapus",
                 key: "hapus",
@@ -254,5 +261,5 @@ const pagination = {
         pageSize: 10
 }
 
-onMounted(() => getData());
+
 </script>

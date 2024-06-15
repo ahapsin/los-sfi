@@ -175,7 +175,7 @@
                 </template>
             </n-button>
         </template>
-        <template #suffix>
+        <!-- <template #suffix>
             <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick"
                 @negative-click="handleNegativeClick">
                 <template #activator>
@@ -183,7 +183,7 @@
                 </template>
                 <n-input type="textarea" placeholder="keterangan"></n-input>
             </n-popconfirm>
-        </template>
+        </template> -->
     </n-tabs>
 </template>
 <script setup>
