@@ -165,7 +165,7 @@ const statusTag = (e) => {
         } else if (status === "2") {
                 return "info";
         }
-
+        return "warning";
 }
 const statusLabel = (e) => {
         let status = e.at(0);
@@ -174,7 +174,7 @@ const statusLabel = (e) => {
         } else if (status === "2") {
                 return "pembuatan PFK";
         } else {
-                return e;
+                return e.substring(2);
         }
 
 }

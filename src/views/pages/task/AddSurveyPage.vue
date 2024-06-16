@@ -371,27 +371,31 @@ const handleSave = async (e) => {
                 router.replace('/task/survey');
         }
 }
-const handleImagePost = async ({ file, data, onError, onFinish }) => {
-        const imageForm = {
-                image: file.file,
-                type: data.type,
-                cr_prospect_id: uuid
-        }
-        const response = await useApi({
-                method: 'POST',
-                api: 'image_upload_employee',
-                data: imageForm,
-                token: userToken
-        });
-        if (!response.ok) {
-                message.error("gagal upload image");
-                onError();
-        } else {
-                message.success("image berhasil upload");
-                onFinish();
+
+const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
+        let idApp = pageData.value.order.cr_prospect_id;
+        const form = new FormData();
+        form.append('image', file.file);
+        form.append('type', 'KK');
+        form.append('cr_prospect_id', idApp);
+        const headers = {
+                Authorization: `Bearer ${userToken}`,
         }
 
-}
+        lyla.post('https://api.kspdjaya.id/image_upload_prospect', {
+                headers,
+                body: form,
+                onUploadProgress: ({ percent }) => {
+                        onProgress({ percent: Math.ceil(percent) });
+                }
+        }).then(({ json }) => {
+                message.success(JSON.stringify(json));
+                onFinish();
+        }).catch((error) => {
+                message.success(error.message);
+                onError();
+        });
+};
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 
 const seprator = (value) => {

@@ -126,15 +126,17 @@ const statusTag = (e) => {
     } else if (status === "2") {
         return "info";
     }
+    return "warning";
 
 }
 const statusLabel = (e) => {
     let status = e.at(0);
-    if (status === "1") {
-        return "menunggu PFK";
-    } else if (status === "2") {
-        return "pembuatan PFK";
-    }
+    // if (status === "1") {
+    //     return "menunggu PFK";
+    // } else if (status === "2") {
+    //     return "pembuatan PFK";
+    // }
+    return e.substring(2);
 }
 const typeAction = (e) => {
     let status = e.at(0);
@@ -143,6 +145,7 @@ const typeAction = (e) => {
     } else if (status === "2") {
         return "info";
     }
+    return "info";
 }
 const actionLabel = (e) => {
     let status = e.at(0);
@@ -151,7 +154,7 @@ const actionLabel = (e) => {
     } else if (status === "2") {
         return "Update PFK";
     }
-    return e;
+    return "lihat FPK";
 
 }
 const format = (e) => {

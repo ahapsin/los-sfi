@@ -380,7 +380,7 @@
                                 placeholder="angsuran" :show-button="false" class="flex !w-full" readonly />
                         </n-form-item>
                         <n-form-item label="Total Admin" path="total_admin">
-                            <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.total_admin"
+                            <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.admin"
                                 placeholder="Total Admin" :show-button="false" class="flex !w-full" readonly />
                         </n-form-item>
                         <n-form-item label="Cadangan" path="cadangan">
@@ -432,9 +432,9 @@
                                 placeholder="Net Admin" :show-button="false" class="flex !w-full" readonly />
                         </n-form-item>
                         <n-form-item label="Nilai yang diterima" path="nilai_diterima">
-                            <n-input-number :parse="parse" :format="format"
-                                v-model:value="calcCredit.nilai_yang_diterima" placeholder="Nilai yang diterima"
-                                size="large" :show-button="false" class="flex !w-full" readonly />
+                            <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.plafond"
+                                placeholder="Nilai yang diterima" size="large" :show-button="false" class="flex !w-full"
+                                readonly />
                         </n-form-item>
                     </div>
                 </div>
@@ -466,15 +466,7 @@ const loadingSend = ref(false);
 const baseRoute = useRoute();
 
 
-const calcCredit = reactive({
-    net_admin: computed(() => parseInt(calcCredit.total_admin)),
-    bunga_eff_actual: computed(() => calcCredit.bunga_eff),
-    bunga_margin: computed(() => calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100),
-    pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
-    pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
-    angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
-    bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
-});
+
 
 const keterangan = ref();
 const dataPelanggan = ref({});
@@ -490,6 +482,18 @@ const dataAttachment = ref({});
 const dataEkstra = ref({});
 
 const dataBank = ref([]);
+
+const calcCredit = reactive({
+    admin: computed(() => parseInt(calcCredit.total_admin)),
+    plafond: computed(() => parseInt(calcCredit.nilai_yang_diterima)),
+    net_admin: computed(() => parseInt(calcCredit.total_admin)),
+    bunga_eff_actual: computed(() => calcCredit.bunga_eff),
+    bunga_margin: computed(() => calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100),
+    pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
+    pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
+    angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
+    bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
+});
 const onCreate = () => {
     return {
         kode_bank: null,
@@ -613,6 +617,7 @@ const response = useApi({
         // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
         // dynamicForm.surat = pageData.value.surat;
         Object.assign(calcCredit, pageData.value.ekstra);
+        Object.assign(dataAttachment.value, pageData.value.attachment);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);

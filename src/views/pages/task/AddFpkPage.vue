@@ -8,14 +8,14 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
-        <!-- <n-collapse>
+        <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ formAssign }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
         <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,
@@ -484,6 +484,7 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
+import { lyla } from "@lylajs/web";
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon } from "@vicons/material";
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
@@ -650,6 +651,7 @@ const response = useApi({
         Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
         Object.assign(dataSurat.value, pageData.value.surat);
         Object.assign(dataBank.value, pageData.value.info_bank);
+        Object.assign(dataAttachment.value, pageData.value.attachment);
     }
 });
 
@@ -719,5 +721,31 @@ const handleSend = async (e) => {
         router.replace('/task/apply-credit');
     }
 }
+
+
+const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
+    let idApp = pageData.value.order.cr_prospect_id;
+    const form = new FormData();
+    form.append('image', file.file);
+    form.append('type', 'KK');
+    form.append('cr_prospect_id', idApp);
+    const headers = {
+        Authorization: `Bearer ${userToken}`,
+    }
+
+    lyla.post('https://api.kspdjaya.id/image_upload_prospect', {
+        headers,
+        body: form,
+        onUploadProgress: ({ percent }) => {
+            onProgress({ percent: Math.ceil(percent) });
+        }
+    }).then(({ json }) => {
+        message.success(JSON.stringify(json));
+        onFinish();
+    }).catch((error) => {
+        message.success(error.message);
+        onError();
+    });
+};
 
 </script>
