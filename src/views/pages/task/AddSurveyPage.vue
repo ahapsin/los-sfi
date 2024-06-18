@@ -86,6 +86,9 @@
                                         <n-select placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item>
+                                <n-form-item label="Merk" path="merk">
+                                        <n-input placeholder="merk" v-model:value="jaminan.merk" />
+                                </n-form-item>
                                 <n-form-item label="Tahun" path="tahun_kendaraan">
                                         <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
                                                 type="year" placeholder="Tahun jaminan" clearable />
@@ -263,6 +266,7 @@ import { useMessage } from "naive-ui";
 import router from '../../../router';
 import { useWindowSize } from '@vueuse/core';
 import { useApi } from "../../../helpers/axios";
+import { lyla } from "@lylajs/web";
 const { width, height } = useWindowSize()
 const message = useMessage();
 const uuid = uuidv4();
@@ -373,10 +377,10 @@ const handleSave = async (e) => {
 }
 
 const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
-        let idApp = pageData.value.order.cr_prospect_id;
+        let idApp = uuid;
         const form = new FormData();
         form.append('image', file.file);
-        form.append('type', 'KK');
+        form.append('type', data.type);
         form.append('cr_prospect_id', idApp);
         const headers = {
                 Authorization: `Bearer ${userToken}`,
@@ -389,10 +393,10 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
                         onProgress({ percent: Math.ceil(percent) });
                 }
         }).then(({ json }) => {
-                message.success(JSON.stringify(json));
+                message.success("upload gambar berhasil");
                 onFinish();
         }).catch((error) => {
-                message.success(error.message);
+                message.success("upload gambar gagal");
                 onError();
         });
 };

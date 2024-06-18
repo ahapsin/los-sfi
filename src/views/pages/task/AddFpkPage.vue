@@ -77,12 +77,12 @@
             <n-divider title-placement="left">
                 Dokumen
             </n-divider>
-            <n-space>
+            <n-flex>
                 <n-image v-for="attachment in dataAttachment" :key="attachment"
                     class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH"></n-image>
                 <n-upload :data="{ 'type': 'ktp' }" list-type="image-card" :custom-request="handleImagePost">
                 </n-upload>
-            </n-space>
+            </n-flex>
             <n-divider title-placement="left">
                 Informasi Alamat Identitas
             </n-divider>
@@ -740,10 +740,10 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
             onProgress({ percent: Math.ceil(percent) });
         }
     }).then(({ json }) => {
-        message.success(JSON.stringify(json));
+        message.success("upload image berhasil");
         onFinish();
     }).catch((error) => {
-        message.success(error.message);
+        message.success("upload image gagal !");
         onError();
     });
 };

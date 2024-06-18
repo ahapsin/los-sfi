@@ -135,7 +135,7 @@ const columns = [
                         return h(
                                 NDropdown,
                                 {
-                                        options: options,
+                                        options: options(row),
                                         size: "small",
                                         onSelect: (e) => {
                                                 if (e === "hapus") {
@@ -165,7 +165,7 @@ const statusTag = (e) => {
         } else if (status === "2") {
                 return "info";
         }
-        return "warning";
+        return "info";
 }
 const statusLabel = (e) => {
         let status = e.at(0);
@@ -240,23 +240,37 @@ const renderIcon = (icon) => {
                 });
         };
 };
-const options = [
-        // {
-        //         label: "Edit",
-        //         key: "edit",
-        //         icon: renderIcon(EditIcon),
-        // },
-        {
-                label: "Hapus",
-                key: "hapus",
-                icon: renderIcon(DeleteIcon)
-        },
-        {
-                label: "Detail",
-                key: "detail",
-                icon: renderIcon(DetailIcon)
+const options = (e) => {
+        let status = e.status.at(0);
+        if (status === "1") {
+                return [
+                        {
+                                label: "Edit",
+                                key: "edit",
+                                icon: renderIcon(EditIcon),
+                        },
+                        {
+                                label: "Hapus",
+                                key: "hapus",
+                                icon: renderIcon(DeleteIcon)
+                        },
+                        {
+                                label: "Detail",
+                                key: "detail",
+                                icon: renderIcon(DetailIcon)
+                        }
+                ]
+
+        } else {
+                return [
+                        {
+                                label: "Detail",
+                                key: "detail",
+                                icon: renderIcon(DetailIcon)
+                        }
+                ]
         }
-];
+}
 const pagination = {
         pageSize: 10
 }

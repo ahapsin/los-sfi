@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider :theme="kspTheme" :theme-overrides="themeOverrides">
 
     <n-message-provider>
       <n-dialog-provider>
@@ -13,6 +13,12 @@
 </template>
 <script setup>
 import { NConfigProvider } from 'naive-ui'
+// import { darkTheme } from 'naive-ui'
 const themeOverrides = {
+  common: {
+    // primaryColor: '#FF0000',
+    // primaryColorHover: "#4deee4",
+    borderRadius: "10px"
+  },
 }
 </script>
