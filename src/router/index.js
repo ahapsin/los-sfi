@@ -43,9 +43,14 @@ const routes = [
         component: () => import("../views/pages/task/SurveyPage.vue"),
       },
       {
-        path: "survey/:idsurvey",
+        path: "edit-survey/:idsurvey",
         name: "detail survey",
         component: () => import("../views/pages/task/DetailSurveyPage.vue"),
+      },
+      {
+        path: "survey/:idsurvey",
+        name: "edit survey",
+        component: () => import("../views/pages/task/EditSurveyPage.vue"),
       },
       {
         path: "Approval",
