@@ -139,7 +139,7 @@
                                                 :custom-request="handleImagePost">
                                                 Upload tampak depan
                                         </n-upload>
-                                        <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                                        <n-upload :data="{ 'type': 'tampak belakang' }" list-type="image-card"
                                                 :custom-request="handleImagePost">
                                                 Upload tampak belakang
                                         </n-upload>
@@ -147,7 +147,7 @@
                                                 :custom-request="handleImagePost">
                                                 Upload tampak kanan
                                         </n-upload>
-                                        <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                                        <n-upload :data="{ 'type': 'tampak kiri' }" list-type="image-card"
                                                 :custom-request="handleImagePost">
                                                 Upload tampak kiri
                                         </n-upload>

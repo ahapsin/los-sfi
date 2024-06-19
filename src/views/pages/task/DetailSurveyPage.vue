@@ -121,50 +121,48 @@
                     Dokumen identitas
                 </n-divider>
                 <n-card>
-                    <n-flex justify="start" v-if="data.dokumen_indentitas.length > 0">
+                    <n-space>
                         <n-flex vertical v-for="dok_identitas in data.dokumen_indentitas">
-                            <n-image lazy width="100" :src="dok_identitas.PATH" />
+                            <n-image lazy width="100" height="100" :src="dok_identitas.PATH" />
                             <n-tag type="success" size="small" :bordered="false">
                                 <template #icon>
                                     <n-icon :component="FileIcon" />
                                 </template>
                                 {{ dok_identitas.TYPE }} </n-tag>
                         </n-flex>
-                    </n-flex>
-                    <n-empty description="Tidak ada dokumen identitas" v-else />
+                    </n-space>
+
                 </n-card>
                 <n-divider title-placement="left">
                     Dokumen Jaminan
                 </n-divider>
                 <n-card>
-                    <n-flex justify="start" v-if="data.dokumen_jaminan.length > 0">
-                        <n-flex vertical v-for="dok_identitas in data.dokumen_indentitas">
-                            <n-image lazy width="100" :src="dok_identitas.PATH" />
+                    <n-space>
+                        <n-flex vertical v-for="dok_identitas in data.dokumen_jaminan">
+                            <n-image lazy width="100" height="100" :src="dok_identitas.PATH" />
                             <n-tag type="success" size="small" :bordered="false">
                                 <template #icon>
                                     <n-icon :component="FileIcon" />
                                 </template>
                                 {{ dok_identitas.TYPE }} </n-tag>
                         </n-flex>
-                    </n-flex>
-                    <n-empty description="Tidak ada dokumen jaminan" v-else />
+                    </n-space>
                 </n-card>
                 <n-divider title-placement="left">
                     Dokumen Pendukung
                 </n-divider>
                 <n-card>
-                    <n-flex justify="start" v-if="data.dokumen_jaminan.length > 0">
-                        <n-flex vertical v-for="dok_identitas in data.dokumen_indentitas">
-                            <n-image lazy :src="dok_identitas.PATH" class="w-24 border-b border-2 border-pr h-24" />
-
+                    <n-space>
+                        <n-flex vertical v-for="dok_identitas in data.dokumen_pendukung">
+                            <n-image width="100" height="100" lazy :src="dok_identitas.PATH"
+                                class="w-24 border-b border-2 border-pr h-24" />
                             <n-tag type="success" size="small" :bordered="false">
                                 <template #icon>
                                     <n-icon :component="FileIcon" />
                                 </template>
                                 {{ dok_identitas.TYPE }} </n-tag>
                         </n-flex>
-                    </n-flex>
-                    <n-empty description="Tidak ada dokumen pendukung" v-else />
+                    </n-space>
                 </n-card>
             </n-card>
         </n-tab-pane>

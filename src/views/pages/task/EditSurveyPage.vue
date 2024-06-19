@@ -154,7 +154,7 @@
                         :custom-request="handleImagePost">
                         Upload tampak depan
                     </n-upload>
-                    <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                    <n-upload :data="{ 'type': 'tampak belakang' }" list-type="image-card"
                         :custom-request="handleImagePost">
                         Upload tampak belakang
                     </n-upload>
@@ -162,7 +162,7 @@
                         :custom-request="handleImagePost">
                         Upload tampak kanan
                     </n-upload>
-                    <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                    <n-upload :data="{ 'type': 'tampak kiri' }" list-type="image-card"
                         :custom-request="handleImagePost">
                         Upload tampak kiri
                     </n-upload>
@@ -294,6 +294,7 @@ const message = useMessage();
 const pageData = ref({});
 const suspense = ref({});
 const baseRoute = useRoute();
+const paramPage = baseRoute.params.idsurvey;
 const uuid = uuidv4();
 const current = ref(1);
 const loading = ref(false);
@@ -385,7 +386,7 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
     const form = new FormData();
     form.append('image', file.file);
     form.append('type', data.type);
-    form.append('cr_prospect_id', idApp);
+    form.append('cr_prospect_id', paramPage);
     const headers = {
         Authorization: `Bearer ${userToken}`,
     }

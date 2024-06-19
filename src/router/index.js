@@ -38,6 +38,21 @@ const routes = [
         component: () => import("../views/pages/task/ConfFpkPage.vue"),
       },
       {
+        path: "nego-fpk/:idapplication",
+        name: "Nego Pengajuan Kredit",
+        component: () => import("../views/pages/task/NegoFpkPage.vue"),
+      },
+      {
+        path: "approve-fpk/:idapplication",
+        name: "Konfirmasi HO Pengajuan Kredit",
+        component: () => import("../views/pages/task/ConfHOFpkPage.vue"),
+      },
+      {
+        path: "detail-fpk/:idapplication",
+        name: "Detail Pengajuan Kredit",
+        component: () => import("../views/pages/task/DetailFpkPage.vue"),
+      },
+      {
         path: "survey",
         name: "survey",
         component: () => import("../views/pages/task/SurveyPage.vue"),

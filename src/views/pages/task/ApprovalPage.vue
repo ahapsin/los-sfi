@@ -106,7 +106,7 @@ const columns = [
                     type: statusTag(row.status),
                     size: "small",
                 },
-                { default: () => statusLabel(row.status) }
+                { default: () => row.status }
             );
         }
     }, {
@@ -157,6 +157,8 @@ const statusLabel = (e) => {
 const statusHandle = (e) => {
     if (e.status.at(0) == 1) {
         return "periksa";
+    } else if (e.status.at(0) == 4) {
+        return "nego";
     } else {
         return "lihat";
     }
@@ -220,8 +222,10 @@ const renderIcon = (icon) => {
 const handelAction = (e) => {
     if (e.status.at(0) == 1) {
         router.replace({ name: 'Konfirmasi Pengajuan Kredit', params: { idapplication: e.id } });
+    } else if (e.status.at(0) == 4) {
+        router.replace({ name: 'Nego Pengajuan Kredit', params: { idapplication: e.id } });
     } else {
-        console.log("mau cek");
+        router.replace({ name: 'Detail Pengajuan Kredit', params: { idapplication: e.id } });
     }
     // let status = e.at(0);
     // const dynamicBody = {

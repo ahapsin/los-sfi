@@ -1,6 +1,7 @@
 <template>
     <div class="pt-4">
         <n-space vertical>
+            <!-- {{ dataTable }} -->
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
                     <n-space>
@@ -182,8 +183,10 @@ const handleAction = (e, data) => {
                 message.error('FPK gagal dibuat!')
             }
         });
-    } else {
+    } else if (status === "2") {
         router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+    } else {
+        router.replace({ name: 'Detail Pengajuan Kredit', params: { idapplication: data.id } });
     }
 };
 const handleDetail = (evt) => {
