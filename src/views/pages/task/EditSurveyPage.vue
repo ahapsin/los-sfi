@@ -269,7 +269,7 @@
                 </template>
                 Selanjutnya
             </n-button>
-            <n-button :loading="loading" icon-placement="left" type="primary" @click="handleSave" v-else>
+            <n-button :loading="loading" icon-placement="left" type="primary" @click="handleSave">
                 Ubah
             </n-button>
         </n-flex>
