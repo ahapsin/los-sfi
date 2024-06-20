@@ -411,10 +411,14 @@
                             placeholder="Biaya Transfer" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Eff" path="bunga_margin_eff">
-                        <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" />
+                        <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff">
+                            <template #suffix>%</template>
+                        </n-input>
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Flat" path="bunga_margin_flat">
-                        <n-input v-model:value="calcCredit.bunga_flat" placeholder="Bunga / Margin Flat" disabled />
+                        <n-input v-model:value="calcCredit.bunga_flat" placeholder="Bunga / Margin Flat" disabled>
+                            <template #suffix>%</template>
+                        </n-input>
                     </n-form-item>
                 </div>
                 <div class="flex flex-col w-full">
@@ -432,11 +436,15 @@
                         </n-form-item> -->
                     <n-form-item label="Bunga / Margin Eff Actual" path="bunga_margin_eff_actual">
                         <n-input v-model:value="calcCredit.bunga_eff_actual" placeholder="Bunga / Margin Eff Actual"
-                            disabled />
+                            disabled>
+                            <template #suffix>%</template>
+                        </n-input>
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Eff Flat Actual" path="bunga_margin_eff_flat_actual">
                         <n-input v-model:value="calcCredit.bunga_margin_eff_flat" placeholder=" Bunga / Margin Eff Flat
-                                Actual" disabled />
+                                Actual" disabled>
+                            <template #suffix>%</template>
+                        </n-input>
                     </n-form-item>
                     <n-form-item label="Nett Admin" path="net_admin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.net_admin"
@@ -503,7 +511,7 @@ const baseRoute = useRoute();
 const calcCredit = reactive({
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
-    bunga_margin: computed(() => calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100),
+    bunga_margin: computed(() => parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100)),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
     angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
