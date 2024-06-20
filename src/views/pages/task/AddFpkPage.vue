@@ -200,7 +200,7 @@
                 <n-input placeholder="Reff Pelanggan" v-model:value="dataOrder.ref_pelanggan" />
             </n-form-item>
             <n-form-item label="Surveyor" path="surveyor">
-                <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" disabled />
+                <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_name" disabled />
             </n-form-item>
             <n-form-item label="Catatan Survey" path="cat_survey">
                 <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
@@ -210,7 +210,7 @@
                 <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" />
             </n-form-item>
             <n-form-item label="Cara Bayar" path="cara_bayar">
-                <n-input placeholder="Cara Bayar" v-model:value="dataOrder.cara_bayar" />
+                <n-select placeholder="Cara Bayar" :options="optCaraBayarPay" v-model:value="dataOrder.cara_bayar" />
             </n-form-item>
             <n-divider />
             <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
@@ -598,7 +598,7 @@ const optTipeOrder = ["RETAIL"].map(
         label: v,
         value: v
     }));
-const optKategori = ["Karyawan", "Bukan Karyawan"].map(
+const optKategori = ["BUKAN KARYAWAN", "KARYAWAN", "KARYAWAN PERUSAHAAN AFILIASI"].map(
     (v) => ({
         label: v,
         value: v
@@ -608,17 +608,22 @@ const optStatusKawin = ["Kawin", "Belum Kawin", "Janda", "Duda"].map(
         label: v,
         value: v
     }));
-const optAgama = ["ISLAM", "KRISTEN"].map(
+const optAgama = ["ISLAM", "PROTESTAN", "KATHOLIK", "HINDU", "BUDHA", "KONG HU CU", "OTHERS"].map(
     (v) => ({
         label: v,
         value: v
     }));
-const optPendidikan = ["SMA", "SD"].map(
+const optPendidikan = ["SEKOLAH DASAR", "SEKOLAH MENENGAH PERTAMA", "SEKOLAH MENENGAH ATAS", "DIPLOMA 1", "DIPLOMA 2", "DIPLOMA 3", "SARJANA S1"].map(
     (v) => ({
         label: v,
         value: v
     }));
 const optPeriode = ["Bulan", "tahun"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optCaraBayarPay = ["KE KASIR", "DITAGIH KOLEKTOR", "ATM", "TRANSFER BANK", "PDC"].map(
     (v) => ({
         label: v,
         value: v

@@ -30,7 +30,7 @@
                                                 v-model:value="order.tenor" />
                                 </n-form-item>
                                 <n-form-item label="Kategori Kredit" path="category">
-                                        <n-select placeholder="Kategori Kredit" :options="kategoriKredit"
+                                        <n-select placeholder="Kategori Kredit" :options="optKategori"
                                                 v-model:value="order.category" />
                                 </n-form-item>
                         </n-card>
@@ -210,7 +210,8 @@
                                         <n-input placeholder="usaha" v-model:value="survey.usaha" />
                                 </n-form-item>
                                 <n-form-item label="Sektor" path="sektor">
-                                        <n-input placeholder="sektor" v-model:value="survey.sektor" />
+                                        <n-select placeholder="sektor" :options="optSektor"
+                                                v-model:value="survey.sektor" />
                                 </n-form-item>
                                 <n-form-item label="Catatan Survey" path="cat_survey">
                                         <n-input v-model:value="survey.catatan_survey" type="textarea"
@@ -294,7 +295,17 @@ const kategoriKredit = ["kategori 1", "kategori 2"].map(
                 label: v,
                 value: v
         }));
+const optKategori = ["BUKAN KARYAWAN", "KARYAWAN", "KARYAWAN PERUSAHAAN AFILIASI"].map(
+        (v) => ({
+                label: v,
+                value: v
+        }));
 const tipeKendaraan = ["motor", "mobil"].map(
+        (v) => ({
+                label: v,
+                value: v
+        }));
+const optSektor = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
         (v) => ({
                 label: v,
                 value: v
