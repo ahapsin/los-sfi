@@ -11,11 +11,12 @@
                 </n-upload>
             </n-form-item>
             <n-form-item label="Cabang" path="cabang">
-                <n-select placeholder="Pilih Cabang" label-field="nama" value-field="id" :options="dataBranch"
-                    v-model:value="dynamicForm.cabang_nama" />
+                <n-select filterable placeholder="Pilih Cabang" label-field="nama" value-field="id"
+                    :options="dataBranch" v-model:value="dynamicForm.cabang_nama" />
             </n-form-item>
             <n-form-item label="Jabatan" path="jabatan">
-                <n-select placeholder="Pilih Jabatan" :options="optJabatan" v-model:value="dynamicForm.jabatan" />
+                <n-select filterable placeholder="Pilih Jabatan" :options="optJabatan"
+                    v-model:value="dynamicForm.jabatan" />
             </n-form-item>
             <n-form-item label="No KTP" path="no_ktp">
                 <n-input placeholder="No KTP" v-model:value="dynamicForm.no_ktp" />
@@ -30,7 +31,8 @@
                 </n-input-group>
             </n-form-item>
             <n-form-item label="Jenis Kelamin" path="jk">
-                <n-select :options="optJenisKelamin" placeholder="Jenis Kelamin" v-model:value="dynamicForm.gender" />
+                <n-select filterable :options="optJenisKelamin" placeholder="Jenis Kelamin"
+                    v-model:value="dynamicForm.gender" />
             </n-form-item>
             <n-form-item label="Golongan Darah" path="blood">
                 <n-input placeholder="Golongan Darah" v-model:value="dynamicForm.blood_type" />
@@ -90,7 +92,7 @@
                 <n-input placeholder="kodepos" v-model:value="dynamicForm.kode_pos" />
             </n-form-item>
             <n-form-item label="Agama" path="agama">
-                <n-select :options="optAgama" placeholder="Agama" v-model:value="dynamicForm.agama" />
+                <n-select filterable :options="optAgama" placeholder="Agama" v-model:value="dynamicForm.agama" />
             </n-form-item>
             <n-form-item label="Nama Ibu Kandung" path="ibu_kandung">
                 <n-input placeholder="Nama Ibu Kandung" v-model:value="dynamicForm.ibu_kandung" />

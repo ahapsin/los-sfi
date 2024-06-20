@@ -33,7 +33,7 @@
 
             <div class="flex w-full gap-2">
                 <n-form-item label="Jenis kelamin" path="jenis_kelamin" class="w-full">
-                    <n-select placeholder="Jenis Kelamin" :options="optJenisKelamin"
+                    <n-select filterable placeholder="Jenis Kelamin" :options="optJenisKelamin"
                         v-model:value="dataPelanggan.jenis_kelamin" />
                 </n-form-item>
                 <n-form-item label="Tanggal Lahir" path="tgl_lahir" class="w-full">
@@ -48,7 +48,7 @@
 
             <n-form-item label="Status Kawin" path="jenis_kelamin">
                 <n-input-group>
-                    <n-select placeholder="Status Kawin" :options="optStatusKawin"
+                    <n-select filterable placeholder="Status Kawin" :options="optStatusKawin"
                         v-model:value="dataPelanggan.status_kawin" />
                     <!-- <n-date-picker placeholder="Tanggal Kawin"
                             v-model:formatted-value="dynamicForm.pelanggan.tgl_kawin" value-format="yyyy-MM-dd"
@@ -57,7 +57,7 @@
             </n-form-item>
             <div class="flex w-full gap-2">
                 <n-form-item label="Identitas" path="plafond" class="w-full">
-                    <n-select placeholder="Jenis Identitas" :options="optJenisIdentitas"
+                    <n-select filterable placeholder="Jenis Identitas" :options="optJenisIdentitas"
                         v-model:value="dataPelanggan.tipe_identitas" />
                 </n-form-item>
                 <n-form-item label="No Identitas" path="no_identitas" class="w-full">
@@ -144,10 +144,11 @@
                 </n-form-item>
             </div>
             <n-form-item label="Agama" path="agama">
-                <n-select placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
+                <n-select filterable placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
             </n-form-item>
             <n-form-item label="Pendidikan" path="pendidikan">
-                <n-select placeholder="pendidikan" :options="optPendidikan" v-model:value="dataPekerjaan.pendidikan" />
+                <n-select filterable placeholder="pendidikan" :options="optPendidikan"
+                    v-model:value="dataPekerjaan.pendidikan" />
             </n-form-item>
             <div class="flex gap-2">
                 <n-form-item label="Telepon" path="telepon" class="w-full">
@@ -186,11 +187,12 @@
                         value-format="yyyy-MM-dd" type="date" class="w-full" />
                 </n-form-item>
                 <n-form-item label="Status Order" path="status_order" class="w-full">
-                    <n-select placeholder="status order" :options="optStatusOrder"
+                    <n-select filterable placeholder="status order" :options="optStatusOrder"
                         v-model:value="dataOrder.order_status" />
                 </n-form-item>
                 <n-form-item label="Tipe Order" path="order" class="w-full">
-                    <n-select placeholder="tipe" :options="optTipeOrder" v-model:value="dataOrder.order_tipe" />
+                    <n-select filterable placeholder="tipe" :options="optTipeOrder"
+                        v-model:value="dataOrder.order_tipe" />
                 </n-form-item>
             </div>
             <n-form-item label="Unit Bisnis" path="unit_bisnis">
@@ -210,14 +212,15 @@
                 <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" />
             </n-form-item>
             <n-form-item label="Cara Bayar" path="cara_bayar">
-                <n-select placeholder="Cara Bayar" :options="optCaraBayarPay" v-model:value="dataOrder.cara_bayar" />
+                <n-select filterable placeholder="Cara Bayar" :options="optCaraBayarPay"
+                    v-model:value="dataOrder.cara_bayar" />
             </n-form-item>
             <n-divider />
             <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
                 <n-input placeholder="Nama Ibu Kandung" v-model:value="dataOrder.nama_ibu" />
             </n-form-item>
             <n-form-item label="Kategori" path="kategori">
-                <n-select placeholder="agama" :options="optKategori" v-model:value="dataOrder.kategori" />
+                <n-select filterable placeholder="Kategori" :options="optKategori" v-model:value="dataOrder.kategori" />
             </n-form-item>
             <n-form-item label="Lama Bekerja" path="lama_kerja">
                 <n-input placeholder="lama bekerja" v-model:value="dataOrder.lama_bekerja" />
@@ -372,10 +375,10 @@
                             :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" disabled />
                     </n-form-item>
                     <n-form-item label="Tipe Angsuran" path="tipe_angsuran">
-                        <n-select v-model:value="calcCredit.tipe_angsuran" :options="optTipeAngsuran" />
+                        <n-select filterable v-model:value="calcCredit.tipe_angsuran" :options="optTipeAngsuran" />
                     </n-form-item>
                     <n-form-item label="Cara Pembayaraan" path="cara_bayar">
-                        <n-select placeholder="Cara Pembayaran" :options="optCaraBayar"
+                        <n-select filterable placeholder="Cara Pembayaran" :options="optCaraBayar"
                             v-model:value="calcCredit.cara_pembayaran" />
                     </n-form-item>
                     <n-form-item label="Jumlah Angsuran" path="jml_angsuran">
@@ -383,7 +386,7 @@
                     </n-form-item>
                     <n-form-item label="Periode" path="periode">
                         <n-input v-model:value="calcCredit.periode" placeholder="periode" />
-                        <n-select placeholder="Pilih Periode" :options="optPeriode"
+                        <n-select filterable placeholder="Pilih Periode" :options="optPeriode"
                             v-model:value="calcCredit.opt_periode" />
                     </n-form-item>
                     <n-form-item label="Angsuran" path="angsuran">

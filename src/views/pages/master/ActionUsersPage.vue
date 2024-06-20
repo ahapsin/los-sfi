@@ -20,20 +20,22 @@
                 <n-input placeholder="Nama" v-model:value="dynamicForm.nama" />
             </n-form-item>
             <n-form-item label="Cabang" path="cabang">
-                <n-select placeholder="Pilih Cabang" label-field="nama" value-field="id" :options="dataBranch"
-                    v-model:value="dynamicForm.cabang_id" />
+                <n-select filterable placeholder="Pilih Cabang" label-field="nama" value-field="id"
+                    :options="dataBranch" v-model:value="dynamicForm.cabang_id" />
             </n-form-item>
             <n-form-item label="Jabatan" path="jabatan">
-                <n-select placeholder="Pilih Jabatan" :options="optJabatan" v-model:value="dynamicForm.jabatan" />
+                <n-select filterable placeholder="Pilih Jabatan" :options="optJabatan"
+                    v-model:value="dynamicForm.jabatan" />
             </n-form-item>
             <n-form-item label="No HP" path="ho">
                 <n-input placeholder="no HP" v-model:value="dynamicForm.no_hp" />
             </n-form-item>
             <n-form-item label="Jenis Kelamin" path="jk">
-                <n-select :options="optJenisKelamin" placeholder="Jenis Kelamin" v-model:value="dynamicForm.gender" />
+                <n-select filterable :options="optJenisKelamin" placeholder="Jenis Kelamin"
+                    v-model:value="dynamicForm.gender" />
             </n-form-item>
             <n-form-item label="Status" path="ho">
-                <n-select placeholder="Status" :options="optStatus" v-model:value="dynamicForm.status" />
+                <n-select filterable placeholder="Status" :options="optStatus" v-model:value="dynamicForm.status" />
             </n-form-item>
         </n-form>
         <template #action>

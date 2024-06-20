@@ -1,19 +1,19 @@
 <template>
     <n-form-item label="Provinsi" path="provinsi">
-        <n-select placeholder="Pilih Provinsi" label-field="name" value-field="id" v-model:value="props.provinsi"
-            :options="col_provinsi" @update:value="provinsiChanged" />
+        <n-select filterable placeholder="Pilih Provinsi" label-field="name" value-field="id"
+            v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged" />
     </n-form-item>
     <n-form-item label="Kota" path="kota">
-        <n-select :disabled placeholder="Pilih Kab/Kota" label-field="name" value-field="id" v-model:value="props.kota"
-            :options="col_kota" @update:value="kotaChanged" />
+        <n-select filterable :disabled placeholder="Pilih Kab/Kota" label-field="name" value-field="id"
+            v-model:value="props.kota" :options="col_kota" @update:value="kotaChanged" />
     </n-form-item>
     <n-form-item label="Kecamatan" path="kecamatan">
-        <n-select :disabled placeholder="Pilih Kecamatan" label-field="name" value-field="id"
+        <n-select filterable :disabled placeholder="Pilih Kecamatan" label-field="name" value-field="id"
             v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" />
     </n-form-item>
     <n-form-item label="Desa" path="desa">
-        <n-select :disabled placeholder="Pilih Desa" label-field="name" value-field="id" v-model:value="props.desa"
-            :options="col_desa" @update:value="desaChanged" />
+        <n-select filterable :disabled placeholder="Pilih Desa" label-field="name" value-field="id"
+            v-model:value="props.desa" :options="col_desa" @update:value="desaChanged" />
     </n-form-item>
 
 </template>

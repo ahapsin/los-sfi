@@ -22,15 +22,15 @@
                                                 placeholder="plafond" :show-button="false" class="flex !w-full" />
                                 </n-form-item>
                                 <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
-                                        <n-select placeholder="Tujuan Kredit" :options="tujuanKredit"
+                                        <n-select filterable placeholder="Tujuan Kredit" :options="tujuanKredit"
                                                 v-model:value="order.tujuan_kredit" />
                                 </n-form-item>
                                 <n-form-item label="Tenor Kredit" path="tenor">
-                                        <n-select placeholder="Tenor Kredit" :options="tenorKredit"
+                                        <n-select filterable placeholder="Tenor Kredit" :options="tenorKredit"
                                                 v-model:value="order.tenor" />
                                 </n-form-item>
                                 <n-form-item label="Kategori Kredit" path="category">
-                                        <n-select placeholder="Kategori Kredit" :options="optKategori"
+                                        <n-select filterable placeholder="Kategori Kredit" :options="optKategori"
                                                 v-model:value="order.category" />
                                 </n-form-item>
                         </n-card>
@@ -83,7 +83,7 @@
                                 footer: 'soft'
                         }">
                                 <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
-                                        <n-select placeholder="Tipe Kendaraan" :options="tipeKendaraan"
+                                        <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item>
                                 <n-form-item label="Merk" path="merk">
@@ -210,7 +210,7 @@
                                         <n-input placeholder="usaha" v-model:value="survey.usaha" />
                                 </n-form-item>
                                 <n-form-item label="Sektor" path="sektor">
-                                        <n-select placeholder="sektor" :options="optSektor"
+                                        <n-select filterable placeholder="sektor" :options="optSektor"
                                                 v-model:value="survey.sektor" />
                                 </n-form-item>
                                 <n-form-item label="Catatan Survey" path="cat_survey">
