@@ -104,9 +104,12 @@
             <n-form-item label="Kode Pos" path="desa">
                 <n-input placeholder="Kode Pos" v-model:value="alamatIdentitas.kode_pos" />
             </n-form-item>
-            <n-divider title-placement="left">
-                Informasi Alamat Tagih
-            </n-divider>
+            <div class="flex  items-center justify-between border-b pb-2 mb-2">
+                <strong class="text-base">Informasi Alamat Tagih</strong> <n-button secondary type="primary"
+                    @click="copyAddress">
+                    salin alamat
+                    identitas</n-button>
+            </div>
 
             <div class="flex gap-2">
                 <n-form-item label="Alamat" class="w-full">
@@ -366,7 +369,7 @@
                 <div class="flex flex-col w-full">
                     <n-form-item label="Pokok pembayaran" path="Pokok Pembayaran">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_pembayaran"
-                            :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" />
+                            :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" disabled />
                     </n-form-item>
                     <n-form-item label="Tipe Angsuran" path="tipe_angsuran">
                         <n-select v-model:value="calcCredit.tipe_angsuran" :options="optTipeAngsuran" />
@@ -385,7 +388,7 @@
                     </n-form-item>
                     <n-form-item label="Angsuran" path="angsuran">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran"
-                            placeholder="angsuran" :show-button="false" class="flex !w-full" />
+                            placeholder="angsuran" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Total Admin" path="total_admin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.total_admin"
@@ -411,32 +414,33 @@
                         <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" />
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Flat" path="bunga_margin_flat">
-                        <n-input v-model:value="calcCredit.bunga_flat" placeholder="Bunga / Margin Flat" />
+                        <n-input v-model:value="calcCredit.bunga_flat" placeholder="Bunga / Margin Flat" disabled />
                     </n-form-item>
                 </div>
                 <div class="flex flex-col w-full">
                     <n-form-item label="Bunga / Margin" path="bunga_margin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.bunga_margin"
-                            placeholder="Bunga / Margin" :show-button="false" class="flex !w-full" />
+                            placeholder="Bunga / Margin" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Pokok + Margin" path="pokok_margin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_margin"
-                            placeholder="Pokok + Margin" :show-button="false" class="flex !w-full" />
+                            placeholder="Pokok + Margin" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
                     <!-- <n-form-item label="Angsuran Terkahir" path="angsuran_terakhir">
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran_terakhir"
                                 placeholder="Angsuran Terakhir" :show-button="false" class="flex !w-full" />
                         </n-form-item> -->
                     <n-form-item label="Bunga / Margin Eff Actual" path="bunga_margin_eff_actual">
-                        <n-input v-model:value="calcCredit.bunga_eff_actual" placeholder="Bunga / Margin Eff Actual" />
+                        <n-input v-model:value="calcCredit.bunga_eff_actual" placeholder="Bunga / Margin Eff Actual"
+                            disabled />
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Eff Flat Actual" path="bunga_margin_eff_flat_actual">
                         <n-input v-model:value="calcCredit.bunga_margin_eff_flat" placeholder=" Bunga / Margin Eff Flat
-                                Actual" />
+                                Actual" disabled />
                     </n-form-item>
                     <n-form-item label="Nett Admin" path="net_admin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.net_admin"
-                            placeholder="Net Admin" :show-button="false" class="flex !w-full" />
+                            placeholder="Net Admin" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Nilai yang diterima" path="nilai_diterima">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.nilai_yang_diterima"
@@ -613,6 +617,8 @@ const optPeriode = ["Bulan", "tahun"].map(
     }));
 
 const idApp = baseRoute.params.idapplication;
+
+const copyAddress = () => Object.assign(alamatTagih.value, alamatIdentitas.value);
 const sum = (num1, num2) => {
     if (isNaN(num1) || isNaN(num2)) {
         return undefined;
