@@ -29,13 +29,16 @@
                         :show-button="false" class="flex !w-full" />
                 </n-form-item>
                 <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
-                    <n-select placeholder="Tujuan Kredit" :options="tujuanKredit" v-model:value="order.tujuan_kredit" />
+                    <n-select filterable placeholder="Tujuan Kredit" :options="tujuanKredit"
+                        v-model:value="order.tujuan_kredit" />
                 </n-form-item>
                 <n-form-item label="Tenor Kredit" path="tenor">
-                    <n-select placeholder="Tenor Kredit" :options="tenorKredit" v-model:value="order.tenor" />
+                    <n-select filterable placeholder="Tenor Kredit" :options="tenorKredit"
+                        v-model:value="order.tenor" />
                 </n-form-item>
                 <n-form-item label="Kategori Kredit" path="category">
-                    <n-select placeholder="Kategori Kredit" :options="kategoriKredit" v-model:value="order.kategory" />
+                    <n-select filterable placeholder="Kategori Kredit" :options="optKategori"
+                        v-model:value="order.kategory" />
                 </n-form-item>
             </n-card>
             <n-card v-show="current == 2" title="Data Pelanggan" :segmented="{
@@ -93,7 +96,8 @@
                 footer: 'soft'
             }">
                 <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
-                    <n-select placeholder="Tipe Kendaraan" :options="tipeKendaraan" v-model:value="jaminan.tipe" />
+                    <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
+                        v-model:value="jaminan.tipe" />
                 </n-form-item>
                 <n-form-item label="Merk" path="merk">
                     <n-input placeholder="merk" v-model:value="jaminan.merk" />
@@ -223,7 +227,7 @@
                     <n-input placeholder="usaha" v-model:value="survey.usaha" />
                 </n-form-item>
                 <n-form-item label="Sektor" path="sektor">
-                    <n-input placeholder="sektor" v-model:value="survey.sektor" />
+                    <n-select filterable placeholder="sektor" :options="optSektor" v-model:value="survey.sektor" />
                 </n-form-item>
                 <n-form-item label="Catatan Survey" path="cat_survey">
                     <n-input v-model:value="survey.catatan_survey" type="textarea" placeholder="catatan survey" />
@@ -320,7 +324,17 @@ const kategoriKredit = ["kategori 1", "kategori 2"].map(
         label: v,
         value: v
     }));
+const optKategori = ["BUKAN KARYAWAN", "KARYAWAN", "KARYAWAN PERUSAHAAN AFILIASI"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
 const tipeKendaraan = ["motor", "mobil"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optSektor = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
     (v) => ({
         label: v,
         value: v
