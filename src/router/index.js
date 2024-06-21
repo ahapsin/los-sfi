@@ -120,6 +120,11 @@ const routes = [
         component: () => import("../views/pages/master/ActionUsersPage.vue"),
       },
       {
+        path: "users-menu/:iduser",
+        name: "menu pengguna",
+        component: () => import("../views/pages/master/MenuUserPage.vue"),
+      },
+      {
         path: "employee-action/:idemployee",
         name: "update karyawan",
         component: () => import("../views/pages/master/ActionEmployeePage.vue"),

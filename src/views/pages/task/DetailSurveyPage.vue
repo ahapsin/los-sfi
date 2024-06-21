@@ -12,7 +12,7 @@
                         {{ cekField(data.data_order.tujuan_kredit) }}
                     </n-descriptions-item>
                     <n-descriptions-item label="Plafond">
-                        {{ cekField(data.data_order.plafond) }}
+                        {{ cekField(data.data_order.plafond).toLocaleString("en-US") }}
                     </n-descriptions-item>
                     <n-descriptions-item label="Tenor">
                         {{ cekField(data.data_order.tenor) }}
@@ -59,17 +59,14 @@
                     <n-descriptions-item label="Lama Bekerja">
                         {{ cekField(data.data_survey.lama_bekerja) }}
                     </n-descriptions-item>
-                    <n-descriptions-item label="Jumlah Tanggungan">
-                        {{ cekField(data.data_survey.tanggungan) }}
-                    </n-descriptions-item>
                     <n-descriptions-item label="Penghasilan Pribadi">
-                        {{ cekField(data.data_survey.penghasilan_pribadi) }}
+                        {{ cekField(data.data_survey.penghasilan_pribadi).toLocaleString("en-US") }}
                     </n-descriptions-item>
                     <n-descriptions-item label="Penghasilan Pasangan">
-                        {{ cekField(data.data_survey.penghasilan_pasangan) }}
+                        {{ cekField(data.data_survey.penghasilan_pasangan).toLocaleString("en-US") }}
                     </n-descriptions-item>
                     <n-descriptions-item label="Penghasilan Lainnya">
-                        {{ cekField(data.data_survey.penghasilan_lainnya) }}
+                        {{ cekField(data.data_survey.penghasilan_lainnya).toLocaleString("en-US") }}
                     </n-descriptions-item>
                     <n-descriptions-item label="Catatan Survey">
                         {{ cekField(data.data_survey.catatan_survey) }}
@@ -109,7 +106,7 @@
                             {{ cekField(jaminan.no_stnk) }}
                         </n-descriptions-item>
                         <n-descriptions-item label="Nilai Jaminan">
-                            {{ cekField(jaminan.nilai) }}
+                            {{ cekField(jaminan.nilai).toLocaleString("en-US") }}
                         </n-descriptions-item>
                     </n-descriptions>
                 </n-space>

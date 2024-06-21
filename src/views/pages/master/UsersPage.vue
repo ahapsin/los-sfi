@@ -73,6 +73,7 @@ import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
 import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
 import {
+    SettingsRound as SettingIcon,
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
     FileDownloadOutlined as DownloadIcon,
@@ -130,6 +131,10 @@ const columns = [
                         if (e === "edit") {
                             handleUpdate(row);
                         }
+                        if (e === "settingMenu") {
+                            handleSettingMenu(row);
+                        }
+                        console.log(e)
                     }
                 },
                 {
@@ -182,6 +187,9 @@ const handleDetail = (evt) => {
 const handleAdd = () => {
     router.replace('/master/users-action');
 }
+const handleSettingMenu = (e) => {
+    router.replace(`/master/users-menu/${e.id}`);
+}
 const getData = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
@@ -207,10 +215,15 @@ const renderIcon = (icon) => {
 };
 const options = [
     {
-        label: "Hapus",
-        key: "hapus",
-        icon: renderIcon(DeleteIcon)
+        label: "Atur Menu",
+        key: "settingMenu",
+        icon: renderIcon(SettingIcon)
     },
+    // {
+    //     label: "Hapus",
+    //     key: "hapus",
+    //     icon: renderIcon(DeleteIcon)
+    // },
     {
         label: "Detail",
         key: "detail",
