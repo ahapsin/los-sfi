@@ -1,7 +1,7 @@
 <template>
     <div class="pt-4">
         <n-space vertical>
-            <!-- {{ dataTable }} -->
+            <!-- <pre>{{ dataTable }}</pre> -->
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
                     <n-space>
@@ -38,13 +38,211 @@
                 </n-space>
             </n-card>
         </n-space>
+        <!-- <n-space>
+            online at: {{ fingerprint }}
+        </n-space> -->
     </div>
+    <n-modal v-model:show="showModal">
+        <n-card style="width: 600px" title="Modal" :bordered="false" size="huge" role="dialog" aria-modal="true">
+            <template #header-extra>
+                Oops!
+            </template>
+            <n-flex>
+                <table border="1" ref="pk" style="font-size: 10px; width: 600px;">
+                    <tr>
+                        <td align="center">
+                            PERJANJIAN PEMBERIAN PINJAMAN
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            NO.PERJANJIAN : 11102240000208
+                        </td>
+                    </tr>
+                    <tr>
+                        <td heigth="20">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Yang bertanda tangan dibawah ini :
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            <table>
+                                <tr>
+                                    <td rowspan="3" valign="top">I.</td>
+                                    <td>Nama</td>
+                                    <td>:</td>
+                                    <td>HOSEA</td>
+                                </tr>
+                                <tr>
+
+                                    <td>Jabatan</td>
+                                    <td>:</td>
+                                    <td>POS MANAGER</td>
+                                </tr>
+                                <tr>
+
+                                    <td> Alamat Kantor</td>
+                                    <td>:</td>
+                                    <td>JL.BY PASS KANDANGHAUR DEPAN KANTOR PLN BLOK ANJUN DS.KARANGANYAR KEC.KANDANHAUR
+                                        KAB.INDRAMAYU KARANGANYAR KANDANGHAUR INDRAMAYU
+                                        Dalam hal ini bertindak untuk dan atas nama CABANG KANDANGHAUR
+                                        selanjutnya disebut Pihak Pertama </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td rowspan="4" valign="top">II.</td>
+                                    <td>Nama</td>
+                                    <td>:</td>
+                                    <td>TASMI</td>
+                                </tr>
+                                <tr>
+
+                                    <td> No. KTP/SIM</td>
+                                    <td>:</td>
+                                    <td>321221480280004</td>
+                                </tr>
+                                <tr>
+
+                                    <td> Alamat Kantor</td>
+                                    <td>:</td>
+                                    <td>BLOK CILET RT 003 RW 007
+                                        Kel KARANGANYAR KEC. KANDANGHAUR KAB. INDRAMAYU JAWA BARAT</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"> Dalam hal ini bertindak untuk dirinya sendiri, selanjutnya disebut
+                                        Pihak Kedua
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <br />
+                            Dengan ini menerangkan bahwa para pihak sepakat menandatangani Perjanjian Pemberian
+                            Pinjaman,
+                            dengan
+                            isi, syarat dan ketentuan sebagai berikut :
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"> <br /> Pasal 1</td>
+                    </tr>
+                    <tr>
+                        <td> Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas
+                            pinjaman
+                            menjadi sebesar Rp. 5.076.000 (LIMA JUTA TUJUH PULUH ENAM RIBU RUPIAH)</td>
+                    </tr>
+                    <tr>
+                        <td align="center"> <br />Pasal 2</td>
+                    </tr>
+                    <tr>
+                        <td> Pengembalian pinjaman tersebut akan dibayarkan untuk jangka 18 (DELAPAN BELAS) BULAN
+                            lamanya,
+                            dimulai tanggal 21/07/2024 berakhir pada tanggal 21/12/2025 dengan jumlah angsuran sebesar
+                            Rp. 282.000 (DUA RATUS DELAPAN PULUH DUA RIBU RUPIAH) setiap bulannya.</td>
+                    </tr>
+                    <tr>
+                        <td align="center"> <br /> Pasal 3</td>
+                    </tr>
+                    <tr>
+                        <td> Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan
+                            jaminan
+                            barang miliknya sendiri berupa SEPEDA MOTOR, dengan dibuktikan diserahkannya
+                            Bukti Kepemilikan dengan spesifikasi sebagai berikut</td>
+                    </tr>
+                    <tr>
+                        <td> <br />
+                            <table>
+                                <tr>
+                                    <td>BPKB No</td>
+                                    <td>:</td>
+                                    <td>J-05259893</td>
+                                </tr>
+                                <tr>
+                                    <td>BPKB atas nama</td>
+                                    <td>:</td>
+                                    <td>ROKMAT BIN SUMA</td>
+                                </tr>
+                                <tr>
+                                    <td>Merk/Type/tahun</td>
+                                    <td>:</td>
+                                    <td>HONDA/BEAT SPORTY CBS/2012</td>
+                                </tr>
+                                <tr>
+                                    <td> Warna/No.Polisi</td>
+                                    <td>:</td>
+                                    <td>BIRU PUTIH/E4220TT</td>
+                                </tr>
+                                <tr>
+                                    <td>No. Rangka/Mesin</td>
+                                    <td>:</td>
+                                    <td>MHIJFD219CK226444/JFD2E1229558</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            Apabila pihak kedua tidak bisa memenuhi kewajiban pembayaran angsuran selama 3 bulan, maka
+                            pihak
+                            kedua
+                            bersedia menyerahkan jaminan kendaraan sesuai dengan pasal 3 di atas kepada pihak pertama.
+                            Jika Perjanjian Pemberi Pinjaman telah selesai, BPKB wajib diambil maksimum 90 hari kalender
+                            terhitung
+                            dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas kerusakan
+                            atau kegilangan BPKB.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            Demikian Perjanjian Pemberian Pinjaman ini dibuat dan ditandatangani, tanpa adanya unsur
+                            paksaan.<br />
+                            INDRAMAYU, 21/06/2024
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            <table width="100%">
+                                <tr>
+                                    <td>Pihak Pertama<br />CABANG KANDANGHAUR<br /><br /><br /><br /> ( KSP Djaya )
+                                    </td>
+                                    <td>Pihak Kedua<br /><br /><br /><br /><br /> ( TASMI )
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </n-flex>
+            <template #footer>
+                Footer
+            </template>
+        </n-card>
+    </n-modal>
 </template>
 <script setup>
 import { ref, reactive, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
 import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
+import { jsPDF } from "jspdf";
+import { useNetwork } from '@vueuse/core';
+const { onlineAt } = useNetwork();
+import { sha256, sha224 } from 'js-sha256';
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -61,6 +259,8 @@ import {
 
 const message = useMessage();
 const dialog = useDialog();
+const pk = ref(null);
+const showModal = ref(false);
 const dataTable = ref();
 const loadingRef = reactive({
     type: "loading",
@@ -72,6 +272,10 @@ const columns = [
     {
         title: "Tanggal",
         key: "visit_date"
+    },
+    {
+        title: "Order",
+        key: "order_number"
     },
     {
         title: "Nama",
@@ -97,6 +301,28 @@ const columns = [
                 },
                 { default: () => statusLabel(row.status) }
             );
+        }
+    },
+    {
+        key: "status",
+        render(row) {
+            let status = row.status.at(0);
+            if (status === "6") {
+                return h(
+                    NButton,
+                    {
+                        size: "small",
+                        onClick: (e) => {
+                            handlePrePrint(row);
+                            //showModal.value = true;
+                            // handlePrint(row)
+                        },
+                    },
+                    {
+                        default: "CETAK FPK"
+                    }
+                );
+            }
         }
     }, {
         title: "Action",
@@ -189,9 +415,34 @@ const handleAction = (e, data) => {
         router.replace({ name: 'Detail Pengajuan Kredit', params: { idapplication: data.id } });
     }
 };
-const handleDetail = (evt) => {
-    console.log(evt);
-    console.log("mau cek detail");
+const handlePrint = (evt) => {
+    generatePdf();
+}
+
+const handlePrePrint = (row) => {
+    router.replace({ name: 'pre print pk', params: { idapplication: row.id } });
+}
+
+function generatePdf() {
+    console.log('generate pdf');
+    var doc = new jsPDF('p', 'pt', 'legal');
+    const margins = {
+        top: 80,
+        bottom: 60,
+        left: 40,
+        width: 522
+    };
+
+    doc.html(pk.value, {
+        callback: function (doc) {
+            doc.output('dataurlnewwindow');
+            // doc.save();
+        },
+        x: 10,
+        y: 10
+    });
+
+    // doc.save('test.pdf');
 }
 const handleAdd = () => {
     router.push('/task/new-survey');
@@ -238,6 +489,23 @@ const options = [
 const pagination = {
     pageSize: 10
 }
+function generateBrowserFingerprint() {
+    let fingerprint = [];
 
+    // User agent string
+    fingerprint.push(navigator.userAgent);
+
+    // Language
+    fingerprint.push(navigator.language || navigator.userLanguage);
+    // Screen resolution
+    fingerprint.push(screen.width + "x" + screen.height);
+    // Timezone offset
+    fingerprint.push(new Date().getTimezoneOffset());
+    // Generate a hash of the fingerprint components
+    let fingerprintString = fingerprint.join("###");
+    let hash = sha256(fingerprintString); // You would need a SHA-256 function here
+    return hash;
+}
+const fingerprint = generateBrowserFingerprint();
 onMounted(() => getData());
 </script>

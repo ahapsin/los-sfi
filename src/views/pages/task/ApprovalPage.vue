@@ -200,7 +200,7 @@ const getData = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
-        api: 'cr_application',
+        api: 'fpk_kapos',
         token: userToken
     });
     if (!response.ok) {

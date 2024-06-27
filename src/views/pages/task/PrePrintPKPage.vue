@@ -1,0 +1,320 @@
+<template>
+    <n-card>
+        <div class="flex w-full gap-2">
+
+            <n-form-item label="order number" path="nama" class="w-full">
+                <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
+            </n-form-item>
+            <n-form-item label="Tanggal Awal" path="nama_panggilan" class="w-full">
+                <n-input-group>
+                    <n-select :options="options" placeholder="pilih" v-model:value="dynamicForm.awal"></n-select>
+                    <n-input :value="month" disabled />
+                    <n-input :value="new Date().getFullYear()" disabled />
+                </n-input-group>
+            </n-form-item>
+            <n-form-item label="Angsuran" path="nama_panggilan" class="w-full">
+                <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.angsuran"
+                    placeholder="Net Admin" :show-button="false" class="flex !w-full" />
+            </n-form-item>
+            <n-form-item class="w-full">
+                <n-button type="primary" @click="handleProses">Proses</n-button>
+            </n-form-item>
+        </div>
+        <n-divider title="PK" title-placement="left" v-show="prosesPK">PK</n-divider>
+        <table border="1" ref="pk" v-show="prosesPK">
+            <tr>
+                <td align="center">
+                    PERJANJIAN PEMBERIAN PINJAMAN
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    NO.PERJANJIAN : {{ pkData.no_perjanjian }}
+                </td>
+            </tr>
+            <tr>
+                <td heigth="20">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Yang bertanda tangan dibawah ini :
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                    <table>
+                        <tr>
+                            <td rowspan="3" valign="top" width="20">I.</td>
+                            <td width="150">Nama</td>
+                            <td>:</td>
+                            <td>{{ pihak1.nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>Jabatan</td>
+                            <td>:</td>
+                            <td>{{ pihak1.jabatan }}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"> Alamat Kantor</td>
+                            <td valign="top">:</td>
+                            <td>{{ pihak1.alamat_kantor }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td rowspan="4" valign="top" width="20">II.</td>
+                            <td width="150">Nama</td>
+                            <td>:</td>
+                            <td>{{ pihak2.nama }}</td>
+                        </tr>
+                        <tr>
+                            <td> No. KTP/SIM</td>
+                            <td>:</td>
+                            <td>{{ pihak2.no_identitas }}</td>
+                        </tr>
+                        <tr>
+                            <td> Alamat Kantor</td>
+                            <td>:</td>
+                            <td>{{ pihak2.alamat }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan=" 3"> Dalam hal ini bertindak untuk dirinya sendiri, selanjutnya disebut
+                                Pihak Kedua
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td> <br />
+                    Dengan ini menerangkan bahwa para pihak sepakat menandatangani Perjanjian Pemberian
+                    Pinjaman,
+                    dengan
+                    isi, syarat dan ketentuan sebagai berikut :
+                </td>
+            </tr>
+            <tr>
+                <td align="center"> <br /> Pasal 1</td>
+            </tr>
+            <tr>
+                <td> Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas
+                    pinjaman
+                    menjadi sebesar {{ pkData.pokok_margin }}</td>
+            </tr>
+            <tr>
+                <td align="center"> <br />Pasal 2</td>
+            </tr>
+            <tr>
+                <td> Pengembalian pinjaman tersebut akan dibayarkan untuk jangka {{ pkData.tenor }} BULAN
+                    lamanya,
+                    dimulai tanggal {{ pkData.tgl_awal_cicilan }} berakhir pada tanggal {{ pkData.tgl_akhir_cicilan }}
+                    dengan jumlah
+                    angsuran
+                    sebesar {{ pkData.angsuran }}
+                </td>
+            </tr>
+            <tr>
+                <td align="center"> <br /> Pasal 3</td>
+            </tr>
+            <tr>
+                <td> Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan
+                    jaminan
+                    barang miliknya sendiri berupa {{ pkData.tipe_jaminan }}, dengan dibuktikan diserahkannya
+                    Bukti Kepemilikan dengan spesifikasi sebagai berikut</td>
+            </tr>
+            <tr>
+                <td> <br />
+                    <table>
+                        <tr>
+                            <td>BPKB No</td>
+                            <td>:</td>
+                            <td>{{ pkData.no_bpkb }}</td>
+                        </tr>
+                        <tr>
+                            <td>BPKB atas nama</td>
+                            <td>:</td>
+                            <td>{{ pkData.atas_nama }}</td>
+                        </tr>
+                        <tr>
+                            <td>Merk/Type/Tahun</td>
+                            <td>:</td>
+                            <td>{{ `${pkData.merk}/${pkData.type}/${pkData.tahun}` }}</td>
+                        </tr>
+                        <tr>
+                            <td> Warna/No.Polisi</td>
+                            <td>:</td>
+                            <td>{{ `${pkData.warna}/${pkData.no_polisi}` }}</td>
+                        </tr>
+                        <tr>
+                            <td>No. Rangka/Mesin</td>
+                            <td>:</td>
+                            <td>{{ `${pkData.no_rangka}/${pkData.no_mesin}` }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                    Apabila pihak kedua tidak bisa memenuhi kewajiban pembayaran angsuran selama 3 bulan, maka
+                    pihak
+                    kedua
+                    bersedia menyerahkan jaminan kendaraan sesuai dengan pasal 3 di atas kepada pihak pertama.
+                    Jika Perjanjian Pemberi Pinjaman telah selesai, BPKB wajib diambil maksimum 90 hari kalender
+                    terhitung
+                    dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas kerusakan
+                    atau kegilangan BPKB.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                    Demikian Perjanjian Pemberian Pinjaman ini dibuat dan ditandatangani, tanpa adanya unsur
+                    paksaan.<br />
+                    INDRAMAYU, 21/06/2024
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br />
+                    <table width="100%">
+                        <tr>
+                            <td>Pihak Pertama<br />CABANG KANDANGHAUR<br /><br /><br /><br /> ( {{ pihak1.nama
+                                }} )
+                            </td>
+                            <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <n-divider title="PK" title-placement="left" v-show="prosesPK">Skala Angsuran</n-divider>
+        <n-space vertical v-show="prosesPK">
+            <n-table striped>
+                <thead>
+                    <tr>
+                        <th>Angsuran ke</th>
+                        <th>POKOK</th>
+                        <th>BUNGA</th>
+                        <th>ANGSURAN</th>
+                        <th>BAKI DEBET</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="skala in pkData.struktur">
+                        <td>{{ skala.angsuran_ke }}</td>
+                        <td>{{ skala.pokok }}</td>
+                        <td>{{ skala.bunga }}</td>
+                        <td>{{ skala.total_angsuran }}</td>
+                        <td>{{ skala.baki_debet }}</td>
+                    </tr>
+                </tbody>
+            </n-table>
+        </n-space>
+    </n-card>
+</template>
+<script setup>
+import { useApi } from "../../../helpers/axios";
+import { ref, reactive, computed } from "vue";
+import { useRoute } from "vue-router";
+
+const prosesPK = ref(false);
+const pageData = ref([]);
+const pkData = ref([]);
+const pihak1 = ref([]);
+const pihak2 = ref([]);
+const tgl = reactive({
+    awal: null,
+});
+
+const baseRoute = useRoute();
+const idApp = baseRoute.params.idapplication;
+const userToken = localStorage.getItem("token");
+const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+let monthServer = new Date().getMonth() + 1
+let yearServer = new Date().getFullYear();
+const month = monthNames[monthServer];
+const zeroPad = (num, places) => String(num).padStart(places, '0')
+const dynamicForm = reactive({
+    awal: '01',
+    order_number: null,
+    angsuran: null
+});
+const response = useApi({
+    method: 'get',
+    api: `cr_application/${idApp}`,
+    token: userToken
+}).then(res => {
+
+    if (res.ok) {
+        pageData.value = res.data.response;
+        console.log(pageData.value.order_number)
+        console.log(dynamicForm.order_number)
+        Object.assign(dynamicForm, {
+            order_number: pageData.value.order_number,
+            angsuran: pageData.value.angsuran,
+        });
+    }
+});
+
+
+const handleProses = async (e) => {
+    const bodySend = {
+        tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
+        order_number: dynamicForm.order_number,
+        angsuran: dynamicForm.angsuran,
+    }
+    console.log(bodySend);
+    e.preventDefault(e);
+    const proses_pk = useApi({
+        method: 'POST',
+        data: bodySend,
+        api: `pk`,
+        token: userToken
+    }).then(res => {
+        if (!res.ok) {
+            prosesPK.value = false;
+        } else {
+            prosesPK.value = true;
+            pkData.value = res.data;
+            pihak1.value = res.data.pihak_1;
+            pihak2.value = res.data.pihak_2;
+        }
+    });
+}
+const parse = (input) => {
+    const nums = input.replace(/,/g, "").trim();
+    if (/^\d+(\.(\d+)?)?$/.test(nums))
+        return Number(nums);
+    return nums === "" ? null : Number.NaN;
+}
+const format = (value) => {
+    if (value === null)
+        return "";
+    return value.toLocaleString("en-US");
+}
+const options = [];
+
+for (var x = 1; x <= 25; x++) {
+
+    options[x] = {
+        label: zeroPad(x, 2),
+        value: zeroPad(x, 2)
+    };
+}
+
+
+</script>

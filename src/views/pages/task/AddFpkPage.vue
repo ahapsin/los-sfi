@@ -8,14 +8,14 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
-        <!-- <n-collapse>
+        <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ formAssign }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
         <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,

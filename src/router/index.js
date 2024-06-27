@@ -53,6 +53,11 @@ const routes = [
         component: () => import("../views/pages/task/DetailFpkPage.vue"),
       },
       {
+        path: "preprint-pk/:idapplication",
+        name: "pre print pk",
+        component: () => import("../views/pages/task/PrePrintPKPage.vue"),
+      },
+      {
         path: "survey",
         name: "survey",
         component: () => import("../views/pages/task/SurveyPage.vue"),
