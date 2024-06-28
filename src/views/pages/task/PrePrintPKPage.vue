@@ -1,5 +1,6 @@
 <template>
     <n-card>
+        <!-- <pre>{{ pageData.flag }}</pre> -->
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form-item label="order number" path="nama" class="w-full">
                 <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
@@ -75,7 +76,7 @@
                                     <tr>
                                         <td valign="top"> Alamat Kantor</td>
                                         <td valign="top">:</td>
-                                        <td>{{ pihak1.alamat_kantor }}</td>
+                                        <td><span class="capitalize">{{ pihak1.alamat_kantor }}</span></td>
                                     </tr>
                                 </table>
                             </td>
@@ -226,7 +227,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="mt-2">
+                <div class="mt-10">
                     <div class="bg-white p-4">
                         <div class="mb-4 bg-white">
                             Tabel Skala Angsuran
@@ -258,9 +259,17 @@
     </n-card>
 </template>
 <style scoped>
+table {
+    font-size: 10px;
+}
+
 table.tblprint>tr>th {
     padding: 2px 0px 10px 4px;
     border: 1px solid;
+}
+
+table.tblprint {
+    font-size: 10px;
 }
 
 table.tblprint>tr>td {
@@ -276,14 +285,16 @@ table.tblprint>tr>td {
 import { useApi } from "../../../helpers/axios";
 import { ref, reactive, computed } from "vue";
 import { jsPDF } from "jspdf";
+import router from '../../../router';
 import { useRoute } from "vue-router";
-import { LocalPrintshopRound as PrintIcon, DownloadRound as DownloadIcon } from "@vicons/material"
-
-
+import { LocalPrintshopRound as PrintIcon, DownloadRound as DownloadIcon } from "@vicons/material";
+import autoTable from 'jspdf-autotable';
+import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
 const prosesPK = ref(false);
 const pageData = ref([]);
 const pk = ref();
 const struktur = ref();
+const message = useMessage();
 const pkData = ref([]);
 const pihak1 = ref([]);
 const pihak2 = ref([]);
@@ -311,7 +322,6 @@ const response = useApi({
     api: `cr_application/${idApp}`,
     token: userToken
 }).then(res => {
-
     if (res.ok) {
         pageData.value = res.data.response;
         // console.log(pageData.value.order_number)
@@ -330,7 +340,7 @@ const handleProses = async (e) => {
         order_number: dynamicForm.order_number,
         angsuran: dynamicForm.angsuran,
     }
-    console.log(bodySend);
+    // console.log(bodySend);
     e.preventDefault(e);
     const proses_pk = useApi({
         method: 'POST',
@@ -350,10 +360,45 @@ const handleProses = async (e) => {
 }
 
 const handlePrint = (evt) => {
+    const bodySend = {
+        tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
+        order_number: dynamicForm.order_number,
+        angsuran: dynamicForm.angsuran,
+        flag: "yes"
+    }
+    // // console.log(bodySend);
+    // e.preventDefault(evt);
+    const print_pk = useApi({
+        method: 'POST',
+        data: bodySend,
+        api: `pk`,
+        token: userToken
+    }).then(res => {
+        if (!res.ok) {
+            message.warning('gagal proses print!');
+        } else {
+            message.success('sukses proses print!');
+            router.replace({ name: 'Pengajuan Kredit' });
+        }
+    });
     generatePdf();
+    // Supply data via script
+    // var doc = new jsPDF('p', 'pt', 'a4');
+    // var body = [
+    //     ['SL.No', 'Product Name', 'Price', 'Model'],
+    //     [1, 'I-phone', 75000, '2021'],
+    //     [2, 'Realme', 25000, '2022'],
+    //     [3, 'Oneplus', 30000, '2021'],
+    // ]
+    // // generate auto table with body
+    // var y = 10;
+    // doc.setLineWidth(2);
+    // doc.setFontSize(10);
+    // doc.text(300, 30, `PERJANJIAN PEMBERIAN PINJAMAN\nNo. ${pkData.value.no_perjanjian}`, { align: 'center' });
+    // doc.output('dataurlnewwindow');
 }
 const handleDownload = (evt) => {
-    var doc = new jsPDF('p', 'pt', 'legal');
+    var doc = new jsPDF('p', 'pt', 'a4');
     const margins = {
         top: 80,
         bottom: 60,
@@ -376,7 +421,7 @@ function generatePdf() {
         top: 80,
         bottom: 60,
         left: 40,
-        width: 522
+        width: 10
     };
 
     doc.html(pk.value, {

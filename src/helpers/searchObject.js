@@ -1,7 +1,8 @@
 function useSearch(arr, searchKey) {
   return arr.filter(function (obj) {
     return Object.keys(obj).some(function (key) {
-      return obj[key] != null && String(obj[key]).match(searchKey);
+      let string = String(obj[key]).toLowerCase();
+      return obj[key] != null && string.match(searchKey);
     });
   });
 }

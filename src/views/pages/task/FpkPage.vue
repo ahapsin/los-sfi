@@ -13,7 +13,7 @@
                                     </n-icon>
                                 </n-button>
                             </template>
-                            <n-input autofocus="true" clearable placeholder="cari disini.." />
+                            <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
                         </n-popover>
                         <n-button>
                             <template #icon>
@@ -34,7 +34,8 @@
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :columns="columns" :data="dataTable" :pagination="pagination" />
+                    <n-data-table size="small" triped :scroll-x="800" :columns="columns" :data="showData"
+                        :pagination="pagination" />
                 </n-space>
             </n-card>
         </n-space>
@@ -42,197 +43,7 @@
             online at: {{ fingerprint }}
         </n-space> -->
     </div>
-    <n-modal v-model:show="showModal">
-        <n-card style="width: 600px" title="Modal" :bordered="false" size="huge" role="dialog" aria-modal="true">
-            <template #header-extra>
-                Oops!
-            </template>
-            <n-flex>
-                <table border="1" ref="pk" style="font-size: 10px; width: 600px;">
-                    <tr>
-                        <td align="center">
-                            PERJANJIAN PEMBERIAN PINJAMAN
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center">
-                            NO.PERJANJIAN : 11102240000208
-                        </td>
-                    </tr>
-                    <tr>
-                        <td heigth="20">
-                            &nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Yang bertanda tangan dibawah ini :
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <br />
-                            <table>
-                                <tr>
-                                    <td rowspan="3" valign="top">I.</td>
-                                    <td>Nama</td>
-                                    <td>:</td>
-                                    <td>HOSEA</td>
-                                </tr>
-                                <tr>
 
-                                    <td>Jabatan</td>
-                                    <td>:</td>
-                                    <td>POS MANAGER</td>
-                                </tr>
-                                <tr>
-
-                                    <td> Alamat Kantor</td>
-                                    <td>:</td>
-                                    <td>JL.BY PASS KANDANGHAUR DEPAN KANTOR PLN BLOK ANJUN DS.KARANGANYAR KEC.KANDANHAUR
-                                        KAB.INDRAMAYU KARANGANYAR KANDANGHAUR INDRAMAYU
-                                        Dalam hal ini bertindak untuk dan atas nama CABANG KANDANGHAUR
-                                        selanjutnya disebut Pihak Pertama </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <table>
-                                <tr>
-                                    <td rowspan="4" valign="top">II.</td>
-                                    <td>Nama</td>
-                                    <td>:</td>
-                                    <td>TASMI</td>
-                                </tr>
-                                <tr>
-
-                                    <td> No. KTP/SIM</td>
-                                    <td>:</td>
-                                    <td>321221480280004</td>
-                                </tr>
-                                <tr>
-
-                                    <td> Alamat Kantor</td>
-                                    <td>:</td>
-                                    <td>BLOK CILET RT 003 RW 007
-                                        Kel KARANGANYAR KEC. KANDANGHAUR KAB. INDRAMAYU JAWA BARAT</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3"> Dalam hal ini bertindak untuk dirinya sendiri, selanjutnya disebut
-                                        Pihak Kedua
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> <br />
-                            Dengan ini menerangkan bahwa para pihak sepakat menandatangani Perjanjian Pemberian
-                            Pinjaman,
-                            dengan
-                            isi, syarat dan ketentuan sebagai berikut :
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center"> <br /> Pasal 1</td>
-                    </tr>
-                    <tr>
-                        <td> Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas
-                            pinjaman
-                            menjadi sebesar Rp. 5.076.000 (LIMA JUTA TUJUH PULUH ENAM RIBU RUPIAH)</td>
-                    </tr>
-                    <tr>
-                        <td align="center"> <br />Pasal 2</td>
-                    </tr>
-                    <tr>
-                        <td> Pengembalian pinjaman tersebut akan dibayarkan untuk jangka 18 (DELAPAN BELAS) BULAN
-                            lamanya,
-                            dimulai tanggal 21/07/2024 berakhir pada tanggal 21/12/2025 dengan jumlah angsuran sebesar
-                            Rp. 282.000 (DUA RATUS DELAPAN PULUH DUA RIBU RUPIAH) setiap bulannya.</td>
-                    </tr>
-                    <tr>
-                        <td align="center"> <br /> Pasal 3</td>
-                    </tr>
-                    <tr>
-                        <td> Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan
-                            jaminan
-                            barang miliknya sendiri berupa SEPEDA MOTOR, dengan dibuktikan diserahkannya
-                            Bukti Kepemilikan dengan spesifikasi sebagai berikut</td>
-                    </tr>
-                    <tr>
-                        <td> <br />
-                            <table>
-                                <tr>
-                                    <td>BPKB No</td>
-                                    <td>:</td>
-                                    <td>J-05259893</td>
-                                </tr>
-                                <tr>
-                                    <td>BPKB atas nama</td>
-                                    <td>:</td>
-                                    <td>ROKMAT BIN SUMA</td>
-                                </tr>
-                                <tr>
-                                    <td>Merk/Type/tahun</td>
-                                    <td>:</td>
-                                    <td>HONDA/BEAT SPORTY CBS/2012</td>
-                                </tr>
-                                <tr>
-                                    <td> Warna/No.Polisi</td>
-                                    <td>:</td>
-                                    <td>BIRU PUTIH/E4220TT</td>
-                                </tr>
-                                <tr>
-                                    <td>No. Rangka/Mesin</td>
-                                    <td>:</td>
-                                    <td>MHIJFD219CK226444/JFD2E1229558</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <br />
-                            Apabila pihak kedua tidak bisa memenuhi kewajiban pembayaran angsuran selama 3 bulan, maka
-                            pihak
-                            kedua
-                            bersedia menyerahkan jaminan kendaraan sesuai dengan pasal 3 di atas kepada pihak pertama.
-                            Jika Perjanjian Pemberi Pinjaman telah selesai, BPKB wajib diambil maksimum 90 hari kalender
-                            terhitung
-                            dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas kerusakan
-                            atau kegilangan BPKB.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <br />
-                            Demikian Perjanjian Pemberian Pinjaman ini dibuat dan ditandatangani, tanpa adanya unsur
-                            paksaan.<br />
-                            INDRAMAYU, 21/06/2024
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <br />
-                            <table width="100%">
-                                <tr>
-                                    <td>Pihak Pertama<br />CABANG KANDANGHAUR<br /><br /><br /><br /> ( KSP Djaya )
-                                    </td>
-                                    <td>Pihak Kedua<br /><br /><br /><br /><br /> ( TASMI )
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </n-flex>
-            <template #footer>
-                Footer
-            </template>
-        </n-card>
-    </n-modal>
 </template>
 <script setup>
 import { ref, reactive, onMounted, h } from "vue";
@@ -243,6 +54,7 @@ import { jsPDF } from "jspdf";
 import { useNetwork } from '@vueuse/core';
 const { onlineAt } = useNetwork();
 import { sha256, sha224 } from 'js-sha256';
+import { useSearch } from "../../../helpers/searchObject";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -261,7 +73,8 @@ const message = useMessage();
 const dialog = useDialog();
 const pk = ref(null);
 const showModal = ref(false);
-const dataTable = ref();
+const dataTable = ref([]);
+const searchBox = ref();
 const loadingRef = reactive({
     type: "loading",
     messagePost: null,
@@ -271,18 +84,22 @@ const userToken = localStorage.getItem("token");
 const columns = [
     {
         title: "Tanggal",
-        key: "visit_date"
+        key: "visit_date",
+        width: 110,
     },
     {
         title: "Order",
-        key: "order_number"
+        key: "order_number",
+        width: 180,
     },
     {
         title: "Nama",
-        key: "nama_debitur"
+        key: "nama_debitur",
+        width: 180,
     },
     {
         title: "Plafond",
+        width: 180,
         key: "plafond",
         render(row) {
             return h('div', format(row.plafond));
@@ -290,6 +107,7 @@ const columns = [
     },
     {
         title: "Status",
+        width: 150,
         key: "status",
         render(row) {
             return h(
@@ -508,4 +326,8 @@ function generateBrowserFingerprint() {
 }
 const fingerprint = generateBrowserFingerprint();
 onMounted(() => getData());
+const showData = computed(() => {
+    return useSearch(dataTable.value, searchBox.value);
+    // return filterIt(dataTable.value, searchBox.value);
+});
 </script>
