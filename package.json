@@ -23,7 +23,8 @@
     "oh-vue-icons": "^1.0.0-rc3",
     "uuid": "^9.0.1",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-pdfmake": "^2.2.0"
   },
   "devDependencies": {
     "@vicons/fluent": "^0.12.0",

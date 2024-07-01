@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import { PDFPlugin } from "vue3-pdfmake";
 import naive from "naive-ui";
 import router from "./router";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
@@ -12,6 +13,7 @@ addIcons(...Hi, ...Ri);
 
 const app = createApp(App);
 app.use(naive);
+app.use(PDFPlugin);
 app.component("v-icon", OhVueIcon);
 // app.component("downloadExcel", JsonExcel);
 app.use(router);

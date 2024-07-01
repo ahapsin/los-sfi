@@ -1,7 +1,6 @@
 <template>
     <div class="pt-4">
         <n-space vertical>
-            <!-- <pre>{{ dataTable }}</pre> -->
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
                     <n-space>
@@ -34,7 +33,7 @@
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" triped :scroll-x="800" :columns="columns" :data="showData"
+                    <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="showData"
                         :pagination="pagination" />
                 </n-space>
             </n-card>
@@ -107,7 +106,6 @@ const columns = [
     },
     {
         title: "Status",
-        width: 150,
         key: "status",
         render(row) {
             return h(
@@ -122,13 +120,22 @@ const columns = [
         }
     },
     {
+        width: 150,
         key: "status",
         render(row) {
             let status = row.status.at(0);
+            if (row.flag == 0) {
+                var cetak = "CETAK";
+                var type = "primary";
+            } else {
+                var cetak = "CETAK ULANG";
+                var type = "warning";
+            }
             if (status === "6") {
                 return h(
                     NButton,
                     {
+                        type: type,
                         size: "small",
                         onClick: (e) => {
                             handlePrePrint(row);
@@ -137,7 +144,7 @@ const columns = [
                         },
                     },
                     {
-                        default: "CETAK FPK"
+                        default: `${cetak} PK`
                     }
                 );
             }
