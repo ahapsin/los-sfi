@@ -1,7 +1,7 @@
 <template>
     <n-card>
         <div class="flex flex-col md:flex-row w-full gap-2">
-            <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
+            <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
                 <n-form-item label="order number" path="nama" class="w-full">
                     <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
                 </n-form-item>
@@ -15,6 +15,16 @@
                 <n-form-item label="Angsuran" path="nama_panggilan" class="w-full">
                     <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.angsuran"
                         placeholder="Net Admin" :show-button="false" class="flex !w-full" />
+                </n-form-item>
+                <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
+                    <n-checkbox-group v-model:value="cities">
+                        <n-space item-style="display: flex;">
+                            <n-checkbox value="pk" label="PK" />
+                            <n-checkbox value="Pasangan" label="Kwitansi" />
+                            <n-checkbox value="kwitansi" label="Kwitansi" />
+                            <n-checkbox value="asuransi" label="Asuransi" />
+                        </n-space>
+                    </n-checkbox-group>
                 </n-form-item>
                 <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
@@ -252,6 +262,210 @@
                                     <td>{{ skala.baki_debet }}</td>
                                 </tr>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="bg-white shadow-lg p-8">
+                        <div class="mb-4 text-center text-base ">
+                            SYARAT DAN KETENTUTAN KHUSUS PROGRAM "KREDIT TANPA PERLINDUNGAN ASURANSI"
+                        </div>
+                        <div class="mb-4 text-justify text-sm">
+                            Pada hari ini.................... tanggal..............bulan.............tahun dua ribu
+                            ..........(........),yang bertanda tangan dibawah ini :
+                        </div>
+                        <div class="mb-4 text-justify text-sm ps-8">
+                            I.
+                            Bertempat tinggal di
+                            tanggal
+                            bulan
+                            tahun dua ribu
+                            ), yang bertanda tangan di bawah ini :
+                            pekerjaan / jabatan
+                            ) nomor
+                            Pemegang kartu identitas (......
+                            Dalam hal ini bertindak untuk dan atas nama......... Selanjutnya disebut <b>Penerima
+                                Pinjaman.</b>
+                        </div>
+                        <div class="mb-4 text-justify text-sm ps-8">
+                            II. .................
+                            Bertempat tinggal di
+                            Pemegang kartu identitas (......
+                            pekerjaan / jabatan
+                            ) nomor
+                            Dalam hal ini bertindak untuk dan atas nama Selanjutnya disebut <b>Pemberi Jaminan.</b>
+                        </div>
+                        <div class="mb-4 text-justify text-sm ">
+                            Yang bersama-sama dengan <b>KSP DJAYA</b>, telah, sepakat dan mengikatkan diri dan karenanya
+                            menjadi para pihak dalam Perjanjian PINJAMAN Konsumen
+                            tanggal ...... berikut kelengkapan dan perubahannya ( selanjutnya disebut <b>
+                                Perjanjian
+                                PINJAMAN Konsumen
+                            </b> yang merupakan satu kesatuan tak terpisahkan dengan syarat dan ketentuan
+                            Program <b>"Kredit Tanpa Perlindungan Asuransi"</b> ini (syarat dan ketentuan)
+                        </div>
+                        <div class="mb-4 text-justify text-sm">
+                            Penerima Pinjaman dan pemberi jaminan dengan ini mengikuti program yang ditawarkan (
+                            selanjutnya disebut Penerima Pinjaman / Penerima Jaminan ) yaitu "Kredit Tanpa Perlindungan
+                            Asuransi " dengan menyetujui setiap dan seluruh syarat dan ketentuannya, berikut di bawah
+                            ini yang merupakan syarat dan ketentuan khusus dan manakala terdapat perbedaan dengan
+                            perjanjian PINJAMAN konsumen, maka syarat dan ketentuan inilah yang akan berlaku, yaitu
+                            sebagai berikut:
+                        </div>
+                        <div class="mb-4 text-justify text-sm ps-8">
+                            1. Dengan Menandatangani syarat dan ketentuan ini, penerima Pinjaman / Pemberi Jaminan
+                            sepakat untuk mengikuti program <b>"Kredit Tanpa Perlindungan Asuransi "</b> yang ditawarkan
+                            pemberi Pinjaman / penerima jaminan karenanya menyetujui setiap dan seluruh syarat dan
+                            ketentuan yang mengaturnya dan mengesampingkan syarat dan ketentuan mengenai asuransi pada
+                            PINJAMAN Konsumen.
+                        </div>
+                        <div class="mb-4 text-justify text-sm ps-8">
+                            2. Dengan mengikuti program <b>"Kredit Tanpa Perlindungan Asuransi "</b> ini, sesuai
+                            penawaran yang
+                            diberikan maka segala resiko rusak, hilang atau musnahnya barang karena sebab apapun juga
+                            sepenuhnya menjadi tanggung jawab dan beban penerima Pinjaman / pemberi Jaminan, sehingga
+                            dengan rusak, hilang atau musnahnya barang tidak meniadakan, mengurangi atau menunda
+                            pemenuhan kewajiban penerima Pinjaman pemberi jaminan sebagaimana ditentukan dalam
+                            perjanjian PINJAMAN konsumen.
+                        </div>
+                        <div class="mb-4 text-justify text-sm ps-8">
+                            3. Dalam hal terjadi resiko rusak, hilang atau musnahnya barang, maka penerima
+                            Pinjaman/pemberi jaminan tidak dapat melakukan klaim asuransi dan karenanya tetap
+                            berkewajiban untuk melakukan pembayaran angsuran sebagaimana disepakati dalam perjanjian
+                            PINJAMAN konsumen hingga setiap dan seluruhnya terlunasi.
+                        </div>
+                        <div class="mb-4 text-justify text-sm">
+                            Penerima Pinjaman/Pemberi Jaminan telah membaca, mengerti dan menyetujui setiap dan seluruh
+                            syarat dan ketentuan ini.
+                        </div>
+                        <div class="mb-4 text-justify">
+                            <table class="!text-sm">
+                                <tr>
+                                    <td class="py-4 pr-4"><b>
+                                            Penerima
+                                            Pinjaman,
+                                        </b><br /><br /><br />..............................
+                                    </td>
+                                    <td class="py-4 pr-4"><b>
+                                            Pemberi
+                                            Jaminan,
+                                        </b><br /><br /><br />..............................</td>
+                                    <td><b>
+                                            Pemberi Pinjaman / Penerima
+                                            Pinjaman
+                                        </b><br /><br /><br />............................................................
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="bg-white shadow-lg p-8">
+                        <div class="mb-4 text-center text-base ">
+                            <b>SURAT PERSETUJUAN SUAMI ISTRI</b>
+                        </div>
+                        <div class="mb-4">
+                            yang bertanda tangan di bawah ini:
+                        </div>
+                        <div class="mb-4">
+                            Nama :<br />
+                            Pekerjaan :<br />
+                            Alamat :<br />
+                        </div>
+                        <div class="mb-4">
+                            Sebagai suami/isteri *) dengan ini memberikan persetujuan kepada suami/isteri *) saya:
+                        </div>
+                        <div class="mb-4">
+                            Nama :<br />
+                            Pekerjaan :<br />
+                            Alamat :<br />
+                        </div>
+                        <div class="mb-4  ">
+                            Untuk melakukan tindakan-tindakan sebagaimana disebutkan di bawah ini :
+                        </div>
+                        <div class="mb-4  ">
+                            1. Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam
+                            Perjanjian PINJAMAN Konsumen No......... tertanggal ............ berikut dengan seluruh
+                            perubahan-perubahan dan lampiran-lampirannya <b>("Perjanjian Pinjaman *)</b> dari pemberi
+                            Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.
+                        </div>
+                        <div class="mb-4">
+                            2. Menjaminkan Barang guna menjamin / sebagai jaminan pelunasan seluruh kewajiban
+                            hutang Suami/Isteri *) saya berdasarkan Perjanjian PINJAMAN.
+                        </div>
+                        <div class="mb-4 ">
+                            3. Untuk keperluan tersebut membuat dan menandatangani Perjanjian Pembiayaan berikut
+                            dokumen-dokumen lainnya serta tindakan-tindakan lainnya yang diperlukan sehubungan
+                            dengan yang diuraikan pada butir 1 dan 2 di atas.
+                        </div>
+                        <div class="mb-4">
+                            Demikian Surat Persetujuan ini dibuat dengan sebenarnya dan tidak akan berakhir karena
+                            sebab apapun juga kecuali seluruh kewajiban suami/isteri *) saya berdasarkan Perjanjian
+                            PINJAMAN tersebut telah lunas seluruhnya.
+                        </div>
+                        <div class="mb-4 ">
+                            Tanggal,<br />
+                            Yang memberi persetujuan,<br /><br /><br />
+                            ..........................
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="bg-white shadow-lg p-8">
+                        <div class="mb-4 text-center text-base ">
+                            <b>PERNYATAAN PENJAMIN</b>
+                        </div>
+                        <div class="mb-4">
+                            yang bertanda tangan di bawah ini:
+                        </div>
+                        <div class="mb-4">
+                            Nama : ……………………………………………………………………………………<br />
+                            Pekerjaan : ……………………………………………………………………………………<br />
+                            Alamat : ……………………………………………………………………………………<br />
+                            ……………………………………………………………………………………<br />
+                            Nomor KTP : ……………………………………………………………………………………<br />
+                        </div>
+                        <div class="mb-4">
+                            Selanjutnya disebut Penjamin<br />
+                            Dengan ini menyatakan dan menegaskan bahwa :
+                        </div>
+                        <div class="mb-4">
+                            1. Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan
+                            Perjanjian
+                            pembiayaan Konsumen Nomor ………………………… tanggal…………………………………<br />
+                            beserta seluruh lampiran, penambahan dan / atau pengurangannya ( selanjutnya disebut
+                            Perjanjian ) oleh dan antara <b>KSP Djaya</b> berkedudukan di Haurgeulis dengan Kantor
+                            Cabang
+                            di …………………………………………………………………………………………………...<br />
+                            dan …………………………………………………………………………………………………<br />
+                            ( selanjutnya secara sendiri-sendiri atau bersama disebut<b> Pemberi Pinjaman</b> dengan :
+                            Nama : ……………………………………………………………………………………<br />
+                            Pekerjaan : ……………………………………………………………………………………<br />
+                            Alamat : ……………………………………………………………………………………<br />
+                            ……………………………………………………………………………………<br />
+                            Nomor KTP : ……………………………………………………………………………………<br />
+                        </div>
+                        <div class="mb-4  ">
+                            Penjamin menyatakan sanggup dan mengikatkan diri untuk menjamin seluruh HUTANG PEMBIAYAAN
+                            Penerima Pinjaman yang timbul dari perjanjian tersebut sebesar Rp.
+                            (
+                            dan bersedia untuk membayar seluruh kewajiban pembayaran hutang tersebut kepada Pemberi
+                            Pinjaman apabila Penerima Pinjaman tidak memenuhi kewajibannya sebagaimana ditentukan dalam
+                            perjanjian
+                        </div>
+                        <div class="mb-4">
+                            3. Penjamin dengan tegas melepaskan semua hak istimewa maupun pengecualian-pengecualian yang
+                            diberikan oleh peraturan perundangan kepada Penjamin, khusus tetapi tidak terbatas pada
+                            pasal 1832 Undang-Undang Hukum Perdata.
+                        </div>
+
+                        <div class="flex mb-4 justify-end">
+                            <div class="flex w-fit text-center bg-white">
+                                ..........................<br />
+                                Penjamin,<br /><br /><br />
+                                ..........................
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -613,6 +827,6 @@ for (var x = 1; x <= 25; x++) {
         value: zeroPad(x, 2)
     };
 }
-
+const pkCheck = ref(true);
 
 </script>

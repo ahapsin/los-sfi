@@ -8,14 +8,14 @@
         </n-steps>
     </n-space>
     <n-flex class="pt-4">
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ formAssign }}</pre>
             </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
         <!-- info pelanggan -->
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
             content: true,
@@ -414,7 +414,7 @@
                             placeholder="Biaya Transfer" :show-button="false" class="flex !w-full" />
                     </n-form-item>
                     <n-form-item label="Bunga / Margin Eff" path="bunga_margin_eff">
-                        <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff">
+                        <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" disabled>
                             <template #suffix>%</template>
                         </n-input>
                     </n-form-item>
@@ -514,10 +514,12 @@ const baseRoute = useRoute();
 const calcCredit = reactive({
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
+    bunga_eff: computed(() => calcCredit.nilai_yang_diterima >= 2000000 ? 44 : 43),
     bunga_margin: computed(() => parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100)),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
     angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
+    provisi: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
 const dataPelanggan = ref({});

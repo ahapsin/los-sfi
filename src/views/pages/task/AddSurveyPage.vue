@@ -290,7 +290,7 @@ const tenorKredit = ["12", "24", "36"].map(
                 label: v,
                 value: v
         }));
-const optKategori = ["BUKAN KARYAWAN", "KARYAWAN", "KARYAWAN PERUSAHAAN AFILIASI"].map(
+const optKategori = ["Baru", "RO"].map(
         (v) => ({
                 label: v,
                 value: v

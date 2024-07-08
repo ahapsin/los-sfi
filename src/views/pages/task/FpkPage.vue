@@ -22,6 +22,13 @@
                             </template>
                             download
                         </n-button>
+                        <n-button @click="handleNavCalc">
+                            <template #icon>
+                                <n-icon>
+                                    <calc-icon />
+                                </n-icon>
+                            </template>
+                        </n-button>
                         <!-- <n-button type="primary" @click="handleAdd">
                             <template #icon>
                                 <n-icon>
@@ -58,6 +65,7 @@ import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
     FileDownloadOutlined as DownloadIcon,
+    CalculateOutlined as CalcIcon
 
 } from "@vicons/material"
 import {
@@ -337,4 +345,8 @@ const showData = computed(() => {
     return useSearch(dataTable.value, searchBox.value);
     // return filterIt(dataTable.value, searchBox.value);
 });
+
+const handleNavCalc = () => {
+    router.replace({ name: 'calculator' });
+}
 </script>

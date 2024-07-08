@@ -95,6 +95,11 @@ const routes = [
     component: () => import("../views/pages/DashboardPage.vue"),
     children: [
       {
+        path: "calculator",
+        name: "calculator",
+        component: () => import("../views/pages/master/CalculatorPage.vue"),
+      },
+      {
         path: "employees",
         name: "karyawan",
         component: () => import("../views/pages/master/EmployeesPage.vue"),
