@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { readonly, ref } from "vue";
 import { NInput } from "naive-ui";
 const rangeNum = ref([1, 2]);
 const marks = {
@@ -133,6 +133,7 @@ const createColumns = () => [
         key: "name",
         render(row, index) {
             return h(NInput, {
+                readonly: true,
                 value: row.name,
                 onUpdateValue(v) {
                     data.value[index].name = v;
