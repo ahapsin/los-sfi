@@ -2,7 +2,7 @@
     <n-card title="Kalkulasi">
         <n-space vertical>
             <n-form-item path="range" label="Range Pinjaman">
-                <n-slider v-model:value="rangeNum" range :step="1" :marks="marks" step="mark" />
+                <n-slider v-model:value="rangeNum" range min="1" max="10" :marks="marks" step="mark" />
             </n-form-item>
             <n-space>
                 <n-input v-model:value="rangeNum[0]" size="small">
@@ -28,6 +28,13 @@
 import { ref } from "vue";
 import { NInput } from "naive-ui";
 const rangeNum = ref([1, 2]);
+const marks = {
+    1: '1 Juta',
+    2: '2 Juta',
+    4: '4 Juta',
+    6: '6 Juta',
+    10: '> 6 Juta',
+};
 const createData = () => [
     {
         key: 0,
