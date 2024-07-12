@@ -2,7 +2,7 @@
     <n-card>
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
-                <n-form-item label="order number" path="nama" class="w-full">
+                <n-form-item label="Order Number" path="nama" class="w-full">
                     <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
                 </n-form-item>
                 <n-form-item label="Tanggal Awal" path="nama_panggilan" class="w-full">
@@ -17,14 +17,15 @@
                         placeholder="Net Admin" :show-button="false" class="flex !w-full" />
                 </n-form-item>
                 <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
-                    <n-checkbox-group v-model:value="cities">
-                        <n-space item-style="display: flex;">
-                            <n-checkbox value="pk" label="PK" />
-                            <n-checkbox value="Pasangan" label="Kwitansi" />
-                            <n-checkbox value="kwitansi" label="Kwitansi" />
-                            <n-checkbox value="asuransi" label="Asuransi" />
-                        </n-space>
-                    </n-checkbox-group>
+                    <n-space item-style="display: flex;">
+                        <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
+                        <n-checkbox value="pk" label="Perjanjian Kredit" v-model:checked="optPrint.pkPage" />
+                        <n-checkbox value="skala" label="Skala Kredit" v-model:checked="optPrint.skalaPage" />
+                        <n-checkbox value="ktpa" label="Tanpa Perlindungan Asuransi"
+                            v-model:checked="optPrint.ktpaPage" />
+                        <n-checkbox value="" label="Persetujuan Pasangan" v-model:checked="optPrint.pasanganPage" />
+                        <n-checkbox value="" label="Penjamin" v-model:checked="optPrint.penjaminPage" />
+                    </n-space>
                 </n-form-item>
                 <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
@@ -47,8 +48,8 @@
         </div>
         <div class="flex bg-slate-200 overflow-auto p-2 pr-20 pl-20 justify-center" v-show="prosesPK">
             <div class="w-full" ref="pk">
-                <div class="bg-white shadow-lg p-8">
-                    <table border="1" v-show="prosesPK" class="mb-10">
+                <div class="bg-white shadow-lg p-8" v-show="optPrint.pkPage">
+                    <table border="1" class="mb-10">
                         <tr>
                             <td align="center">
                                 PERJANJIAN PEMBERIAN PINJAMAN
@@ -228,7 +229,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                        }} )
+                                            }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -238,12 +239,12 @@
                         </tr>
                     </table>
                 </div>
-                <div class="mt-2">
-                    <div class="bg-white shadow-lg p-4">
+                <div class="mt-2" v-show="optPrint.skalaPage">
+                    <div class="bg-white shadow-lg p-8">
                         <div class="mb-4 bg-white">
                             Tabel Skala Angsuran
                         </div>
-                        <div vertical v-show="prosesPK" class="bg-white flex w-full">
+                        <div vertical class="bg-white flex w-full">
                             <table class="tblprint">
                                 <tr>
                                     <th>Angsuran ke</th>
@@ -265,47 +266,46 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2" v-show="optPrint.ktpaPage">
                     <div class="bg-white shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
-                            SYARAT DAN KETENTUTAN KHUSUS PROGRAM "KREDIT TANPA PERLINDUNGAN ASURANSI"
+                            <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM " KREDIT TANPA PERLINDUNGAN ASURANSI "</b>
                         </div>
                         <div class="mb-4 text-justify text-sm">
-                            Pada hari ini.................... tanggal..............bulan.............tahun dua ribu
-                            ..........(........),yang bertanda tangan dibawah ini :
+                            Pada hari ini <b>{{ thisDay }}</b> tanggal <b>{{ dateServer }}</b> bulan
+                            <b>{{ month }}</b> tahun
+                            <b>{{ yearServer }}</b>, yang bertanda tangan dibawah ini :
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
-                            I.
-                            Bertempat tinggal di
-                            tanggal
-                            bulan
-                            tahun dua ribu
-                            ), yang bertanda tangan di bawah ini :
-                            pekerjaan / jabatan
-                            ) nomor
-                            Pemegang kartu identitas (......
-                            Dalam hal ini bertindak untuk dan atas nama......... Selanjutnya disebut <b>Penerima
+                            I. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ pihak2.jabatan }}</b>
+                            Bertempat tinggal di <b>{{ pihak2.alamat }}
+                            </b>
+                            Pemegang kartu identitas (<b>####</b>) nomor <b>####</b>
+                            Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
+                            disebut <b>Penerima
                                 Pinjaman.</b>
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
-                            II. .................
-                            Bertempat tinggal di
-                            Pemegang kartu identitas (......
-                            pekerjaan / jabatan
-                            ) nomor
-                            Dalam hal ini bertindak untuk dan atas nama Selanjutnya disebut <b>Pemberi Jaminan.</b>
+                            II. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ pihak2.jabatan }}</b>
+                            Bertempat tinggal di <b>{{ pihak2.alamat_kantor }}
+                            </b>
+                            Pemegang kartu identitas (<b>####</b>) nomor <b>####</b>
+                            Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
+                            disebut <b>Penerima
+                                Pinjaman.</b>
                         </div>
                         <div class="mb-4 text-justify text-sm ">
                             Yang bersama-sama dengan <b>KSP DJAYA</b>, telah, sepakat dan mengikatkan diri dan karenanya
                             menjadi para pihak dalam Perjanjian PINJAMAN Konsumen
-                            tanggal ...... berikut kelengkapan dan perubahannya ( selanjutnya disebut <b>
+                            tanggal <b>#####</b> berikut kelengkapan dan perubahannya ( selanjutnya disebut <b>
                                 Perjanjian
                                 PINJAMAN Konsumen
                             </b> yang merupakan satu kesatuan tak terpisahkan dengan syarat dan ketentuan
                             Program <b>"Kredit Tanpa Perlindungan Asuransi"</b> ini (syarat dan ketentuan)
                         </div>
                         <div class="mb-4 text-justify text-sm">
-                            Penerima Pinjaman dan pemberi jaminan dengan ini mengikuti program yang ditawarkan (
+                            Penerima Pinjaman dan pemberi jaminan dengan ini mengikuti program yang ditawarkan (<b>KSP
+                                DJAYA</b>)
                             selanjutnya disebut Penerima Pinjaman / Penerima Jaminan ) yaitu "Kredit Tanpa Perlindungan
                             Asuransi " dengan menyetujui setiap dan seluruh syarat dan ketentuannya, berikut di bawah
                             ini yang merupakan syarat dan ketentuan khusus dan manakala terdapat perbedaan dengan
@@ -322,7 +322,9 @@
                         <div class="mb-4 text-justify text-sm ps-8">
                             2. Dengan mengikuti program <b>"Kredit Tanpa Perlindungan Asuransi "</b> ini, sesuai
                             penawaran yang
-                            diberikan maka segala resiko rusak, hilang atau musnahnya barang karena sebab apapun juga
+                            diberikan (<b>KSP
+                                DJAYA</b>) maka segala resiko rusak, hilang atau musnahnya barang karena sebab apapun
+                            juga
                             sepenuhnya menjadi tanggung jawab dan beban penerima Pinjaman / pemberi Jaminan, sehingga
                             dengan rusak, hilang atau musnahnya barang tidak meniadakan, mengurangi atau menunda
                             pemenuhan kewajiban penerima Pinjaman pemberi jaminan sebagaimana ditentukan dalam
@@ -342,25 +344,29 @@
                             <table class="!text-sm">
                                 <tr>
                                     <td class="py-4 pr-4"><b>
-                                            Penerima
-                                            Pinjaman,
-                                        </b><br /><br /><br />..............................
+                                            Penerima Pinjaman,
+                                            <br /><br /><br />
+                                            {{ pihak2.nama }}
+                                        </b>
                                     </td>
                                     <td class="py-4 pr-4"><b>
-                                            Pemberi
-                                            Jaminan,
-                                        </b><br /><br /><br />..............................</td>
-                                    <td><b>
-                                            Pemberi Pinjaman / Penerima
-                                            Pinjaman
-                                        </b><br /><br /><br />............................................................
+                                            Pemberi Jaminan,
+                                            <br /><br /><br />
+                                            {{ pihak2.nama }}
+                                        </b></td>
+                                    <td>
+                                        <b>
+                                            Pemberi Pinjaman / Penerima Jaminan,
+                                            <br /><br /><br />
+                                            {{ pihak1.nama }}
+                                        </b>
                                     </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2" v-show="optPrint.pasanganPage">
                     <div class="bg-white shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
                             <b>SURAT PERSETUJUAN SUAMI ISTRI</b>
@@ -368,7 +374,7 @@
                         <div class="mb-4">
                             yang bertanda tangan di bawah ini:
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4 ps-8">
                             Nama :<br />
                             Pekerjaan :<br />
                             Alamat :<br />
@@ -376,10 +382,10 @@
                         <div class="mb-4">
                             Sebagai suami/isteri *) dengan ini memberikan persetujuan kepada suami/isteri *) saya:
                         </div>
-                        <div class="mb-4">
-                            Nama :<br />
+                        <div class="mb-4 ps-8">
+                            Nama : <b>{{ pihak2.nama }}</b><br />
                             Pekerjaan :<br />
-                            Alamat :<br />
+                            Alamat :<b>{{ pihak2.alamat }}</b><br />
                         </div>
                         <div class="mb-4  ">
                             Untuk melakukan tindakan-tindakan sebagaimana disebutkan di bawah ini :
@@ -411,7 +417,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2" v-show="optPrint.penjaminPage">
                     <div class="bg-white shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
                             <b>PERNYATAAN PENJAMIN</b>
@@ -474,10 +480,6 @@
     </n-card>
 </template>
 <style scoped>
-table {
-    font-size: 10px;
-}
-
 table.tblprint>tr>th {
     padding: 2px 0px 10px 4px;
     border: 1px solid;
@@ -514,6 +516,21 @@ const pkData = ref([]);
 const struktur = ref([]);
 const pihak1 = ref([]);
 const pihak2 = ref([]);
+// page controller
+const optAllPage = ref(false);
+const optPrint = reactive({
+    pkPage: true,
+    skalaPage: true,
+    pasanganPage: true,
+    ktpaPage: true,
+    penjaminPage: true,
+});
+
+const checkAllPage = () => {
+    console.log('chekced');
+    return true;
+}
+
 const tgl = reactive({
     awal: null,
 });
@@ -524,8 +541,14 @@ const userToken = localStorage.getItem("token");
 const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
-let monthServer = new Date().getMonth() + 1
+const daysName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
+let monthServer = new Date().getMonth();
 let yearServer = new Date().getFullYear();
+let dayServer = new Date().getDay();
+let thisDay = daysName[dayServer];
+let thisMonth = monthNames[monthServer];
+let dateServer = new Date().getDate();
+
 const month = monthNames[monthServer];
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 const dynamicForm = reactive({

@@ -95,7 +95,6 @@ const columns = [
         {
                 title: "Tanggal",
                 key: "visit_date",
-                width: 100,
         },
         {
                 title: "Nama",
