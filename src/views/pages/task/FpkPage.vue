@@ -22,6 +22,13 @@
                             </template>
                             download
                         </n-button>
+                        <n-button @click="handleNavCalc">
+                            <template #icon>
+                                <n-icon>
+                                    <calc-icon />
+                                </n-icon>
+                            </template>
+                        </n-button>
                         <!-- <n-button type="primary" @click="handleAdd">
                             <template #icon>
                                 <n-icon>
@@ -58,6 +65,7 @@ import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
     FileDownloadOutlined as DownloadIcon,
+    CalculateOutlined as CalcIcon
 
 } from "@vicons/material"
 import {
@@ -272,8 +280,9 @@ function generatePdf() {
 const handleAdd = () => {
     router.push('/task/new-survey');
 }
-const getData = async () => {
 
+
+const getData = async () => {
     const response = await useApi({
         method: 'GET',
         api: 'kunjungan_admin',
@@ -287,6 +296,23 @@ const getData = async () => {
         dataTable.value = response.data.response;
     }
 }
+
+const refAdmin = async () => {
+    const response = await useApi({
+        method: 'post',
+        api: 'kunjungan_admin',
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
+    } else {
+        dataTable.value = response.data.response;
+    }
+}
+
+
 const renderIcon = (icon) => {
     return () => {
         return h(NIcon, null, {
@@ -337,4 +363,8 @@ const showData = computed(() => {
     return useSearch(dataTable.value, searchBox.value);
     // return filterIt(dataTable.value, searchBox.value);
 });
+
+const handleNavCalc = () => {
+    router.replace({ name: 'calculator' });
+}
 </script>

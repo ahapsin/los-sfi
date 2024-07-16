@@ -16,12 +16,16 @@
                         <n-select disabled placeholder="Jenis Kelamin" :options="optJenisKelamin"
                             v-model:value="dataPelanggan.jenis_kelamin" />
                     </n-form-item>
+                    <n-form-item label="Tempat Lahir" path="tgl_lahir" class="w-full">
+                        <n-input placeholder="Tempat Lahir" v-model:value="dataPelanggan.tempat_lahir" disabled>
+                        </n-input>
+                    </n-form-item>
                     <n-form-item label="Tanggal Lahir" path="tgl_lahir" class="w-full">
                         <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                             value-format="yyyy-MM-dd" type="date" class="w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Golongan Darah" path="gol_darah" class="w-full">
-                        <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah" readonly>
+                        <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah" disabled>
                         </n-input>
                     </n-form-item>
                 </div>
@@ -54,62 +58,6 @@
                         </n-input>
                     </n-form-item>
                 </div>
-                <n-divider title-placement="left">
-                    Dokumen
-                </n-divider>
-                <n-space>
-                    <n-image v-for="attachment in dataAttachment" :key="attachment"
-                        class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH"></n-image>
-                </n-space>
-                <n-divider title-placement="left">
-                    Informasi Alamat Identitas
-                </n-divider>
-                <div class="flex gap-2">
-                    <n-form-item label="Alamat" class="w-full">
-                        <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat" readonly />
-                    </n-form-item>
-                    <n-form-item label="RT">
-                        <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" readonly>
-                        </n-input>
-                    </n-form-item>
-                    <n-form-item label="RW">
-                        <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" readonly>
-                        </n-input>
-                    </n-form-item>
-                </div>
-                <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
-                    v-model:kecamatan="alamatIdentitas.kecamatan" v-model:desa="alamatIdentitas.kelurahan" readonly />
-                <n-form-item label="Kode Pos" path="desa">
-                    <n-input placeholder="Kode Pos" v-model:value="alamatIdentitas.kode_pos" readonly />
-                </n-form-item>
-                <n-divider title-placement="left">
-                    Informasi Alamat Tagih
-                </n-divider>
-
-                <div class="flex gap-2">
-                    <n-form-item label="Alamat" class="w-full">
-                        <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat" readonly />
-                    </n-form-item>
-                    <n-form-item label="RT">
-                        <n-input placeholder="RT" v-model:value="alamatTagih.rt" readonly>
-                        </n-input>
-                    </n-form-item>
-                    <n-form-item label="RW">
-                        <n-input placeholder="RW" v-model:value="alamatTagih.rw" readonly>
-                        </n-input>
-                    </n-form-item>
-                </div>
-
-                <select-state-region active="false" v-model:provinsi="alamatTagih.provinsi"
-                    v-model:kota="alamatTagih.kota" v-model:kecamatan="alamatTagih.kecamatan"
-                    v-model:desa="alamatTagih.kelurahan" readonly />
-                <n-form-item label="Kode Pos" path="desa">
-                    <n-input placeholder="Kode Pos" v-model:value="alamatTagih.kode_pos" readonly />
-                </n-form-item>
-
-                <n-divider title-placement="left">
-                    Informasi Pekerjaan
-                </n-divider>
                 <div class="flex gap-2">
                     <n-form-item label="Pekerjaan" path="nama" class="w-full">
                         <n-input placeholder="pekerjaan" v-model:value="dataPekerjaan.pekerjaan" readonly />
@@ -143,14 +91,66 @@
                     </n-form-item>
                 </div>
                 <div class="flex gap-2">
-                    <n-form-item label="Ekstra" path="ekstra" class="w-full">
-                        <n-input placeholder="Ekstra 1" v-model:value="dataPekerjaan.ekstra1" readonly />
+                    <n-form-item label="Ext 1" path="ekstra" class="w-full">
+                        <n-input placeholder="Ext 1" v-model:value="dataPekerjaan.ekstra1" readonly />
                     </n-form-item>
-                    <n-form-item label="Ekstra 2" path="ekstra" class="w-full">
-                        <n-input placeholder="Ekstra 2" v-model:value="dataPekerjaan.ekstra2">
+                    <n-form-item label="Ext 2" path="ekstra" class="w-full">
+                        <n-input placeholder="Ext 2" v-model:value="dataPekerjaan.ekstra2">
                         </n-input>
                     </n-form-item>
                 </div>
+
+                <n-divider title-placement="left">
+                    Informasi Alamat Identitas
+                </n-divider>
+                <div class="flex gap-2">
+                    <n-form-item label="Alamat" class="w-full">
+                        <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat" readonly />
+                    </n-form-item>
+                    <n-form-item label="RT">
+                        <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" readonly>
+                        </n-input>
+                    </n-form-item>
+                    <n-form-item label="RW">
+                        <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" readonly>
+                        </n-input>
+                    </n-form-item>
+                </div>
+                <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
+                    v-model:kecamatan="alamatIdentitas.kecamatan" v-model:desa="alamatIdentitas.kelurahan" readonly />
+                <n-form-item label="Kode Pos" path="desa">
+                    <n-input placeholder="Kode Pos" v-model:value="alamatIdentitas.kode_pos" readonly />
+                </n-form-item>
+                <n-divider title-placement="left">
+                    Informasi Alamat Tagih
+                </n-divider>
+                <div class="flex gap-2">
+                    <n-form-item label="Alamat" class="w-full">
+                        <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat" readonly />
+                    </n-form-item>
+                    <n-form-item label="RT">
+                        <n-input placeholder="RT" v-model:value="alamatTagih.rt" readonly>
+                        </n-input>
+                    </n-form-item>
+                    <n-form-item label="RW">
+                        <n-input placeholder="RW" v-model:value="alamatTagih.rw" readonly>
+                        </n-input>
+                    </n-form-item>
+                </div>
+
+                <select-state-region active="false" v-model:provinsi="alamatTagih.provinsi"
+                    v-model:kota="alamatTagih.kota" v-model:kecamatan="alamatTagih.kecamatan"
+                    v-model:desa="alamatTagih.kelurahan" readonly />
+                <n-form-item label="Kode Pos" path="desa">
+                    <n-input placeholder="Kode Pos" v-model:value="alamatTagih.kode_pos" readonly />
+                </n-form-item>
+                <n-divider title-placement="left">
+                    Dokumen
+                </n-divider>
+                <n-space>
+                    <n-image v-for="attachment in dataAttachment" :key="attachment"
+                        class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH"></n-image>
+                </n-space>
             </n-tab-pane>
             <n-tab-pane name="order" tab="Order">
                 <div class="flex gap-2">

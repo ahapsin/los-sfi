@@ -69,7 +69,7 @@ const handleLogin = async (e) => {
     } else {
         message.success("login berhasil");
         loading.value = false;
-        localStorage.token = response.data.response.token;
+        localStorage.token = response.data.token;
         router.push('dashboard');
     }
 }
