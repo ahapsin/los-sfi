@@ -18,6 +18,18 @@ const routes = [
     component: () => import("../views/pages/DashboardPage.vue"),
   },
   {
+    path: "/transaction",
+    name: "transaction",
+    component: () => import("../views/pages/DashboardPage.vue"),
+    children: [
+      {
+        path: "cash-in",
+        name: "penerimaan uang",
+        component: () => import("../views/pages/transaction/cashInPage.vue"),
+      },
+    ],
+  },
+  {
     path: "/task",
     name: "task",
     component: () => import("../views/pages/DashboardPage.vue"),
@@ -95,9 +107,19 @@ const routes = [
     component: () => import("../views/pages/DashboardPage.vue"),
     children: [
       {
-        path: "calculator",
-        name: "calculator",
+        path: "admin_fee",
+        name: "Biaya Admin",
         component: () => import("../views/pages/master/CalculatorPage.vue"),
+      },
+      {
+        path: "taksasi",
+        name: "Taksasi",
+        component: () => import("../views/pages/master/TaksasiPage.vue"),
+      },
+      {
+        path: "taksasi-action",
+        name: "Taksasi baru",
+        component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
       },
       {
         path: "employees",
