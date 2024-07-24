@@ -36,28 +36,54 @@
 
                 <n-card title="Pembayaran">
                     <template #header-extra>
-                        <n-form-item path="nestedValue.path2" label="Jumlah Uang">
-                            <n-input placeholder="Jumlah Pembayaran" loading size="large">
-                                <template #prefix>
-                                    Rp.
-                                </template>
-                            </n-input>
-                        </n-form-item>
+                        <n-space>
+                            <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
+                                <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
+                                    v-model:value="tipe_pay" />
+                            </n-form-item>
+                            <n-form-item path="nestedValue.path2" label="Jumlah Uang">
+                                <n-input placeholder="Jumlah Pembayaran" loading size="large">
+                                    <template #prefix>
+                                        Rp.
+                                    </template>
+                                </n-input>
+                            </n-form-item>
+                        </n-space>
                     </template>
                     <template #action>
                         <n-space>
-                            <n-form-item label="pembulatan">
-                                <n-input size="large" />
-                            </n-form-item>
-                            <n-form-item label="total">
-                                <n-input size="large" />
-                            </n-form-item>
-                            <n-form-item label="kembalian">
-                                <n-input size="large" />
-                            </n-form-item>
-                            <n-button type="primary" size="large">
+                            <n-space v-show="tipe_pay == 'transfer'">
+                                <n-form-item path="nestedValue.path2" label="Bank">
+                                    <n-select filterable :options="optBank" placeholder="Bank Tujuan"
+                                        v-model:value="bank" />
+                                </n-form-item>
+                                <n-form-item label="No Rekening">
+                                    <n-input />
+                                </n-form-item>
+                                <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
+                                    'naive-info': 'hello!',
+                                }" :data="{
+                                    'naive-data': 'cool! naive!',
+                                }">
+                                    <n-button>Bukti Transfer</n-button>
+                                </n-upload>
+                            </n-space>
+                            <n-space v-show="tipe_pay == 'cash'">
+                                <n-form-item label="pembulatan">
+                                    <n-input size="large" />
+                                </n-form-item>
+                                <n-form-item label="total">
+                                    <n-input size="large" />
+                                </n-form-item>
+                                <n-form-item label="kembalian">
+
+                                    <n-input size="large" />
+                                </n-form-item>
+                            </n-space>
+                            <n-button type="primary">
                                 Proses
                             </n-button>
+
                         </n-space>
                     </template>
                     <n-list bordered hoverable>
@@ -161,7 +187,28 @@ const data = Array.from({ length: 3 }).map((_, index) => ({
     address: `1.000.000. ${index}`,
     key: index
 }));
-
+const tipe_pay = ref("Tunai");
+const bank = ref(null);
+const optTipePay = [
+    {
+        label: 'Tunai',
+        value: 'cash',
+    },
+    {
+        label: 'Transfer',
+        value: 'transfer'
+    },
+];
+const optBank = [
+    {
+        label: 'BCA',
+        value: 'bca',
+    },
+    {
+        label: 'Mandiri',
+        value: 'mandiri'
+    },
+];
 const checkedRowKeysRef = ref([4, 1]);
 const columns = createColumns(); 
 </script>
