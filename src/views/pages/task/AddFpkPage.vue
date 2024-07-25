@@ -1,5 +1,6 @@
 <template>
     <n-space vertical class="p-2">
+        <!-- <pre>{{ pageData }}</pre> -->
         <n-steps :current="current" :status="currentStatus">
             <n-step title="Pelanggan" />
             <n-step title="Order" />
@@ -429,8 +430,8 @@
                     <n-form-item label="Periode" path="periode">
                         <n-space>
                             <n-input v-model:value="calcCredit.periode" placeholder="periode" />
-                            <n-select filterable placeholder="Pilih Periode" :options="optPeriode"
-                                v-model:value="calcCredit.opt_periode" />
+                            <!-- <n-select filterable placeholder="Pilih Periode" :options="optPeriode"
+                                v-model:value="calcCredit.opt_periode" /> -->
                         </n-space>
                     </n-form-item>
                     <n-form-item label="Angsuran" path="angsuran">
@@ -439,7 +440,7 @@
                     </n-form-item>
                     <n-form-item label="Total Admin" path="total_admin">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.total_admin"
-                            placeholder="Total Admin" :show-button="false" class="flex !w-full" />
+                            placeholder="Total Admin" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Cadangan" path="cadangan">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
@@ -499,7 +500,8 @@
                     </n-form-item>
                     <n-form-item label="Nilai yang diterima" path="nilai_diterima">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.nilai_yang_diterima"
-                            placeholder="Nilai yang diterima" size="large" :show-button="false" class="flex !w-full" />
+                            placeholder="Nilai yang diterima" size="large" :show-button="false" class="flex !w-full"
+                            :on-update:value="handlePlafond" />
                     </n-form-item>
                 </div>
             </div>
@@ -542,7 +544,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { lyla } from "@lylajs/web";
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon } from "@vicons/material";
 import { useRoute } from "vue-router";
@@ -559,7 +561,6 @@ const baseRoute = useRoute();
 const calcCredit = reactive({
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
-    bunga_eff: computed(() => calcCredit.nilai_yang_diterima >= 2000000 ? 44 : 43),
     bunga_margin: computed(() => parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100)),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
@@ -600,6 +601,8 @@ const current = ref(1);
 const userToken = localStorage.getItem("token");
 
 const currentStatus = ref("process");
+
+const skemaAngsuran = ref([]);
 
 const next = () => current.value += 1;
 const prev = () => current.value -= 1;
@@ -695,6 +698,7 @@ const sum = (num1, num2) => {
     }
     return num1 + num2;
 };
+
 const response = useApi({
     method: 'get',
     api: `cr_application/${idApp}`,
@@ -731,6 +735,40 @@ const response = useApi({
     }
 });
 
+const refAdmin = async (body) => {
+    skemaAngsuran.value = [];
+    const bodyPost = {
+        "plafond": 5000000,
+        "jenis_angsuran": "bulanan",
+        "tenor": "6"
+    };
+    loading.value = true;
+    const response = await useApi({
+        method: 'post',
+        api: 'fee',
+        data: bodyPost,
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
+    } else {
+        loading.value = false;
+        skemaAngsuran.value = response.data;
+        calcCredit.total_admin = skemaAngsuran.value.total;
+        calcCredit.bunga_eff = skemaAngsuran.value.eff_rate;
+    }
+}
+const handlePlafond = (e) => {
+    order.value.plafond = e;
+    const body = {
+        plafond: e,
+        jenis_angsuran: order.value.jenis_angsuran,
+    }
+    refAdmin(body);
+}
+onMounted(refAdmin);
 const formAssign = reactive({
     flag_pengajuan: null,
     pelanggan: dataPelanggan.value,

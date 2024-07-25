@@ -365,6 +365,6 @@ const showData = computed(() => {
 });
 
 const handleNavCalc = () => {
-    router.replace({ name: 'calculator' });
+    router.replace({ name: 'penerimaan uang' });
 }
 </script>

@@ -392,6 +392,9 @@ const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
 
+
+const diffState = ref();
+
 const refAdmin = async (body) => {
         skemaAngsuran.value = [];
         // const bodyPost = {
@@ -587,13 +590,16 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 const tahunJaminanValidate = (rule, value) => {
-        console.log(rule);
+        let tahun = new Date().getFullYear();
+        let diff = tahun - jaminan.value.tahun;
+        diffState.value = 2;
+        return diff <= 10;
 }
 const rules = {
         tahun_jaminan: {
+                message: `jumlah tahun lebih dari 10 Tahun`,
                 validator: tahunJaminanValidate,
-                message: 'tahun lebih dari 60 Tahun',
-                trigger: ['input', 'blur']
+                trigger: ['blur']
         },
 }
 const seprator = (value) => {
