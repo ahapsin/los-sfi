@@ -15,26 +15,39 @@
                         </n-radio-group>
                     </n-form-item-gi>
                     <n-form-item-gi path="nestedValue.path2">
-                        <n-input placeholder="cari" loading>
-                            <template #prefix>
-                                <n-icon :component="searchIcon" />
+                        <n-auto-complete v-model:value="valOptSearch" :options="listCustomer"
+                            :on-select="handleInputSearch">
+                            <template #default="{ handleInput, handleBlur, handleFocus, value: slotValue }">
+                                <n-input clearable @clear="handleCloseNasabah" :value="slotValue" placeholder="Cari"
+                                    @input="handleInput" @focus="handleFocus" @blur="handleBlur">
+                                    <template #prefix>
+                                        <n-icon :component="searchIcon" />
+                                    </template>
+                                </n-input>
                             </template>
-                        </n-input>
+                            <!-- <n-input placeholder="cari" loading>
+                                <template #prefix>
+                                    <n-icon :component="searchIcon" />
+                                </template>
+</n-input> -->
+                        </n-auto-complete>
                     </n-form-item-gi>
                 </n-grid>
             </n-form-item>
 
             <n-space vertical>
 
-                <n-form-item>
-                    <n-card title="data nasabah" closable class="shadow-md">asdsad</n-card>
+                <n-form-item v-show="searchField">
+                    <n-card title="data nasabah" closable class="shadow-md" @close="handleCloseNasabah">
+                        {{ valOptSearch }}
+                    </n-card>
                 </n-form-item>
-                <n-form-item>
+                <n-form-item v-show="searchField">
                     <n-data-table v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data"
                         :pagination="pagination" />
                 </n-form-item>
 
-                <n-card title="Pembayaran">
+                <n-card title="Pembayaran" v-show="searchField">
                     <template #header-extra>
                         <n-space>
                             <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
@@ -76,14 +89,12 @@
                                     <n-input size="large" />
                                 </n-form-item>
                                 <n-form-item label="kembalian">
-
                                     <n-input size="large" />
                                 </n-form-item>
                             </n-space>
                             <n-button type="primary">
                                 Proses
                             </n-button>
-
                         </n-space>
                     </template>
                     <n-list bordered hoverable>
@@ -149,9 +160,22 @@
 </template>
 
 <script setup>
+import { useApi } from "../../../helpers/axios";
+import { useSearch } from "../../../helpers/searchObject";
 import {
     SearchRound as searchIcon,
 } from "@vicons/material";
+const searchField = ref(false);
+const valOptSearch = ref(null);
+const handleInputSearch = () => {
+    searchField.value = true;
+    console.log('search');
+}
+const handleCloseNasabah = () => {
+    searchField.value = false;
+    valOptSearch.value = null;
+    console.log('search');
+}
 
 const createColumns = () => {
     return [
@@ -180,7 +204,7 @@ const createColumns = () => {
         }
     ];
 }
-import { defineComponent, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 const data = Array.from({ length: 3 }).map((_, index) => ({
     name: `12312312${index}`,
     age: "konvensional",
@@ -210,5 +234,36 @@ const optBank = [
     },
 ];
 const checkedRowKeysRef = ref([4, 1]);
-const columns = createColumns(); 
+const dataCustomer = ref([]);
+const columns = createColumns();
+
+const getDataCustomer = async () => {
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: 'GET',
+        api: 'customer',
+        token: userToken
+    });
+    if (!response.ok) {
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
+    } else {
+        dataCustomer.value = response.data;
+    }
+}
+
+
+
+const listCustomer = computed(() => {
+    let dataList = useSearch(dataCustomer.value, valOptSearch.value);
+    return dataList.map((suffix) => {
+        return {
+            label: suffix.CUST_CODE + "-" + suffix.NAME,
+            value: suffix
+        };
+    })
+});
+
+onMounted(() => getDataCustomer());
 </script>
