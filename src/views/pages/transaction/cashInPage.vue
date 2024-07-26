@@ -1,5 +1,6 @@
 <template>
     <n-card>
+        {{ creditCustomer[0] }}
         <n-form ref="formRef" :model="model" :rules="rules" label-placement="left"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-form-item label="Jenis Transaksi" :show-feedback="false" class="w-full">
@@ -18,8 +19,9 @@
                         <n-auto-complete v-model:value="valOptSearch" :options="listCustomer"
                             :on-select="handleInputSearch">
                             <template #default="{ handleInput, handleBlur, handleFocus, value: slotValue }">
-                                <n-input clearable @clear="handleCloseNasabah" :value="slotValue" placeholder="Cari"
-                                    @input="handleInput" @focus="handleFocus" @blur="handleBlur">
+                                <n-input clearable @clear="handleCloseNasabah" :value="valOptSearch" placeholder="Cari"
+                                    @input="handleInput" @focus="handleFocus" @blur="handleBlur"
+                                    :disabled="searchField">
                                     <template #prefix>
                                         <n-icon :component="searchIcon" />
                                     </template>
@@ -31,12 +33,12 @@
             </n-form-item>
             <n-space vertical>
                 <n-form-item v-show="searchField">
-                    <n-card title="Data Nasabah" closable class="bg-pr text-white" @close="handleCloseNasabah">
+                    <n-card title="Data Nasabah" closable class="bg-pr-50 " @close="handleCloseNasabah">
                         {{ valOptSearch }}
                     </n-card>
                 </n-form-item>
                 <n-form-item v-show="searchField">
-                    <n-data-table v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="data"
+                    <n-data-table v-model:checked-row-keys="checkedRowKeys" :columns="columns" :data="dataKontrak"
                         :pagination="pagination" />
                 </n-form-item>
 
@@ -158,50 +160,34 @@ import {
 } from "@vicons/material";
 const searchField = ref(false);
 const valOptSearch = ref(null);
-const handleInputSearch = () => {
-    searchField.value = true;
-    console.log('search');
-}
-const handleCloseNasabah = () => {
-    searchField.value = false;
-    valOptSearch.value = null;
-    console.log('search');
-}
+
 
 const createColumns = () => {
     return [
         {
             type: "selection",
             multiple: false,
-            disabled(row) {
-                return row.name === "Edward King 3";
-            }
         },
         {
             title: "No Kontrak",
-            key: "name"
+            key: "loan_number"
         },
         {
             title: "Syariah Flag",
-            key: "age"
+            key: "syariah_flag"
         },
         {
             title: "Sisa Angsuran",
-            key: "address"
+            key: "sisa_angsuran"
         },
         {
             title: "Total Bayar",
-            key: "address"
+            key: "total_bayar"
         }
     ];
 }
 import { computed, onMounted, ref } from "vue";
-const data = Array.from({ length: 3 }).map((_, index) => ({
-    name: `12312312${index}`,
-    age: "konvensional",
-    address: `1.000.000. ${index}`,
-    key: index
-}));
+
 const tipe_pay = ref("Tunai");
 const bank = ref(null);
 const optTipePay = [
@@ -244,7 +230,38 @@ const getDataCustomer = async () => {
     }
 }
 
+const handleInputSearch = () => {
+    searchField.value = true;
+    getCreditCustomer();
+}
+const handleCloseNasabah = () => {
+    searchField.value = false;
+    valOptSearch.value = null;
+    console.log('search');
+}
 
+const creditCustomer = ref([]);
+const getCreditCustomer = async () => {
+    const dynamicBody = {
+        "cust_code": "005240600001"
+    }
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: 'POST',
+        api: 'kontrak_fasilitas',
+        data: dynamicBody,
+        token: userToken,
+    });
+    if (!response.ok) {
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.replace('/');
+    } else {
+        creditCustomer.value = response.data;
+    }
+}
+
+const dataKontrak = [{ "id": "01905df3-99d4-7072-baa9-944d3214b954", "loan_number": "001240600001", "cust_code": "005240600001", "order_number": "FPK/20240621/00001", "sisa_angsuran": 7050000, "total_bayar": 0 }];
 
 const listCustomer = computed(() => {
     let dataList = useSearch(dataCustomer.value, valOptSearch.value);
