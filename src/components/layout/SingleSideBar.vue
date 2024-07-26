@@ -15,7 +15,8 @@
                                                                 <n-icon><menu-icon /></n-icon>
                                                         </template>
                                                 </n-button>
-                                                <img class="h-8 " src="../../assets/logo.png" alt="logo_company">
+                                                <img class="h-14 md:h-16 " src="../../assets/logo.png"
+                                                        alt="logo_company">
                                                 KSPDJAYA
                                         </n-space>
                                         <span class="hidden md:flex capitalize">{{ $route.name }}</span>
