@@ -565,7 +565,7 @@ const calcCredit = reactive({
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
     angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
-    provisi: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
+    // provisi: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
 
