@@ -59,7 +59,8 @@
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :columns="columns" :data="showData" :pagination="pagination" />
+                    <n-data-table size="small" :columns="columns" :data="showData" :pagination="pagination"
+                        :loading="loading" />
                 </n-space>
             </n-card>
         </n-space>
@@ -181,7 +182,9 @@ const handleUpdate = (evt) => {
 const handleAdd = () => {
     router.replace('/master/taksasi-action');
 }
+const loading = ref(false);
 const getData = async () => {
+    loading.value = true;
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
@@ -193,7 +196,8 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.replace('/');
     } else {
-        dataTable.value = response.data;
+        loading.value = false;
+        dataTable.value = response.data.data;
     }
 }
 const renderIcon = (icon) => {

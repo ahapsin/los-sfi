@@ -41,7 +41,7 @@
                 </template>
                 <n-space vertical :size="12" class="pt-4">
                     <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="showData"
-                        :pagination="pagination" />
+                        :pagination="pagination" :loading="loadData" />
                 </n-space>
             </n-card>
         </n-space>
@@ -82,6 +82,7 @@ const pk = ref(null);
 const showModal = ref(false);
 const dataTable = ref([]);
 const searchBox = ref();
+const loadData = ref(false);
 const loadingRef = reactive({
     type: "loading",
     messagePost: null,
@@ -283,6 +284,7 @@ const handleAdd = () => {
 
 
 const getData = async () => {
+    loadData.value = true;
     const response = await useApi({
         method: 'GET',
         api: 'kunjungan_admin',
@@ -293,6 +295,7 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.replace('/');
     } else {
+        loadData.value = false;
         dataTable.value = response.data.response;
     }
 }

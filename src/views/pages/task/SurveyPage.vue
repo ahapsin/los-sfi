@@ -60,7 +60,7 @@
                                 </template>
                                 <n-space vertical :size="12" class="pt-4">
                                         <n-data-table striped :scroll-x="500" size="small" :columns="columns"
-                                                :data="showData" :pagination="pagination" />
+                                                :data="showData" :pagination="pagination" :loading="loadData" />
                                 </n-space>
                         </n-card>
                 </n-space>
@@ -89,6 +89,7 @@ import {
 
 const message = useMessage();
 const dialog = useDialog();
+const loadData = ref(false);
 const dataTable = ref([]);
 
 const columns = [
@@ -219,6 +220,7 @@ const handleAdd = () => {
         router.push('/task/new-survey');
 }
 const getData = async () => {
+        loadData.value = true;
         let userToken = localStorage.getItem("token");
         const response = await useApi({
                 method: 'GET',
@@ -230,6 +232,7 @@ const getData = async () => {
                 localStorage.removeItem("token");
                 router.replace('/');
         } else {
+                loadData.value = false;
                 dataTable.value = response.data.response;
         }
 }
