@@ -45,10 +45,10 @@
                     <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                         value-format="yyyy-MM-dd" type="date" class="w-full" />
                 </n-form-item>
-                <n-form-item label="Golonga Darah" path="gol_darah" class="w-full">
+                <!-- <n-form-item label="Golonga Darah" path="gol_darah" class="w-full">
                     <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah">
                     </n-input>
-                </n-form-item>
+                </n-form-item> -->
             </div>
 
             <n-form-item label="Status Kawin" path="jenis_kelamin">
@@ -74,43 +74,45 @@
                 <n-form-item label="No KK" path="no KK" class="w-full">
                     <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk" />
                 </n-form-item>
-                <n-form-item label="Warganegara" path="warganegara" class="w-full">
+                <!-- <n-form-item label="Warganegara" path="warganegara" class="w-full">
                     <n-input placeholder="Warganegara" v-model:value="dataPelanggan.warganegara">
                     </n-input>
-                </n-form-item>
+                </n-form-item> -->
             </div>
             <div class="flex gap-2">
-                <n-form-item label="Pekerjaan" path="nama" class="w-full">
+                <!-- <n-form-item label="Pekerjaan" path="nama" class="w-full">
                     <n-input placeholder="pekerjaan" v-model:value="dataPekerjaan.pekerjaan" />
+                </n-form-item> -->
+                <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
+                    <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
+                        v-model:value="dataPekerjaan.pekerjaan" />
                 </n-form-item>
                 <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
                     <n-input placeholder="Pekerjaan ID" v-model:value="dataPekerjaan.pekerjaan_id">
                     </n-input>
                 </n-form-item>
             </div>
-            <n-form-item label="Agama" path="agama">
+            <!--<n-form-item label="Agama" path="agama">
                 <n-select filterable placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
-            </n-form-item>
+            </n-form-item>-->
             <n-form-item label="Pendidikan" path="pendidikan">
                 <n-select filterable placeholder="pendidikan" :options="optPendidikan"
                     v-model:value="dataPekerjaan.pendidikan" />
             </n-form-item>
             <div class="flex gap-2">
-                <n-form-item label="Telepon" path="telepon" class="w-full">
-                    <n-input placeholder="Telepon Rumah" v-model:value="dataPekerjaan.telepon_rumah" />
+                <n-form-item label="Telepon Selullar 1" path="telepon" class="w-full">
+                    <n-input placeholder="Telepon Sellular 1" v-model:value="dataPekerjaan.telepon_rumah" />
                 </n-form-item>
-                <n-form-item label="Telepon Selullar" path="telepon_selullar" class="w-full">
-                    <n-input placeholder="Telepon Selular" v-model:value="dataPekerjaan.telepon_selular">
-
+                <n-form-item label="Telepon Selullar 2" path="telepon_selullar" class="w-full">
+                    <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_selular">
                     </n-input>
                 </n-form-item>
-                <n-form-item label="Telepon" path="Kantor" class="w-full">
+                <!-- <n-form-item label="Telepon" path="Kantor" class="w-full">
                     <n-input placeholder="Telepon Kantor" v-model:value="dataPekerjaan.telepon_kantor">
-
                     </n-input>
-                </n-form-item>
+                </n-form-item> -->
             </div>
-            <div class="flex gap-2">
+            <!-- <div class="flex gap-2">
                 <n-form-item label="Ext 1" path="Ext" class="w-full">
                     <n-input placeholder="Ext 1" v-model:value="dataPekerjaan.Ext1" />
                 </n-form-item>
@@ -118,7 +120,7 @@
                     <n-input placeholder="Ext 2" v-model:value="dataPekerjaan.Ext2">
                     </n-input>
                 </n-form-item>
-            </div>
+            </div> -->
 
             <n-divider title-placement="left">
                 Informasi Alamat Identitas
@@ -233,10 +235,15 @@
                         v-model:value="dataOrder.kategori" />
                 </n-form-item>
                 <n-form-item label="Lama Bekerja" path="lama_kerja" class="w-full">
-                    <n-input placeholder="lama bekerja" v-model:value="dataOrder.lama_bekerja" />
+                    <n-input-number :show-button="false" placeholder="lama bekerja"
+                        v-model:value="dataOrder.lama_bekerja">
+                        <template #suffix>
+                            bulan
+                        </template>
+                    </n-input-number>
                 </n-form-item>
                 <n-form-item label="Tanggungan" path="tanggungan" class="w-full">
-                    <n-input placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan" />
+                    <n-input-number placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan" />
                 </n-form-item>
             </div>
             <div class="flex gap-2">
@@ -319,7 +326,7 @@
                     <n-select filterable :options="optHubCust" v-model:value="dataPenjamin.hubCust" />
                 </n-form-item>
             </div>
-            <n-form-item label="Alamat" path="alamat">
+            <!-- <n-form-item label="Alamat" path="alamat">
                 <n-input-group>
                     <n-input placeholder="Alamat" v-model:value="dataPenjamin.alamat" />
                     <n-input placeholder="RT" v-model:value="dataPenjamin.rt" />
@@ -330,12 +337,12 @@
                 v-model:kecamatan="dataPenjamin.kecamatan" v-model:desa="dataPenjamin.kelurahan" />
             <n-form-item label="Kode Pos" path="kodepos">
                 <n-input placeholder="Kode Pos" v-model:value="dataPenjamin.kode_pos" />
-            </n-form-item>
+            </n-form-item> -->
 
             <n-form-item label="Telepon" path="telepon">
                 <n-input-group>
-                    <n-input placeholder="Telepon Rumah" v-model:value="dataPenjamin.no_telp" />
-                    <n-input placeholder="Telepon Selular" v-model:value="dataPenjamin.no_hp" />
+                    <n-input placeholder="Telepon Sellular 1" v-model:value="dataPenjamin.no_telp" />
+                    <n-input placeholder="Telepon Sellular 2" v-model:value="dataPenjamin.no_hp" />
                 </n-input-group>
             </n-form-item>
             <n-divider title-placement="left">
@@ -359,7 +366,7 @@
 
             <n-form-item label="Telepon" path="telepon">
                 <n-input-group>
-                    <n-input placeholder="Telepon Rumah" v-model:value="dataKerabat.no_telp" />
+                    <!-- <n-input placeholder="Telepon Rumah" v-model:value="dataKerabat.no_telp" /> -->
                     <n-input placeholder="Telepon Selular" v-model:value="dataKerabat.no_hp" />
                 </n-input-group>
             </n-form-item>
@@ -623,6 +630,11 @@ const kategoriKredit = ["biaya kuliah", "investasi"].map(
         value: v
     }));
 const optJenisKelamin = ["Laki-laki", "perempuan"].map(
+    (v) => ({
+        label: v,
+        value: v
+    }));
+const optPekerjaan = ["Pedagang", "Petani", "peternak", "Nelayan"].map(
     (v) => ({
         label: v,
         value: v
