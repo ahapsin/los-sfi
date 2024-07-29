@@ -684,7 +684,7 @@ const handlePositiveClick = async (e) => {
     } else {
         message.success("konfirmasi berhasil");
         loading.value = false;
-        router.replace('/task/approval');
+        router.replace('/task/approval_ho');
     }
 }
 const handleNegativeClick = async (e) => {

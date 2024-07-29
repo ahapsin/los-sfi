@@ -229,7 +229,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                            }} )
+                                        }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -708,22 +708,22 @@ const createPdf = () => {
                         [`Pihak Pertama,\n${pkData.value.cabang}\n\n\n\n\n(${pihak1.value.nama})`, `Pihak Kedua\n\n\n\n\n\n(${pihak2.value.nama})`],
                     ]
                 },
-                pageBreak: 'after'
+                pageBreak: 'none'
             },
-            {
-                text: `Tabel Skala Angsuran`,
-                alignment: "left",
-            },
-            {
-                margin: [0, 10, 0, 0],
-                table: {
-                    widths: ['*', '*', '*', '*', '*', '*'],
-                    headerRows: 1,
-                    body: struktur.value
+            // {
+            //     text: `Tabel Skala Angsuran`,
+            //     alignment: "left",
+            // },
+            // {
+            //     margin: [0, 10, 0, 0],
+            //     table: {
+            //         widths: ['*', '*', '*', '*', '*', '*'],
+            //         headerRows: 1,
+            //         body: struktur.value
 
-                },
+            //     },
 
-            },
+            // },
         ],
         styles: {
             header: {
