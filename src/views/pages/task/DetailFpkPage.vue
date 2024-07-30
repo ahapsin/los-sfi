@@ -24,10 +24,10 @@
                         <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                             value-format="yyyy-MM-dd" type="date" class="w-full" disabled />
                     </n-form-item>
-                    <n-form-item label="Golongan Darah" path="gol_darah" class="w-full">
+                    <!-- <n-form-item label="Golongan Darah" path="gol_darah" class="w-full">
                         <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah" disabled>
                         </n-input>
-                    </n-form-item>
+                    </n-form-item> -->
                 </div>
 
                 <n-form-item label="Status Kawin" path="jenis_kelamin">
@@ -53,10 +53,10 @@
                     <n-form-item label="No KK" path="no KK" class="w-full">
                         <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk" readonly />
                     </n-form-item>
-                    <n-form-item label="Warganegara" path="warganegara" class="w-full">
+                    <!-- <n-form-item label="Warganegara" path="warganegara" class="w-full">
                         <n-input placeholder="Warganegara" v-model:value="dataPelanggan.warganegara" readonly>
                         </n-input>
-                    </n-form-item>
+                    </n-form-item> -->
                 </div>
                 <div class="flex gap-2">
                     <n-form-item label="Pekerjaan" path="nama" class="w-full">
@@ -67,30 +67,30 @@
                         </n-input>
                     </n-form-item>
                 </div>
-                <n-form-item label="Agama" path="agama">
+                <!-- <n-form-item label="Agama" path="agama">
                     <n-select disabled placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama"
                         readonly />
-                </n-form-item>
+                </n-form-item> -->
                 <n-form-item label="Pendidikan" path="pendidikan">
                     <n-select disabled placeholder="pendidikan" :options="optPendidikan"
                         v-model:value="dataPekerjaan.pendidikan" readonlyreadonly />
                 </n-form-item>
                 <div class="flex gap-2">
-                    <n-form-item label="Telepon" path="telepon" class="w-full">
+                    <n-form-item label="Telepon Sellular 1" path="telepon" class="w-full">
                         <n-input placeholder="Telepon Rumah" v-model:value="dataPekerjaan.telepon_rumah" readonly />
                     </n-form-item>
-                    <n-form-item label="Telepon Selullar" path="telepon_selullar" class="w-full">
+                    <n-form-item label="Telepon Sellular 2" path="telepon_selullar" class="w-full">
                         <n-input placeholder="Telepon Selular" v-model:value="dataPekerjaan.telepon_selular">
 
                         </n-input>
                     </n-form-item>
-                    <n-form-item label="Telepon" path="Kantor" class="w-full">
+                    <!-- <n-form-item label="Telepon" path="Kantor" class="w-full">
                         <n-input placeholder="Telepon Kantor" v-model:value="dataPekerjaan.telepon_kantor">
 
                         </n-input>
-                    </n-form-item>
+                    </n-form-item> -->
                 </div>
-                <div class="flex gap-2">
+                <!-- <div class="flex gap-2">
                     <n-form-item label="Ext 1" path="ekstra" class="w-full">
                         <n-input placeholder="Ext 1" v-model:value="dataPekerjaan.ekstra1" readonly />
                     </n-form-item>
@@ -98,7 +98,7 @@
                         <n-input placeholder="Ext 2" v-model:value="dataPekerjaan.ekstra2">
                         </n-input>
                     </n-form-item>
-                </div>
+                </div> -->
 
                 <n-divider title-placement="left">
                     Informasi Alamat Identitas
