@@ -40,6 +40,7 @@
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
+
                     <n-data-table size="small" :loading="loadData" :columns="columns" :data="showData"
                         :pagination="pagination" ellipsis />
                 </n-space>
