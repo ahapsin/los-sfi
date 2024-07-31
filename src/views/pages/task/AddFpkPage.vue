@@ -1,7 +1,7 @@
 <template>
     <n-space vertical class="p-2">
         <!-- <pre>{{ pageData }}</pre> -->
-        <n-steps :current="current" :status="currentStatus">
+        <n-steps :current="current" :status="currentStatus" v-model:current="current">
             <n-step title="Pelanggan" />
             <n-step title="Order" />
             <n-step title="Tambahan" />
@@ -419,8 +419,99 @@
             footer: 'soft'
         }">
             <div class="w-full flex md:flex-row flex-col gap-4 ">
+                <!-- {{ calcCredit }} -->
                 <div class="flex flex-col w-full">
                     <n-form-item label="Pokok pembayaran" path="Pokok Pembayaran">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_pembayaran"
+                            :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" disabled />
+                    </n-form-item>
+                    <n-form-item label="Jenis Angsuran" path="jenis">
+                        <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
+                            v-model:value="calcCredit.opt_periode" :on-update:value="handleTipe"
+                            :disabled="calcCredit.plafond != 0 ? false : true" />
+                    </n-form-item>
+                    <n-form-item label="Tenor / Angsuran" path="tenor">
+                        <!-- <n-select filterable placeholder="Tenor Kredit" :options="tenorKredit"
+                                                v-model:value="order.tenor" /> -->
+                        <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
+                            <n-radio-group v-model:value="calcCredit.periode" name="radiogroup">
+                                <n-radio @change="handleChange" name="periode" value=6>
+                                    6 bulan
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="periode" @change="handleChange" value=12>
+                                    12 bulan
+
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="periode" @change="handleChange" value=18>
+                                    18 bulan
+
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="periode" @change="handleChange" value=24>
+                                    24 bulan
+                                </n-radio>
+                            </n-radio-group>
+                        </div>
+                        <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
+                            <n-radio-group v-model:value="calcCredit.periode" name="radiogroup">
+                                <n-radio @change="handleChange" name="periode" value=3>
+                                    1 x 3 bulan
+
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="tenor" @change="handleChange" value=6>
+                                    1 x 6 bulan
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="tenor" @change="handleChange" value=12>
+                                    2 x 12 bulan
+                                </n-radio>
+                                <n-divider vertical />
+                                <n-radio name="tenor" @change="handleChange" value=18>
+                                    3 x 18 bulan
+                                </n-radio>
+                            </n-radio-group>
+                        </div>
+                    </n-form-item>
+                    <n-form-item label="Total Admin" path="total_admin">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.total_admin"
+                            placeholder="Total Admin" :show-button="false" class="flex !w-full" disabled />
+                    </n-form-item>
+
+
+                    <n-form-item label="Bunga / Margin Flat" path="bunga_margin_flat">
+                        <n-input v-model:value="calcCredit.bunga_flat" placeholder="Bunga / Margin Flat" disabled>
+                            <template #suffix>%</template>
+                        </n-input>
+                    </n-form-item>
+                </div>
+                <div class="flex flex-col w-full">
+                    <n-form-item label="Bunga / Margin Eff" path="bunga_margin_eff">
+                        <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" disabled>
+                            <template #suffix>%</template>
+                        </n-input>
+                    </n-form-item>
+                    <n-form-item label="Bunga / Margin" path="bunga_margin">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.bunga_margin"
+                            placeholder="Bunga / Margin" :show-button="false" class="flex !w-full" disabled />
+                    </n-form-item>
+                    <n-form-item label="Pokok + Margin" path="pokok_margin">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_margin"
+                            placeholder="Pokok + Margin" :show-button="false" class="flex !w-full" disabled />
+                    </n-form-item>
+                    <n-form-item label="Angsuran" path="angsuran">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran"
+                            placeholder="angsuran" :show-button="false" class="flex !w-full" disabled />
+                    </n-form-item>
+                    <n-form-item label="Nilai yang diterima" path="nilai_diterima">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.nilai_yang_diterima"
+                            placeholder="Nilai yang diterima" size="large" :show-button="false" class="flex !w-full"
+                            :on-update:value="handlePlafond" />
+                    </n-form-item>
+
+                    <!-- <n-form-item label="Pokok pembayaran" path="Pokok Pembayaran">
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_pembayaran"
                             :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" disabled />
                     </n-form-item>
@@ -437,8 +528,8 @@
                     <n-form-item label="Periode" path="periode">
                         <n-space>
                             <n-input v-model:value="calcCredit.periode" placeholder="periode" />
-                            <!-- <n-select filterable placeholder="Pilih Periode" :options="optPeriode"
-                                v-model:value="calcCredit.opt_periode" /> -->
+                            <n-select filterable placeholder="Pilih Periode" :options="optPeriode"
+                                v-model:value="calcCredit.opt_periode" />
                         </n-space>
                     </n-form-item>
                     <n-form-item label="Angsuran" path="angsuran">
@@ -485,10 +576,10 @@
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_margin"
                             placeholder="Pokok + Margin" :show-button="false" class="flex !w-full" disabled />
                     </n-form-item>
-                    <!-- <n-form-item label="Angsuran Terkahir" path="angsuran_terakhir">
-                            <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran_terakhir"
-                                placeholder="Angsuran Terakhir" :show-button="false" class="flex !w-full" />
-                        </n-form-item> -->
+                    <n-form-item label="Angsuran Terkahir" path="angsuran_terakhir">
+                        <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran_terakhir"
+                            placeholder="Angsuran Terakhir" :show-button="false" class="flex !w-full" />
+                    </n-form-item>
                     <n-form-item label="Bunga / Margin Eff Actual" path="bunga_margin_eff_actual">
                         <n-input v-model:value="calcCredit.bunga_eff_actual" placeholder="Bunga / Margin Eff Actual"
                             disabled>
@@ -509,7 +600,7 @@
                         <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.nilai_yang_diterima"
                             placeholder="Nilai yang diterima" size="large" :show-button="false" class="flex !w-full"
                             :on-update:value="handlePlafond" />
-                    </n-form-item>
+                    </n-form-item> -->
                 </div>
             </div>
             <!-- <n-form-item label="Tanggal survey" path="tgl_survey">
@@ -564,14 +655,16 @@ const loading = ref(false);
 const loadingSend = ref(false);
 const baseRoute = useRoute();
 
-
+const tipeAngsuran = ref('bulanan');
 const calcCredit = reactive({
+    opt_periode: "bulanan",
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
-    bunga_margin: computed(() => parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100)),
+    bunga_margin: computed(() => Math.ceil(parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100))),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
-    angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
+    // angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
+    angsuran: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     // provisi: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
@@ -614,6 +707,16 @@ const skemaAngsuran = ref([]);
 const next = () => current.value += 1;
 const prev = () => current.value -= 1;
 
+
+const handleTipe = (e) => {
+    tipeAngsuran.value = e;
+    calcCredit.jenis_angsuran = e;
+    const body = {
+        plafond: order.value.plafond,
+        jenis_angsuran: e,
+    }
+    refAdmin(body);
+}
 const tujuanKredit = ["konsumsi", "investasi"].map(
     (v) => ({
         label: v,
@@ -649,6 +752,11 @@ const optTipeAngsuran = ["Tetap"].map(
     (v) => ({
         label: v,
         value: v
+    }));
+const jenisAngsuran = ["Bulanan", "Musiman"].map(
+    (v) => ({
+        label: v,
+        value: v.toLowerCase(),
     }));
 const optCaraBayar = ["Advance", "Arrear"].map(
     (v) => ({
@@ -749,16 +857,11 @@ const response = useApi({
 
 const refAdmin = async (body) => {
     skemaAngsuran.value = [];
-    const bodyPost = {
-        "plafond": 5000000,
-        "jenis_angsuran": "bulanan",
-        "tenor": "6"
-    };
-    loading.value = true;
+    // loading.value = true;
     const response = await useApi({
         method: 'post',
         api: 'fee',
-        data: bodyPost,
+        data: body,
         token: userToken
     });
     if (!response.ok) {
@@ -773,10 +876,11 @@ const refAdmin = async (body) => {
     }
 }
 const handlePlafond = (e) => {
-    order.value.plafond = e;
+    calcCredit.nilai_yang_diterima = e;
     const body = {
         plafond: e,
-        jenis_angsuran: order.value.jenis_angsuran,
+        jenis_angsuran: 'bulanan',
+        tenor: 6,
     }
     refAdmin(body);
 }

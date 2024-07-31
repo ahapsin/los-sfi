@@ -1,7 +1,8 @@
 <template>
         <n-scrollbar x-scrollable>
+                {{ dynamicForm }}
                 <n-space class="p-4">
-                        <n-steps :current="current" :status="currentStatus">
+                        <n-steps :current="current" :status="currentStatus" v-model:current="current">
                                 <n-step title="Informasi Order" />
                                 <n-step title="Data Pelanggan" />
                                 <n-step title="Data Jaminan" />
@@ -182,12 +183,19 @@
                                 content: true,
                                 footer: 'soft'
                         }">
-                                <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
+                                <n-form-item label="Jenis Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item>
                                 <n-form-item label="Merk" path="merk">
                                         <n-input placeholder="merk" v-model:value="jaminan.merk" />
+                                </n-form-item>
+                                <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
+                                        <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
+                                                v-model:value="jaminan.tipe" />
+                                </n-form-item>
+                                <n-form-item label="NO Polisi" path="no_polisi">
+                                        <n-input placeholder="No Polisi" v-model:value="jaminan.no_polisi" />
                                 </n-form-item>
                                 <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
                                         <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
@@ -196,7 +204,7 @@
                                 <n-form-item label="Warna" path="warna">
                                         <n-input placeholder="warna" v-model:value="jaminan.warna" />
                                 </n-form-item>
-                                <n-form-item label="NO BPKB" path="no_bpkb">
+                                <!-- <n-form-item label="NO BPKB" path="no_bpkb">
                                         <n-input placeholder="No BPKB" v-model:value="jaminan.no_bpkb" />
                                 </n-form-item>
                                 <n-form-item label="Atas Nama" path="atas_nama">
@@ -213,7 +221,7 @@
                                 </n-form-item>
                                 <n-form-item label="NO STNK" path="no_stnk">
                                         <n-input placeholder="No STNK" v-model:value="jaminan.no_stnk" />
-                                </n-form-item>
+                                </n-form-item> -->
                                 <n-form-item label="Nilai Jaminan" path="nilai_jaminan">
                                         <n-input-number :parse="parse" :format="format" v-model:value="jaminan.nilai"
                                                 placeholder="Nilai Jaminan" :show-button="false">
