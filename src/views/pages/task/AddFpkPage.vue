@@ -427,7 +427,7 @@
                         </n-form-item>
                         <n-form-item label="Jenis Angsuran" path="jenis">
                             <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
-                                v-model:value="calcCredit.opt_periode" :on-update:value="handleTipe"
+                                v-model:value="calcCredit.jenis_angsuran" :on-update:value="handleTipe"
                                 :disabled="calcCredit.plafond != 0 ? false : true" />
                         </n-form-item>
                         <n-form-item label="Tenor / Angsuran" path="tenor">
@@ -435,7 +435,7 @@
                             <!-- <n-select filterable placeholder="Tenor Kredit" :options="tenorKredit"
                                                 v-model:value="order.tenor" /> -->
                             <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
-                                <n-radio-group v-model:value="calcCredit.periode" name="radiogroup">
+                                <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                     <n-radio @change="handleChange" name="periode" value=6>
                                         6 bulan
                                     </n-radio>
@@ -456,7 +456,7 @@
                                 </n-radio-group>
                             </div>
                             <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
-                                <n-radio-group v-model:value="calcCredit.periode" name="radiogroup">
+                                <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                     <n-radio @change="handleChange" name="periode" value=3>
                                         1 x 3 bulan
 
@@ -660,14 +660,13 @@ const baseRoute = useRoute();
 
 const tipeAngsuran = ref('bulanan');
 const calcCredit = reactive({
-    opt_periode: "bulanan",
     net_admin: computed(() => parseInt(calcCredit.total_admin)),
     bunga_eff_actual: computed(() => calcCredit.bunga_eff),
     bunga_margin: computed(() => Math.ceil(parseInt(calcCredit.bunga_flat / 12 * parseInt(calcCredit.periode) * (parseInt(calcCredit.pokok_pembayaran)) / 100))),
     pokok_margin: computed(() => parseInt(calcCredit.pokok_pembayaran) + parseInt(calcCredit.bunga_margin)),
     pokok_pembayaran: computed(() => sum(parseInt(calcCredit.nilai_yang_diterima), parseInt(calcCredit.total_admin))),
     // angsuran: computed(() => ((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode)),
-    angsuran: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
+    angsuran_calc: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     // provisi: computed(() => (Math.ceil((calcCredit.pokok_pembayaran + calcCredit.bunga_margin) / calcCredit.periode / 1000) * 1000)),
     bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
@@ -717,7 +716,7 @@ const handleTipe = (e) => {
     tipeAngsuran.value = e;
     calcCredit.jenis_angsuran = e;
     const body = {
-        plafond: order.value.plafond,
+        //plafond: order.value.plafond,
         jenis_angsuran: e,
     }
     refAdmin(body);

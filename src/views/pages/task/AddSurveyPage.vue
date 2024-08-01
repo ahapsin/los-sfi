@@ -179,17 +179,22 @@
                                         </n-upload>
                                 </n-space>
                         </n-card>
-                        <n-card v-show="current == 3" title="Data Jaminan" :segmented="{
+                        <n-card v-show="current == 3" class="flex" title="Data Jaminan" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
-                                <n-form-item label="Jenis Kendaraan" path="tipe_kendaraan">
+                                <!-- <n-form-item label="Jenis Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
+                                </n-form-item> -->
+                                <n-form-item>
+                                        <n-alert title="Warning Text" type="warning">
+                                                error
+                                        </n-alert>
                                 </n-form-item>
-                                <n-form-item label="Merk" path="merk">
-                                        <n-input placeholder="merk" v-model:value="jaminan.merk" />
-                                </n-form-item>
+                                <div>
+                                        <taksasi-select-state />
+                                </div>
                                 <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
