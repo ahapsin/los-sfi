@@ -1,7 +1,6 @@
 <template>
     <n-loading-bar-provider :to="loadingBarTargetRef" container-style="position: absolute;">
         <n-space vertical class="p-2">
-            <pre>{{ pageData }}</pre>
             <n-steps :current="current" :status="currentStatus" v-model:current="current">
                 <n-step title="Pelanggan" />
                 <n-step title="Order" />
@@ -89,10 +88,10 @@
                         <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
                             v-model:value="dataPekerjaan.pekerjaan" />
                     </n-form-item>
-                    <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
+                    <!-- <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
                         <n-input placeholder="Pekerjaan ID" v-model:value="dataPekerjaan.pekerjaan_id">
                         </n-input>
-                    </n-form-item>
+                    </n-form-item> -->
                 </div>
                 <!--<n-form-item label="Agama" path="agama">
                 <n-select filterable placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
@@ -175,12 +174,75 @@
                 <n-divider title-placement="left">
                     Dokumen
                 </n-divider>
-                <n-flex>
+                <n-space>
+                    <n-upload :data="{ 'type': 'no rangka' }" list-type="image-card" :custom-request="handleImagePost">
+                        Upload No Rangka
+                    </n-upload>
+                    <n-upload :data="{ 'type': 'no mesin' }" list-type="image-card" :custom-request="handleImagePost">
+                        Upload No Mesin
+                    </n-upload>
+                    <n-upload :data="{ 'type': 'stnk' }" list-type="image-card" :custom-request="handleImagePost">
+                        Upload STNK
+                    </n-upload>
+                </n-space>
+                <n-divider />
+                <n-space>
+                    <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                        :custom-request="handleImagePost">
+                        Upload tampak depan
+                    </n-upload>
+                    <n-upload :data="{ 'type': 'tampak belakang' }" list-type="image-card"
+                        :custom-request="handleImagePost">
+                        Upload tampak belakang
+                    </n-upload>
+                    <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                        :custom-request="handleImagePost">
+                        Upload tampak kanan
+                    </n-upload>
+                    <n-upload :data="{ 'type': 'tampak kiri' }" list-type="image-card"
+                        :custom-request="handleImagePost">
+                        Upload tampak kiri
+                    </n-upload>
+                </n-space>
+                <n-divider />
+                <n-space>
+                    <n-image-group>
+                        <n-space>
+                            <n-card v-for="attachment in dataAttachment" :key="attachment" class="bg-pr-50 !border-0">
+                                <n-image class="w-10 border-b border-2 rounded-md h-10" :src="attachment.PATH">
+                                </n-image>
+                                {{ attachment.TYPE.toUpperCase() }}
+                            </n-card>
+                        </n-space>
+                    </n-image-group>
+
+                </n-space>
+
+                <!-- <n-flex>
                     <n-image v-for="attachment in dataAttachment" :key="attachment"
-                        class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH"></n-image>
+                        class="w-24 border-b border-2 border-pr h-24" :src="attachment.PATH">
+                    </n-image>
+                    <n-space>
+                        <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
+                            :custom-request="handleImagePost">
+                            Upload tampak depan
+                        </n-upload>
+                        <n-upload :data="{ 'type': 'tampak belakang' }" list-type="image-card"
+                            :custom-request="handleImagePost">
+                            Upload tampak belakang
+                        </n-upload>
+                        <n-upload :data="{ 'type': 'tampak kanan' }" list-type="image-card"
+                            :custom-request="handleImagePost">
+                            Upload tampak kanan
+                        </n-upload>
+                        <n-upload :data="{ 'type': 'tampak kiri' }" list-type="image-card"
+                            :custom-request="handleImagePost">
+                            Upload tampak kiri
+                        </n-upload>
+                    </n-space>
                     <n-upload :data="{ 'type': 'ktp' }" list-type="image-card" :custom-request="handleImagePost">
                     </n-upload>
-                </n-flex>
+                </n-flex> -->
 
             </n-card>
             <!-- info order -->
@@ -216,7 +278,7 @@
                     <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
                         v-model:value="dataOrder.catatan_survey" disabled />
                 </n-form-item>
-                <div class="flex gap-2">
+                <!-- <div class="flex gap-2">
                     <n-form-item label="Prog. Marketing" path="prog_marketing" class="w-full">
                         <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" />
                     </n-form-item>
@@ -224,7 +286,7 @@
                         <n-select filterable placeholder="Cara Bayar" :options="optCaraBayarPay"
                             v-model:value="dataOrder.cara_bayar" />
                     </n-form-item>
-                </div>
+                </div> -->
                 <n-divider />
                 <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
                     <n-input placeholder="Nama Ibu Kandung" v-model:value="dataOrder.nama_ibu" />
@@ -236,14 +298,15 @@
                     </n-form-item>
                     <n-form-item label="Lama Bekerja" path="lama_kerja" class="w-full">
                         <n-input-number :show-button="false" placeholder="lama bekerja"
-                            v-model:value="dataOrder.lama_bekerja">
+                            v-model:value="dataOrder.lama_bekerja" class="w-full">
                             <template #suffix>
                                 bulan
                             </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Tanggungan" path="tanggungan" class="w-full">
-                        <n-input-number placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan" />
+                        <n-input-number placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan"
+                            class="w-full" />
                     </n-form-item>
                 </div>
                 <div class="flex gap-2">
@@ -259,11 +322,12 @@
                         <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_lainnya"
                             :show-button="false" class="flex !w-full" placeholder="Lainnya" />
                     </n-form-item>
+                    <n-form-item label="Biaya" path="biaya" class="w-full">
+                        <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
+                            :show-button="false" class="flex !w-full" placeholder="Pengeluaran" />
+                    </n-form-item>
                 </div>
-                <n-form-item label="Biaya" path="biaya">
-                    <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
-                        :show-button="false" class="flex !w-full" placeholder="Pengeluaran" />
-                </n-form-item>
+
                 <n-divider title-placement="left">
                     NPWP
                 </n-divider>
@@ -324,6 +388,9 @@
                     <n-form-item label="Nama Penjamin" path="nama_kerabat" class=" w-full">
                         <n-input placeholder="Nama penjamin" v-model:value="dataPenjamin.nama" />
                     </n-form-item>
+                    <n-form-item label="Tanggal Lahir" path="tgl_lahir" class="w-full">
+                        <n-date-picker placeholder="Tanggal Lahir" type="date" class="w-full" />
+                    </n-form-item>
                     <n-form-item label="Hubungan Dengan konsumen" path="tipe_angsuran" class=" w-full">
                         <n-select filterable :options="optHubCust" v-model:value="dataPenjamin.hubCust" />
                     </n-form-item>
@@ -346,6 +413,11 @@
                         <n-input placeholder="Telepon Sellular 1" v-model:value="dataPenjamin.no_telp" />
                         <n-input placeholder="Telepon Sellular 2" v-model:value="dataPenjamin.no_hp" />
                     </n-input-group>
+
+                </n-form-item>
+                <n-form-item label="Pekerjaan penjamin" path="nama" class="w-full">
+                    <n-input placeholder="Pekerjaan Penjamin">
+                    </n-input>
                 </n-form-item>
                 <n-divider title-placement="left">
                     Kerabat dalam kondisi darurat
