@@ -1,5 +1,5 @@
 <template>
-    <div class="flex md:flex-row flex-col w-full  gap-2">
+    <div class="flex md:flex-col lg:flex-row flex-col w-full  gap-2">
         <n-form-item label="Brand / Merk" path="provinsi" class="w-full" value-field="value" label-field="label">
             <n-select filterable placeholder="Pilih Brand" v-model:value="props.brand" :options="col_brand"
                 @update:value="brandChanged" :loading="loadingBrand" />

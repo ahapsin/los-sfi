@@ -1,6 +1,5 @@
 <template>
         <n-scrollbar x-scrollable>
-                {{ dynamicForm }}
                 <n-space class="p-4">
                         <n-steps :current="current" :status="currentStatus" v-model:current="current">
                                 <n-step title="Informasi Order" />
@@ -146,9 +145,14 @@
                                         <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
                                 </n-form-item>
                                 <n-form-item label="Tanggal lahir" path="tgl_lahir">
-                                        <n-date-picker placeholder="Tanggal Lahir"
-                                                v-model:formatted-value="pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
-                                                type="date" />
+                                        <n-space vertical>
+                                                <n-alert title="Informasi" type="warning" :bordered="bordered"
+                                                        v-if="notifUsia"> {{ noteUsia }} ||</n-alert>
+                                                <n-date-picker placeholder="Tanggal Lahir"
+                                                        v-model:formatted-value="pelanggan.tgl_lahir"
+                                                        value-format="yyyy-MM-dd" type="date"
+                                                        @update:value="handleTanggalLahir" />
+                                        </n-space>
                                 </n-form-item>
                                 <n-form-item label="Alamat" path="alamat">
                                         <n-input-group>
@@ -187,25 +191,25 @@
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item> -->
-                                <n-form-item>
+                                <!-- <n-form-item>
                                         <n-alert title="Warning Text" type="warning">
                                                 error
                                         </n-alert>
-                                </n-form-item>
+                                </n-form-item> -->
                                 <div>
                                         <taksasi-select-state />
                                 </div>
-                                <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
+                                <!-- <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
                                                 v-model:value="jaminan.tipe" />
-                                </n-form-item>
+                                </n-form-item> -->
                                 <n-form-item label="NO Polisi" path="no_polisi">
                                         <n-input placeholder="No Polisi" v-model:value="jaminan.no_polisi" />
                                 </n-form-item>
-                                <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
+                                <!-- <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
                                         <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
                                                 type="year" placeholder="Tahun jaminan" clearable />
-                                </n-form-item>
+                                </n-form-item> -->
                                 <n-form-item label="Warna" path="warna">
                                         <n-input placeholder="warna" v-model:value="jaminan.warna" />
                                 </n-form-item>
@@ -227,11 +231,11 @@
                                 <n-form-item label="NO STNK" path="no_stnk">
                                         <n-input placeholder="No STNK" v-model:value="jaminan.no_stnk" />
                                 </n-form-item> -->
-                                <n-form-item label="Nilai Jaminan" path="nilai_jaminan">
+                                <!-- <n-form-item label="Nilai Jaminan" path="nilai_jaminan">
                                         <n-input-number :parse="parse" :format="format" v-model:value="jaminan.nilai"
                                                 placeholder="Nilai Jaminan" :show-button="false">
                                         </n-input-number>
-                                </n-form-item>
+                                </n-form-item> -->
                                 <n-divider title-placement="left">
                                         Dokumen Jaminan
                                 </n-divider>
@@ -274,9 +278,8 @@
                                 footer: 'soft'
                         }">
                                 <n-form-item label="Tanggal survey" path="tgl_survey">
-                                        <n-date-picker v-model:formatted-value="survey.tgl_survey"
-                                                placeholder="Tanggal Survey" value-format="yyyy-MM-dd" type="date"
-                                                clearable />
+                                        <n-date-picker v-model:value="survey.tgl_survey" placeholder="Tanggal Survey"
+                                                :default-value="Date.now()" type="date" clearable />
                                 </n-form-item>
 
                                 <n-form-item label="Lama Bekerja" path="lama_berkerja">
@@ -527,7 +530,7 @@ const survey = reactive({
         usaha: "",
         sektor: "",
         catatan_survey: "",
-        tgl_survey: null,
+        tgl_survey: Date.now(),
 });
 const dynamicForm = reactive({
         id: uuid,
@@ -552,6 +555,26 @@ const handleTipe = (e) => {
                 jenis_angsuran: e,
         }
         refAdmin(body);
+}
+const notifUsia = ref(false)
+const noteUsia = ref(false)
+const usiaPelanggan = ref()
+const handleTanggalLahir = (e) => {
+        var month_diff = Date.now() - e;
+        var age_dt = new Date(month_diff);
+        var year = age_dt.getUTCFullYear();
+        var age = Math.abs(year - 1970);
+        if (age > 19 && age < 60) {
+                notifUsia.value = false;
+        } else {
+                if (age < 19) {
+                        notifUsia.value = true;
+                        noteUsia.value = `usia ${age} tahun, usia < dari 19 Tahun`;
+                } else if (age < 60) {
+                        notifUsia.value = true;
+                        noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
+                }
+        }
 }
 const handleSave = async (e) => {
         e.preventDefault(e);
