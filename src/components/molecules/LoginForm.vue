@@ -75,7 +75,23 @@ const handleLogin = async (e) => {
 }
 onMounted(() => {
     if (localStorage.getItem("token")) {
-        router.push('dashboard');
+        const userToken = localStorage.getItem("token");
+        useApi({
+            method: 'get',
+            api: `me`,
+            token: userToken
+        }).then(res => {
+
+            if (!res.ok) {
+                localStorage.removeItem("token");
+                message.warning("sesi anda sudah berakhir");
+                router.replace('/');
+            } else {
+                message.loading("memulihkan sesi...");
+                router.push('dashboard');
+            }
+        });
+
     }
 });
 </script>

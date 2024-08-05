@@ -90,7 +90,7 @@
                             Proses
                         </n-button>
                     </template>
-                    <n-list bordered hoverable>
+                    <n-list bordered hoverable clickable>
                         <n-list-item>
                             <template #prefix>
                                 <n-checkbox>
