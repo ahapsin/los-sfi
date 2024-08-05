@@ -1,5 +1,6 @@
 <template>
-    <div class="flex md:flex-col lg:flex-row flex-col w-full  gap-2">
+
+    <div class="flex flex-col w-full  gap-2">
         <n-form-item label="Brand / Merk" path="provinsi" class="w-full" value-field="value" label-field="label">
             <n-select filterable placeholder="Pilih Brand" v-model:value="props.brand" :options="col_brand"
                 @update:value="brandChanged" :loading="loadingBrand" />
@@ -34,7 +35,7 @@ const col_tipe = ref([]);
 const filter_tipe = ref([]);
 
 const loadingTipe = ref(false);
-const col_tahun = ref([]);
+const col_tahun = ref();
 const price = ref();
 
 
@@ -75,6 +76,7 @@ const props = defineProps({
 
 const getBrand = async () => {
     loadingBrand.value = true;
+
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
@@ -94,6 +96,7 @@ const getBrand = async () => {
 }
 
 const brandChanged = async (value, option) => {
+    sel_tipe.value = [];
     let userToken = localStorage.getItem("token");
     emit('update:brand', option.value);
     loadingTipe.value = true;
@@ -122,6 +125,7 @@ const tipeChanged = async (value, option) => {
     let tahunOpt = _.filter(col_tipe.value, {
         'code': option.value,
     });
+    price.value = [];
     emit('update:tipe', option.value);
     sel_tipe.value = option.value;
     let tahunAvailable = tahunOpt[0].tahun;
@@ -131,6 +135,7 @@ const tipeChanged = async (value, option) => {
     }));
 }
 const tahunChanged = async (value, option) => {
+    price.value = [];
     let userToken = localStorage.getItem("token");
     loadingTipe.value = true;
     emit('update:tahun', option.value);
