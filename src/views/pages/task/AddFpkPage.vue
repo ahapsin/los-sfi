@@ -274,7 +274,7 @@
                     Barang Taksasi
                 </n-divider>
                 <div class="flex gap-2">
-                    <n-form-item label="Kode Barang" path="kode_barang" class="w-full">
+                    <!-- <n-form-item label="Kode Barang" path="kode_barang" class="w-full">
                         <n-input placeholder="Kode Barang" v-model:value="dataTaksasi.kode_barang" />
                     </n-form-item>
                     <n-form-item label="ID Tipe" path="id_tipe" class="w-full">
@@ -286,7 +286,9 @@
                     <n-form-item label="Harga Pasar" path="harga_pasar" class="w-full">
                         <n-input-number :parse="parse" :format="format" v-model:value="dataTaksasi.harga_pasar"
                             :show-button="false" class="flex !w-full" placeholder="harga pasar" />
-                    </n-form-item>
+                    </n-form-item> -->
+                    <taksasi-select-state v-model:brand="dataTaksasi.kode_barang" v-model:tipe="dataTaksasi.id_tipe"
+                        v-model:tahun="dataTaksasi.tahun" v-model:price="dataTaksasi.harga_pasar" />
                 </div>
             </n-card>
 

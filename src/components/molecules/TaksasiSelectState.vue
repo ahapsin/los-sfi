@@ -1,19 +1,19 @@
 <template>
     <div class="flex md:flex-row flex-col w-full  gap-2">
         <n-form-item label="Brand / Merk" path="provinsi" class="w-full" value-field="value" label-field="label">
-            <n-select filterable placeholder="Pilih Brand" v-model:value="sel_brand" :options="col_brand"
+            <n-select filterable placeholder="Pilih Brand" v-model:value="props.brand" :options="col_brand"
                 @update:value="brandChanged" :loading="loadingBrand" />
         </n-form-item>
         <n-form-item label="Tipe" path="Tipe" class="w-full">
-            <n-select filterable :disabled placeholder="Pilih Tipe" label-field="model" value-field="code"
-                v-model:value="sel_tipe" :options="col_tipe" @update:value="tipeChanged" :loading="loadingTipe" />
+            <n-select filterable :disabled placeholder="Pilih Tipe" label-field="label" value-field="value"
+                v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe" />
         </n-form-item>
         <n-form-item label="Tahun" path="tahun" class="w-full">
             <n-select filterable :disabled placeholder="Pilih Tahun" label-field="label" value-field="value"
-                v-model:value="sel_tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTipe" />
+                v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTipe" />
         </n-form-item>
         <n-form-item label="Harga Pasar" path="pasar" class=" w-full">
-            <n-input v-model:value="price" placeholder="Harga Pasar" disabled :parse="parse" :format="format" />
+            <n-input v-model:value="price" placeholder="Harga Pasar" readonly :parse="parse" :format="format" />
         </n-form-item>
     </div>
 
@@ -31,12 +31,14 @@ const sel_tahun = ref('pilih');
 const loadingBrand = ref(false);
 const col_brand = ref([]);
 const col_tipe = ref([]);
+const filter_tipe = ref([]);
 
 const loadingTipe = ref(false);
 const col_tahun = ref([]);
 const price = ref();
 
-const emit = defineEmits(['update:brand', 'update:kota', 'update:kecamatan', 'update:desa']);
+
+const emit = defineEmits(['update:brand', 'update:tipe', 'update:tahun', 'update:price']);
 const props = defineProps({
     label: {
         type: [String, Boolean],
@@ -55,13 +57,13 @@ const props = defineProps({
     brand: {
         type: String,
     },
-    kota: {
+    tipe: {
         type: String,
     },
-    kecamatan: {
+    tahun: {
         type: String,
     },
-    desa: {
+    pasar: {
         type: String,
     },
     loop: {
@@ -93,6 +95,7 @@ const getBrand = async () => {
 
 const brandChanged = async (value, option) => {
     let userToken = localStorage.getItem("token");
+    emit('update:brand', option.value);
     loadingTipe.value = true;
     const bodyData = {
         merk: option.value,
@@ -108,14 +111,19 @@ const brandChanged = async (value, option) => {
     } else {
         loadingTipe.value = false;
         col_tipe.value = response.data;
-
+        filter_tipe.value = col_tipe.value.map((v, i) => ({
+            label: `${v.code} - ${v.model}`,
+            value: v.code,
+        }));
     }
 };
 
 const tipeChanged = async (value, option) => {
     let tahunOpt = _.filter(col_tipe.value, {
-        'code': option.code,
+        'code': option.value,
     });
+    emit('update:tipe', option.value);
+    sel_tipe.value = option.value;
     let tahunAvailable = tahunOpt[0].tahun;
     col_tahun.value = tahunAvailable.map((v, i) => ({
         label: v,
@@ -125,6 +133,7 @@ const tipeChanged = async (value, option) => {
 const tahunChanged = async (value, option) => {
     let userToken = localStorage.getItem("token");
     loadingTipe.value = true;
+    emit('update:tahun', option.value);
     const bodyData = {
         code: sel_tipe.value,
         tahun: option.value,
@@ -139,8 +148,9 @@ const tahunChanged = async (value, option) => {
         localStorage.removeItem("tokens");
     } else {
         loadingTipe.value = false;
-        price.value = response.data[0].price;
-
+        let getPrice = response.data[0].price;
+        price.value = getPrice.toLocaleString("en-US");
+        emit('update:price', getPrice);
     }
 };
 const parse = (input) => {
