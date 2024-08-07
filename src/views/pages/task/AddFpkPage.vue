@@ -9,14 +9,14 @@
             </n-steps>
         </n-space>
         <n-flex class="pt-4">
-            <!-- <n-collapse>
+            <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ formAssign }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
             <!-- info pelanggan -->
             <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
                 content: true,
@@ -102,10 +102,10 @@
                 </n-form-item>
                 <div class="flex gap-2">
                     <n-form-item label="Telepon Selullar 1" path="telepon" class="w-full">
-                        <n-input placeholder="Telepon Sellular 1" v-model:value="dataPekerjaan.telepon_rumah" />
+                        <n-input placeholder="Telepon Sellular 1" v-model:value="dataPekerjaan.telepon_selular" />
                     </n-form-item>
                     <n-form-item label="Telepon Selullar 2" path="telepon_selullar" class="w-full">
-                        <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_selular">
+                        <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon.rumah">
                         </n-input>
                     </n-form-item>
                     <!-- <n-form-item label="Telepon" path="Kantor" class="w-full">
@@ -275,8 +275,8 @@
                     <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_name" disabled />
                 </n-form-item>
                 <n-form-item label="Catatan Survey" path="cat_survey">
-                    <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
-                        v-model:value="dataOrder.catatan_survey" disabled />
+                    <n-input type="textarea" autosize show-count placeholder="catatan surveyor"
+                        v-model:value="dataOrder.catatan_survey" readonly />
                 </n-form-item>
                 <!-- <div class="flex gap-2">
                     <n-form-item label="Prog. Marketing" path="prog_marketing" class="w-full">

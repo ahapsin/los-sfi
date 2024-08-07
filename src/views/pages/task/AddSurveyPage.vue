@@ -10,7 +10,7 @@
                 </n-space>
         </n-scrollbar>
         <n-space vertical class="pt-4">
-                <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
+                <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
                         require-mark-placement="right-hanging" :size="size" label-width="auto">
                         <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                                 content: true,
@@ -134,14 +134,19 @@
                                 content: true,
                                 footer: 'soft'
                         }">
-                                <n-form-item label="No KTP" path="no_ktp">
-                                        <n-space>
+                                <n-space>
+                                        <n-form-item label="No KTP" path="no_ktp">
                                                 <n-input placeholder="NO KTP" v-model:value="pelanggan.no_ktp"
-                                                        loading />
+                                                        :loading="loadingKTP" @change="handleKtp" />
+                                        </n-form-item>
+                                        <n-form-item label="Kategori Kredit" path="no_ktp">
                                                 <n-select filterable placeholder="Kategori Kredit"
-                                                        :options="optKategori" v-model:value="order.category"
-                                                        disabled />
-                                        </n-space>
+                                                        :options="optKategori" default-value="Baru"
+                                                        v-model:value="order.category" disabled />
+                                        </n-form-item>
+                                </n-space>
+                                <n-form-item label="No KK" path="nokk">
+                                        <n-input placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk" />
                                 </n-form-item>
                                 <n-form-item label="Nama" path="nama">
                                         <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
@@ -159,10 +164,9 @@
                                 </n-form-item>
                                 <n-form-item label="Alamat" path="alamat">
                                         <n-input-group>
-                                                <n-input placeholder="Alamat"
-                                                        v-model:value="pelanggan.data_alamat.alamat" />
-                                                <n-input placeholder="RT" v-model:value="pelanggan.data_alamat.rt" />
-                                                <n-input placeholder="RW" v-model:value="pelanggan.data_alamat.rw" />
+                                                <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" />
+                                                <n-input placeholder="RT" v-model:value="pelanggan.rt" />
+                                                <n-input placeholder="RW" v-model:value="pelanggan.rw" />
                                         </n-input-group>
                                 </n-form-item>
                                 <n-form-item label="No Handphone" path="HP">
@@ -206,8 +210,7 @@
                                 </n-form-item> -->
                                 <div>
                                         <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe"
-                                                v-model:tahun="jaminan.tahun" v-model:price="jaminan.nilai"
-                                                default:value="2024-08-08" />
+                                                v-model:tahun="jaminan.tahun" v-model:pasar="jaminan.nilai" />
                                 </div>
                                 <!-- <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
@@ -345,7 +348,7 @@
                                 </n-form-item>
                                 <n-form-item label="Catatan Survey" path="cat_survey">
                                         <n-input v-model:value="survey.catatan_survey" type="textarea"
-                                                placeholder="catatan survey" />
+                                                placeholder="catatan survey" autosize />
                                 </n-form-item>
                                 <n-divider title-placement="left">
                                         Dokumen Pendukung
@@ -502,21 +505,23 @@ const order = ref({
         category: null,
         jenis_angsuran: 'bulanan',
 });
-const pelanggan = reactive({
+
+const initPelanggan = {
+        no_kk: "",
         nama: "",
-        no_ktp: "",
         no_hp: "",
         tgl_lahir: null,
-        data_alamat: {
-                alamat: "",
-                rt: "",
-                rw: "",
-                provinsi: "",
-                kota: "",
-                kecamatan: "",
-                kelurahan: ""
-        }
-});
+        name: "",
+        alamat: "",
+        rt: "",
+        rw: "",
+        provinsi: "",
+        kota: "",
+        kecamatan: "",
+        kelurahan: ""
+};
+
+const pelanggan = reactive({ ...initPelanggan });
 const jaminan = ref({
         tipe: null,
         tahun: null,
@@ -564,6 +569,36 @@ const handlePlafond = (e) => {
                 jenis_angsuran: order.value.jenis_angsuran,
         }
         refAdmin(body);
+}
+const loadingKTP = ref(false);
+const handleKtp = async (e) => {
+        loadingKTP.value = true;
+        const bodyForm = {
+                "no_ktp": e
+        }
+        const response = await useApi({
+                method: 'POST',
+                api: 'check_ro',
+                data: bodyForm,
+                token: userToken
+        });
+        if (!response.ok) {
+                loadingKTP.value = false;
+
+        } else {
+                let data = response.data;
+                if (data.length > 0) {
+                        order.value.category = "RO";
+                        Object.assign(pelanggan, data[0]);
+                } else {
+                        order.value.category = "Baru";
+                        loadingKTP.value = false;
+                        Object.assign(pelanggan, initPelanggan);
+                }
+                loadingKTP.value = false;
+
+
+        }
 }
 const handleTipe = (e) => {
         tipeAngsuran.value = e;

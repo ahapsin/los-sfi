@@ -1,23 +1,24 @@
 <template>
-
-    <div class="flex flex-col w-full  gap-2">
-        <n-form-item label="Brand / Merk" path="provinsi" class="w-full" value-field="value" label-field="label">
+    <div class="flex gap-2">
+        <n-form-item label="Brand / Merk" path="provinsi" value-field="value" label-field="label" class="w-full">
             <n-select filterable placeholder="Pilih Brand" v-model:value="props.brand" :options="col_brand"
                 @update:value="brandChanged" :loading="loadingBrand" />
         </n-form-item>
         <n-form-item label="Tipe" path="Tipe" class="w-full">
             <n-select filterable :disabled placeholder="Pilih Tipe" label-field="label" value-field="value"
-                v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe" />
+                v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe"
+                class="w-full" />
         </n-form-item>
         <n-form-item label="Tahun" path="tahun" class="w-full">
             <n-select filterable :disabled placeholder="Pilih Tahun" label-field="label" value-field="value"
-                v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTipe" />
+                v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTipe"
+                class="w-full" />
         </n-form-item>
-        <n-form-item label="Harga Pasar" path="pasar" class=" w-full">
-            <n-input v-model:value="price" placeholder="Harga Pasar" readonly :parse="parse" :format="format" />
+        <n-form-item label="Harga Pasar" path="pasar" class="w-full">
+            <n-input v-model:value="props.pasar" placeholder="Harga Pasar" readonly :parse="parse" :format="format"
+                class="w-full" />
         </n-form-item>
     </div>
-
 </template>
 
 <script setup>
@@ -65,14 +66,12 @@ const props = defineProps({
         type: String,
     },
     pasar: {
-        type: String,
+        type: Number,
     },
     loop: {
         type: [Number, Boolean]
     }
 });
-
-
 
 const getBrand = async () => {
     loadingBrand.value = true;
@@ -154,8 +153,7 @@ const tahunChanged = async (value, option) => {
     } else {
         loadingTipe.value = false;
         let getPrice = response.data[0].price;
-        price.value = getPrice.toLocaleString("en-US");
-        emit('update:price', getPrice);
+        emit('update:pasar', getPrice.toLocaleString("en-US"));
     }
 };
 const parse = (input) => {
