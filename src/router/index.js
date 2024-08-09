@@ -75,9 +75,9 @@ const routes = [
         component: () => import("../views/pages/task/SurveyPage.vue"),
       },
       {
-        path: "edit-survey/:idsurvey",
+        path: "detail-survey/:idsurvey/:action",
         name: "detail survey",
-        component: () => import("../views/pages/task/DetailSurveyPage.vue"),
+        component: () => import("../views/pages/task/EditSurveyPage.vue"),
       },
       {
         path: "survey/:idsurvey",

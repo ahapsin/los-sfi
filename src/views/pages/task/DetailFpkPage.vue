@@ -1,5 +1,6 @@
 <template>
     <n-card>
+        <pre>{{ pageData }}</pre>
         <n-tabs type="line" animated>
             <n-tab-pane name="pelanggan" tab="Pelanggan">
                 <div class="flex w-full gap-2">
@@ -174,11 +175,11 @@
                     <n-input placeholder="Reff Pelanggan" v-model:value="dataOrder.ref_pelanggan" readonly />
                 </n-form-item>
                 <n-form-item label="Surveyor" path="surveyor">
-                    <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" disabled readonly />
+                    <n-input placeholder="Surveyor" v-model:value="dataOrder.surveyor_id" readonly />
                 </n-form-item>
                 <n-form-item label="Catatan Survey" path="cat_survey">
-                    <n-input type="textarea" show-count placeholder="catatan surveyor" maxlength="1000"
-                        v-model:value="dataOrder.catatan_survey" disabled readonly />
+                    <n-input type="textarea" show-count placeholder="catatan surveyor" autosize maxlength="1000"
+                        v-model:value="dataOrder.catatan_survey" readonly />
                 </n-form-item>
                 <n-form-item label="Prog. Marketing" path="prog_marketing">
                     <n-input placeholder="Program Marketing" v-model:value="dataOrder.prog_marketing" readonly />
@@ -227,17 +228,17 @@
                 <n-divider title-placement="left">
                     Barang Taksasi
                 </n-divider>
-                <n-form-item label="Kode Barang" path="kode_barang">
-                    <n-input placeholder="Kode Barang" v-model:value="dataTaksasi.kode_barang" readonly />
+                <n-form-item label="Brand / Merk" path="kode_barang">
+                    <n-input placeholder="Kode Barang" v-model:value="dataTaksasi.merk" readonly />
                 </n-form-item>
-                <n-form-item label="ID Tipe" path="id_tipe">
-                    <n-input placeholder="ID Tipe" v-model:value="dataTaksasi.id_tipe" readonly />
+                <n-form-item label="Tipe" path="id_tipe">
+                    <n-input placeholder="ID Tipe" v-model:value="dataTaksasi.tipe" readonly />
                 </n-form-item>
                 <n-form-item label="Tahun" path="tahun">
                     <n-input placeholder="Tahun" v-model:value="dataTaksasi.tahun" readonly />
                 </n-form-item>
                 <n-form-item label="Harga Pasar" path="harga_pasar">
-                    <n-input-number :parse="parse" :format="format" v-model:value="dataTaksasi.harga_pasar"
+                    <n-input-number :parse="parse" :format="format" v-model:value="dataTaksasi.nilai"
                         :show-button="false" class="flex !w-full" placeholder="harga pasar" readonly />
                 </n-form-item>
             </n-tab-pane>
@@ -614,7 +615,7 @@ const response = useApi({
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
         Object.assign(dataOrder.value, pageData.value.order);
-        Object.assign(dataTaksasi.value, pageData.value.barang_taksasi);
+        Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan[0]);
         Object.assign(dataTambahan.value, pageData.value.tambahan);
         Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
         Object.assign(dataSurat.value, pageData.value.surat);

@@ -10,29 +10,29 @@
         </n-space>
     </n-scrollbar>
     <n-space vertical class="pt-4">
-
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="get" name="1">
                 <pre>{{ pageData }}</pre>
             </n-collapse-item>
             <n-collapse-item title="post" name="2">
                 <pre>{{ dynamicForm }}</pre>
             </n-collapse-item>
-        </n-collapse>
-        <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
-            require-mark-placement="right-hanging" :size="size" label-width="auto">
+        </n-collapse> -->
+        <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
+            require-mark-placement="right-hanging" :size="size" label-width="auto"
+            :disabled="actionPage == 'view' ? true : false">
             <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                 content: true,
                 footer: 'soft'
             }">
                 <n-form-item label="Plafond" path="plafond">
-                    <n-input-number :parse="parse" :format="format" v-model:value="order.plafond" placeholder="plafond"
-                        :show-button="false" class="flex !w-full" :on-update:value="handlePlafond" :loading="loading" />
+                    <n-input-number :parse="parse" :format="format" :placeholder="order.plafond" :show-button="false"
+                        class="flex !w-full" @update:value="handlePlafond" :loading="loading"
+                        v-model:value="order.plafond" />
                 </n-form-item>
                 <n-form-item label="Jenis Angsuran" path="jenis">
                     <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
-                        v-model:value="order.jenis_angsuran" :on-update:value="handleTipe"
-                        :disabled="order.plafond != 0 ? false : true" />
+                        v-model:value="order.jenis_angsuran" @update:value="handleTipe" />
                 </n-form-item>
 
                 <n-form-item label="Tenor / Angsuran" path="tenor">
@@ -183,7 +183,7 @@
                         </div>
                     </n-space>
 
-                    <n-space>
+                    <n-space v-show="actionPage != 'view'">
                         <n-upload :data="{ 'type': 'ktp' }" list-type="image-card" :custom-request="handleImagePost">
                             Upload KTP
                         </n-upload>
@@ -269,7 +269,7 @@
                     </n-space>
                 </n-space>
                 <n-divider />
-                <n-space>
+                <n-space v-show="actionPage != 'view'">
                     <n-upload :data="{ 'type': 'no rangka' }" list-type="image-card" :custom-request="handleImagePost">
                         Upload No Rangka
                     </n-upload>
@@ -280,8 +280,8 @@
                         Upload STNK
                     </n-upload>
                 </n-space>
-                <n-divider />
-                <n-space>
+                <n-divider v-show="actionPage != 'view'" />
+                <n-space v-show="actionPage != 'view'">
                     <n-upload :data="{ 'type': 'tampak depan' }" list-type="image-card"
                         :custom-request="handleImagePost">
                         Upload tampak depan
@@ -364,14 +364,14 @@
                 <n-divider title-placement="left">
                     Dokumen Pendukung
                 </n-divider>
-                <n-space vertical>
+                <n-space>
                     <div v-for="file_id in dok_pendukung" class="flex items-center gap-2">
                         <n-image :src="file_id.PATH" class="!w-10 border !h-10 rounded-md" />
                         <span class="uppercase text-pr">{{ file_id.TYPE }}</span>
                     </div>
                 </n-space>
-                <n-divider />
-                <n-upload :data="{ 'type': 'dokumen pendukung' }" list-type="image-card"
+                <n-divider v-show="actionPage != 'view'" />
+                <n-upload v-show="actionPage != 'view'" :data="{ 'type': 'dokumen pendukung' }" list-type="image-card"
                     :custom-request="handleImagePost">
                 </n-upload>
 
@@ -402,7 +402,8 @@
                 </template>
                 Selanjutnya
             </n-button>
-            <n-button :loading="loading" icon-placement="left" type="primary" @click="handleSave">
+            <n-button v-show="actionPage != 'view'" :loading="loading" icon-placement="left" type="primary"
+                @click="handleSave">
                 Ubah
             </n-button>
         </n-flex>
@@ -411,7 +412,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward } from "@vicons/material";
 import { useMessage } from "naive-ui";
@@ -428,13 +429,14 @@ const pageData = ref({});
 const suspense = ref({});
 const baseRoute = useRoute();
 const paramPage = baseRoute.params.idsurvey;
+const actionPage = baseRoute.params.action;
 const uuid = uuidv4();
 const current = ref(1);
 const loading = ref(false);
 const userToken = localStorage.getItem("token");
 const skemaAngsuran = ref([]);
 
-const tipeAngsuran = ref('bulanan');
+const tipeAngsuran = ref();
 
 const loadingKTP = ref(false);
 const handleKtp = async (e) => {
@@ -468,9 +470,9 @@ const handleKtp = async (e) => {
 }
 const handleTipe = (e) => {
     tipeAngsuran.value = e;
-    order.value.jenis_angsuran = e;
+    order.jenis_angsuran = e;
     const body = {
-        plafond: order.value.plafond,
+        plafond: order.plafond,
         jenis_angsuran: e,
     }
     refAdmin(body);
@@ -487,13 +489,13 @@ const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
 const handlePlafond = (e) => {
-    order.value.plafond = e;
     const body = {
         plafond: e,
-        jenis_angsuran: order.value.jenis_angsuran,
+        jenis_angsuran: order.jenis_angsuran,
     }
     refAdmin(body);
 }
+
 const refAdmin = async (body) => {
     skemaAngsuran.value = [];
     // const bodyPost = {
@@ -561,9 +563,7 @@ const optSektor = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI
         label: v,
         value: v
     }));
-const order = ref({
-
-});
+const order = reactive({});
 const pelanggan = reactive({});
 const jaminan = ref([]);
 const dok_jaminan = ref({});
@@ -571,18 +571,17 @@ const dok_identitas = ref({});
 const dok_pendukung = ref({});
 const survey = reactive({});
 const dynamicForm = reactive({
-    order: order.value,
+    order: order,
     data_nasabah: pelanggan,
     data_survey: survey,
     jaminan_kendaraan: jaminan.value
 });
 const idApp = baseRoute.params.idsurvey;
-const response = useApi({
+const getData = () => useApi({
     method: 'get',
     api: `kunjungan/${idApp}`,
     token: userToken
 }).then(res => {
-
     if (!res.ok) {
         message.error("halam tidak ditemukan !");
         suspense.value = true;
@@ -593,12 +592,22 @@ const response = useApi({
         Object.assign(survey, res.data.response.data_survey);
         Object.assign(dok_jaminan.value, res.data.response.dokumen_jaminan);
         Object.assign(pelanggan, res.data.response.data_nasabah);
-        Object.assign(order.value, res.data.response.data_order);
+        Object.assign(order, res.data.response.data_order);
         Object.assign(jaminan.value, res.data.response.jaminan_kendaraan);
         Object.assign(dok_identitas.value, res.data.response.dokumen_indentitas);
         Object.assign(dok_pendukung.value, res.data.response.dokumen_pendukung);
+        getPlafond();
     }
 });
+
+const getPlafond = async () => {
+    tipeAngsuran.value = order.jenis_angsuran;
+    const body = {
+        plafond: order.plafond,
+        jenis_angsuran: order.jenis_angsuran,
+    }
+    refAdmin(body);
+}
 const handleSave = async (e) => {
     e.preventDefault(e);
 
@@ -662,4 +671,7 @@ const format = (value) => {
         return "";
     return value.toLocaleString("en-US");
 }
+onMounted(() => {
+    getData();
+});
 </script>

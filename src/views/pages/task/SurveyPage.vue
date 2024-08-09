@@ -144,6 +144,9 @@ const columns = [
                                                 if (e === "detail") {
                                                         handleDetail(row);
                                                 }
+                                                if (e === "edit") {
+                                                        handleEdit(row);
+                                                }
                                         },
                                 },
                                 {
@@ -207,7 +210,7 @@ const handleConfirm = (row, index) => {
         });
 }
 const handleDetail = (evt) => {
-        router.replace({ name: 'edit survey', params: { idsurvey: evt.id } });
+        router.replace({ name: 'detail survey', params: { idsurvey: evt.id, action: "view" } });
 }
 const handleEdit = (evt) => {
         router.replace({ name: 'edit survey', params: { idsurvey: evt.id } });
@@ -248,21 +251,21 @@ const options = (e) => {
         let status = e.status.at(0);
         if (status === "1") {
                 return [
-                        // {
-                        //         label: "Edit",
-                        //         key: "edit",
-                        //         icon: renderIcon(EditIcon),
-                        // },
+                        {
+                                label: "Edit",
+                                key: "edit",
+                                icon: renderIcon(EditIcon),
+                        },
                         {
                                 label: "Hapus",
                                 key: "hapus",
                                 icon: renderIcon(DeleteIcon)
                         },
-                        {
-                                label: "Detail",
-                                key: "detail",
-                                icon: renderIcon(DetailIcon)
-                        }
+                        // {
+                        //         label: "Detail",
+                        //         key: "detail",
+                        //         icon: renderIcon(DetailIcon)
+                        // }
                 ]
 
         } else {

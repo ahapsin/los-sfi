@@ -10,13 +10,16 @@
         </n-space>
         <n-flex class="pt-4">
             <n-collapse>
-            <n-collapse-item title="get" name="1">
-                <pre>{{ pageData }}</pre>
-            </n-collapse-item>
-            <n-collapse-item title="post" name="2">
-                <pre>{{ formAssign }}</pre>
-            </n-collapse-item>
-        </n-collapse>
+                <n-collapse-item title="skemaAngsuran" name="1">
+                    <pre>{{ skemaAngsuran }}</pre>
+                </n-collapse-item>
+                <n-collapse-item title="get" name="2">
+                    <pre>{{ pageData }}</pre>
+                </n-collapse-item>
+                <n-collapse-item title="post" name="3">
+                    <pre>{{ formAssign }}</pre>
+                </n-collapse-item>
+            </n-collapse>
             <!-- info pelanggan -->
             <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
                 content: true,
@@ -80,18 +83,27 @@
                     </n-input>
                 </n-form-item> -->
                 </div>
-                <div class="flex gap-2">
-                    <!-- <n-form-item label="Pekerjaan" path="nama" class="w-full">
+                <!-- <div class="flex gap-2"> -->
+                <!-- <n-form-item label="Pekerjaan" path="nama" class="w-full">
                     <n-input placeholder="pekerjaan" v-model:value="dataPekerjaan.pekerjaan" />
                 </n-form-item> -->
-                    <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
+                <!-- <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
                         <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
                             v-model:value="dataPekerjaan.pekerjaan" />
-                    </n-form-item>
-                    <!-- <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
+                    </n-form-item> -->
+                <!-- <n-form-item label="Pekerjaan ID" path="nama" class="w-full">
                         <n-input placeholder="Pekerjaan ID" v-model:value="dataPekerjaan.pekerjaan_id">
                         </n-input>
                     </n-form-item> -->
+                <!-- </div> -->
+                <div class="flex gap-4">
+                    <n-form-item label="Usaha" path="usaha" class="w-full">
+                        <n-input placeholder="usaha" v-model:value="dataPekerjaan.pekerjaan" />
+                    </n-form-item>
+                    <n-form-item label="Sektor" path="sektor" class="w-full">
+                        <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
+                            v-model:value="dataPekerjaan.pekerjaan_id" />
+                    </n-form-item>
                 </div>
                 <!--<n-form-item label="Agama" path="agama">
                 <n-select filterable placeholder="agama" :options="optAgama" v-model:value="dataPekerjaan.agama" />
@@ -105,7 +117,7 @@
                         <n-input placeholder="Telepon Sellular 1" v-model:value="dataPekerjaan.telepon_selular" />
                     </n-form-item>
                     <n-form-item label="Telepon Selullar 2" path="telepon_selullar" class="w-full">
-                        <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon.rumah">
+                        <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_rumah">
                         </n-input>
                     </n-form-item>
                     <!-- <n-form-item label="Telepon" path="Kantor" class="w-full">
@@ -287,14 +299,14 @@
                             v-model:value="dataOrder.cara_bayar" />
                     </n-form-item>
                 </div> -->
-                <n-divider />
-                <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung">
-                    <n-input placeholder="Nama Ibu Kandung" v-model:value="dataOrder.nama_ibu" />
-                </n-form-item>
+
                 <div class="flex gap-2">
-                    <n-form-item label="Kategori" path="kategori" class="w-full">
+                    <!-- <n-form-item label="Kategori" path="kategori" class="w-full">
                         <n-select filterable placeholder="Kategori" :options="optKategori"
                             v-model:value="dataOrder.kategori" />
+                    </n-form-item> -->
+                    <n-form-item label="Nama Ibu Kandung" path="nama_ibu_kandung" class="w-full">
+                        <n-input placeholder="Nama Ibu Kandung" v-model:value="dataOrder.nama_ibu" />
                     </n-form-item>
                     <n-form-item label="Lama Bekerja" path="lama_kerja" class="w-full">
                         <n-input-number :show-button="false" placeholder="lama bekerja"
@@ -351,8 +363,8 @@
                         <n-input-number :parse="parse" :format="format" v-model:value="dataTaksasi.harga_pasar"
                             :show-button="false" class="flex !w-full" placeholder="harga pasar" />
                     </n-form-item> -->
-                    <taksasi-select-state v-model:brand="dataTaksasi.kode_barang" v-model:tipe="dataTaksasi.id_tipe"
-                        v-model:tahun="dataTaksasi.tahun" v-model:price="dataTaksasi.harga_pasar" />
+                    <taksasi-select-state v-model:brand="dataTaksasi.merk" v-model:tipe="dataTaksasi.tipe"
+                        v-model:tahun="dataTaksasi.tahun" v-model:pasar="dataTaksasi.nilai" />
                 </div>
             </n-card>
 
@@ -790,7 +802,7 @@ const handleTipe = (e) => {
     tipeAngsuran.value = e;
     calcCredit.jenis_angsuran = e;
     const body = {
-        //plafond: order.value.plafond,
+        plafond: 5.,
         jenis_angsuran: e,
     }
     refAdmin(body);
@@ -924,7 +936,7 @@ const response = useApi({
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
         Object.assign(dataOrder.value, pageData.value.order);
-        Object.assign(dataTaksasi.value, pageData.value.barang_taksasi);
+        Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan[0]);
         Object.assign(dataTambahan.value, pageData.value.tambahan);
         Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
         Object.assign(dataSurat.value, pageData.value.surat);
@@ -957,13 +969,13 @@ const refAdmin = async (body) => {
 const handlePlafond = (e) => {
     calcCredit.nilai_yang_diterima = e;
     const body = {
-        plafond: e,
+        plafond: 5000000,
         jenis_angsuran: 'bulanan',
-        tenor: 6,
+        tenor: "6",
     }
     refAdmin(body);
 }
-onMounted(refAdmin);
+onMounted(handlePlafond);
 const formAssign = reactive({
     flag_pengajuan: null,
     pelanggan: dataPelanggan.value,
