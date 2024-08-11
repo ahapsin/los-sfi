@@ -1,22 +1,24 @@
 <template>
-    <div class="flex md:flex-col lg:flex-row flex-col w-full  gap-2">
-        <n-form-item label="Brand / Merk" path="provinsi" class="w-full" value-field="value" label-field="label">
+    <div class="flex flex-col md:flex-row gap-2">
+        <n-form-item label="Brand / Merk" path="provinsi" value-field="value" label-field="label" class="w-full">
             <n-select filterable placeholder="Pilih Brand" v-model:value="props.brand" :options="col_brand"
                 @update:value="brandChanged" :loading="loadingBrand" />
         </n-form-item>
         <n-form-item label="Tipe" path="Tipe" class="w-full">
             <n-select filterable :disabled placeholder="Pilih Tipe" label-field="label" value-field="value"
-                v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe" />
+                v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe"
+                class="w-full" />
         </n-form-item>
         <n-form-item label="Tahun" path="tahun" class="w-full">
             <n-select filterable :disabled placeholder="Pilih Tahun" label-field="label" value-field="value"
-                v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTipe" />
+                v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTahun"
+                class="w-full" />
         </n-form-item>
-        <n-form-item label="Harga Pasar" path="pasar" class=" w-full">
-            <n-input v-model:value="price" placeholder="Harga Pasar" readonly :parse="parse" :format="format" />
+        <n-form-item label="Harga Pasar" path="pasar" class="w-full">
+            <n-input-number :show-button="false" v-model:value="props.pasar" placeholder="Harga Pasar" readonly
+                :parse="parse" :format="format" class="w-full" />
         </n-form-item>
     </div>
-
 </template>
 
 <script setup>
@@ -34,7 +36,8 @@ const col_tipe = ref([]);
 const filter_tipe = ref([]);
 
 const loadingTipe = ref(false);
-const col_tahun = ref([]);
+const loadingTahun = ref(false);
+const col_tahun = ref();
 const price = ref();
 
 
@@ -64,17 +67,16 @@ const props = defineProps({
         type: String,
     },
     pasar: {
-        type: String,
+        type: Number,
     },
     loop: {
         type: [Number, Boolean]
     }
 });
 
-
-
 const getBrand = async () => {
     loadingBrand.value = true;
+
     let userToken = localStorage.getItem("token");
     const response = await useApi({
         method: 'GET',
@@ -87,6 +89,54 @@ const getBrand = async () => {
         loadingBrand.value = false;
         let resBrand = response.data.brand;
         col_brand.value = resBrand.map((v, i) => ({
+            label: v,
+            value: v,
+        }));
+    }
+}
+const getTipe = async () => {
+    loadingTipe.value = true;
+    const bodyData = {
+        merk: props.brand,
+    }
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: 'POST',
+        api: 'taksasi_code_model',
+        data: bodyData,
+        token: userToken
+    });
+    if (!response.ok) {
+        localStorage.removeItem("tokens");
+    } else {
+        loadingTipe.value = false;
+        col_tipe.value = response.data;
+        filter_tipe.value = col_tipe.value.map((v, i) => ({
+            label: `${v.code} - ${v.model}`,
+            value: `${v.code} - ${v.model}`,
+        }));
+    }
+}
+const getTahun = async () => {
+    loadingTahun.value = true;
+    const bodyData = {
+        merk: props.brand,
+        tipe: props.tipe,
+    }
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: 'POST',
+        api: 'taksasi_year',
+        data: bodyData,
+        token: userToken
+    });
+    if (!response.ok) {
+        localStorage.removeItem("tokens");
+    } else {
+        loadingTahun.value = false;
+        // emit('update:pasar', 0);
+        let resTahun = response.data
+        col_tahun.value = resTahun.map((v, i) => ({
             label: v,
             value: v,
         }));
@@ -110,32 +160,64 @@ const brandChanged = async (value, option) => {
         localStorage.removeItem("tokens");
     } else {
         loadingTipe.value = false;
+        sel_brand.value = option.value;
+        emit('update:tipe', null);
+        emit('update:tahun', null);
+        emit('update:pasar', 0);
         col_tipe.value = response.data;
         filter_tipe.value = col_tipe.value.map((v, i) => ({
             label: `${v.code} - ${v.model}`,
-            value: v.code,
+            value: `${v.code} - ${v.model}`,
         }));
     }
 };
 
 const tipeChanged = async (value, option) => {
-    let tahunOpt = _.filter(col_tipe.value, {
-        'code': option.value,
-    });
+    // let tahunOpt = _.filter(col_tipe.value, {
+    //     'code': option.value,
+    // });
+    // price.value = [];
+    // emit('update:tipe', option.value);
+    // sel_tipe.value = option.value;
+    // let tahunAvailable = tahunOpt[0].tahun;
+    // col_tahun.value = tahunAvailable.map((v, i) => ({
+    //     label: v,
+    //     value: v,
+    // }));
+    let userToken = localStorage.getItem("token");
     emit('update:tipe', option.value);
-    sel_tipe.value = option.value;
-    let tahunAvailable = tahunOpt[0].tahun;
-    col_tahun.value = tahunAvailable.map((v, i) => ({
-        label: v,
-        value: v,
-    }));
+    emit('update:tahun', null);
+    emit('update:pasar', 0);
+    loadingTahun.value = true;
+    const bodyData = {
+        merk: props.brand,
+        tipe: props.tipe,
+    }
+    const response = await useApi({
+        method: 'POST',
+        api: 'taksasi_year',
+        data: bodyData,
+        token: userToken
+    });
+    if (!response.ok) {
+        localStorage.removeItem("tokens");
+    } else {
+        loadingTahun.value = false;
+        emit('update:pasar', 0);
+        let resTahun = response.data
+        col_tahun.value = resTahun.map((v, i) => ({
+            label: v,
+            value: v,
+        }));
+    }
 }
 const tahunChanged = async (value, option) => {
+    price.value = [];
     let userToken = localStorage.getItem("token");
     loadingTipe.value = true;
     emit('update:tahun', option.value);
     const bodyData = {
-        code: sel_tipe.value,
+        code: props.tipe,
         tahun: option.value,
     }
     const response = await useApi({
@@ -149,8 +231,7 @@ const tahunChanged = async (value, option) => {
     } else {
         loadingTipe.value = false;
         let getPrice = response.data[0].price;
-        price.value = getPrice.toLocaleString("en-US");
-        emit('update:price', getPrice);
+        emit('update:pasar', getPrice);
     }
 };
 const parse = (input) => {
@@ -164,5 +245,9 @@ const format = (value) => {
         return "";
     return value.toLocaleString("en-US");
 }
-onMounted(() => getBrand())
+onMounted(() => {
+    getBrand();
+    getTipe();
+    getTahun();
+})
 </script>

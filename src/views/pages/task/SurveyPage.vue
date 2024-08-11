@@ -147,7 +147,6 @@ const columns = [
                                                 if (e === "edit") {
                                                         handleEdit(row);
                                                 }
-
                                         },
                                 },
                                 {
@@ -211,7 +210,7 @@ const handleConfirm = (row, index) => {
         });
 }
 const handleDetail = (evt) => {
-        router.replace({ name: 'detail survey', params: { idsurvey: evt.id } });
+        router.replace({ name: 'detail survey', params: { idsurvey: evt.id, action: "view" } });
 }
 const handleEdit = (evt) => {
         router.replace({ name: 'edit survey', params: { idsurvey: evt.id } });
@@ -262,11 +261,11 @@ const options = (e) => {
                                 key: "hapus",
                                 icon: renderIcon(DeleteIcon)
                         },
-                        {
-                                label: "Detail",
-                                key: "detail",
-                                icon: renderIcon(DetailIcon)
-                        }
+                        // {
+                        //         label: "Detail",
+                        //         key: "detail",
+                        //         icon: renderIcon(DetailIcon)
+                        // }
                 ]
 
         } else {
