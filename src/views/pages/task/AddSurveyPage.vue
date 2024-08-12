@@ -153,7 +153,6 @@
                                 </n-form-item>
                                 <n-form-item label="Tanggal lahir" path="tgl_lahir">
                                         <n-space vertical>
-
                                                 <n-alert title="Informasi" type="warning" :bordered="bordered"
                                                         v-if="notifUsia"> {{ noteUsia }}</n-alert>
                                                 <n-date-picker placeholder="Tanggal Lahir"

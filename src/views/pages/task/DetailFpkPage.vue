@@ -1,7 +1,10 @@
 <template>
     <n-card>
-        <pre>{{ pageData }}</pre>
+        <!-- <pre>{{ pageData }}</pre> -->
         <n-tabs type="line" animated>
+            <template #suffix>
+                <n-button quaternary @click="handleClose">Tutup</n-button>
+            </template>
             <n-tab-pane name="pelanggan" tab="Pelanggan">
                 <div class="flex w-full gap-2">
                     <n-form-item label="Nama" path="nama" class="w-full">
@@ -356,25 +359,18 @@
             <n-tab-pane name="ekstra" tab="Ekstra">
                 <div class="w-full flex md:flex-row flex-col gap-4 ">
                     <div class="flex flex-col w-full">
+                        <!-- {{ calcCredit }} -->
                         <n-form-item label="Pokok pembayaran" path="Pokok Pembayaran">
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.pokok_pembayaran"
                                 :show-button="false" class="flex !w-full" placeholder="pokok pembayaran" readonly />
                         </n-form-item>
-                        <n-form-item label="Tipe Angsuran" path="tipe_angsuran">
-                            <n-select disabled v-model:value="calcCredit.tipe_angsuran" :options="optTipeAngsuran"
-                                readonly />
+                        <n-form-item label="Jenis Angsuran" path="jenis">
+                            <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
+                                v-model:value="calcCredit.jenis_angsuran" disabled />
                         </n-form-item>
-                        <n-form-item label="Cara Pembayaraan" path="cara_bayar">
-                            <n-select disabled placeholder="Cara Pembayaran" :options="optCaraBayar"
-                                v-model:value="calcCredit.cara_pembayaran" readonly />
-                        </n-form-item>
-                        <n-form-item label="Jumlah Angsuran" path="jml_angsuran">
-                            <n-input v-model:value="calcCredit.periode" placeholder="periode" readonly />
-                        </n-form-item>
-                        <n-form-item label="Periode" path="periode">
-                            <n-input v-model:value="calcCredit.periode" placeholder="periode" readonly />
-                            <n-select disabled placeholder="Pilih Periode" :options="optPeriode"
-                                v-model:value="calcCredit.opt_periode" readonly />
+                        <n-form-item label="Tenor" path="jenis">
+                            <n-select filterable placeholder="Jenis Angsuran" v-model:value="calcCredit.tenor"
+                                disabled />
                         </n-form-item>
                         <n-form-item label="Angsuran" path="angsuran">
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.angsuran"
@@ -384,7 +380,7 @@
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.admin"
                                 placeholder="Total Admin" :show-button="false" class="flex !w-full" readonly />
                         </n-form-item>
-                        <n-form-item label="Cadangan" path="cadangan">
+                        <!-- <n-form-item label="Cadangan" path="cadangan">
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.cadangan"
                                 placeholder="Cadangan" :show-button="false" class="flex !w-full" readonly />
                         </n-form-item>
@@ -399,7 +395,7 @@
                         <n-form-item label="Biaya Transfer" path="biaya_transfer">
                             <n-input-number :parse="parse" :format="format" v-model:value="calcCredit.biaya_transfer"
                                 placeholder="Biaya Transfer" :show-button="false" class="flex !w-full" readonly />
-                        </n-form-item>
+                        </n-form-item> -->
                         <n-form-item label="Bunga / Margin Eff" path="bunga_margin_eff">
                             <n-input v-model:value="calcCredit.bunga_eff" placeholder="Bunga / Margin Eff" readonly />
                         </n-form-item>
@@ -671,6 +667,9 @@ const handlePositiveClick = async (e) => {
         loading.value = false;
         router.replace('/task/approval');
     }
+}
+const handleClose = () => {
+    router.replace({ name: 'Pengajuan Kredit' });
 }
 const handleNegativeClick = async (e) => {
     e.preventDefault(e);

@@ -225,7 +225,7 @@ const renderIcon = (icon) => {
 
 const handelAction = (e) => {
     if (e.status.at(0) == 1) {
-        router.replace({ name: 'Konfirmasi Pengajuan Kredit', params: { idapplication: e.id } });
+        router.replace({ name: 'Konfirmasi Pengajuan Kredit', params: { idapplication: e.id, action: "view" } });
     } else if (e.status.at(0) == 4) {
         router.replace({ name: 'Nego Pengajuan Kredit', params: { idapplication: e.id } });
     } else {

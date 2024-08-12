@@ -246,7 +246,7 @@ const handleAction = (e, data) => {
     } else if (status === "2") {
         router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
     } else {
-        router.replace({ name: 'Detail Pengajuan Kredit', params: { idapplication: data.id } });
+        router.replace({ name: 'Detail Kredit', params: { idapplication: data.id, action: "view" } });
     }
 };
 const handlePrint = (evt) => {

@@ -45,6 +45,11 @@ const routes = [
         component: () => import("../views/pages/task/AddFpkPage.vue"),
       },
       {
+        path: "detail-credit/:idapplication/:action",
+        name: "Detail Kredit",
+        component: () => import("../views/pages/task/AddFpkPage.vue"),
+      },
+      {
         path: "approve-fpk/:idapplication",
         name: "Konfirmasi Pengajuan Kredit",
         component: () => import("../views/pages/task/ConfFpkPage.vue"),

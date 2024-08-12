@@ -229,7 +229,7 @@ const tahunChanged = async (value, option) => {
     if (!response.ok) {
         localStorage.removeItem("tokens");
     } else {
-        loadingTipe.value = false;
+        loadingTahun.value = false;
         let getPrice = response.data[0].price;
         emit('update:pasar', getPrice);
     }
