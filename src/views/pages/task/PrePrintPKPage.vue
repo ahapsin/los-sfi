@@ -229,7 +229,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                        }} )
+                                            }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -554,7 +554,6 @@ const zeroPad = (num, places) => String(num).padStart(places, '0')
 const dynamicForm = reactive({
     awal: '01',
     order_number: null,
-    angsuran: null
 });
 const response = useApi({
     method: 'get',
