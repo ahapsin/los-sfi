@@ -1,10 +1,18 @@
 <template>
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
-        <div class="p-2">
-            <n-alert :show-icon="false" type="warning">
-                Catatan KAPOS
-                Catatan HO
-            </n-alert>
+        <div class="p-2 flex gap-2">
+            <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
+                <div class="flex  gap-2">
+                    <n-icon size="20"><message-icon /></n-icon> <b>KAPOS</b>
+                </div>
+                {{ approval.kapos }}
+            </div>
+            <div class="border p-2 rounded-lg bg-green-50 border-green-200 w-full" v-show="approval.ho">
+                <div class="flex  gap-2">
+                    <n-icon size="20"><message-icon /></n-icon> <b>HO</b>
+                </div>
+                {{ approval.ho }}
+            </div>
         </div>
         <n-tabs type="line" animated>
             <n-tab-pane name="pelanggan" tab="Pelanggan">
@@ -803,6 +811,7 @@ const optHubCust = ["PASANGAN", "SAUDARA", "ORANG TUA"].map(
 
 const idApp = baseRoute.params.idapplication;
 const actionPage = baseRoute.params.action;
+const approval = ref({});
 
 const copyAddress = () => Object.assign(alamatTagih.value, alamatIdentitas.value);
 const sum = (num1, num2) => {
@@ -846,6 +855,7 @@ const response = () => useApi({
         Object.assign(dataSurat.value, pageData.value.surat);
         Object.assign(dataBank.value, pageData.value.info_bank);
         Object.assign(dataAttachment.value, pageData.value.attachment);
+        Object.assign(approval.value, pageData.value.approval);
         handleEkstra();
     }
 });
