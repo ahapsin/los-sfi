@@ -45,12 +45,12 @@ const routes = [
         component: () => import("../views/pages/task/AddFpkPage.vue"),
       },
       {
-        path: "detail-credit/:idapplication/:action",
+        path: "detail-credit/:idapplication",
         name: "Detail Kredit",
-        component: () => import("../views/pages/task/AddFpkPage.vue"),
+        component: () => import("../views/pages/task/DetailFpkPage.vue"),
       },
       {
-        path: "approve-fpk/:idapplication",
+        path: "kapos-fpk/:idapplication",
         name: "Konfirmasi Pengajuan Kredit",
         component: () => import("../views/pages/task/ConfFpkPage.vue"),
       },
@@ -60,7 +60,7 @@ const routes = [
         component: () => import("../views/pages/task/NegoFpkPage.vue"),
       },
       {
-        path: "approve-fpk/:idapplication",
+        path: "ho-fpk/:idapplication",
         name: "Konfirmasi HO Pengajuan Kredit",
         component: () => import("../views/pages/task/ConfHOFpkPage.vue"),
       },

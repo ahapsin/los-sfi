@@ -1,7 +1,6 @@
 <template>
     <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
-        require-mark-placement="right-hanging" :size="size" label-width="auto"
-        :disabled="actionPage == 'view' ? true : false">
+        require-mark-placement="right-hanging" :size="size" label-width="auto">
         <n-space vertical class="p-2">
             <n-steps :current="current" :status="currentStatus" v-model:current="current">
                 <n-step title="Pelanggan" />
@@ -13,7 +12,7 @@
         <n-flex class="pt-4">
             <!-- <n-collapse>
                 <n-collapse-item title="skemaAngsuran" name="1">
-                    <pre>{{ skemaAngsuran }}</pre>
+                    <pre>{{ dataKerabat }}</pre>
                 </n-collapse-item>
                 <n-collapse-item title="get" name="2">
                     <pre>{{ pageData }}</pre>
@@ -361,7 +360,7 @@
                 <n-divider title-placement="left">
                     Barang Taksasi
                 </n-divider>
-                <div class="flex gap-2">
+                <div class="flex-col gap-2">
                     <!-- <n-form-item label="Kode Barang" path="kode_barang" class="w-full">
                         <n-input placeholder="Kode Barang" v-model:value="dataTaksasi.kode_barang" />
                     </n-form-item>
@@ -377,6 +376,45 @@
                     </n-form-item> -->
                     <taksasi-select-state v-model:brand="dataTaksasi.merk" v-model:tipe="dataTaksasi.tipe"
                         v-model:tahun="dataTaksasi.tahun" v-model:pasar="dataTaksasi.nilai" />
+                    <!-- <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
+                                        <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
+                                                v-model:value="jaminan.tipe" />
+                                </n-form-item> -->
+                    <n-space>
+                        <n-form-item label="No Polisi" path="no_polisi">
+                            <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
+                        </n-form-item>
+                        <!-- <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
+                                            <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
+                                                    type="year" placeholder="Tahun jaminan" clearable />
+                                    </n-form-item> -->
+                        <n-form-item label="Warna" path="warna">
+                            <n-input placeholder="warna" v-model:value="dataTaksasi.warna" />
+                        </n-form-item>
+                        <n-form-item label="No BPKB" path="no_bpkb">
+                            <n-input placeholder="No BPKB" v-model:value="dataTaksasi.no_bpkb" />
+                        </n-form-item>
+                        <n-form-item label="Atas Nama" path="atas_nama">
+                            <n-input placeholder="Atas Nama" v-model:value="dataTaksasi.atas_nama" />
+                        </n-form-item>
+                        <!-- <n-form-item label="No Polisi" path="no_polisi">
+                            <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
+                        </n-form-item> -->
+                        <n-form-item label="No Rangka" path="no_rangka">
+                            <n-input placeholder="No Rangka" v-model:value="dataTaksasi.no_rangka" />
+                        </n-form-item>
+                        <n-form-item label="No Mesin" path="no_mesin">
+                            <n-input placeholder="No Mesin" v-model:value="dataTaksasi.no_mesin" />
+                        </n-form-item>
+                    </n-space>
+                    <!-- <n-form-item label="NO STNK" path="no_stnk">
+                                        <n-input placeholder="No STNK" v-model:value="jaminan.no_stnk" />
+                                </n-form-item> -->
+                    <!-- <n-form-item label="Nilai Jaminan" path="nilai_jaminan">
+                                        <n-input-number :parse="parse" :format="format" v-model:value="jaminan.nilai"
+                                                placeholder="Nilai Jaminan" :show-button="false">
+                                        </n-input-number>
+                                </n-form-item> -->
                 </div>
             </n-card>
 
@@ -740,6 +778,7 @@ const alamatTagih = ref({});
 const dataPekerjaan = ref({});
 const dataOrder = ref({});
 const dataTaksasi = ref({});
+const dataJaminan = reactive({});
 const dataTambahan = ref({});
 const dataKerabat = ref({});
 const dataPenjamin = ref({});
@@ -917,11 +956,12 @@ const response = () => useApi({
         // dynamicForm.surat = pageData.value.surat;
         Object.assign(calcCredit, pageData.value.ekstra);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
+        Object.assign(dataPenjamin.value, pageData.value.penjamin);
         Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
         Object.assign(dataOrder.value, pageData.value.order);
-        Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan[0]);
+        Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan);
         Object.assign(dataTambahan.value, pageData.value.tambahan);
         Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
         Object.assign(dataSurat.value, pageData.value.surat);
