@@ -1,5 +1,6 @@
 <template>
     <n-card>
+        <pre>{{ pkData }}</pre>
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
@@ -229,7 +230,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                            }} )
+                                        }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>

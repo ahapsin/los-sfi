@@ -35,13 +35,23 @@
                         </n-input>
                     </n-form-item>
                     <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
-                        <n-space vertical>
-                            <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
-                                }}</n-alert>
+
+
+
+                        <!-- <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
+                                }}</n-alert> -->
+
+                        <div class="flex flex-col">
                             <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                                 value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir"
                                 class="w-full" />
-                        </n-space>
+                            <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2">
+                                <n-icon color="#FF9100">
+                                    <warning-icon />
+                                </n-icon>{{ noteUsia }}
+                            </div>
+                        </div>
+
                     </n-form-item>
                     <!-- <n-form-item label="Golonga Darah" path="gol_darah" class="w-full">
                     <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah">
@@ -614,6 +624,12 @@
                             <n-input-number :parse="parse" :format="format" :placeholder="calcCredit.plafond"
                                 :show-button="false" class="flex !w-full" @update:value="handlePlafond"
                                 :loading="loading" v-model:value="calcCredit.nilai_yang_diterima" />
+                            <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2"
+                                v-show="dataTaksasi.nilai != '' && calcCredit.nilai_yang_diterima > dataTaksasi.nilai">
+                                <n-icon color="#FF9100">
+                                    <warning-icon />
+                                </n-icon>Plafon > Harga Pasar
+                            </div>
                         </n-form-item>
                     </div>
                 </div>
@@ -642,7 +658,7 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon, DeleteOutlineRound as DeleteIcon } from "@vicons/material";
+import { MessageOutlined as MessageIcon, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon, WarningRound as WarningIcon } from "@vicons/material";
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
@@ -862,6 +878,11 @@ const response = () => useApi({
         Object.assign(dataBank.value, pageData.value.info_bank);
         Object.assign(dataAttachment.value, pageData.value.attachment);
         Object.assign(approval.value, pageData.value.approval);
+        let tgllahir = toRef(pageData.value.pelanggan);
+        var myDate = tgllahir.value.tgl_lahir;
+        myDate = myDate.split("-");
+        var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
+        handleTanggalLahir(newDate.getTime());
         handleEkstra();
     }
 });
@@ -1049,6 +1070,8 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
         onError();
     });
 };
+
+const keterangan = ref();
 const handlePositiveClick = async (e) => {
     e.preventDefault(e);
     const bodyPost = {

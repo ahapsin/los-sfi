@@ -214,7 +214,7 @@ const tipeChanged = async (value, option) => {
 const tahunChanged = async (value, option) => {
     price.value = [];
     let userToken = localStorage.getItem("token");
-    loadingTipe.value = true;
+    loadingTahun.value = true;
     emit('update:tahun', option.value);
     const bodyData = {
         code: props.tipe,
