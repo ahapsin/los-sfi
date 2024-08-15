@@ -372,9 +372,37 @@
                 <n-input placeholder="Usaha Lain 4" v-model:value="dataTambahan.usaha_lain4" />
             </n-form-item> -->
                 <n-divider title-placement="left">
+                    Pasangan
+                </n-divider>
+
+                <div class="flex gap-2">
+                    <n-form-item label="Nama Pasangan" path="nama_kerabat" class=" w-full">
+                        <n-input placeholder="Nama Pasangan" v-model:value="dataPasangan.nama_pasangan" />
+                    </n-form-item>
+                    <n-form-item label="Tempat / Tanggal Lahir" path="order" class="w-full">
+                        <n-input-group>
+                            <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
+                            <n-date-picker placeholder="Tanggal lahir"
+                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd"
+                                type="date" class="w-full" />
+                        </n-input-group>
+                    </n-form-item>
+                    <n-form-item label="Pekerjaan" path="nama_kerabat" class=" w-full">
+                        <n-input placeholder="pekerjaan" v-model:value="dataPasangan.pekerjaan_pasangan" />
+                    </n-form-item>
+                </div>
+                <n-form-item label="Alamat" path="nama_kerabat" class=" w-full">
+                    <n-input type="textarea" :autosize="{
+                        minRows: 3,
+                    }" placeholder="Alamat" v-model:value="dataPasangan.alamat_pasangan" />
+                </n-form-item>
+                <n-divider title-placement="left">
                     Penjamin
                 </n-divider>
                 <div class="flex gap-2">
+                     <n-form-item label="No KTP" path="nama_kerabat" class=" w-full">
+                            <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.no_identitas" />
+                        </n-form-item>
                     <n-form-item label="Nama Penjamin" path="nama_kerabat" class=" w-full">
                         <n-input placeholder="Nama penjamin" v-model:value="dataPenjamin.nama" />
                     </n-form-item>
@@ -699,6 +727,14 @@ const userToken = localStorage.getItem("token");
 
 const currentStatus = ref("process");
 
+const dataPasangan = ref({
+    nama_pasangan: null,
+    tmptlahir_pasangan: null,
+    pekerjaan_pasangan: null,
+    tgllahir_pasangan: null,
+    alamat_pasangan: null
+});
+
 const skemaAngsuran = ref([]);
 const nilaiAngsuran = reactive({
     tenor6: null,
@@ -851,6 +887,7 @@ const response = () => useApi({
         Object.assign(calcCredit, pageData.value.ekstra);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(dataPenjamin.value, pageData.value.penjamin);
+        Object.assign(dataPasangan.value, pageData.value.pasangan);
         Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);

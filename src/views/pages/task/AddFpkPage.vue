@@ -490,7 +490,7 @@
                     </n-divider>
                     <div class="flex gap-2">
                         <n-form-item label="No KTP" path="nama_kerabat" class=" w-full">
-                            <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.ktp_penjamin" />
+                            <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.no_identitas" />
                         </n-form-item>
                         <n-form-item label="Nama Penjamin" path="nama_kerabat" class=" w-full">
                             <n-input placeholder="Nama penjamin" v-model:value="dataPenjamin.nama" />
@@ -515,7 +515,7 @@
                     <n-form-item label="Alamat" path="nama_kerabat" class=" w-full">
                         <n-input :autosize="{
                             minRows: 3,
-                        }" type="textarea" placeholder="Alamat" v-model:value="dataPenjamin.alamat_penjamin" />
+                        }" type="textarea" placeholder="Alamat" v-model:value="dataPenjamin.alamat" />
                     </n-form-item>
                     <!-- <n-form-item label="Alamat" path="alamat">
                 <n-input-group>
@@ -852,7 +852,13 @@ const dataKerabat = ref({});
 const dataPenjamin = ref({});
 const dataSurat = ref({});
 const dataAttachment = ref({});
-const dataPasangan = ref({});
+const dataPasangan = ref({
+    nama_pasangan: null,
+    tmptlahir_pasangan: null,
+    pekerjaan_pasangan: null,
+    tgllahir_pasangan: null,
+    alamat_pasangan: null
+});
 const dataEkstra = ref({});
 
 const dataBank = ref([]);
@@ -1026,6 +1032,7 @@ const response = () => useApi({
         Object.assign(calcCredit, pageData.value.ekstra);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(dataPenjamin.value, pageData.value.penjamin);
+        Object.assign(dataPasangan.value, pageData.value.pasangan);
         Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);

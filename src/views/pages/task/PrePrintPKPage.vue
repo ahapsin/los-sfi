@@ -1,21 +1,14 @@
 <template>
     <n-card>
-        <pre>{{ pkData }}</pre>
+        <!-- <pre>{{ dataPelanggan }}</pre> -->
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
                     <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
                 </n-form-item>
-                <n-form-item label="Tanggal Awal" path="nama_panggilan" class="w-full">
-                    <n-input-group>
-                        <n-select :options="options" placeholder="pilih" v-model:value="dynamicForm.awal"></n-select>
-                        <n-input :value="month" disabled />
-                        <n-input :value="new Date().getFullYear()" disabled />
-                    </n-input-group>
-                </n-form-item>
-                <n-form-item label="Angsuran" path="nama_panggilan" class="w-full">
-                    <n-input-number :parse="parse" :format="format" v-model:value="dynamicForm.angsuran"
-                        placeholder="Net Admin" :show-button="false" class="flex !w-full" />
+                <n-form-item label="Tanggal Awal" path="order" class="w-full">
+                    <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
+                        value-format="yyyy-MM-dd" type="date" class="w-full" />
                 </n-form-item>
                 <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
                     <n-space item-style="display: flex;">
@@ -28,9 +21,9 @@
                         <n-checkbox value="" label="Penjamin" v-model:checked="optPrint.penjaminPage" />
                     </n-space>
                 </n-form-item>
-                <n-form-item class="w-full">
+                <!-- <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
-                </n-form-item>
+                </n-form-item> -->
             </n-form>
         </div>
         <div title="PK" v-show="prosesPK" class="flex gap-2 justify-end border-t p-4">
@@ -163,7 +156,7 @@
                             <td> Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini
                                 menyerahkan
                                 jaminan
-                                barang miliknya sendiri berupa {{ pkData.tipe_jaminan }}, dengan dibuktikan
+                                barang miliknya sendiri berupa SEPEDA MOTOR, dengan dibuktikan
                                 diserahkannya
                                 Bukti Kepemilikan dengan spesifikasi sebagai berikut</td>
                         </tr>
@@ -212,7 +205,7 @@
                                 terhitung
                                 dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas
                                 kerusakan
-                                atau kegilangan BPKB.
+                                atau kehilangan BPKB.
                             </td>
                         </tr>
                         <tr>
@@ -230,7 +223,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                        }} )
+                                            }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -270,7 +263,7 @@
                 <div class="mt-2" v-show="optPrint.ktpaPage">
                     <div class="bg-white shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
-                            <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM " KREDIT TANPA PERLINDUNGAN ASURANSI "</b>
+                            <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM <b>" KREDIT TANPA PERLINDUNGAN ASURANSI "</b></b>
                         </div>
                         <div class="mb-4 text-justify text-sm">
                             Pada hari ini <b>{{ thisDay }}</b> tanggal <b>{{ dateServer }}</b> bulan
@@ -278,27 +271,29 @@
                             <b>{{ yearServer }}</b>, yang bertanda tangan dibawah ini :
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
-                            I. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ pihak2.jabatan }}</b>
+                            I. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ dataPelanggan.pekerjaan }}</b>
                             Bertempat tinggal di <b>{{ pihak2.alamat }}
                             </b>
-                            Pemegang kartu identitas (<b>####</b>) nomor <b>####</b>
+                            Pemegang kartu identitas (<b>{{ dataPelanggan.tipe_identitas }}</b>) nomor <b>{{
+                                dataPelanggan.no_identitas }}</b>
                             Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
                             disebut <b>Penerima
                                 Pinjaman.</b>
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
-                            II. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ pihak2.jabatan }}</b>
-                            Bertempat tinggal di <b>{{ pihak2.alamat_kantor }}
+                            II. <b>{{ pihak1.nama }}</b> pekerjaan/jabatan <b> {{ pihak1.jabatan }}</b>
+                            Bertempat tinggal di <b>{{ pihak1.alamat_kantor }}
                             </b>
                             Pemegang kartu identitas (<b>####</b>) nomor <b>####</b>
-                            Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
-                            disebut <b>Penerima
+                            Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak1.nama }}</b> Selanjutnya
+                            disebut <b>Pemberi
                                 Pinjaman.</b>
                         </div>
                         <div class="mb-4 text-justify text-sm ">
                             Yang bersama-sama dengan <b>KSP DJAYA</b>, telah, sepakat dan mengikatkan diri dan karenanya
                             menjadi para pihak dalam Perjanjian PINJAMAN Konsumen
-                            tanggal <b>#####</b> berikut kelengkapan dan perubahannya ( selanjutnya disebut <b>
+                            <b> No.{{ pkData.no_perjanjian }}</b> berikut kelengkapan dan perubahannya ( selanjutnya
+                            disebut <b>
                                 Perjanjian
                                 PINJAMAN Konsumen
                             </b> yang merupakan satu kesatuan tak terpisahkan dengan syarat dan ketentuan
@@ -344,23 +339,23 @@
                         <div class="mb-4 text-justify">
                             <table class="!text-sm">
                                 <tr>
-                                    <td class="py-4 pr-4"><b>
-                                            Penerima Pinjaman,
-                                            <br /><br /><br />
-                                            {{ pihak2.nama }}
-                                        </b>
+                                    <td class="py-4 pr-4">
+                                        Penerima Pinjaman,
+                                        <br /><br /><br />
+                                        <u class="uppercase">{{ pihak2.nama }}</u>
+
                                     </td>
-                                    <td class="py-4 pr-4"><b>
-                                            Pemberi Jaminan,
-                                            <br /><br /><br />
-                                            {{ pihak2.nama }}
-                                        </b></td>
+                                    <td class="py-4 pr-4">
+                                        Pemberi Jaminan,
+                                        <br /><br /><br />
+                                        <u class="uppercase">{{ pihak1.nama }}</u>
+                                    </td>
                                     <td>
-                                        <b>
-                                            Pemberi Pinjaman / Penerima Jaminan,
-                                            <br /><br /><br />
-                                            {{ pihak1.nama }}
-                                        </b>
+
+                                        Pemberi Pinjaman / Penerima Jaminan,
+                                        <br /><br /><br />
+                                        <u class="uppercase">{{ pihak1.nama }} / {{ pihak2.nama }}</u>
+
                                     </td>
                                 </tr>
                             </table>
@@ -376,24 +371,55 @@
                             yang bertanda tangan di bawah ini:
                         </div>
                         <div class="mb-4 ps-8">
-                            Nama :<br />
-                            Pekerjaan :<br />
-                            Alamat :<br />
+                            <table>
+                                <tr>
+                                    <td width="100px">Nama</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ upCase(dataPasangan.nama_pasangan) }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Pekerjaan</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ upCase(dataPasangan.pekerjaan_pasangan) }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ upCase(dataPasangan.alamat_pasangan) }}</b></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="mb-4">
                             Sebagai suami/isteri *) dengan ini memberikan persetujuan kepada suami/isteri *) saya:
                         </div>
                         <div class="mb-4 ps-8">
-                            Nama : <b>{{ pihak2.nama }}</b><br />
-                            Pekerjaan :<br />
-                            Alamat :<b>{{ pihak2.alamat }}</b><br />
+                            <table>
+                                <tr>
+                                    <td width="100px">Nama</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ pihak2.nama }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Pekerjaan</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPelanggan.pekerjaan_id }}) {{
+                                        dataPelanggan.pekerjaan }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ pihak2.alamat }}</b></td>
+                                </tr>
+                            </table>
+
                         </div>
                         <div class="mb-4  ">
                             Untuk melakukan tindakan-tindakan sebagaimana disebutkan di bawah ini :
                         </div>
                         <div class="mb-4  ">
                             1. Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam
-                            Perjanjian PINJAMAN Konsumen No......... tertanggal ............ berikut dengan seluruh
+                            Perjanjian PINJAMAN Konsumen <b>No. {{ pkData.no_perjanjian }}</b> tertanggal {{
+                                pkData.tgl_awal_cicilan }} berikut dengan seluruh
                             perubahan-perubahan dan lampiran-lampirannya <b>("Perjanjian Pinjaman *)</b> dari pemberi
                             Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.
                         </div>
@@ -412,9 +438,9 @@
                             PINJAMAN tersebut telah lunas seluruhnya.
                         </div>
                         <div class="mb-4 ">
-                            Tanggal,<br />
+                            {{ pkData.tgl_awal_cicilan }},<br />
                             Yang memberi persetujuan,<br /><br /><br />
-                            ..........................
+                            <u class="uppercase">{{ upCase(dataPasangan.nama_pasangan) }}</u>
                         </div>
                     </div>
                 </div>
@@ -427,11 +453,28 @@
                             yang bertanda tangan di bawah ini:
                         </div>
                         <div class="mb-4">
-                            Nama : ……………………………………………………………………………………<br />
-                            Pekerjaan : ……………………………………………………………………………………<br />
-                            Alamat : ……………………………………………………………………………………<br />
-                            ……………………………………………………………………………………<br />
-                            Nomor KTP : ……………………………………………………………………………………<br />
+                            <table>
+                                <tr>
+                                    <td width="100px">Nama</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPenjamin.nama }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Pekerjaan</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPenjamin.pekerjaan }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPenjamin.alamat }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Nomor KTP</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPenjamin.no_identitas }}</b></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="mb-4">
                             Selanjutnya disebut Penjamin<br />
@@ -440,22 +483,38 @@
                         <div class="mb-4">
                             1. Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan
                             Perjanjian
-                            pembiayaan Konsumen Nomor ………………………… tanggal…………………………………<br />
+                            pembiayaan Konsumen Nomor <b>{{ pkData.no_perjanjian }}</b> tanggal <b>
+                                {{
+                                    pkData.tgl_awal_cicilan
+                                }}
+                            </b><br />
                             beserta seluruh lampiran, penambahan dan / atau pengurangannya ( selanjutnya disebut
-                            Perjanjian ) oleh dan antara <b>KSP Djaya</b> berkedudukan di Haurgeulis dengan Kantor
-                            Cabang
-                            di …………………………………………………………………………………………………...<br />
-                            dan …………………………………………………………………………………………………<br />
+                            Perjanjian ) oleh dan antara <b>KSP Djaya</b> berkedudukan di Haurgeulis
+                            <br />
                             ( selanjutnya secara sendiri-sendiri atau bersama disebut<b> Pemberi Pinjaman</b> dengan :
-                            Nama : ……………………………………………………………………………………<br />
-                            Pekerjaan : ……………………………………………………………………………………<br />
-                            Alamat : ……………………………………………………………………………………<br />
-                            ……………………………………………………………………………………<br />
-                            Nomor KTP : ……………………………………………………………………………………<br />
+                            <table>
+                                <tr>
+                                    <td width="100px">Nama</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ pihak2.nama }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Pekerjaan</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ dataPelanggan.pekerjaan_id }}) {{
+                                        dataPelanggan.pekerjaan }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
+                                    <td>:</td>
+                                    <td><b class="uppercase">{{ pihak2.alamat }}</b></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="mb-4  ">
-                            Penjamin menyatakan sanggup dan mengikatkan diri untuk menjamin seluruh HUTANG PEMBIAYAAN
-                            Penerima Pinjaman yang timbul dari perjanjian tersebut sebesar Rp.
+                            2. Penjamin menyatakan sanggup dan mengikatkan diri untuk menjamin seluruh HUTANG PEMBIAYAAN
+                            Penerima Pinjaman yang timbul dari perjanjian tersebut sebesar <b>{{ pkData.pokok_margin
+                                }}</b>
                             (
                             dan bersedia untuk membayar seluruh kewajiban pembayaran hutang tersebut kepada Pemberi
                             Pinjaman apabila Penerima Pinjaman tidak memenuhi kewajibannya sebagaimana ditentukan dalam
@@ -468,10 +527,10 @@
                         </div>
 
                         <div class="flex mb-4 justify-end">
-                            <div class="flex w-fit text-center bg-white">
-                                ..........................<br />
+                            <div class=" w-fit text-center bg-white">
+                                {{ pkData.tgl_awal_cicilan }}<br />
                                 Penjamin,<br /><br /><br />
-                                ..........................
+                                (<u class="uppercase">{{ upCase(dataPenjamin.nama) }}</u>)
                             </div>
                         </div>
                     </div>
@@ -551,37 +610,53 @@ let thisMonth = monthNames[monthServer];
 let dateServer = new Date().getDate();
 
 const month = monthNames[monthServer];
-const zeroPad = (num, places) => String(num).padStart(places, '0')
+const zeroPad = (num, places) => String(num).padStart(places, '0');
+
+var dt = new Date();
+let year = dt.getFullYear();
+let months = (dt.getMonth() + 1).toString().padStart(2, "0");
+let day = dt.getDate().toString().padStart(2, "0");
+
+const dataPelanggan = ref([]);
 const dynamicForm = reactive({
-    awal: '01',
+    awal: `${year}-${months}-${day}`,
     order_number: null,
 });
-const response = useApi({
+useApi({
     method: 'get',
     api: `cr_application/${idApp}`,
     token: userToken
 }).then(res => {
     if (res.ok) {
         pageData.value = res.data.response;
+        dataPelanggan.value = pageData.value.pelanggan;
+        Object.assign(dataPelanggan.value, pageData.value.pekerjaan);
         // console.log(pageData.value.order_number)
         // console.log(dynamicForm.order_number)
         Object.assign(dynamicForm, {
             order_number: pageData.value.order_number,
             angsuran: pageData.value.angsuran,
         });
+        getPrePK();
     }
 });
 
-
-const handleProses = async (e) => {
-    const bodySend = {
-        tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
-        order_number: dynamicForm.order_number,
-        angsuran: dynamicForm.angsuran,
-    }
+const dataPasangan = ref([]);
+const dataPenjamin = ref([]);
+const getPrePK = async () => {
+    console.log(dynamicForm.order_number);
+    // const bodySend = {
+    //     tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
+    //     order_number: dynamicForm.order_number,
+    //     angsuran: dynamicForm.angsuran,
+    // }
     // console.log(bodySend);
-    e.preventDefault(e);
-    const proses_pk = useApi({
+    // e.preventDefault(e);
+    const bodySend = {
+        order_number: dynamicForm.order_number,
+        tgl_awal: dynamicForm.awal
+    };
+    useApi({
         method: 'POST',
         data: bodySend,
         api: `pk`,
@@ -592,6 +667,8 @@ const handleProses = async (e) => {
         } else {
             prosesPK.value = true;
             pkData.value = res.data;
+            dataPasangan.value = res.data.pasangan;
+            dataPenjamin.value = res.data.penjamin;
             pihak1.value = res.data.pihak_1;
             pihak2.value = res.data.pihak_2;
             struktur.value = [];
@@ -809,6 +886,9 @@ const handleDownload = (evt) => {
     });
 }
 
+const upCase = (e) => {
+    return e;
+};
 function generatePdf() {
     var doc = new jsPDF('p', 'pt', 'legal');
     const margins = {
