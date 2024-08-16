@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <!-- <n-collapse>
+        <n-collapse>
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
             </n-collapse-item>
@@ -19,15 +19,16 @@
             <n-collapse-item title="dynamic" name="5">
                 <pre>{{ dynamicForm }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
         <div class="flex flex-col md:flex-row w-full gap-2">
-            <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
+            <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
                     <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
                 </n-form-item>
                 <n-form-item label="Tanggal Awal" path="order" class="w-full">
                     <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
-                        value-format="yyyy-MM-dd" type="date" class="w-full" :disabled="pkData.flag != 1" />
+                        value-format="yyyy-MM-dd" type="date" class="w-full" :disabled="pkData.flag == 1"
+                        @update:value="getPrePK" />
                 </n-form-item>
                 <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
                     <n-space item-style="display: flex;">
