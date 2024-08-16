@@ -185,13 +185,13 @@ const tipeChanged = async (value, option) => {
     //     value: v,
     // }));
     let userToken = localStorage.getItem("token");
+    console.log(option);
     emit('update:tipe', option.value);
-    emit('update:tahun', null);
     emit('update:pasar', 0);
     loadingTahun.value = true;
     const bodyData = {
         merk: props.brand,
-        tipe: props.tipe,
+        tipe: option.value,
     }
     const response = await useApi({
         method: 'POST',
@@ -203,6 +203,7 @@ const tipeChanged = async (value, option) => {
         localStorage.removeItem("tokens");
     } else {
         loadingTahun.value = false;
+        emit('update:tahun', null);
         emit('update:pasar', 0);
         let resTahun = response.data
         col_tahun.value = resTahun.map((v, i) => ({

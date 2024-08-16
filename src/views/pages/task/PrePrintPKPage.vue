@@ -1,6 +1,25 @@
 <template>
     <n-card>
-        <!-- <pre>{{ dataPelanggan }}</pre> -->
+        <!-- <n-collapse>
+            <n-collapse-item title="day" name="day">
+                <pre>{{ dayFull }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="pelanggan" name="1">
+                <pre>{{ dataPelanggan }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="penjamin" name="2">
+                <pre>{{ dataPenjamin }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="pasangan" name="3">
+                <pre>{{ dataPasangan }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="pk" name="4">
+                <pre>{{ pkData }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="dynamic" name="5">
+                <pre>{{ dynamicForm }}</pre>
+            </n-collapse-item>
+        </n-collapse> -->
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag != 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
@@ -8,12 +27,12 @@
                 </n-form-item>
                 <n-form-item label="Tanggal Awal" path="order" class="w-full">
                     <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
-                        value-format="yyyy-MM-dd" type="date" class="w-full" />
+                        value-format="yyyy-MM-dd" type="date" class="w-full" :disabled="pkData.flag != 1" />
                 </n-form-item>
                 <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
                     <n-space item-style="display: flex;">
                         <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
-                        <n-checkbox value="pk" label="Perjanjian Kredit" v-model:checked="optPrint.pkPage" />
+                        <n-checkbox value="pk" label="Perjanjian Kredit" checked />
                         <n-checkbox value="skala" label="Skala Kredit" v-model:checked="optPrint.skalaPage" />
                         <n-checkbox value="ktpa" label="Tanpa Perlindungan Asuransi"
                             v-model:checked="optPrint.ktpaPage" />
@@ -51,7 +70,7 @@
                         </tr>
                         <tr>
                             <td align="center">
-                                NO.PERJANJIAN : {{ pkData.no_perjanjian }}
+                                NO.PERJANJIAN : {{ dynamicForm.order_number }}
                             </td>
                         </tr>
                         <tr>
@@ -223,7 +242,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                            }} )
+                                        }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -266,12 +285,13 @@
                             <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM <b>" KREDIT TANPA PERLINDUNGAN ASURANSI "</b></b>
                         </div>
                         <div class="mb-4 text-justify text-sm">
-                            Pada hari ini <b>{{ thisDay }}</b> tanggal <b>{{ dateServer }}</b> bulan
-                            <b>{{ month }}</b> tahun
-                            <b>{{ yearServer }}</b>, yang bertanda tangan dibawah ini :
+                            Pada hari ini <b>{{ dayFull.day }}</b>
+                            tanggal <b>{{ dayFull.date }}</b> bulan
+                            <b>{{ dayFull.month }}</b> tahun
+                            <b>{{ dayFull.year }}</b>, yang bertanda tangan dibawah ini :
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
-                            I. <b>{{ pihak2.nama }}</b> pekerjaan/jabatan <b> {{ dataPelanggan.pekerjaan }}</b>
+                            I. <b>{{ dataPelanggan.nama }}</b> pekerjaan/jabatan <b> {{ dataPelanggan.pekerjaan }}</b>
                             Bertempat tinggal di <b>{{ pihak2.alamat }}
                             </b>
                             Pemegang kartu identitas (<b>{{ dataPelanggan.tipe_identitas }}</b>) nomor <b>{{
@@ -292,7 +312,7 @@
                         <div class="mb-4 text-justify text-sm ">
                             Yang bersama-sama dengan <b>KSP DJAYA</b>, telah, sepakat dan mengikatkan diri dan karenanya
                             menjadi para pihak dalam Perjanjian PINJAMAN Konsumen
-                            <b> No.{{ pkData.no_perjanjian }}</b> berikut kelengkapan dan perubahannya ( selanjutnya
+                            <b> No.{{ dynamicForm.order_number }}</b> berikut kelengkapan dan perubahannya ( selanjutnya
                             disebut <b>
                                 Perjanjian
                                 PINJAMAN Konsumen
@@ -337,7 +357,7 @@
                             syarat dan ketentuan ini.
                         </div>
                         <div class="mb-4 text-justify">
-                            <table class="!text-sm">
+                            <table class="!text-sm w-full">
                                 <tr>
                                     <td class="py-4 pr-4">
                                         Penerima Pinjaman,
@@ -418,7 +438,7 @@
                         </div>
                         <div class="mb-4  ">
                             1. Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam
-                            Perjanjian PINJAMAN Konsumen <b>No. {{ pkData.no_perjanjian }}</b> tertanggal {{
+                            Perjanjian PINJAMAN Konsumen <b>No. {{ dynamicForm.order_number }}</b> tertanggal {{
                                 pkData.tgl_awal_cicilan }} berikut dengan seluruh
                             perubahan-perubahan dan lampiran-lampirannya <b>("Perjanjian Pinjaman *)</b> dari pemberi
                             Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.
@@ -438,7 +458,7 @@
                             PINJAMAN tersebut telah lunas seluruhnya.
                         </div>
                         <div class="mb-4 ">
-                            {{ pkData.tgl_awal_cicilan }},<br />
+                            {{ dayFull.full_date_only }},<br />
                             Yang memberi persetujuan,<br /><br /><br />
                             <u class="uppercase">{{ upCase(dataPasangan.nama_pasangan) }}</u>
                         </div>
@@ -483,7 +503,7 @@
                         <div class="mb-4">
                             1. Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan
                             Perjanjian
-                            pembiayaan Konsumen Nomor <b>{{ pkData.no_perjanjian }}</b> tanggal <b>
+                            pembiayaan Konsumen Nomor <b>{{ dynamicForm.order_number }}</b> tanggal <b>
                                 {{
                                     pkData.tgl_awal_cicilan
                                 }}
@@ -528,7 +548,7 @@
 
                         <div class="flex mb-4 justify-end">
                             <div class=" w-fit text-center bg-white">
-                                {{ pkData.tgl_awal_cicilan }}<br />
+                                {{ dayFull.full_date_only }}<br />
                                 Penjamin,<br /><br /><br />
                                 (<u class="uppercase">{{ upCase(dataPenjamin.nama) }}</u>)
                             </div>
@@ -604,8 +624,7 @@ const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
 const daysName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
 let monthServer = new Date().getMonth();
 let yearServer = new Date().getFullYear();
-let dayServer = new Date().getDay();
-let thisDay = daysName[dayServer];
+
 let thisMonth = monthNames[monthServer];
 let dateServer = new Date().getDate();
 
@@ -618,10 +637,32 @@ let months = (dt.getMonth() + 1).toString().padStart(2, "0");
 let day = dt.getDate().toString().padStart(2, "0");
 
 const dataPelanggan = ref([]);
+
 const dynamicForm = reactive({
     awal: `${year}-${months}-${day}`,
     order_number: null,
 });
+
+const dayFull = reactive({
+    day: computed(() => daysName[new Date(dynamicForm.awal).getDay()]),
+    date: computed(() => new Date(dynamicForm.awal).getDate()),
+    month: computed(() => monthNames[new Date(dynamicForm.awal).getMonth()]),
+    year: computed(() => new Date(dynamicForm.awal).getFullYear()),
+    full_date_only: computed(() => `${dayFull.date} ${dayFull.month} ${dayFull.year}`),
+    full_date: computed(() => `${dayFull.day}, ${dayFull.date} ${dayFull.month} ${dayFull.year}`),
+});
+
+let dayServer = new Date(dynamicForm.awal).getDay();
+let thisDay = daysName[dayServer];
+// const dayFull = () => computed(() => {
+//     let dayPick = new Date(dynamicForm.awal).getDay();
+//     dynamicForm.day_pk = daysName[dayPick];
+//     let tglPk = new Date(dynamicForm.awal).getDate();
+//     dynamicForm.tgl_pk = tglPk;
+//     let monthPick = new Date(dynamicForm.awal).getMonth();
+//     dynamicForm.month_pk = monthNames[monthPick];
+//     dynamicForm.year_pk = new Date(dynamicForm.awal).getFullYear();
+// });
 useApi({
     method: 'get',
     api: `cr_application/${idApp}`,
@@ -644,7 +685,6 @@ useApi({
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
 const getPrePK = async () => {
-    console.log(dynamicForm.order_number);
     // const bodySend = {
     //     tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
     //     order_number: dynamicForm.order_number,
@@ -682,12 +722,328 @@ const getPrePK = async () => {
 const pdfmake = usePDF({
     autoInstallVFS: true
 })
+const skalaAngusran = ref({
+    text: `Tabel Skala Angsuran`,
+    alignment: "left",
+},
+    {
+        margin: [0, 10, 0, 0],
+        table: {
+            widths: ['*', '*', '*', '*', '*', '*'],
+            headerRows: 1,
+            body: struktur.value
+
+        },
+
+    });
+
 const createPdf = () => {
+
+    const contentPkPage = ref([
+        {
+            text: `PERJANJIAN PEMBERIAN PINJAMAN\n NO. PERJANJIAN : ${dynamicForm.order_number}`,
+            alignment: "center",
+            style: "header",
+        },
+        {
+            text: `Yang bertanda tangan dibawah ini:`,
+            margin: [0, 20, 0, 0]
+        },
+        {
+            layout: 'noBorders',
+            margin: [0, 20, 0, 0],
+            table: {
+                widths: [10, 100, 5, '*'],
+                body: [
+                    ['I.', 'Nama', ':', `${pihak1.value.nama}`],
+                    ['', 'Jabatan', ':', `${pihak1.value.jabatan}`],
+                    ['', 'Alamat Kantor', ':', `${pihak1.value.alamat_kantor}`],
+                ]
+            }
+        },
+        {
+            layout: 'noBorders',
+            margin: [0, 20, 0, 0],
+            table: {
+                widths: [10, 100, 5, '*'],
+                body: [
+                    ['II.', 'Nama', ':', `${pihak2.value.nama}`],
+                    ['', 'No. KTP/SIM', ':', `${pihak2.value.no_identitas}`],
+                    ['', 'Alamat', ':', `${pihak2.value.alamat}`],
+                    ['', { colSpan: 3, text: 'Dalam hal ini bertindak untuk dirinya sendiri, selanjutnya disebut Pihak Kedua' }],
+                ]
+            }
+        },
+        {
+            text: `Dengan ini menerangkan bahwa para pihak sepakat menandatangani Perjanjian Pemberian Pinjaman, dengan isi, syarat dan ketentuan sebagai berikut :`,
+            alignment: "justify",
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: `Pasal 1`,
+            alignment: "center",
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: `Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas pinjaman menjadi sebesar ${pkData.value.pokok_margin}`,
+            alignment: "justify",
+        },
+        {
+            text: `Pasal 2`,
+            alignment: "center",
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: `Pengembalian pinjaman tersebut akan dibayarkan untuk jangka ${pkData.value.tenor} BULAN lamanya, dimulai tanggal ${pkData.value.tgl_awal_cicilan} berakhir pada tanggal ${pkData.value.tgl_akhir_cicilan} dengan jumlah angsuran sebesar ${pkData.value.angsuran}`,
+            alignment: "justify",
+        },
+        {
+            text: `Pasal 3`,
+            alignment: "center",
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: `Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan jaminan barang miliknya sendiri berupa , dengan dibuktikan diserahkannya Bukti Kepemilikan dengan spesifikasi sebagai berikut`,
+            alignment: "justify",
+        },
+        {
+            margin: [0, 20, 0, 0],
+            layout: 'noBorders',
+            table: {
+                width: [100, "*", 200, "*"],
+                headerRows: 1,
+                body: [
+                    ['BPKB No.', ':', `${pkData.value.no_bpkb ? pkData.value.no_bpkb : ''}`],
+                    ['BPKB atas nama.', ':', `${pkData.value.atas_nama}`],
+                    ['Merk/Type/Tahun', ':', `${pkData.value.merk} / ${pkData.value.type} / ${pkData.value.tahun}`],
+                    ['Warna/No.Polisi. ', ':', `${pkData.value.warna}/${pkData.value.no_polisi}`],
+                    ['No. Rangka/Mesin ', ':', `${pkData.value.no_rangka}/${pkData.value.no_mesin}`],
+                ]
+            },
+        },
+        {
+            margin: [0, 20, 0, 0],
+            text: `Apabila pihak kedua tidak bisa memenuhi kewajiban pembayaran angsuran selama 3 bulan, maka pihak kedua bersedia menyerahkan jaminan kendaraan sesuai dengan pasal 3 di atas kepada pihak pertama. Jika Perjanjian Pemberi Pinjaman telah selesai, BPKB wajib diambil maksimum 90 hari kalender terhitung dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas kerusakan atau kegilangan BPKB.`,
+            alignment: "justify",
+        },
+        {
+            margin: [0, 20, 0, 0],
+            text: `Demikian Perjanjian Pemberian Pinjaman ini dibuat dan ditandatangani, tanpa adanya unsur paksaan.\n${pkData.value.kota},${pkData.value.tgl_cetak}`,
+            alignment: "justify",
+        },
+        {
+            margin: [0, 20, 0, 0],
+            layout: 'noBorders',
+            style: 'tableExample',
+            table: {
+                widths: ['*', '*'],
+                body: [
+                    [`Pihak Pertama,\n${pkData.value.cabang}\n\n\n\n\n(${pihak1.value.nama})`, `Pihak Kedua\n\n\n\n\n\n(${pihak2.value.nama})`],
+                ]
+            },
+            pageBreak: 'after'
+        }
+    ]);
+    const skalaAngsuranPage = ref([{
+        text: `Tabel Skala Angsuran`,
+        alignment: "left",
+    },
+    {
+        margin: [0, 10, 0, 0],
+        table: {
+            widths: ['*', '*', '*', '*', '*', '*'],
+            headerRows: 1,
+            body: struktur.value
+
+        },
+        pageBreak: 'after'
+    },]);
+
+    const creditTanpaAsuransiPage = ref([
+        {
+            text: 'SYARAT DAN KETENTUTAN KHUSUS PROGRAM " KREDIT TANPA PERLINDUNGAN ASURANSI \"',
+            style: 'header',
+            alignment: 'center'
+        },
+        {
+            text: [
+                'Pada hari ini ', { text: `${dayFull.day}`, bold: true },
+                ' tanggal ', { text: `${dayFull.date}`, bold: true }, ' bulan ', { text: `${dayFull.month}`, bold: true }, ' tahun ',
+                { text: `${dayFull.year}`, bold: true }, ' yang bertanda tangan dibawah ini:'
+            ],
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: [`I. `, { text: `${dataPelanggan.value.nama}`, bold: true }, ` pekerjaan/jabatan ${dataPelanggan.value.pekerjaan} Bertempat tinggal di ${pihak2.value.alamat} Pemegang kartu identitas (${dataPelanggan.value.tipe_identitas}) nomor ${dataPelanggan.value.no_identitas} Dalam hal ini bertindak untuk dan atas nama ${dataPelanggan.value.nama} Selanjutnya disebut Penerima Pinjaman.`],
+            margin: [20, 20, 0, 0],
+        },
+        {
+            text: [`II. ${pihak1.value.nama} pekerjaan/jabatan ${pihak1.value.jabatan} Bertempat tinggal di ${pihak1.value.alamat_kantor} Pemegang kartu identitas (####) nomor #### Dalam hal ini bertindak untuk dan atas nama ${pihak1.value.nama} Selanjutnya disebut Pemberi Pinjaman.`],
+            margin: [20, 20, 0, 0],
+        },
+        {
+            text: [`Yang bersama-sama dengan KSP DJAYA, telah, sepakat dan mengikatkan diri dan karenanya menjadi para pihak dalam Perjanjian PINJAMAN Konsumen No.${dynamicForm.order_number} berikut kelengkapan dan perubahannya ( selanjutnya disebut Perjanjian PINJAMAN Konsumen yang merupakan satu kesatuan tak terpisahkan dengan syarat dan ketentuan Program "Kredit Tanpa Perlindungan Asuransi" ini (syarat dan ketentuan)`],
+            margin: [0, 20, 0, 0],
+        },
+        {
+            text: [`Penerima Pinjaman dan pemberi jaminan dengan ini mengikuti program yang ditawarkan (KSP DJAYA) selanjutnya disebut Penerima Pinjaman / Penerima Jaminan ) yaitu "Kredit Tanpa Perlindungan Asuransi " dengan menyetujui setiap dan seluruh syarat dan ketentuannya, berikut di bawah ini yang merupakan syarat dan ketentuan khusus dan manakala terdapat perbedaan dengan perjanjian PINJAMAN konsumen, maka syarat dan ketentuan inilah yang akan berlaku, yaitu sebagai berikut:`],
+            margin: [0, 20, 0, 0],
+        },
+        {
+            ol: [
+                `Dengan Menandatangani syarat dan ketentuan ini, penerima Pinjaman / Pemberi Jaminan sepakat untuk mengikuti program "Kredit Tanpa Perlindungan Asuransi " yang ditawarkan pemberi Pinjaman / penerima jaminan karenanya menyetujui setiap dan seluruh syarat dan ketentuan yang mengaturnya dan mengesampingkan syarat dan ketentuan mengenai asuransi pada PINJAMAN Konsumen.`,
+                `Dengan mengikuti program "Kredit Tanpa Perlindungan Asuransi " ini, sesuai penawaran yang diberikan (KSP DJAYA) maka segala resiko rusak, hilang atau musnahnya barang karena sebab apapun juga sepenuhnya menjadi tanggung jawab dan beban penerima Pinjaman / pemberi Jaminan, sehingga dengan rusak, hilang atau musnahnya barang tidak meniadakan, mengurangi atau menunda pemenuhan kewajiban penerima Pinjaman pemberi jaminan sebagaimana ditentukan dalam perjanjian PINJAMAN konsumen.`,
+                `Dalam hal terjadi resiko rusak, hilang atau musnahnya barang, maka penerima Pinjaman/pemberi jaminan tidak dapat melakukan klaim asuransi dan karenanya tetap berkewajiban untuk melakukan pembayaran angsuran sebagaimana disepakati dalam perjanjian PINJAMAN konsumen hingga setiap dan seluruhnya terlunasi.`
+            ],
+            margin: [20, 20, 0, 20],
+        },
+        {
+            text: [`Penerima Pinjaman/Pemberi Jaminan telah membaca, mengerti dan menyetujui setiap dan seluruh syarat dan ketentuan ini.`],
+            margin: [0, 20, 0, 20],
+        },
+        {
+            margin: [0, 20, 0, 0],
+            layout: `noBorders`,
+            style: `tableExample`,
+            table: {
+                widths: ['*', '*', '*'],
+                body: [
+                    [`Penerima Pinjaman,\n\n\n\n\n\n${dataPelanggan.value.nama}`, `Pemberi Jaminan,\n\n\n\n\n\n${pihak1.value.nama}`, `Pemberi Pinjaman/Penerima Jaminan,\n\n\n\n\n\n${pihak1.value.nama}/${dataPelanggan.value.nama}`],
+                ]
+            },
+            pageBreak: 'after'
+        },
+    ]);
+
+    const persetujuanPasangan = ref([
+        {
+            text: 'SURAT PERSETUJUAN SUAMI ISTRI',
+            style: 'header',
+            alignment: 'center',
+            margin: [0, 0, 0, 20],
+        },
+        {
+            text: 'yang bertanda tangan dibawah ini :',
+        },
+        {
+            layout: 'noBorders',
+            margin: [20, 20, 0, 0],
+            table: {
+                widths: [60, 5, '*'],
+                body: [
+                    ['Nama', ':', `${dataPasangan.value.nama_pasangan}`],
+                    ['Pekerjaan', ':', `${dataPasangan.value.pekerjaan_pasangan}`],
+                    ['Alamat', ':', `${dataPasangan.value.alamat_pasangan}`],
+                ]
+            }
+        },
+        {
+            text: 'Sebagai suami/isteri *) dengan ini memberikan persetujuan kepada suami/isteri *) saya:',
+        },
+        {
+            layout: 'noBorders',
+            margin: [20, 20, 0, 0],
+            table: {
+                widths: [60, 5, '*'],
+                body: [
+                    ['Nama', ':', `${dataPelanggan.value.nama}`],
+                    ['Pekerjaan', ':', `${dataPelanggan.value.pekerjaan_id} - ${dataPelanggan.value.pekerjaan}`],
+                    ['Alamat', ':', `${pihak2.value.alamat}`],
+                ]
+            }
+        },
+        {
+            text: 'Untuk melakukan tindakan-tindakan sebagaimana disebutkan di bawah ini :',
+        },
+        {
+            ol: [
+                `Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam Perjanjian PINJAMAN Konsumen No. ${dynamicForm.order_number} tertanggal ${pkData.value.tgl_awal_cicilan} berikut dengan seluruh perubahan-perubahan dan lampiran-lampirannya ("Perjanjian Pinjaman *) dari pemberi Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.`,
+                `Menjaminkan Barang guna menjamin / sebagai jaminan pelunasan seluruh kewajiban hutang Suami/Isteri *) saya berdasarkan Perjanjian PINJAMAN.`,
+                `Untuk keperluan tersebut membuat dan menandatangani Perjanjian Pembiayaan berikut dokumen-dokumen lainnya serta tindakan-tindakan lainnya yang diperlukan sehubungan dengan yang diuraikan pada butir 1 dan 2 di atas.`
+            ],
+            margin: [20, 20, 0, 20],
+        },
+        { text: `Demikian Surat Persetujuan ini dibuat dengan sebenarnya dan tidak akan berakhir karena sebab apapun juga kecuali seluruh kewajiban suami/isteri *) saya berdasarkan Perjanjian PINJAMAN tersebut telah lunas seluruhnya.` },
+        {
+            layout: `noBorders`,
+            margin: [0, 20, 0, 0],
+            table: {
+                widths: [`*`],
+                body: [
+                    [`${dayFull.full_date_only}\nyang memberi persetujuan,\n\n\n\n\n${dataPasangan.value.nama_pasangan}`,],
+                ]
+            },
+            pageBreak: `after`,
+        },
+    ]);
+
+    const pernyataanPenjaminPage = ref([
+        {
+            text: 'PERNYATAAN PENJAMIN',
+            style: 'header',
+            alignment: 'center'
+        },
+        {
+            text: 'yang bertanda tangan di bawah ini:',
+            margin: [0, 20, 0, 0],
+        },
+        {
+            layout: 'noBorders',
+            margin: [20, 20, 0, 0],
+            table: {
+                widths: [60, 5, '*'],
+                body: [
+                    ['Nama', ':', `${dataPenjamin.value.nama}`],
+                    ['Pekerjaan', ':', `${dataPenjamin.value.pekerjaan}`],
+                    ['Alamat', ':', `${dataPenjamin.value.alamat}`],
+                    ['No KTP', ':', `${dataPenjamin.value.no_identitas}`],
+                ]
+            }
+        },
+        {
+            text: 'Selanjutnya disebut Penjamin',
+        },
+        {
+            text: 'Dengan ini menyatakan dan menegaskan bahwa :',
+            margin: [0, 0, 0, 20],
+        },
+        {
+            ol: [
+                `Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan Perjanjian pembiayaan Konsumen Nomor ${dynamicForm.order_number} tanggal  ${pkData.value.tgl_awal_cicilan} beserta seluruh lampiran, penambahan dan / atau pengurangannya(selanjutnya disebut Perjanjian) oleh dan antara KSP Djaya berkedudukan di Haurgeulis(selanjutnya secara sendiri - sendiri atau bersama disebut Pemberi Pinjaman dengan : `,
+                {
+                    layout: `noBorders`,
+                    margin: [20, 20, 0, 0],
+                    table: {
+                        widths: [60, 5, `*`],
+                        body: [
+                            [`Nama`, `:`, `${dataPelanggan.value.nama}`],
+                            [`Pekerjaan`, `:`, `${dataPelanggan.value.pekerjaan_id} - ${dataPelanggan.value.pekerjaan}`],
+                            [`Alamat`, `:`, `${pihak2.value.alamat}`],
+                        ]
+                    },
+                    listType: `none`,
+                },
+                `Penjamin menyatakan sanggup dan mengikatkan diri untuk menjamin seluruh HUTANG PEMBIAYAAN Penerima Pinjaman yang timbul dari perjanjian tersebut sebesar ${pkData.value.pokok_margin} ( dan bersedia untuk membayar seluruh kewajiban pembayaran hutang tersebut kepada Pemberi Pinjaman apabila Penerima Pinjaman tidak memenuhi kewajibannya sebagaimana ditentukan dalam perjanjian`,
+                `Penjamin dengan tegas melepaskan semua hak istimewa maupun pengecualian-pengecualian yang diberikan oleh peraturan perundangan kepada Penjamin, khusus tetapi tidak terbatas pada pasal 1832 Undang-Undang Hukum Perdata.Penjamin dengan tegas melepaskan semua hak istimewa maupun pengecualian-pengecualian yang diberikan oleh peraturan perundangan kepada Penjamin, khusus tetapi tidak terbatas pada pasal 1832 Undang-Undang Hukum Perdata.`
+            ]
+        },
+        {
+            text: `${dayFull.full_date_only}\npenjamin,\n\n\n\n\n${dataPenjamin.value.nama}`,
+            margin: [0, 20, 0, 0],
+
+        },
+    ]);
+
     pdfmake.createPdf({
+        info: {
+            title: `Perjanjian Kredit-${pihak2.value.nama}`,
+            author: 'ahapsin',
+        },
         content: [
             {
-                text: `PERJANJIAN PEMBERIAN PINJAMAN\n NO. PERJANJIAN : ${pkData.value.no_perjanjian}`,
+                text: `PERJANJIAN PEMBERIAN PINJAMAN\n NO. PERJANJIAN : ${dynamicForm.order_number}`,
                 alignment: "center",
+                style: "header",
             },
             {
                 text: `Yang bertanda tangan dibawah ini:`,
@@ -785,28 +1141,18 @@ const createPdf = () => {
                         [`Pihak Pertama,\n${pkData.value.cabang}\n\n\n\n\n(${pihak1.value.nama})`, `Pihak Kedua\n\n\n\n\n\n(${pihak2.value.nama})`],
                     ]
                 },
-                pageBreak: 'none'
             },
-            // {
-            //     text: `Tabel Skala Angsuran`,
-            //     alignment: "left",
-            // },
-            // {
-            //     margin: [0, 10, 0, 0],
-            //     table: {
-            //         widths: ['*', '*', '*', '*', '*', '*'],
-            //         headerRows: 1,
-            //         body: struktur.value
+            optPrint.skalaPage ? skalaAngsuranPage.value : '',
+            optPrint.ktpaPage ? creditTanpaAsuransiPage.value : '',
+            optPrint.pasanganPage ? persetujuanPasangan.value : '',
+            optPrint.penjaminPage ? pernyataanPenjaminPage.value : '',
 
-            //     },
-
-            // },
         ],
         styles: {
             header: {
-                fontSize: 18,
+                fontSize: 12,
                 bold: true,
-                margin: [0, 0, 0, 10]
+                margin: [0, 0, 0, 0]
             },
             subheader: {
                 fontSize: 16,
@@ -825,7 +1171,7 @@ const createPdf = () => {
         defaultStyle: {
             fontSize: 10,
         }
-    }).open();
+    }).print();
 }
 const handlePrint = (evt) => {
 
