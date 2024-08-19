@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
             </n-collapse-item>
@@ -19,13 +19,13 @@
             <n-collapse-item title="dynamic" name="5">
                 <pre>{{ dynamicForm }}</pre>
             </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
                     <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
                 </n-form-item>
-                <n-form-item label="Tanggal Awal" path="order" class="w-full">
+                <n-form-item label="Tanggal Awal Angsuran" path="order" class="w-full">
                     <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
                         value-format="yyyy-MM-dd" type="date" class="w-full" :disabled="pkData.flag == 1"
                         @update:value="getPrePK" />
@@ -586,7 +586,7 @@ import { jsPDF } from "jspdf";
 import router from '../../../router';
 import { usePDF } from 'vue3-pdfmake';
 import { useRoute } from "vue-router";
-import { LocalPrintshopRound as PrintIcon, DownloadRound as DownloadIcon } from "@vicons/material";
+import { LocalPrintshopRound as PrintIcon, DownloadRound as DownloadIcon, ComputerFilled } from "@vicons/material";
 import autoTable from 'jspdf-autotable';
 import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
 const prosesPK = ref(false);
@@ -644,14 +644,6 @@ const dynamicForm = reactive({
     order_number: null,
 });
 
-const dayFull = reactive({
-    day: computed(() => daysName[new Date(dynamicForm.awal).getDay()]),
-    date: computed(() => new Date(dynamicForm.awal).getDate()),
-    month: computed(() => monthNames[new Date(dynamicForm.awal).getMonth()]),
-    year: computed(() => new Date(dynamicForm.awal).getFullYear()),
-    full_date_only: computed(() => `${dayFull.date} ${dayFull.month} ${dayFull.year}`),
-    full_date: computed(() => `${dayFull.day}, ${dayFull.date} ${dayFull.month} ${dayFull.year}`),
-});
 
 let dayServer = new Date(dynamicForm.awal).getDay();
 let thisDay = daysName[dayServer];
@@ -682,7 +674,7 @@ useApi({
         getPrePK();
     }
 });
-
+const tgl_cetak=ref({});
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
 const getPrePK = async () => {
@@ -708,6 +700,7 @@ const getPrePK = async () => {
         } else {
             prosesPK.value = true;
             pkData.value = res.data;
+            tgl_cetak.value = res.data.tgl_cetak;
             dataPasangan.value = res.data.pasangan;
             dataPenjamin.value = res.data.penjamin;
             pihak1.value = res.data.pihak_1;
@@ -720,6 +713,20 @@ const getPrePK = async () => {
         }
     });
 }
+
+
+
+const dayFull = reactive({
+    print_date:computed(()=>{
+       return tgl_cetak.value ? tgl_cetak.value:dynamicForm.awal;
+    }),
+    day: computed(() => daysName[new Date(dayFull.print_date).getDay()]),
+    date: computed(() => new Date(dayFull.print_date).getDate()),
+    month: computed(() => monthNames[new Date(dayFull.print_date).getMonth()]),
+    year: computed(() => new Date(dayFull.print_date).getFullYear()),
+    full_date_only: computed(() => `${dayFull.date} ${dayFull.month} ${dayFull.year}`),
+    full_date: computed(() => `${dayFull.day}, ${dayFull.date} ${dayFull.month} ${dayFull.year}`),
+});
 const pdfmake = usePDF({
     autoInstallVFS: true
 })

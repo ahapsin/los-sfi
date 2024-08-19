@@ -10,7 +10,7 @@
                 </n-space>
         </n-scrollbar>
         <n-space vertical class="pt-4">
-                <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
+                <n-form ref="formRef" :model="pelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
                         require-mark-placement="right-hanging" :size="size" label-width="auto">
                         <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                                 content: true,
@@ -134,20 +134,21 @@
                                 content: true,
                                 footer: 'soft'
                         }">
-                                <n-space>
-                                        <n-form-item label="No KTP" path="no_ktp">
-                                                <n-input placeholder="NO KTP" v-model:value="pelanggan.no_ktp"
-                                                        :loading="loadingKTP" @change="handleKtp" />
+                                <div class="flex gap-2">
+                                        <n-form-item label="No KTP" path="no_ktp" class="w-full">
+                                                <n-input-number :show-button="false" placeholder="NO KTP" v-model:value="pelanggan.no_ktp"
+                                                        :loading="loadingKTP" @change="handleKtp" class="w-full" />
                                         </n-form-item>
-                                        <n-form-item label="Kategori Kredit" path="no_ktp">
+                                        <n-form-item label="Kategori Kredit" path="no_ktp" class="w-full">
                                                 <n-select filterable placeholder="Kategori Kredit"
                                                         :options="optKategori" default-value="Baru"
                                                         v-model:value="order.category" disabled />
                                         </n-form-item>
-                                </n-space>
-                                <n-form-item label="No KK" path="nokk">
+                                          <n-form-item label="No KK" path="nokk" class="w-full">
                                         <n-input placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk" />
-                                </n-form-item>
+                                </n-form-item> 
+                        </div>
+                              
                                 <n-form-item label="Nama" path="nama">
                                         <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
                                 </n-form-item>
@@ -705,7 +706,13 @@ const rules = {
                 message: `jumlah tahun lebih dari 10 Tahun`,
                 validator: tahunJaminanValidate,
                 trigger: ['blur']
-        },
+        }, 
+        no_ktp:{
+         trigger: "blur",
+          required: true,
+          min: 16,
+          message: 'No identitas minimal 16 karakter'
+        }
 }
 const seprator = (value) => {
         let nums = value.replace(/,/g, '');

@@ -1,6 +1,6 @@
 <template>
     <n-spin :show="suspense">
-        <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
+        <n-form ref="formRef" :model="dataPelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical class="p-2">
                 <n-steps :current="current" :status="currentStatus" v-model:current="current">
@@ -91,8 +91,8 @@
                                 v-model:value="dataPelanggan.tipe_identitas" />
                         </n-form-item>
                         <n-form-item label="No Identitas" path="no_identitas" class="w-full">
-                            <n-input placeholder="No Identitas" v-model:value="dataPelanggan.no_identitas">
-                            </n-input>
+                            <n-input-number :show-button="false" class="w-full" placeholder="No Identitas" v-model:value="dataPelanggan.no_identitas">
+                            </n-input-number >
                         </n-form-item>
                     </div>
                     <div class="flex w-full gap-2">
@@ -840,7 +840,8 @@ const calcCredit = reactive({
     bunga_flat: computed(() => (((calcCredit.periode * ((calcCredit.bunga_eff_actual / 100) / 12)) / (1 - (1 + ((calcCredit.bunga_eff_actual / 100) / 12)) ** (-calcCredit.periode))) - 1) * (12 / calcCredit.periode) * 100),
 });
 
-const dataPelanggan = ref({});
+const dataPelanggan = ref({
+tipe_identitas:"KTP"});
 const alamatIdentitas = ref({});
 const alamatTagih = ref({});
 const dataPekerjaan = ref({});
@@ -1007,7 +1008,14 @@ const sum = (num1, num2) => {
     }
     return num1 + num2;
 };
-
+const rules = {
+    no_identitas:{
+         trigger: "blur",
+          required: true,
+          min: 16,
+          message: 'No identitas minimal 16 karakter'
+        }
+    }
 const response = () => useApi({
     method: 'get',
     api: `cr_application/${idApp}`,
@@ -1232,7 +1240,7 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
         message.success("upload image berhasil");
         onFinish();
     }).catch((error) => {
-        message.success("upload image gagal !");
+        message.error("upload image gagal !");
         onError();
     });
 };
