@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <!-- <n-collapse>
+        <n-collapse>
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
             </n-collapse-item>
@@ -19,32 +19,31 @@
             <n-collapse-item title="dynamic" name="5">
                 <pre>{{ dynamicForm }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
-                    <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
+                    <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled class="w-full" />
                 </n-form-item>
                 <n-form-item label="Tanggal Awal Angsuran" path="order" class="w-full">
                     <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
-                        value-format="yyyy-MM-dd" type="date" class="w-full" :disabled="pkData.flag == 1"
-                        @update:value="getPrePK" />
+                        value-format="yyyy-MM-dd" type="date" class="w-full" :loading="lodingDateAwal"
+                        :disabled="pkData.flag == 1" @update:formatted-value="getPrePK" />
                 </n-form-item>
-                <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
-                    <n-space item-style="display: flex;">
-                        <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
-                        <n-checkbox value="pk" label="Perjanjian Kredit" checked />
-                        <n-checkbox value="skala" label="Skala Kredit" v-model:checked="optPrint.skalaPage" />
-                        <n-checkbox value="ktpa" label="Tanpa Perlindungan Asuransi"
-                            v-model:checked="optPrint.ktpaPage" />
-                        <n-checkbox value="" label="Persetujuan Pasangan" v-model:checked="optPrint.pasanganPage" />
-                        <n-checkbox value="" label="Penjamin" v-model:checked="optPrint.penjaminPage" />
-                    </n-space>
-                </n-form-item>
-                <!-- <n-form-item class="w-full">
+            </n-form>
+            <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
+                <n-space item-style="display: flex;" class="bg-slate-100 p-2 rounded-lg">
+                    <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
+                    <n-checkbox value="pk" label="Perjanjian Kredit" checked />
+                    <n-checkbox value="skala" label="Skala Kredit" v-model:checked="optPrint.skalaPage" />
+                    <n-checkbox value="ktpa" label="Tanpa Perlindungan Asuransi" v-model:checked="optPrint.ktpaPage" />
+                    <n-checkbox value="" label="Persetujuan Pasangan" v-model:checked="optPrint.pasanganPage" />
+                    <n-checkbox value="" label="Penjamin" v-model:checked="optPrint.penjaminPage" />
+                </n-space>
+            </n-form-item>
+            <!-- <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
                 </n-form-item> -->
-            </n-form>
         </div>
         <div title="PK" v-show="prosesPK" class="flex gap-2 justify-end border-t p-4">
             <!-- <n-button secondary type="info" class="gap-2" @click="handleDownload">
@@ -60,9 +59,9 @@
                 {{ pageData.flag == 1 ? "Cetak Ulang PK" : "Cetak PK" }}
             </n-button>
         </div>
-        <div class="flex bg-slate-200 overflow-auto p-2 pr-20 pl-20 justify-center" v-show="prosesPK">
-            <div class="w-full" ref="pk">
-                <div class="bg-white shadow-lg p-8" v-show="optPrint.pkPage">
+        <div class="flex bg-slate-100  justify-center overflow-auto p-2" v-show="prosesPK">
+            <div class="flex flex-col min-w-[900px] p-10" ref="pk">
+                <div class="bg-white  max-w-[900px] shadow-lg p-8" v-show="optPrint.pkPage">
                     <table border="1" class="mb-10">
                         <tr>
                             <td align="center">
@@ -91,18 +90,18 @@
                                     <tr>
                                         <td rowspan="3" valign="top" width="20">I.</td>
                                         <td width="150">Nama</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pihak1.nama }}</td>
                                     </tr>
                                     <tr>
                                         <td>Jabatan</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pihak1.jabatan }}</td>
                                     </tr>
                                     <tr>
                                         <td valign="top"> Alamat Kantor</td>
                                         <td valign="top">:</td>
-                                        <td><span class="capitalize">{{ pihak1.alamat_kantor }}</span></td>
+                                        <td><span class="capitalize">{{ pihak1.alamat }}</span></td>
                                     </tr>
                                 </table>
                             </td>
@@ -116,17 +115,17 @@
                                     <tr>
                                         <td rowspan="4" valign="top" width="20">II.</td>
                                         <td width="150">Nama</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pihak2.nama }}</td>
                                     </tr>
                                     <tr>
                                         <td> No. KTP/SIM</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pihak2.no_identitas }}</td>
                                     </tr>
                                     <tr>
                                         <td> Alamat Kantor</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pihak2.alamat }}</td>
                                     </tr>
                                     <tr>
@@ -185,27 +184,27 @@
                                 <table>
                                     <tr>
                                         <td>BPKB No</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pkData.no_bpkb }}</td>
                                     </tr>
                                     <tr>
                                         <td>BPKB atas nama</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ pkData.atas_nama }}</td>
                                     </tr>
                                     <tr>
                                         <td>Merk/Type/Tahun</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ `${pkData.merk}/${pkData.type}/${pkData.tahun}` }}</td>
                                     </tr>
                                     <tr>
                                         <td> Warna/No.Polisi</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ `${pkData.warna}/${pkData.no_polisi}` }}</td>
                                     </tr>
                                     <tr>
                                         <td>No. Rangka/Mesin</td>
-                                        <td>:</td>
+                                        <td width="25">:</td>
                                         <td>{{ `${pkData.no_rangka}/${pkData.no_mesin}` }}</td>
                                     </tr>
                                 </table>
@@ -243,7 +242,7 @@
                                     <tr>
                                         <td>Pihak Pertama<br />{{ pkData.cabang }}<br /><br /><br /><br /> ( {{
                                             pihak1.nama
-                                        }} )
+                                            }} )
                                         </td>
                                         <td>Pihak Kedua<br /><br /><br /><br /><br /> ( {{ pihak2.nama }} )
                                         </td>
@@ -254,7 +253,7 @@
                     </table>
                 </div>
                 <div class="mt-2" v-show="optPrint.skalaPage">
-                    <div class="bg-white shadow-lg p-8">
+                    <div class="bg-white max-w-[900px] shadow-lg p-8">
                         <div class="mb-4 bg-white">
                             Tabel Skala Angsuran
                         </div>
@@ -281,7 +280,7 @@
                     </div>
                 </div>
                 <div class="mt-2" v-show="optPrint.ktpaPage">
-                    <div class="bg-white shadow-lg p-8">
+                    <div class="bg-white max-w-[900px] shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
                             <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM <b>" KREDIT TANPA PERLINDUNGAN ASURANSI "</b></b>
                         </div>
@@ -303,9 +302,9 @@
                         </div>
                         <div class="mb-4 text-justify text-sm ps-8">
                             II. <b>{{ pihak1.nama }}</b> pekerjaan/jabatan <b> {{ pihak1.jabatan }}</b>
-                            Bertempat tinggal di <b>{{ pihak1.alamat_kantor }}
+                            Bertempat tinggal di <b>{{ pihak1.alamat }}
                             </b>
-                            Pemegang kartu identitas (<b>####</b>) nomor <b>####</b>
+                            Pemegang kartu identitas (<b>KTP</b>) nomor <b>{{ pihak1.no_ktp  }}</b>
                             Dalam hal ini bertindak untuk dan atas nama <b>{{ pihak1.nama }}</b> Selanjutnya
                             disebut <b>Pemberi
                                 Pinjaman.</b>
@@ -384,7 +383,7 @@
                     </div>
                 </div>
                 <div class="mt-2" v-show="optPrint.pasanganPage">
-                    <div class="bg-white shadow-lg p-8">
+                    <div class="bg-white max-w-[900px] shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
                             <b>SURAT PERSETUJUAN SUAMI ISTRI</b>
                         </div>
@@ -395,17 +394,17 @@
                             <table>
                                 <tr>
                                     <td width="100px">Nama</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ upCase(dataPasangan.nama_pasangan) }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Pekerjaan</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ upCase(dataPasangan.pekerjaan_pasangan) }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Alamat</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ upCase(dataPasangan.alamat_pasangan) }}</b></td>
                                 </tr>
                             </table>
@@ -417,43 +416,43 @@
                             <table>
                                 <tr>
                                     <td width="100px">Nama</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ pihak2.nama }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Pekerjaan</td>
-                                    <td>:</td>
-                                    <td><b class="uppercase">{{ dataPelanggan.pekerjaan_id }}) {{
+                                    <td width="25">:</td>
+                                    <td><b class="uppercase">( {{ dataPelanggan.pekerjaan_id }} ) {{
                                         dataPelanggan.pekerjaan }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Alamat</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ pihak2.alamat }}</b></td>
                                 </tr>
                             </table>
 
                         </div>
-                        <div class="mb-4  ">
+                        <div class="mb-4">
                             Untuk melakukan tindakan-tindakan sebagaimana disebutkan di bawah ini :
                         </div>
-                        <div class="mb-4  ">
+                        <div class="mb-4 text-justify">
                             1. Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam
                             Perjanjian PINJAMAN Konsumen <b>No. {{ dynamicForm.order_number }}</b> tertanggal {{
-                                pkData.tgl_awal_cicilan }} berikut dengan seluruh
+                                 dayFull.full_date_only }} berikut dengan seluruh
                             perubahan-perubahan dan lampiran-lampirannya <b>("Perjanjian Pinjaman *)</b> dari pemberi
                             Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4 text-justify">
                             2. Menjaminkan Barang guna menjamin / sebagai jaminan pelunasan seluruh kewajiban
                             hutang Suami/Isteri *) saya berdasarkan Perjanjian PINJAMAN.
                         </div>
-                        <div class="mb-4 ">
+                        <div class="mb-4 text-justify">
                             3. Untuk keperluan tersebut membuat dan menandatangani Perjanjian Pembiayaan berikut
                             dokumen-dokumen lainnya serta tindakan-tindakan lainnya yang diperlukan sehubungan
                             dengan yang diuraikan pada butir 1 dan 2 di atas.
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4 text-justify">
                             Demikian Surat Persetujuan ini dibuat dengan sebenarnya dan tidak akan berakhir karena
                             sebab apapun juga kecuali seluruh kewajiban suami/isteri *) saya berdasarkan Perjanjian
                             PINJAMAN tersebut telah lunas seluruhnya.
@@ -466,7 +465,7 @@
                     </div>
                 </div>
                 <div class="mt-2" v-show="optPrint.penjaminPage">
-                    <div class="bg-white shadow-lg p-8">
+                    <div class="bg-white max-w-[900px] shadow-lg p-8">
                         <div class="mb-4 text-center text-base ">
                             <b>PERNYATAAN PENJAMIN</b>
                         </div>
@@ -477,62 +476,71 @@
                             <table>
                                 <tr>
                                     <td width="100px">Nama</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ dataPenjamin.nama }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Pekerjaan</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ dataPenjamin.pekerjaan }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Alamat</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ dataPenjamin.alamat }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Nomor KTP</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ dataPenjamin.no_identitas }}</b></td>
                                 </tr>
                             </table>
+                            Selanjutnya disebut <b>Penjamin</b>
                         </div>
                         <div class="mb-4">
-                            Selanjutnya disebut Penjamin<br />
+                            <!-- Selanjutnya disebut Penjamin<br /> -->
                             Dengan ini menyatakan dan menegaskan bahwa :
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4 text-justify">
                             1. Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan
                             Perjanjian
                             pembiayaan Konsumen Nomor <b>{{ dynamicForm.order_number }}</b> tanggal <b>
                                 {{
-                                    pkData.tgl_awal_cicilan
+                                   dayFull.full_date_only
                                 }}
                             </b><br />
                             beserta seluruh lampiran, penambahan dan / atau pengurangannya ( selanjutnya disebut
                             Perjanjian ) oleh dan antara <b>KSP Djaya</b> berkedudukan di Haurgeulis
                             <br />
                             ( selanjutnya secara sendiri-sendiri atau bersama disebut<b> Pemberi Pinjaman</b> dengan :
+                            <br/>
+                            <br/>
                             <table>
                                 <tr>
                                     <td width="100px">Nama</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ pihak2.nama }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Pekerjaan</td>
-                                    <td>:</td>
-                                    <td><b class="uppercase">{{ dataPelanggan.pekerjaan_id }}) {{
+                                    <td width="25">:</td>
+                                    <td><b class="uppercase">({{ dataPelanggan.pekerjaan_id }}) {{
                                         dataPelanggan.pekerjaan }}</b></td>
                                 </tr>
                                 <tr>
                                     <td>Alamat</td>
-                                    <td>:</td>
+                                    <td width="25">:</td>
                                     <td><b class="uppercase">{{ pihak2.alamat }}</b></td>
                                 </tr>
+                                <tr>
+                                    <td>Nomor KTP</td>
+                                    <td width="25">:</td>
+                                    <td><b class="uppercase">{{ pihak2.no_identitas }}</b></td>
+                                </tr>
                             </table>
+                            Selanjutnya disebut<b> Penerima Pinjaman</b>
                         </div>
-                        <div class="mb-4  ">
+                        <div class="mb-4 text-justify">
                             2. Penjamin menyatakan sanggup dan mengikatkan diri untuk menjamin seluruh HUTANG PEMBIAYAAN
                             Penerima Pinjaman yang timbul dari perjanjian tersebut sebesar <b>{{ pkData.pokok_margin
                                 }}</b>
@@ -541,7 +549,7 @@
                             Pinjaman apabila Penerima Pinjaman tidak memenuhi kewajibannya sebagaimana ditentukan dalam
                             perjanjian
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-4 text-justify">
                             3. Penjamin dengan tegas melepaskan semua hak istimewa maupun pengecualian-pengecualian yang
                             diberikan oleh peraturan perundangan kepada Penjamin, khusus tetapi tidak terbatas pada
                             pasal 1832 Undang-Undang Hukum Perdata.
@@ -608,7 +616,7 @@ const optPrint = reactive({
 });
 
 const checkAllPage = () => {
-    console.log('chekced');
+    // console.log('chekced');
     return true;
 }
 
@@ -636,7 +644,7 @@ var dt = new Date();
 let year = dt.getFullYear();
 let months = (dt.getMonth() + 1).toString().padStart(2, "0");
 let day = dt.getDate().toString().padStart(2, "0");
-
+const thisday = `${year}-${months}-${day}`;
 const dataPelanggan = ref([]);
 
 const dynamicForm = reactive({
@@ -674,10 +682,12 @@ useApi({
         getPrePK();
     }
 });
-const tgl_cetak=ref({});
+const tgl_cetak = ref({});
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
-const getPrePK = async () => {
+const loadingDateAwal = ref(false);
+const getPrePK = async (e) => {
+    loadingDateAwal.value = true;
     // const bodySend = {
     //     tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
     //     order_number: dynamicForm.order_number,
@@ -687,7 +697,7 @@ const getPrePK = async () => {
     // e.preventDefault(e);
     const bodySend = {
         order_number: dynamicForm.order_number,
-        tgl_awal: dynamicForm.awal
+        tgl_awal: e,
     };
     useApi({
         method: 'POST',
@@ -698,6 +708,7 @@ const getPrePK = async () => {
         if (!res.ok) {
             prosesPK.value = false;
         } else {
+            loadingDateAwal.value = false;
             prosesPK.value = true;
             pkData.value = res.data;
             tgl_cetak.value = res.data.tgl_cetak;
@@ -717,8 +728,8 @@ const getPrePK = async () => {
 
 
 const dayFull = reactive({
-    print_date:computed(()=>{
-       return tgl_cetak.value ? tgl_cetak.value:dynamicForm.awal;
+    print_date: computed(() => {
+        return tgl_cetak.value ? tgl_cetak.value : thisday;
     }),
     day: computed(() => daysName[new Date(dayFull.print_date).getDay()]),
     date: computed(() => new Date(dayFull.print_date).getDate()),
@@ -965,7 +976,7 @@ const createPdf = () => {
         },
         {
             ol: [
-                `Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam Perjanjian PINJAMAN Konsumen No. ${dynamicForm.order_number} tertanggal ${pkData.value.tgl_awal_cicilan} berikut dengan seluruh perubahan-perubahan dan lampiran-lampirannya ("Perjanjian Pinjaman *) dari pemberi Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.`,
+                `Mengajukan mendapatkan Pinjaman Konsumen sebagaimana dimaksud dalam Perjanjian PINJAMAN Konsumen No. ${dynamicForm.order_number} tertanggal ${ dayFull.full_date_only} berikut dengan seluruh perubahan-perubahan dan lampiran-lampirannya ("Perjanjian Pinjaman *) dari pemberi Pinjaman, baik bertindak untuk dan atas nama dirinya sendiri dan atau selaku kuasa.`,
                 `Menjaminkan Barang guna menjamin / sebagai jaminan pelunasan seluruh kewajiban hutang Suami/Isteri *) saya berdasarkan Perjanjian PINJAMAN.`,
                 `Untuk keperluan tersebut membuat dan menandatangani Perjanjian Pembiayaan berikut dokumen-dokumen lainnya serta tindakan-tindakan lainnya yang diperlukan sehubungan dengan yang diuraikan pada butir 1 dan 2 di atas.`
             ],
@@ -1017,7 +1028,7 @@ const createPdf = () => {
         },
         {
             ol: [
-                `Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan Perjanjian pembiayaan Konsumen Nomor ${dynamicForm.order_number} tanggal  ${pkData.value.tgl_awal_cicilan} beserta seluruh lampiran, penambahan dan / atau pengurangannya(selanjutnya disebut Perjanjian) oleh dan antara KSP Djaya berkedudukan di Haurgeulis(selanjutnya secara sendiri - sendiri atau bersama disebut Pemberi Pinjaman dengan : `,
+                `Penjamin benar-benar mengetahui timbulnya hutang piutang secara sah berdasarkan Perjanjian pembiayaan Konsumen Nomor ${dynamicForm.order_number} tanggal  ${ dayFull.full_date_only} beserta seluruh lampiran, penambahan dan / atau pengurangannya(selanjutnya disebut Perjanjian) oleh dan antara KSP Djaya berkedudukan di Haurgeulis(selanjutnya secara sendiri - sendiri atau bersama disebut Pemberi Pinjaman dengan : `,
                 {
                     layout: `noBorders`,
                     margin: [20, 20, 0, 0],
@@ -1184,7 +1195,7 @@ const createPdf = () => {
 const handlePrint = (evt) => {
 
     const bodySend = {
-        tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
+        tgl_awal: dynamicForm.awal,
         order_number: dynamicForm.order_number,
         angsuran: dynamicForm.angsuran,
         flag: "yes"

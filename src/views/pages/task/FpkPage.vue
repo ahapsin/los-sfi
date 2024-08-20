@@ -14,14 +14,14 @@
                             </template>
                             <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
                         </n-popover>
-                        <n-button>
+                        <!-- <n-button>
                             <template #icon>
                                 <n-icon>
                                     <download-icon />
                                 </n-icon>
                             </template>
                             download
-                        </n-button>
+                        </n-button> -->
                         <n-button @click="handleNavCalc">
                             <template #icon>
                                 <n-icon>

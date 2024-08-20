@@ -11,7 +11,7 @@
                 </n-steps>
             </n-space>
             <n-flex class="pt-4">
-                <n-collapse>
+                <!-- <n-collapse>
                     <n-collapse-item title="skemaAngsuran" name="1">
                         <pre>{{ skemaAngsuran }}</pre>
                     </n-collapse-item>
@@ -24,7 +24,7 @@
                     <n-collapse-item title="calcredit" name="4">
                         <pre>{{ calcCredit }}</pre>
                     </n-collapse-item>
-                </n-collapse>
+                </n-collapse> -->
                 <!-- info pelanggan -->
 
 
@@ -91,19 +91,20 @@
                                 v-model:value="dataPelanggan.tipe_identitas" />
                         </n-form-item>
                         <n-form-item label="No Identitas" path="no_identitas" class="w-full">
-                            <n-input-number :show-button="false" class="w-full" placeholder="No Identitas" v-model:value="dataPelanggan.no_identitas">
-                            </n-input-number >
+                            <n-input :show-button="false" class="w-full" placeholder="No Identitas" show-count :maxlength="16" v-model:value="dataPelanggan.no_identitas">
+                            </n-input >
+                        </n-form-item>
+                        <n-form-item label="No KK" path="no KK" class="w-full">
+                            <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk"  show-count :maxlength="16" />
                         </n-form-item>
                     </div>
-                    <div class="flex w-full gap-2">
-                        <n-form-item label="No KK" path="no KK" class="w-full">
-                            <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk" />
-                        </n-form-item>
+                    <!-- <div class="flex w-full gap-2"> -->
+                        
                         <!-- <n-form-item label="Warganegara" path="warganegara" class="w-full">
                     <n-input placeholder="Warganegara" v-model:value="dataPelanggan.warganegara">
                     </n-input>
                 </n-form-item> -->
-                    </div>
+                    <!-- </div> -->
                     <!-- <div class="flex gap-2"> -->
                     <!-- <n-form-item label="Pekerjaan" path="nama" class="w-full">
                     <n-input placeholder="pekerjaan" v-model:value="dataPekerjaan.pekerjaan" />
@@ -484,13 +485,12 @@
                         }" placeholder="Alamat" v-model:value="dataPasangan.alamat_pasangan" />
                     </n-form-item>
 
-
                     <n-divider title-placement="left">
                         Penjamin
                     </n-divider>
                     <div class="flex gap-2">
                         <n-form-item label="No KTP" path="nama_kerabat" class=" w-full">
-                            <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.no_identitas" />
+                            <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.no_identitas" show-count :maxlength="16"/>
                         </n-form-item>
                         <n-form-item label="Nama Penjamin" path="nama_kerabat" class=" w-full">
                             <n-input placeholder="Nama penjamin" v-model:value="dataPenjamin.nama" />

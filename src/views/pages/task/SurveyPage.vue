@@ -18,7 +18,7 @@
                                                                         v-model:value="searchBox" />
                                                         </n-popover>
                                                 </div>
-                                                <div class="hidden md:flex">
+                                                <!-- <div class="hidden md:flex">
                                                         <n-button>
                                                                 <template #icon>
                                                                         <n-icon>
@@ -27,7 +27,7 @@
                                                                 </template>
                                                                 <strong class="hidden md:!block">download</strong>
                                                         </n-button>
-                                                </div>
+                                                </div> -->
                                                 <div class="md:hidden">
                                                         <n-button>
                                                                 <template #icon>
@@ -210,7 +210,7 @@ const handleConfirm = (row, index) => {
         });
 }
 const handleDetail = (evt) => {
-        router.replace({ name: 'detail survey', params: { idsurvey: evt.id, action: "view" } });
+        router.replace({ name: 'Detail Kredit', params: { idapplication: evt.id } });
 }
 const handleEdit = (evt) => {
         router.replace({ name: 'edit survey', params: { idsurvey: evt.id } });
