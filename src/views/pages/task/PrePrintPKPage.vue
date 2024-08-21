@@ -160,8 +160,8 @@
                         <tr>
                             <td> Pengembalian pinjaman tersebut akan dibayarkan untuk jangka {{ pkData.tenor }} BULAN
                                 lamanya,
-                                dimulai tanggal {{ pkData.tgl_awal_cicilan }} berakhir pada tanggal {{
-                                    pkData.tgl_akhir_cicilan
+                                dimulai tanggal {{ pkData.tgl_awal_pk }} berakhir pada tanggal {{
+                                    pkData.tgl_akhir_pk
                                 }}
                                 dengan jumlah
                                 angsuran
@@ -697,7 +697,7 @@ const getPrePK = async (e) => {
     // e.preventDefault(e);
     const bodySend = {
         order_number: dynamicForm.order_number,
-        tgl_awal: e,
+        tgl_awal: dynamicForm.awal,
     };
     useApi({
         method: 'POST',
@@ -711,6 +711,10 @@ const getPrePK = async (e) => {
             loadingDateAwal.value = false;
             prosesPK.value = true;
             pkData.value = res.data;
+            let awal = res.data.tgl_awal_angsuran;
+            if(awal){
+            dynamicForm.awal = res.data.tgl_awal_angsuran;
+            }
             tgl_cetak.value = res.data.tgl_cetak;
             dataPasangan.value = res.data.pasangan;
             dataPenjamin.value = res.data.penjamin;
