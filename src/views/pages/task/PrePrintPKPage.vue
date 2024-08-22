@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
             </n-collapse-item>
@@ -19,7 +19,7 @@
             <n-collapse-item title="dynamic" name="5">
                 <pre>{{ dynamicForm }}</pre>
             </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
         <div class="flex flex-col md:flex-row w-full gap-2">
             <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
                 <n-form-item label="Order Number" path="nama" class="w-full">
@@ -61,7 +61,7 @@
         </div>
         <div class="flex bg-slate-100  justify-center overflow-auto p-2" v-show="prosesPK">
             <div class="flex flex-col min-w-[900px] p-10" ref="pk">
-                <div class="bg-white  max-w-[900px] shadow-lg p-8" v-show="optPrint.pkPage">
+                <div class="bg-white max-w-[900px] shadow-lg p-8" v-show="optPrint.pkPage">
                     <table border="1" class="mb-10">
                         <tr>
                             <td align="center">
@@ -588,25 +588,21 @@ table.tblprint>tr>td {
 }
 </style>
 <script setup>
-import { useApi } from "../../../helpers/axios";
-import { ref, reactive, computed } from "vue";
-import { jsPDF } from "jspdf";
-import router from '../../../router';
-import { usePDF } from 'vue3-pdfmake';
+import { LocalPrintshopRound as PrintIcon } from "@vicons/material";
+import { NButton, NIcon } from "naive-ui";
+import { computed, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
-import { LocalPrintshopRound as PrintIcon, DownloadRound as DownloadIcon, ComputerFilled } from "@vicons/material";
-import autoTable from 'jspdf-autotable';
-import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
+import { usePDF } from 'vue3-pdfmake';
+import { useApi } from "../../../helpers/axios";
+
 const prosesPK = ref(false);
 const pageData = ref([]);
 const pk = ref();
-const message = useMessage();
 const pkData = ref([]);
 const struktur = ref([]);
 const pihak1 = ref([]);
 const pihak2 = ref([]);
 // page controller
-const optAllPage = ref(false);
 const optPrint = reactive({
     pkPage: true,
     skalaPage: true,
@@ -615,14 +611,6 @@ const optPrint = reactive({
     penjaminPage: true,
 });
 
-const checkAllPage = () => {
-    // console.log('chekced');
-    return true;
-}
-
-const tgl = reactive({
-    awal: null,
-});
 
 const baseRoute = useRoute();
 const idApp = baseRoute.params.idapplication;
@@ -631,13 +619,7 @@ const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
 const daysName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
-let monthServer = new Date().getMonth();
-let yearServer = new Date().getFullYear();
 
-let thisMonth = monthNames[monthServer];
-let dateServer = new Date().getDate();
-
-const month = monthNames[monthServer];
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 var dt = new Date();
@@ -653,8 +635,6 @@ const dynamicForm = reactive({
 });
 
 
-let dayServer = new Date(dynamicForm.awal).getDay();
-let thisDay = daysName[dayServer];
 // const dayFull = () => computed(() => {
 //     let dayPick = new Date(dynamicForm.awal).getDay();
 //     dynamicForm.day_pk = daysName[dayPick];
@@ -686,7 +666,7 @@ const tgl_cetak = ref({});
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
 const loadingDateAwal = ref(false);
-const getPrePK = async (e) => {
+const getPrePK = async () => {
     loadingDateAwal.value = true;
     // const bodySend = {
     //     tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
@@ -722,7 +702,7 @@ const getPrePK = async (e) => {
             pihak2.value = res.data.pihak_2;
             struktur.value = [];
             struktur.value.push(['Angsuran ke', 'Jatuh Tempo', 'Pokok', 'Bunga', 'Angsuran', 'Baki Debet']);
-            pkData.value.struktur.forEach((v, k) => {
+            pkData.value.struktur.forEach((v) => {
                 struktur.value.push([v.angsuran_ke, v.tgl_angsuran, v.pokok, v.bunga, v.total_angsuran, v.baki_debet]);
             });
         }
@@ -745,128 +725,9 @@ const dayFull = reactive({
 const pdfmake = usePDF({
     autoInstallVFS: true
 })
-const skalaAngusran = ref({
-    text: `Tabel Skala Angsuran`,
-    alignment: "left",
-},
-    {
-        margin: [0, 10, 0, 0],
-        table: {
-            widths: ['*', '*', '*', '*', '*', '*'],
-            headerRows: 1,
-            body: struktur.value
-
-        },
-
-    });
 
 const createPdf = () => {
 
-    const contentPkPage = ref([
-        {
-            text: `PERJANJIAN PEMBERIAN PINJAMAN\n NO. PERJANJIAN : ${dynamicForm.order_number}`,
-            alignment: "center",
-            style: "header",
-        },
-        {
-            text: `Yang bertanda tangan dibawah ini:`,
-            margin: [0, 20, 0, 0]
-        },
-        {
-            layout: 'noBorders',
-            margin: [0, 20, 0, 0],
-            table: {
-                widths: [10, 100, 5, '*'],
-                body: [
-                    ['I.', 'Nama', ':', `${pihak1.value.nama}`],
-                    ['', 'Jabatan', ':', `${pihak1.value.jabatan}`],
-                    ['', 'Alamat Kantor', ':', `${pihak1.value.alamat_kantor}`],
-                ]
-            }
-        },
-        {
-            layout: 'noBorders',
-            margin: [0, 20, 0, 0],
-            table: {
-                widths: [10, 100, 5, '*'],
-                body: [
-                    ['II.', 'Nama', ':', `${pihak2.value.nama}`],
-                    ['', 'No. KTP/SIM', ':', `${pihak2.value.no_identitas}`],
-                    ['', 'Alamat', ':', `${pihak2.value.alamat}`],
-                    ['', { colSpan: 3, text: 'Dalam hal ini bertindak untuk dirinya sendiri, selanjutnya disebut Pihak Kedua' }],
-                ]
-            }
-        },
-        {
-            text: `Dengan ini menerangkan bahwa para pihak sepakat menandatangani Perjanjian Pemberian Pinjaman, dengan isi, syarat dan ketentuan sebagai berikut :`,
-            alignment: "justify",
-            margin: [0, 20, 0, 0],
-        },
-        {
-            text: `Pasal 1`,
-            alignment: "center",
-            margin: [0, 20, 0, 0],
-        },
-        {
-            text: `Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas pinjaman menjadi sebesar ${pkData.value.pokok_margin}`,
-            alignment: "justify",
-        },
-        {
-            text: `Pasal 2`,
-            alignment: "center",
-            margin: [0, 20, 0, 0],
-        },
-        {
-            text: `Pengembalian pinjaman tersebut akan dibayarkan untuk jangka ${pkData.value.tenor} BULAN lamanya, dimulai tanggal ${pkData.value.tgl_awal_cicilan} berakhir pada tanggal ${pkData.value.tgl_akhir_cicilan} dengan jumlah angsuran sebesar ${pkData.value.angsuran}`,
-            alignment: "justify",
-        },
-        {
-            text: `Pasal 3`,
-            alignment: "center",
-            margin: [0, 20, 0, 0],
-        },
-        {
-            text: `Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan jaminan barang miliknya sendiri berupa , dengan dibuktikan diserahkannya Bukti Kepemilikan dengan spesifikasi sebagai berikut`,
-            alignment: "justify",
-        },
-        {
-            margin: [0, 20, 0, 0],
-            layout: 'noBorders',
-            table: {
-                width: [100, "*", 200, "*"],
-                headerRows: 1,
-                body: [
-                    ['BPKB No.', ':', `${pkData.value.no_bpkb ? pkData.value.no_bpkb : ''}`],
-                    ['BPKB atas nama.', ':', `${pkData.value.atas_nama}`],
-                    ['Merk/Type/Tahun', ':', `${pkData.value.merk} / ${pkData.value.type} / ${pkData.value.tahun}`],
-                    ['Warna/No.Polisi. ', ':', `${pkData.value.warna}/${pkData.value.no_polisi}`],
-                    ['No. Rangka/Mesin ', ':', `${pkData.value.no_rangka}/${pkData.value.no_mesin}`],
-                ]
-            },
-        },
-        {
-            margin: [0, 20, 0, 0],
-            text: `Apabila pihak kedua tidak bisa memenuhi kewajiban pembayaran angsuran selama 3 bulan, maka pihak kedua bersedia menyerahkan jaminan kendaraan sesuai dengan pasal 3 di atas kepada pihak pertama. Jika Perjanjian Pemberi Pinjaman telah selesai, BPKB wajib diambil maksimum 90 hari kalender terhitung dari pelunasan angsuran dan denda terakhir. KSP Djaya tidak bertanggung jawab atas kerusakan atau kegilangan BPKB.`,
-            alignment: "justify",
-        },
-        {
-            margin: [0, 20, 0, 0],
-            text: `Demikian Perjanjian Pemberian Pinjaman ini dibuat dan ditandatangani, tanpa adanya unsur paksaan.\n${pkData.value.kota},${pkData.value.tgl_cetak}`,
-            alignment: "justify",
-        },
-        {
-            margin: [0, 20, 0, 0],
-            layout: 'noBorders',
-            style: 'tableExample',
-            table: {
-                widths: ['*', '*'],
-                body: [
-                    [`Pihak Pertama,\n${pkData.value.cabang}\n\n\n\n\n(${pihak1.value.nama})`, `Pihak Kedua\n\n\n\n\n\n(${pihak2.value.nama})`],
-                ]
-            },
-            pageBreak: 'after'
-        }
-    ]);
     const skalaAngsuranPage = ref([{
         text: `Tabel Skala Angsuran`,
         alignment: "left",
@@ -1057,7 +918,7 @@ const createPdf = () => {
         },
     ]);
 
-    pdfmake.createPdf({
+    const genPDF=pdfmake.createPdf({
         info: {
             title: `Perjanjian Kredit-${pihak2.value.nama}`,
             author: 'ahapsin',
@@ -1196,30 +1057,12 @@ const createPdf = () => {
         }
     }).print();
 }
-const handlePrint = (evt) => {
 
-    const bodySend = {
-        tgl_awal: dynamicForm.awal,
-        order_number: dynamicForm.order_number,
-        angsuran: dynamicForm.angsuran,
-        flag: "yes"
-    }
+
+const handlePrint = () => {
+
     // // console.log(bodySend);
     // e.preventDefault(evt);
-    const print_pk = useApi({
-        method: 'POST',
-        data: bodySend,
-        api: `pk`,
-        token: userToken
-    }).then(res => {
-        router.replace({ name: 'Pengajuan Kredit' });
-        // if (!res.ok) {
-        //     message.warning('gagal proses print!');
-        // } else {
-        //     message.success('sukses proses print!');
-
-        // }
-    });
     createPdf();
     //     generatePdf();
     // Supply data via script
@@ -1237,59 +1080,11 @@ const handlePrint = (evt) => {
     // doc.text(300, 30, `PERJANJIAN PEMBERIAN PINJAMAN\nNo. ${pkData.value.no_perjanjian}`, { align: 'center' });
     // doc.output('dataurlnewwindow');
 }
-const handleDownload = (evt) => {
-    var doc = new jsPDF('p', 'pt', 'a4');
-    const margins = {
-        top: 80,
-        bottom: 60,
-        left: 40,
-        width: 522
-    };
-
-    doc.html(pk.value, {
-        callback: function (doc) {
-            doc.save('pk');
-        },
-        x: 10,
-        y: 10
-    });
-}
 
 const upCase = (e) => {
     return e;
 };
-function generatePdf() {
-    var doc = new jsPDF('p', 'pt', 'legal');
-    const margins = {
-        top: 80,
-        bottom: 60,
-        left: 40,
-        width: 10
-    };
 
-    doc.html(pk.value, {
-        callback: function (doc) {
-            doc.output('dataurlnewwindow');
-            // doc.save();
-        },
-        x: 10,
-        y: 10
-    });
-
-    // doc.save('test.pdf');
-}
-
-const parse = (input) => {
-    const nums = input.replace(/,/g, "").trim();
-    if (/^\d+(\.(\d+)?)?$/.test(nums))
-        return Number(nums);
-    return nums === "" ? null : Number.NaN;
-}
-const format = (value) => {
-    if (value === null)
-        return "";
-    return value.toLocaleString("en-US");
-}
 const options = [];
 
 for (var x = 1; x <= 25; x++) {
@@ -1299,6 +1094,5 @@ for (var x = 1; x <= 25; x++) {
         value: zeroPad(x, 2)
     };
 }
-const pkCheck = ref(true);
 
 </script>
