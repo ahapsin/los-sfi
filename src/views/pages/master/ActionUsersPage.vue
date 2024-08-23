@@ -3,7 +3,7 @@
         content: true,
         footer: 'soft'
     }" :title="`Form ${$route.name}`">
-        <n-form ref="formRef" :model="model" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
+        <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-form-item label="Photo personal" path="photo_personal">
                 <n-upload :data="{ 'type': 'personal' }" list-type="image-card" :custom-request="handleImagePost">
@@ -16,6 +16,9 @@
             <n-form-item label="Password" path="password">
                 <n-input placeholder="Password" v-model:value="dynamicForm.password" />
             </n-form-item>
+            <n-form-item label="No KTP" path="no_ktp">
+                <n-input-number placeholder="no KTP" v-model:value="dynamicForm.no_ktp" :show-button="false"  class="w-full"/>
+            </n-form-item>
             <n-form-item label="Nama" path="nama">
                 <n-input placeholder="Nama" v-model:value="dynamicForm.nama" />
             </n-form-item>
@@ -26,6 +29,9 @@
             <n-form-item label="Jabatan" path="jabatan">
                 <n-select filterable placeholder="Pilih Jabatan" :options="optJabatan"
                     v-model:value="dynamicForm.jabatan" />
+            </n-form-item>
+            <n-form-item label="Alamat" path="ho">
+                <n-input type="textarea" autosize placeholder="alamat" v-model:value="dynamicForm.alamat" />
             </n-form-item>
             <n-form-item label="No HP" path="ho">
                 <n-input placeholder="no HP" v-model:value="dynamicForm.no_hp" />
@@ -66,6 +72,7 @@ const dynamicForm = reactive({
     username: '',
     password: '',
     name: '',
+    no_ktp:null,
     cabang_id: null,
     cabang_nama: null,
     jabatan: '',
@@ -82,6 +89,13 @@ const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
 const handleCancel = () => router.replace('/master/users');
 
+const rules={
+no_ktp:{
+         trigger: "blur",
+          min: 16,
+          message: 'No identitas minimal 16 karakter'
+        }
+    }
 const response = () => useApi({
     method: 'get',
     api: `users/${param}`,

@@ -159,8 +159,12 @@
                     <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
                 </n-form-item>
                 <n-form-item label="Tanggal lahir" path="tgl_lahir">
-                    <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="pelanggan.tgl_lahir"
-                        value-format="dd-MM-yyyy" type="date" />
+                    <n-space vertical>
+                        <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
+                            }}</n-alert>
+                        <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="pelanggan.tgl_lahir"
+                            value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir" />
+                    </n-space>
                 </n-form-item>
                 <n-form-item label="Alamat" path="alamat">
                     <n-input-group>
@@ -306,7 +310,7 @@
             }">
                 <n-form-item label="Tanggal survey" path="tgl_survey">
                     <n-date-picker v-model:formatted-value="survey.tgl_survey" placeholder="Tanggal Survey"
-                        value-format="dd-MM-yyyy" type="date" clearable disabled />
+                        value-format="yyyy-MM-dd" type="date" clearable disabled />
                 </n-form-item>
 
                 <n-form-item label="Lama Bekerja" path="lama_berkerja">
@@ -316,41 +320,43 @@
                         </template>
                     </n-input>
                 </n-form-item>
-                <n-form-item label="Pendapatan " path="pendapatan">
-                    <n-input-number class="flex w-full" :parse="parse" :format="format"
-                        v-model:value="survey.penghasilan_pribadi" placeholder="pendapatan pelanggan"
-                        :show-button="false">
-                        <template #suffix>
-                            perbulan
-                        </template>
-                    </n-input-number>
-                </n-form-item>
-                <n-form-item label=" pasangan" path="pendapatan">
-                    <n-input-number class="flex w-full" :parse="parse" :format="format"
-                        v-model:value="survey.penghasilan_pasangan" placeholder="pendapatan pasangan"
-                        :show-button="false">
-                        <template #suffix>
-                            perbulan
-                        </template>
-                    </n-input-number>
-                </n-form-item>
-                <n-form-item label="lainnya" path="pendapatan">
-                    <n-input-number class="flex w-full" :parse="parse" :format="format"
-                        v-model:value="survey.penghasilan_lainnya" placeholder="pendapatan lain-lain"
-                        :show-button="false">
-                        <template #suffix>
-                            perbulan
-                        </template>
-                    </n-input-number>
-                </n-form-item>
-                <n-form-item label="Pengeluaran" path="pengeluaran">
-                    <n-input-number :parse="parse" :format="format" v-model:value="survey.pengeluaran"
-                        placeholder="pengeluaran" :show-button="false">
-                        <template #suffix>
-                            perbulan
-                        </template>
-                    </n-input-number>
-                </n-form-item>
+                <div class="flex gap-2 flex-col md:flex-row">
+                    <n-form-item label="Pendapatan " path="pendapatan">
+                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                            v-model:value="survey.penghasilan_pribadi" placeholder="pendapatan pelanggan"
+                            :show-button="false">
+                            <template #suffix>
+                                perbulan
+                            </template>
+                        </n-input-number>
+                    </n-form-item>
+                    <n-form-item label="pendapatan pasangan" path="pendapatan">
+                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                            v-model:value="survey.penghasilan_pasangan" placeholder="pendapatan pasangan"
+                            :show-button="false">
+                            <template #suffix>
+                                perbulan
+                            </template>
+                        </n-input-number>
+                    </n-form-item>
+                    <n-form-item label="pendapatan lainnya" path="pendapatan">
+                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                            v-model:value="survey.penghasilan_lainnya" placeholder="pendapatan lain-lain"
+                            :show-button="false">
+                            <template #suffix>
+                                perbulan
+                            </template>
+                        </n-input-number>
+                    </n-form-item>
+                    <n-form-item label="Pengeluaran" path="pengeluaran">
+                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                            v-model:value="survey.pengeluaran" placeholder="pengeluaran" :show-button="false">
+                            <template #suffix>
+                                perbulan
+                            </template>
+                        </n-input-number>
+                    </n-form-item>
+                </div>
                 <n-form-item label="Usaha" path="usaha">
                     <n-input placeholder="usaha" v-model:value="survey.usaha" />
                 </n-form-item>
@@ -412,7 +418,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, toRef } from "vue";
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward } from "@vicons/material";
 import { useMessage } from "naive-ui";
@@ -596,6 +602,12 @@ const getData = () => useApi({
         Object.assign(jaminan.value, res.data.response.jaminan_kendaraan);
         Object.assign(dok_identitas.value, res.data.response.dokumen_indentitas);
         Object.assign(dok_pendukung.value, res.data.response.dokumen_pendukung);
+        let tgllahir = toRef(pelanggan.tgl_lahir);
+        var myDate = tgllahir.value;
+        myDate = myDate.split("-");
+        var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
+        console.log(newDate.getTime());
+        handleTanggalLahir(newDate.getTime());
         getPlafond();
     }
 });
@@ -628,6 +640,28 @@ const handleSave = async (e) => {
     }
 }
 
+
+const notifUsia = ref(false)
+const noteUsia = ref(false)
+const handleTanggalLahir = (e) => {
+    // console.log(e)
+    var month_diff = Date.now() - e;
+    var age_dt = new Date(month_diff);
+    var year = age_dt.getUTCFullYear();
+    var age = Math.abs(year - 1970);
+    // console.log(age);
+    if (age > 19 && age < 60) {
+        notifUsia.value = false;
+    } else {
+        if (age < 19) {
+            notifUsia.value = true;
+            noteUsia.value = `usia ${age} tahun, usia < dari 19 Tahun`;
+        } else if (age > 60) {
+            notifUsia.value = true;
+            noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
+        }
+    }
+}
 const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
     let idApp = uuid;
     const form = new FormData();

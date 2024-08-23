@@ -35,13 +35,23 @@
                         </n-input>
                     </n-form-item>
                     <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
-                        <n-space vertical>
-                            <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
-                                }}</n-alert>
+
+
+
+                        <!-- <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
+                                }}</n-alert> -->
+
+                        <div class="flex flex-col">
                             <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                                 value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir"
                                 class="w-full" />
-                        </n-space>
+                            <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2">
+                                <n-icon color="#FF9100">
+                                    <warning-icon />
+                                </n-icon>{{ noteUsia }}
+                            </div>
+                        </div>
+
                     </n-form-item>
                     <!-- <n-form-item label="Golonga Darah" path="gol_darah" class="w-full">
                     <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah">
@@ -362,9 +372,37 @@
                 <n-input placeholder="Usaha Lain 4" v-model:value="dataTambahan.usaha_lain4" />
             </n-form-item> -->
                 <n-divider title-placement="left">
+                    Pasangan
+                </n-divider>
+
+                <div class="flex gap-2">
+                    <n-form-item label="Nama Pasangan" path="nama_kerabat" class=" w-full">
+                        <n-input placeholder="Nama Pasangan" v-model:value="dataPasangan.nama_pasangan" />
+                    </n-form-item>
+                    <n-form-item label="Tempat / Tanggal Lahir" path="order" class="w-full">
+                        <n-input-group>
+                            <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
+                            <n-date-picker placeholder="Tanggal lahir"
+                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd"
+                                type="date" class="w-full" />
+                        </n-input-group>
+                    </n-form-item>
+                    <n-form-item label="Pekerjaan" path="nama_kerabat" class=" w-full">
+                        <n-input placeholder="pekerjaan" v-model:value="dataPasangan.pekerjaan_pasangan" />
+                    </n-form-item>
+                </div>
+                <n-form-item label="Alamat" path="nama_kerabat" class=" w-full">
+                    <n-input type="textarea" :autosize="{
+                        minRows: 3,
+                    }" placeholder="Alamat" v-model:value="dataPasangan.alamat_pasangan" />
+                </n-form-item>
+                <n-divider title-placement="left">
                     Penjamin
                 </n-divider>
                 <div class="flex gap-2">
+                    <n-form-item label="No KTP" path="nama_kerabat" class=" w-full">
+                        <n-input placeholder="KTP Penjamin" v-model:value="dataPenjamin.no_identitas" />
+                    </n-form-item>
                     <n-form-item label="Nama Penjamin" path="nama_kerabat" class=" w-full">
                         <n-input placeholder="Nama penjamin" v-model:value="dataPenjamin.nama" />
                     </n-form-item>
@@ -614,6 +652,12 @@
                             <n-input-number :parse="parse" :format="format" :placeholder="calcCredit.plafond"
                                 :show-button="false" class="flex !w-full" @update:value="handlePlafond"
                                 :loading="loading" v-model:value="calcCredit.nilai_yang_diterima" />
+                            <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2"
+                                v-show="dataTaksasi.nilai != '' && calcCredit.nilai_yang_diterima > dataTaksasi.nilai">
+                                <n-icon color="#FF9100">
+                                    <warning-icon />
+                                </n-icon>Plafon > Harga Pasar
+                            </div>
                         </n-form-item>
                     </div>
                 </div>
@@ -642,7 +686,7 @@
 
 <script setup>
 import { ref, reactive, computed } from "vue";
-import { ArrowBackOutlined as ArrowBack, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon, DeleteOutlineRound as DeleteIcon } from "@vicons/material";
+import { MessageOutlined as MessageIcon, ArrowForwardOutlined as ArrowForward, SendRound as SendIcon, SaveAsOutlined as SaveIcon, WarningRound as WarningIcon } from "@vicons/material";
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
@@ -679,6 +723,13 @@ const dataSurat = ref({});
 const dataAttachment = ref({});
 const dataEkstra = ref({});
 
+const dataPasangan = ref({
+    nama_pasangan: null,
+    tmptlahir_pasangan: null,
+    pekerjaan_pasangan: null,
+    tgllahir_pasangan: null,
+    alamat_pasangan: null
+});
 const dataBank = ref([]);
 const onCreate = () => {
     return {
@@ -851,6 +902,7 @@ const response = () => useApi({
         Object.assign(calcCredit, pageData.value.ekstra);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(dataPenjamin.value, pageData.value.penjamin);
+        Object.assign(dataPasangan.value, pageData.value.pasangan);
         Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
         Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
         Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
@@ -862,6 +914,11 @@ const response = () => useApi({
         Object.assign(dataBank.value, pageData.value.info_bank);
         Object.assign(dataAttachment.value, pageData.value.attachment);
         Object.assign(approval.value, pageData.value.approval);
+        let tgllahir = toRef(pageData.value.pelanggan);
+        var myDate = tgllahir.value.tgl_lahir;
+        myDate = myDate.split("-");
+        var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
+        handleTanggalLahir(newDate.getTime());
         handleEkstra();
     }
 });
@@ -1049,6 +1106,8 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
         onError();
     });
 };
+
+const keterangan = ref();
 const handlePositiveClick = async (e) => {
     e.preventDefault(e);
     const bodyPost = {
