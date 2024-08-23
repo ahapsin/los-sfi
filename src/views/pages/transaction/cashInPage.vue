@@ -2,7 +2,7 @@
   <n-card>
     <template #header>Penerimaan Uang</template>
     <template #header-extra>
-      <n-button v-show="!searchField" strong secondary circle>
+      <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
         <template #icon>
           <n-icon>
             <full-icon />
@@ -23,7 +23,7 @@
                                 Pelunasan
                             </n-radio-button>
                         </n-radio-group> -->
-            <n-switch size="large" :rail-style="railStyle">
+            <n-switch size="large" :rail-style="railStyle" :disabled="searchField">
               <template #checked> Pelunasan </template>
               <template #unchecked> Pembayaran </template>
             </n-switch>
@@ -93,17 +93,18 @@
       </n-form-item>
 
       <n-card title="Daftar Angsuran" size="small" v-show="searchField">
-        <template #header-extra>
-          <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
-            <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran" v-model:value="tipe_pay" />
-          </n-form-item>
-          <n-form-item path="nestedValue.path2" label="Jumlah Uang">
-            <n-input placeholder="Jumlah Pembayaran" loading size="large">
-              <template #prefix> Rp. </template>
-            </n-input>
-          </n-form-item>
-        </template>
         <template #action>
+            <n-space>
+              <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
+                <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran" v-model:value="tipe_pay" />
+              </n-form-item>
+              <n-form-item path="nestedValue.path2" label="Jumlah Uang">
+                <n-input placeholder="Jumlah Pembayaran" loading size="large">
+                  <template #prefix> Rp. </template>
+                </n-input>
+              </n-form-item>
+            </n-space>
+            
           <n-space v-show="tipe_pay == 'transfer'">
             <n-form-item path="nestedValue.path2" label="Bank">
               <n-select filterable :options="optBank" placeholder="Bank Tujuan" v-model:value="bank" />
@@ -130,7 +131,16 @@
               <n-input size="large" />
             </n-form-item>
           </n-space>
-          <n-button type="primary"> Proses </n-button>
+           <n-space>
+             <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
+                'naive-info': 'hello!',
+              }" :data="{
+                'naive-data': 'cool! naive!',
+              }">
+                <n-button>Attachment</n-button>
+              </n-upload>
+                       <n-button type="primary"> Proses </n-button>
+           </n-space>
         </template>
         <n-list size="small" bordered>
           <n-list-item class="bg-slate-50">
@@ -168,9 +178,10 @@
 <script setup>
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
-import { SearchRound as searchIcon, FullscreenRound as fullIcon } from "@vicons/material";
+import router from '../../../router';
+import { SearchRound as searchIcon, OpenInFullRound as fullIcon } from "@vicons/material";
 
-import _ from "lodash";
+import { computed, onMounted, ref } from "vue";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
@@ -199,7 +210,6 @@ const createColumns = () => {
     },
   ];
 };
-import { computed, onMounted, ref } from "vue";
 
 const tipe_pay = ref("Tunai");
 const bank = ref(null);
@@ -223,7 +233,7 @@ const optBank = [
     value: "mandiri",
   },
 ];
-const checkedRowKeysRef = ref([4, 1]);
+
 const dataCustomer = ref([]);
 const selectedCustomer = ref([]);
 const columns = createColumns();
@@ -311,5 +321,12 @@ const railStyle = ({ focused, checked }) => {
   }
   return style;
 };
+
+const handleExpand = () => {
+  console.log('asdasdas');
+  const fullPage = router.resolve({ name: 'expand transaction' });
+  window.open(fullPage.href, '_blank');
+}
+
 onMounted(() => getDataCustomer());
 </script>

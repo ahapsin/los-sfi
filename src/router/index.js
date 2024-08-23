@@ -18,6 +18,11 @@ const routes = [
     component: () => import("../views/pages/DashboardPage.vue"),
   },
   {
+    path: "/exp-transaction",
+    name: "expand transaction",
+    component: () => import("../views/pages/transaction/cashInPage.vue"),
+  },
+  {
     path: "/transaction",
     name: "transaction",
     component: () => import("../views/pages/DashboardPage.vue"),

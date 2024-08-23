@@ -11,7 +11,7 @@
                 </n-steps>
             </n-space>
             <n-flex class="pt-4">
-                <!-- <n-collapse>
+                <n-collapse>
                     <n-collapse-item title="skemaAngsuran" name="1">
                         <pre>{{ skemaAngsuran }}</pre>
                     </n-collapse-item>
@@ -24,7 +24,7 @@
                     <n-collapse-item title="calcredit" name="4">
                         <pre>{{ calcCredit }}</pre>
                     </n-collapse-item>
-                </n-collapse> -->
+                </n-collapse>
                 <!-- info pelanggan -->
 
 

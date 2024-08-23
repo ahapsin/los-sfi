@@ -1060,7 +1060,28 @@ const createPdf = () => {
 
 
 const handlePrint = () => {
+    const bodySend = {
+        tgl_awal: dynamicForm.awal,
+        order_number: dynamicForm.order_number,
+        angsuran: dynamicForm.angsuran,
+        flag: "yes"
+    }
+    // // console.log(bodySend);
+    // e.preventDefault(evt);
+    useApi({
+        method: 'POST',
+        data: bodySend,
+        api: `pk`,
+        token: userToken
+    }).then(res => {
+        router.replace({ name: 'Pengajuan Kredit' });
+        // if (!res.ok) {
+        //     message.warning('gagal proses print!');
+        // } else {
+        //     message.success('sukses proses print!');
 
+        // }
+    });
     // // console.log(bodySend);
     // e.preventDefault(evt);
     createPdf();

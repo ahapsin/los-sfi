@@ -1,5 +1,19 @@
 <template>
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
+         <n-collapse>
+                    <n-collapse-item title="skemaAngsuran" name="1">
+                        <pre>{{ skemaAngsuran }}</pre>
+                    </n-collapse-item>
+                    <n-collapse-item title="get" name="2">
+                        <pre>{{ pageData }}</pre>
+                    </n-collapse-item>
+                    <n-collapse-item title="post" name="3">
+                        <pre>{{ formAssign }}</pre>
+                    </n-collapse-item>
+                    <n-collapse-item title="calcredit" name="4">
+                        <pre>{{ calcCredit }}</pre>
+                    </n-collapse-item>
+                </n-collapse>
         <div class="p-2 flex gap-2">
             <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
                 <div class="flex  gap-2">
