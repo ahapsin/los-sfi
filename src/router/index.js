@@ -32,6 +32,11 @@ const routes = [
         name: "penerimaan uang",
         component: () => import("../views/pages/transaction/cashInPage.vue"),
       },
+      {
+        path: "serah-jaminan",
+        name: "serah jaminan",
+        component: () => import("../views/pages/transaction/deliveryPage.vue"),
+      },
     ],
   },
   {

@@ -29,6 +29,13 @@
                                 </n-icon>
                             </template>
                         </n-button>
+                        <n-button @click="handleNavFile">
+                            <template #icon>
+                                <n-icon>
+                                    <file-icon/>
+                                </n-icon>
+                            </template>
+                        </n-button>
                         <!-- <n-button type="primary" @click="handleAdd">
                             <template #icon>
                                 <n-icon>
@@ -65,8 +72,8 @@ import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
     FileDownloadOutlined as DownloadIcon,
-    CalculateOutlined as CalcIcon
-
+    CalculateOutlined as CalcIcon,
+FilePresentOutlined as FileIcon
 } from "@vicons/material"
 import {
     EditOutlined as EditIcon,
@@ -369,5 +376,8 @@ const showData = computed(() => {
 
 const handleNavCalc = () => {
     router.replace({ name: 'penerimaan uang' });
+}
+const handleNavFile= () => {
+    router.replace({ name: 'serah jaminan' });
 }
 </script>
