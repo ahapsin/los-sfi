@@ -1,4 +1,5 @@
 <template>
+
         <n-scrollbar x-scrollable>
                 <n-space class="p-4">
                         <n-steps :current="current" :status="currentStatus" v-model:current="current">
@@ -136,19 +137,21 @@
                         }">
                                 <div class="flex gap-2">
                                         <n-form-item label="No KTP" path="no_ktp" class="w-full">
-                                                <n-input-number :show-button="false" placeholder="NO KTP" v-model:value="pelanggan.no_ktp"
-                                                        :loading="loadingKTP" @change="handleKtp" class="w-full" />
+                                                <n-input :show-button="false" placeholder="NO KTP"
+                                                        v-model:value="pelanggan.no_ktp" :loading="loadingKTP"
+                                                        @change="handleKtp" class="w-full" maxlength="16"/>
                                         </n-form-item>
                                         <n-form-item label="Kategori Kredit" path="no_ktp" class="w-full">
                                                 <n-select filterable placeholder="Kategori Kredit"
                                                         :options="optKategori" default-value="Baru"
                                                         v-model:value="order.category" disabled />
                                         </n-form-item>
-                                          <n-form-item label="No KK" path="nokk" class="w-full">
-                                        <n-input placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk" />
-                                </n-form-item> 
-                        </div>
-                              
+                                        <n-form-item label="No KK" path="no_kk" class="w-full">
+                                                <n-input placeholder="No Kartu Keluarga"
+                                                        v-model:value="pelanggan.no_kk"  maxlength="16"/>
+                                        </n-form-item>
+                                </div>
+
                                 <n-form-item label="Nama" path="nama">
                                         <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
                                 </n-form-item>
@@ -365,13 +368,6 @@
 
                         </n-card>
                 </n-form>
-                <!-- <n-space>
-                        <n-card>
-                                <pre>
-                        {{ dynamicForm }}
-                </pre>
-                        </n-card>
-                </n-space> -->
 
                 <n-flex justify="between">
                         <n-button @click="prev" type="secondary" v-if="current > 1">
@@ -484,7 +480,7 @@ const tenorKredit = ["12", "24", "36"].map(
                 label: v,
                 value: v
         }));
-const jenisAngsuran = ["Bulanan", "Musiman"].map(
+const jenisAngsuran = ["Bulanan"].map(
         (v) => ({
                 label: v,
                 value: v.toLowerCase(),
@@ -672,6 +668,7 @@ const handleSave = async (e) => {
 
 const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
         let idApp = uuid;
+        console.log(data);
         const form = new FormData();
         form.append('image', file.file);
         form.append('type', data.type);
@@ -706,12 +703,18 @@ const rules = {
                 message: `jumlah tahun lebih dari 10 Tahun`,
                 validator: tahunJaminanValidate,
                 trigger: ['blur']
-        }, 
-        no_ktp:{
-         trigger: "blur",
-          required: true,
-          min: 16,
-          message: 'No identitas minimal 16 karakter'
+        },
+        no_ktp: {
+                trigger: "blur",
+                required: true,
+                min: 16,
+                message: 'No identitas minimal 16 karakter'
+        },
+        no_kk: {
+                trigger: "blur",
+                required: true,
+                min: 16,
+                message: 'No Kartu Keluarga minimal 16 karakter'
         }
 }
 const seprator = (value) => {

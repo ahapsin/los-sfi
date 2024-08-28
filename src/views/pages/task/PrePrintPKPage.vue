@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <!-- <n-collapse>
+        <!-- <n-collapse class="bg-yellow-100">
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
             </n-collapse-item>
@@ -624,7 +624,7 @@ const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 var dt = new Date();
 let year = dt.getFullYear();
-let months = (dt.getMonth() + 1).toString().padStart(2, "0");
+let months = (dt.getMonth() + 2).toString().padStart(2, "0");
 let day = dt.getDate().toString().padStart(2, "0");
 const thisday = `${year}-${months}-${day}`;
 const dataPelanggan = ref([]);

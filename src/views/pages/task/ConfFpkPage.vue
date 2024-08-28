@@ -190,19 +190,26 @@
                     Dokumen
                 </n-divider>
 
-                <n-space>
-                    <n-image-group>
-                        <n-space>
-                            <n-card v-for="attachment in dataAttachment" :key="attachment" class="bg-pr-50 !border-0">
-                                <n-image class="w-10 border-b border-2 rounded-md h-10" :src="attachment.PATH">
-                                </n-image>
-                                {{ attachment.TYPE.toUpperCase() }}
-                            </n-card>
-                        </n-space>
-                    </n-image-group>
-
-                </n-space>
-
+                  <n-space>
+            <div
+              v-for="attachment in dataAttachment"
+              :key="attachment"
+              class="bg-slate-50 !p-0"
+            >
+              <n-space>
+                <n-tooltip placement="top" trigger="hover">
+                  <template #trigger>
+                    <n-image
+                      class="w-20 h-20 border-b border-2 rounded-md"
+                      :src="attachment.PATH"
+                    >
+                    </n-image>
+                  </template>
+                  <span class="uppercase">{{ attachment.TYPE}}</span>
+                </n-tooltip>
+              </n-space>
+            </div>
+          </n-space>
             </n-tab-pane>
             <n-tab-pane name="order" tab="Order">
 
@@ -781,7 +788,7 @@ const optJenisKelamin = ["Laki-laki", "perempuan"].map(
         label: v,
         value: v
     }));
-const optPekerjaan = ["Pedagang", "Petani", "peternak", "Nelayan"].map(
+const optPekerjaan = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
     (v) => ({
         label: v,
         value: v
