@@ -38,11 +38,11 @@
         </n-collapse> -->
 
         <!-- info pelanggan -->
-<n-collapse>
+<!-- <n-collapse>
   <n-collapse-item title="get" name="2">
             <pre>{{ pageData }}</pre>
           </n-collapse-item>
-</n-collapse>
+</n-collapse> -->
         <n-card
           v-show="current == 1"
           title="Informasi pelanggan"

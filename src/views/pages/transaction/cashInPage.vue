@@ -49,6 +49,7 @@
       </n-form-item>
       <n-form-item v-show="searchField">
         <n-card title="Data Nasabah" :bordered="false" embedded size="small">
+          
           <template #header-extra>
             <n-button type="error" quaternary @click="handleCloseNasabah" size="small">
               ganti
@@ -89,7 +90,7 @@
       </n-form-item>
       <n-form-item v-show="searchField">
       
-        <n-data-table size="small" v-model:checked-row-keys="checkedRowFasilitas" :columns="columns" :data="dataKontrak"
+        <n-data-table size="small" v-model:checked-row-keys="checkedRowFasilitas" :row-key="(row)=>row.loan_number" :columns="columns" :data="creditCustomer"
           :pagination="pagination" />
       </n-form-item>
 
@@ -143,7 +144,7 @@
                        <n-button type="primary"> Proses </n-button>
            </n-space>
         </template>
-        <n-list size="small" bordered>
+        <!-- <n-list size="small" bordered>
           <n-list-item class="bg-slate-50">
             <template #prefix>
               <n-checkbox> </n-checkbox>
@@ -168,9 +169,11 @@
               <n-tag size="small" :bordered="false" type="success" v-if="i < 6">PAID</n-tag>
               <n-tag size="small" :bordered="false" type="error" v-else>UNPAID</n-tag>
             </n-space>
-          </n-list-item>
+          </n-list-item> -->
+            <n-data-table size="small" v-model:checked-row-keys="checkedRowCredit" :row-key="(row)=>row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
+          :pagination="pagination" />
 
-        </n-list>
+        <!-- </n-list> -->
       </n-card>
     </n-form>
   </n-card>
@@ -187,7 +190,8 @@ import { computed, onMounted, ref } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 
-const checkedRowFasilitas=ref([1]);
+const checkedRowFasilitas=ref([]);
+const checkedRowCredit=ref([]);
 
 const createColumns = () => {
   return [
@@ -201,7 +205,7 @@ const createColumns = () => {
     },
     {
       title: "NO PK",
-      key: "no_pk",
+      key: "order_number",
     },
     {
       title: "Sisa Angsuran",
@@ -210,6 +214,33 @@ const createColumns = () => {
     {
       title: "Total Bayar",
       key: "total_bayar",
+    },
+  ];
+};
+const createColStruktur = () => {
+  return [
+    {
+      type: "selection",
+    },
+    {
+      title: "Angsuran ke",
+      key: "angsuran_ke",
+    },
+    {
+      title: "No Kontrak",
+      key: "loan_number",
+    },
+    {
+      title: "Jatuh Tempo",
+      key: "tgl_angsuran",
+    },
+    {
+      title: "Angsuran",
+      key: "installment",
+    },
+    {
+      title: "Status",
+      key: "flag",
     },
   ];
 };
@@ -240,6 +271,7 @@ const optBank = [
 const dataCustomer = ref([]);
 const selectedCustomer = ref([]);
 const columns = createColumns();
+const columnStruktur = createColStruktur();
 
 const getDataCustomer = async () => {
   let userToken = localStorage.getItem("token");
@@ -269,9 +301,10 @@ const handleCloseNasabah = () => {
 };
 
 const creditCustomer = ref([]);
+
 const getCreditCustomer = async () => {
   const dynamicBody = {
-    cust_code: "005240600001",
+    cust_code: "001240800001",
   };
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -286,16 +319,45 @@ const getCreditCustomer = async () => {
     router.replace("/");
   } else {
     creditCustomer.value = response.data;
+    getSkalaCredit();
   }
 };
+
+
+const dataStrukturKredit = ref([]);
+const getSkalaCredit = async () => {
+  const dynamicBody = {
+    loan_number : "001240800001"   
+}
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "POST",
+    api: "struktur_kredit",
+    data: dynamicBody,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("sesi berakhir");
+    localStorage.removeItem("token");
+    router.replace("/");
+  } else {
+    dataStrukturKredit.value = response.data;
+  }
+};
+
 const dataKontrak = Array.from({ length: 5 }).map((_, index) => ({
    id: `01905df3-${index}`,
   loan_number: `0052406${index}`,
     cust_code: "005240600001",
     no_pk: `FPK/20240621/ ${index}`,
   sisa_angsuran: `7.050.000`,
-  key: index
+  key: 1
 }));
+
+
+const handleCheckFasilitas = () =>{
+  console.log('list')
+}
 
 
 const listCustomer = computed(() => {
@@ -307,6 +369,11 @@ const listCustomer = computed(() => {
     };
   });
 });
+
+
+
+
+
 const railStyle = ({ focused, checked }) => {
   const style = {};
   if (checked) {
@@ -322,6 +389,11 @@ const railStyle = ({ focused, checked }) => {
   }
   return style;
 };
+
+
+
+
+
 
 const handleExpand = () => {
   console.log('asdasdas');
