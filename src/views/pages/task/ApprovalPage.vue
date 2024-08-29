@@ -1,5 +1,8 @@
 <template>
     <div class="pt-4">
+        <n-alert title="Informasi" type="warning">
+            keterangan informasi
+        </n-alert>
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`" class="bg-white">
                 <template #header-extra>

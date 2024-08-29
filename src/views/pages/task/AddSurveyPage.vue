@@ -1,5 +1,7 @@
 <template>
-
+        <n-alert title="Informasi" type="warning">
+                keterangan informasi
+        </n-alert>
         <n-scrollbar x-scrollable>
                 <n-space class="p-4">
                         <n-steps :current="current" :status="currentStatus" v-model:current="current">
@@ -13,10 +15,12 @@
         <n-space vertical class="pt-4">
                 <n-form ref="formRef" :model="pelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
                         require-mark-placement="right-hanging" :size="size" label-width="auto">
+
                         <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
                                 content: true,
                                 footer: 'soft'
                         }">
+
                                 <n-form-item label="Plafond" path="plafond">
                                         <n-input-number :parse="parse" :format="format" v-model:value="order.plafond"
                                                 placeholder="plafond" :show-button="false" class="flex !w-full"
@@ -139,7 +143,7 @@
                                         <n-form-item label="No KTP" path="no_ktp" class="w-full">
                                                 <n-input :show-button="false" placeholder="NO KTP"
                                                         v-model:value="pelanggan.no_ktp" :loading="loadingKTP"
-                                                        @change="handleKtp" class="w-full" maxlength="16"/>
+                                                        @change="handleKtp" class="w-full" maxlength="16" />
                                         </n-form-item>
                                         <n-form-item label="Kategori Kredit" path="no_ktp" class="w-full">
                                                 <n-select filterable placeholder="Kategori Kredit"
@@ -147,24 +151,32 @@
                                                         v-model:value="order.category" disabled />
                                         </n-form-item>
                                         <n-form-item label="No KK" path="no_kk" class="w-full">
-                                                <n-input placeholder="No Kartu Keluarga"
-                                                        v-model:value="pelanggan.no_kk"  maxlength="16"/>
+                                                <n-input placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk"
+                                                        maxlength="16" />
                                         </n-form-item>
                                 </div>
 
-                                <n-form-item label="Nama" path="nama">
-                                        <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
-                                </n-form-item>
-                                <n-form-item label="Tanggal lahir" path="tgl_lahir">
-                                        <n-space vertical>
-                                                <n-alert title="Informasi" type="warning" :bordered="bordered"
-                                                        v-if="notifUsia"> {{ noteUsia }}</n-alert>
-                                                <n-date-picker placeholder="Tanggal Lahir"
-                                                        v-model:formatted-value="pelanggan.tgl_lahir"
-                                                        value-format="yyyy-MM-dd" type="date"
-                                                        @update:value="handleTanggalLahir" />
-                                        </n-space>
-                                </n-form-item>
+                                <div class="flex gap-2">
+                                        <n-form-item label="Nama" path="nama" class=" w-full">
+                                                <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
+                                        </n-form-item>
+                                        <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
+
+                                                <div>
+                                                        <n-alert title="Informasi" type="warning" :bordered="bordered"
+                                                                v-if="notifUsia"> {{ noteUsia
+                                                                }}</n-alert>
+                                                        <n-date-picker placeholder="Tanggal Lahir" class="w-full"
+                                                                v-model:formatted-value="pelanggan.tgl_lahir"
+                                                                value-format="dd-MM-yyyy" format="dd MMM yyyy"
+                                                                type="date" @update:value="handleTanggalLahir" />
+                                                </div>
+
+                                        </n-form-item>
+                                        <n-form-item label="No Handphone" path="HP" class=" w-full">
+                                                <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
+                                        </n-form-item>
+                                </div>
                                 <n-form-item label="Alamat" path="alamat">
                                         <n-input-group>
                                                 <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" />
@@ -172,9 +184,7 @@
                                                 <n-input placeholder="RW" v-model:value="pelanggan.rw" />
                                         </n-input-group>
                                 </n-form-item>
-                                <n-form-item label="No Handphone" path="HP">
-                                        <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
-                                </n-form-item>
+
                                 <n-divider title-placement="left">
                                         Dokumen Identitas
                                 </n-divider>
@@ -347,12 +357,12 @@
                                         </n-form-item>
                                 </div>
                                 <div class="flex gap-4">
-                                        <n-form-item label="Usaha" path="usaha" class="w-full">
+                                        <!-- <n-form-item label="Usaha" path="usaha" class="w-full">
                                                 <n-input placeholder="usaha" v-model:value="survey.usaha" />
-                                        </n-form-item>
-                                        <n-form-item label="Sektor" path="sektor" class="w-full">
-                                                <n-select filterable placeholder="sektor" counter :options="optSektor"
-                                                        v-model:value="survey.sektor" />
+                                        </n-form-item> -->
+                                        <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
+                                                <n-select filterable placeholder="pekerjaan" counter
+                                                        :options="optSektor" v-model:value="survey.sektor" />
                                         </n-form-item>
                                 </div>
                                 <n-form-item label="Catatan Survey" path="cat_survey">
@@ -495,7 +505,22 @@ const tipeKendaraan = ["motor", "mobil"].map(
                 label: v,
                 value: v
         }));
-const optSektor = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
+const optSektor = [
+        "BURUH HARIAN LEPAS",
+        "BURUH PABRIK",
+        "GURU",
+        "MENGURUS RUMAH TANGGA",
+        "NELAYAN",
+        "PEDAGANG",
+        "PEDAGANG KELONTONG",
+        "PEDAGANG MAKANAN",
+        "PEGAWAI SWASTA",
+        "PELAJAR",
+        "PETANI / PEKEBUN",
+        "PNS",
+        "SOPIR",
+        "WIRASWASTA"
+].map(
         (v) => ({
                 label: v,
                 value: v

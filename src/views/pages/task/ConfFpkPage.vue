@@ -1,4 +1,7 @@
 <template>
+    <n-alert title="Informasi" type="warning">
+        keterangan informasi
+    </n-alert>
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
         <div class="p-2 flex gap-2">
             <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
@@ -103,10 +106,14 @@
                     </n-form-item> -->
                 <!-- </div> -->
                 <div class="flex gap-4">
-                    <n-form-item label="Usaha" path="usaha" class="w-full">
-                        <n-input placeholder="usaha" v-model:value="dataPekerjaan.pekerjaan" />
+                    <!-- <n-form-item label="Usaha" path="usaha" class="w-full"> -->
+                    <!-- <n-input placeholder="usaha" v-model:value="dataPekerjaan.pekerjaan" />
                     </n-form-item>
                     <n-form-item label="Sektor" path="sektor" class="w-full">
+                        <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
+                            v-model:value="dataPekerjaan.pekerjaan_id" />
+                    </n-form-item> -->
+                    <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
                         <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
                             v-model:value="dataPekerjaan.pekerjaan_id" />
                     </n-form-item>
@@ -190,26 +197,19 @@
                     Dokumen
                 </n-divider>
 
-                  <n-space>
-            <div
-              v-for="attachment in dataAttachment"
-              :key="attachment"
-              class="bg-slate-50 !p-0"
-            >
-              <n-space>
-                <n-tooltip placement="top" trigger="hover">
-                  <template #trigger>
-                    <n-image
-                      class="w-20 h-20 border-b border-2 rounded-md"
-                      :src="attachment.PATH"
-                    >
-                    </n-image>
-                  </template>
-                  <span class="uppercase">{{ attachment.TYPE}}</span>
-                </n-tooltip>
-              </n-space>
-            </div>
-          </n-space>
+                <n-space>
+                    <div v-for="attachment in dataAttachment" :key="attachment" class="bg-slate-50 !p-0">
+                        <n-space>
+                            <n-tooltip placement="top" trigger="hover">
+                                <template #trigger>
+                                    <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
+                                    </n-image>
+                                </template>
+                                <span class="uppercase">{{ attachment.TYPE }}</span>
+                            </n-tooltip>
+                        </n-space>
+                    </div>
+                </n-space>
             </n-tab-pane>
             <n-tab-pane name="order" tab="Order">
 
@@ -533,10 +533,10 @@
                                     <n-radio @change="handleChange" name="tenor" value="6">
                                         6 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_6.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -544,10 +544,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="12">
                                         12 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_12.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -555,10 +555,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="18">
                                         18 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_18.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -566,10 +566,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="24">
                                         24 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_24.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -580,10 +580,10 @@
                                     <n-radio @change="handleChange" name="tenor" value="3">
                                         1x 3 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_6.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -591,10 +591,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="6">
                                         1 x 6 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_12.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -602,10 +602,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="12">
                                         2 x 12 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_18.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -613,10 +613,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="18">
                                         3 x 18 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_24.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -788,11 +788,26 @@ const optJenisKelamin = ["Laki-laki", "perempuan"].map(
         label: v,
         value: v
     }));
-const optPekerjaan = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
+const optPekerjaan = [
+    "BURUH HARIAN LEPAS",
+    "BURUH PABRIK",
+    "GURU",
+    "MENGURUS RUMAH TANGGA",
+    "NELAYAN",
+    "PEDAGANG",
+    "PEDAGANG KELONTONG",
+    "PEDAGANG MAKANAN",
+    "PEGAWAI SWASTA",
+    "PELAJAR",
+    "PETANI / PEKEBUN",
+    "PNS",
+    "SOPIR",
+    "WIRASWASTA"
+].map(
     (v) => ({
         label: v,
         value: v
-    }));
+    });
 const optJenisIdentitas = ["KTP", "SIM", 'PASPOR'].map(
     (v) => ({
         label: v,

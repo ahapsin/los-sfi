@@ -1,5 +1,6 @@
 <template>
         <div class="flex h-screen">
+
                 <div class="sidebar w-1/5 ">
                         <div>
                                 <LogoHeader />

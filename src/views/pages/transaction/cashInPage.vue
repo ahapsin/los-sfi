@@ -49,7 +49,7 @@
       </n-form-item>
       <n-form-item v-show="searchField">
         <n-card title="Data Nasabah" :bordered="false" embedded size="small">
-          
+
           <template #header-extra>
             <n-button type="error" quaternary @click="handleCloseNasabah" size="small">
               ganti
@@ -89,24 +89,24 @@
         </n-card>
       </n-form-item>
       <n-form-item v-show="searchField">
-      
-        <n-data-table size="small" v-model:checked-row-keys="checkedRowFasilitas" :row-key="(row)=>row.loan_number" :columns="columns" :data="creditCustomer"
-          :pagination="pagination" />
+
+        <n-data-table size="small" v-model:checked-row-keys="checkedRowFasilitas" :row-key="(row) => row.loan_number"
+          :columns="columns" :data="creditCustomer" :pagination="pagination" />
       </n-form-item>
 
       <n-card title="Daftar Angsuran" size="small" v-show="searchField">
         <template #action>
-            <n-space>
-              <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
-                <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran" v-model:value="tipe_pay" />
-              </n-form-item>
-              <n-form-item path="nestedValue.path2" label="Jumlah Uang">
-                <n-input placeholder="Jumlah Pembayaran" loading size="large">
-                  <template #prefix> Rp. </template>
-                </n-input>
-              </n-form-item>
-            </n-space>
-            
+          <n-space>
+            <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
+              <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran" v-model:value="tipe_pay" />
+            </n-form-item>
+            <n-form-item path="nestedValue.path2" label="Jumlah Uang">
+              <n-input placeholder="Jumlah Pembayaran" loading size="large">
+                <template #prefix> Rp. </template>
+              </n-input>
+            </n-form-item>
+          </n-space>
+
           <n-space v-show="tipe_pay == 'transfer'">
             <n-form-item path="nestedValue.path2" label="Bank">
               <n-select filterable :options="optBank" placeholder="Bank Tujuan" v-model:value="bank" />
@@ -133,16 +133,16 @@
               <n-input size="large" />
             </n-form-item>
           </n-space>
-           <n-space>
-             <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
-                'naive-info': 'hello!',
-              }" :data="{
-                'naive-data': 'cool! naive!',
-              }">
-                <n-button>Attachment</n-button>
-              </n-upload>
-                       <n-button type="primary"> Proses </n-button>
-           </n-space>
+          <n-space>
+            <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
+              'naive-info': 'hello!',
+            }" :data="{
+              'naive-data': 'cool! naive!',
+            }">
+              <n-button>Attachment</n-button>
+            </n-upload>
+            <n-button type="primary"> Proses </n-button>
+          </n-space>
         </template>
         <!-- <n-list size="small" bordered>
           <n-list-item class="bg-slate-50">
@@ -170,7 +170,7 @@
               <n-tag size="small" :bordered="false" type="error" v-else>UNPAID</n-tag>
             </n-space>
           </n-list-item> -->
-            <n-data-table size="small" v-model:checked-row-keys="checkedRowCredit" :row-key="(row)=>row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
+        <n-data-table size="small" :row-key="(row) => row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
           :pagination="pagination" />
 
         <!-- </n-list> -->
@@ -184,14 +184,14 @@ import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
 import { SearchRound as searchIcon, OpenInFullRound as fullIcon } from "@vicons/material";
-
+import { useDialog, useMessage, NIcon, NTag, NButton, NBadge, NAvatar } from "naive-ui";
 import { computed, onMounted, ref } from "vue";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
 
-const checkedRowFasilitas=ref([]);
-const checkedRowCredit=ref([]);
+const checkedRowFasilitas = ref([]);
+const checkedRowCredit = ref([]);
 
 const createColumns = () => {
   return [
@@ -219,9 +219,9 @@ const createColumns = () => {
 };
 const createColStruktur = () => {
   return [
-    {
-      type: "selection",
-    },
+    // {
+    //   type: "selection",
+    // },
     {
       title: "Angsuran ke",
       key: "angsuran_ke",
@@ -239,8 +239,23 @@ const createColStruktur = () => {
       key: "installment",
     },
     {
+      title: "Dibayar",
+      key: "installment",
+    },
+    {
       title: "Status",
-      key: "flag",
+      key: "status",
+      render(row) {
+        return h(
+          NTag,
+          {
+            bordered: false,
+            type: "success",
+          },
+          { default: () => "paid" }
+        );
+
+      }
     },
   ];
 };
@@ -327,8 +342,8 @@ const getCreditCustomer = async () => {
 const dataStrukturKredit = ref([]);
 const getSkalaCredit = async () => {
   const dynamicBody = {
-    loan_number : "001240800001"   
-}
+    loan_number: "001240800001"
+  }
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -346,16 +361,16 @@ const getSkalaCredit = async () => {
 };
 
 const dataKontrak = Array.from({ length: 5 }).map((_, index) => ({
-   id: `01905df3-${index}`,
+  id: `01905df3-${index}`,
   loan_number: `0052406${index}`,
-    cust_code: "005240600001",
-    no_pk: `FPK/20240621/ ${index}`,
+  cust_code: "005240600001",
+  no_pk: `FPK/20240621/ ${index}`,
   sisa_angsuran: `7.050.000`,
   key: 1
 }));
 
 
-const handleCheckFasilitas = () =>{
+const handleCheckFasilitas = () => {
   console.log('list')
 }
 

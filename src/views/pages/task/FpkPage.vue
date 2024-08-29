@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-4">
+    <div class="pt-4" id="drawer-target">
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
@@ -32,7 +32,7 @@
                         <n-button @click="handleNavFile">
                             <template #icon>
                                 <n-icon>
-                                    <file-icon/>
+                                    <file-icon />
                                 </n-icon>
                             </template>
                         </n-button>
@@ -57,12 +57,29 @@
         </n-space> -->
     </div>
 
+    <n-modal preset="card" class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal"
+        :mask-closable="false">
+        <n-card :bordered="false" role="dialog" aria-modal="true">
+            <n-upload multiple directory-dnd action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :max="5">
+                <n-upload-dragger>
+                    <div style="margin-bottom: 12px">
+                        <n-icon size="48" :depth="3">
+                            <file-upload />
+                        </n-icon>
+                    </div>
+                    <n-text style="font-size: 16px">
+                        Klik atau seret file ke area ini untuk diunggah
+                    </n-text>
+                </n-upload-dragger>
+            </n-upload>
+        </n-card>
+    </n-modal>
 </template>
 <script setup>
 import { ref, reactive, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
-import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
+import { useDialog, useMessage, NIcon, NTag, NButton, NBadge, NAvatar } from "naive-ui";
 import { jsPDF } from "jspdf";
 import { useNetwork } from '@vueuse/core';
 const { onlineAt } = useNetwork();
@@ -73,7 +90,9 @@ import {
     SearchOutlined as SearchIcon,
     FileDownloadOutlined as DownloadIcon,
     CalculateOutlined as CalcIcon,
-FilePresentOutlined as FileIcon
+    FilePresentOutlined as FileIcon,
+    FileUploadOutlined as UploadIcon,
+    DriveFolderUploadRound as FileUpload
 } from "@vicons/material"
 import {
     EditOutlined as EditIcon,
@@ -82,7 +101,7 @@ import {
     ListAltOutlined as DetailIcon
 } from "@vicons/material";
 
-
+const iconfile = defineComponent(() => FileIcon);
 const message = useMessage();
 const dialog = useDialog();
 const pk = ref(null);
@@ -129,10 +148,10 @@ const columns = [
                 {
                     bordered: false,
                     type: statusTag(row.status),
-                    size: "small",
                 },
                 { default: () => statusLabel(row.status) }
             );
+
         }
     },
     {
@@ -151,8 +170,8 @@ const columns = [
                 return h(
                     NButton,
                     {
+                        secondary: true,
                         type: type,
-                        size: "small",
                         onClick: (e) => {
                             handlePrePrint(row);
                             //showModal.value = true;
@@ -165,7 +184,33 @@ const columns = [
                 );
             }
         }
-    }, {
+    },
+    {
+        key: "status",
+        render(row) {
+            if (row.flag != 0) {
+                return h(
+                    NButton,
+                    {
+                        secondary: true,
+                        onClick: (e) => {
+                            // handlePrePrint(row);
+                            showModal.value = true;
+                            //handlePrint(row)
+                        },
+                    },
+                    {
+                        default: h(
+                            NIcon, null, {
+                            default: () => h(UploadIcon)
+                        }
+                        )
+                    }
+                );
+            }
+        }
+    },
+    {
         title: "Action",
         align: "right",
         key: "more",
@@ -173,8 +218,8 @@ const columns = [
             return h(
                 NButton,
                 {
+                    secondary: true,
                     type: typeAction(row.status),
-                    size: "tiny",
                     onClick: (e) => {
                         handleAction(row.status, row)
                     },
@@ -186,6 +231,13 @@ const columns = [
         }
     }
 ];
+
+const activeRef = ref(false);
+const placementRef = ref("right");
+const activate = (place) => {
+    activeRef.value = true;
+    placementRef.value = place;
+};
 
 const statusTag = (e) => {
     let status = e.at(0);
@@ -212,6 +264,8 @@ const typeAction = (e) => {
         return "warning";
     } else if (status === "2") {
         return "info";
+    } else {
+        return "success";
     }
     return "info";
 }
@@ -377,7 +431,7 @@ const showData = computed(() => {
 const handleNavCalc = () => {
     router.replace({ name: 'penerimaan uang' });
 }
-const handleNavFile= () => {
+const handleNavFile = () => {
     router.replace({ name: 'serah jaminan' });
 }
 </script>
