@@ -170,8 +170,10 @@
               <n-tag size="small" :bordered="false" type="error" v-else>UNPAID</n-tag>
             </n-space>
           </n-list-item> -->
-        <n-data-table size="small" :row-key="(row) => row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
-          :pagination="pagination" />
+        <n-scrollbar style="max-height: 300px">
+          <n-data-table size="small" :row-key="(row) => row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
+            :pagination="pagination" />
+        </n-scrollbar>
 
         <!-- </n-list> -->
       </n-card>
@@ -235,8 +237,11 @@ const createColStruktur = () => {
       key: "tgl_angsuran",
     },
     {
-      title: "Angsuran",
+      title: "Tagihan",
       key: "installment",
+    },
+    {
+      title: "Denda",
     },
     {
       title: "Dibayar",
