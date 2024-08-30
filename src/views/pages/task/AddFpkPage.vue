@@ -1,5 +1,4 @@
 <template>
-
   <n-spin :show="suspense">
     <n-form ref="formRef" :model="dataPelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
       require-mark-placement="right-hanging" :size="size" label-width="auto">
@@ -60,7 +59,7 @@
 
 
               <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
-                value-format="dd-MM-yyyy" format="dd MMM yyyy" type="date" @update:value="handleTanggalLahir"
+                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir"
                 class="w-full" />
               <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2" v-show="noteUsia">
                 <n-icon color="#FF9100"> <warning-icon /> </n-icon>{{ noteUsia }}
@@ -228,7 +227,7 @@
                 Upload KK
               </n-upload>
             </n-space>
-            <n-upload :data="{ type: 'dokumen lain' }" list-type="image-card" :custom-request="handleImagePost">
+            <n-upload :data="{ type: 'dokumen lain' }" multiple list-type="image-card" :custom-request="handleImagePost">
             </n-upload>
           </n-space>
           <n-divider v-show="actionPage != 'view'" />
@@ -294,8 +293,8 @@
         }">
           <div class="flex gap-2">
             <n-form-item label="Tanggal Order" path="order" class="w-full">
-              <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataOrder.order_tanggal"
-                value-format="yyyy-MM-dd" type="date" class="w-full" />
+              <n-date-picker placeholder="Tanggal order" :default-value="Date.now()" v-model:value-formatted="dataOrder.order_tanggal"
+                value-format="yyyy-MM-dd" type="date" format="dd-MM-yyyy" class="w-full" disabled/>
             </n-form-item>
             <!-- <n-form-item label="Status Order" path="status_order" class="w-full">
                     <n-select filterable placeholder="status order" :options="optStatusOrder"
@@ -398,31 +397,43 @@
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item> -->
             <div class="flex gap-2">
-              <n-form-item label="No Polisi" path="no_polisi">
+              <n-form-item label="No Polisi" path="no_polisi"  class="w-full">
                 <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
               </n-form-item>
               <!-- <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
                                             <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
                                                     type="year" placeholder="Tahun jaminan" clearable />
                                     </n-form-item> -->
-              <n-form-item label="Warna" path="warna">
+              <n-form-item label="Warna" path="warna"  class="w-full">
                 <n-input placeholder="warna" v-model:value="dataTaksasi.warna" />
               </n-form-item>
-              <n-form-item label="No BPKB" path="no_bpkb">
+              <n-form-item label="No BPKB" path="no_bpkb"  class="w-full">
                 <n-input placeholder="No BPKB" v-model:value="dataTaksasi.no_bpkb" />
               </n-form-item>
-              <n-form-item label="Atas Nama" path="atas_nama">
+              <n-form-item label="Atas Nama" path="atas_nama"  class="w-full">
                 <n-input placeholder="Atas Nama" v-model:value="dataTaksasi.atas_nama" />
               </n-form-item>
+              </div>
+              <div class="flex gap-2">
               <!-- <n-form-item label="No Polisi" path="no_polisi">
                             <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
                         </n-form-item> -->
-              <n-form-item label="No Rangka" path="no_rangka">
+              <n-form-item label="No Rangka" path="no_rangka"  class="w-full">
                 <n-input placeholder="No Rangka" v-model:value="dataTaksasi.no_rangka" />
               </n-form-item>
-              <n-form-item label="No Mesin" path="no_mesin">
+              <n-form-item label="No Mesin" path="no_mesin"  class="w-full">
                 <n-input placeholder="No Mesin" v-model:value="dataTaksasi.no_mesin" />
               </n-form-item>
+               <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
+                  <n-date-picker
+                    placeholder="Tanggal Berlaku STNK"
+                    v-model:formatted-value="dataTaksasi.tgl_stnk"
+                    value-format="yyyy-MM-dd"
+                    format="dd-MM-yyyy"
+                    type="date"
+                    class="w-full"
+                  />
+                </n-form-item>
             </div>
             <!-- <n-form-item label="NO STNK" path="no_stnk">
                                         <n-input placeholder="No STNK" v-model:value="jaminan.no_stnk" />
@@ -470,7 +481,7 @@
               <n-input-group>
                 <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
                 <n-date-picker placeholder="Tanggal lahir" v-model:formatted-value="dataPasangan.tgllahir_pasangan"
-                  value-format="yyyy-MM-dd" type="date" class="w-full" />
+                  value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
               </n-input-group>
             </n-form-item>
             <n-form-item label="Pekerjaan" path="nama_kerabat" class="w-full">
@@ -875,6 +886,11 @@ const dataPelanggan = ref({
 const alamatIdentitas = ref({});
 const alamatTagih = ref({});
 const dataPekerjaan = ref({});
+
+var dt = new Date();
+const year = dt.getFullYear();
+const month = (dt.getMonth() + 1).toString().padStart(2, "0");
+const day = dt.getDate().toString().padStart(2, "0");
 const dataOrder = ref({});
 const dataTaksasi = ref({});
 const dataJaminan = reactive({});
@@ -1227,7 +1243,7 @@ const format = (value) => {
 const notifUsia = ref();
 const noteUsia = ref(false);
 const handleTanggalLahir = (e) => {
-  // console.log(e)
+  console.log(e)
   var month_diff = Date.now() - e;
   var age_dt = new Date(month_diff);
   var year = age_dt.getUTCFullYear();

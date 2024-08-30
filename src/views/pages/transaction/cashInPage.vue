@@ -1,5 +1,7 @@
 <template>
   <n-card>
+    <!-- <pre>{{ selectedCustomer.CUST_CODE }}</pre>
+    <pre>{{ checkedRowFasilitas }}</pre> -->
     <template #header>Penerimaan Uang</template>
     <template #header-extra>
       <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
@@ -10,7 +12,7 @@
         </template>
       </n-button>
     </template>
-    <n-form ref="formRef" :model="model" :rules="rules" label-placement="left" require-mark-placement="right-hanging"
+    <n-form ref="formRef" :model="model" :rules="rules" label-placement="top" require-mark-placement="right-hanging"
       :size="size" label-width="auto">
       <n-form-item label="Transaksi" :show-feedback="false" class="w-full">
         <n-grid :cols="2">
@@ -90,8 +92,8 @@
       </n-form-item>
       <n-form-item v-show="searchField">
 
-        <n-data-table size="small" v-model:checked-row-keys="checkedRowFasilitas" :row-key="(row) => row.loan_number"
-          :columns="columns" :data="creditCustomer" :pagination="pagination" />
+        <n-data-table size="small"  :row-key="(row) => row.loan_number"
+          :columns="columns" :data="creditCustomer" :pagination="pagination" :on-update:checked-row-keys="handleFasilitas"/>
       </n-form-item>
 
       <n-card title="Daftar Angsuran" size="small" v-show="searchField">
@@ -101,9 +103,9 @@
               <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran" v-model:value="tipe_pay" />
             </n-form-item>
             <n-form-item path="nestedValue.path2" label="Jumlah Uang">
-              <n-input placeholder="Jumlah Pembayaran" loading size="large">
-                <template #prefix> Rp. </template>
-              </n-input>
+              <n-input-number placeholder="Jumlah Pembayaran" :show-button="false" :parse="parse" :format="format" >
+              
+              </n-input-number>
             </n-form-item>
           </n-space>
 
@@ -170,10 +172,9 @@
               <n-tag size="small" :bordered="false" type="error" v-else>UNPAID</n-tag>
             </n-space>
           </n-list-item> -->
-        <n-scrollbar style="max-height: 300px">
+      
           <n-data-table size="small" :row-key="(row) => row.ID" :columns="columnStruktur" :data="dataStrukturKredit"
-            :pagination="pagination" />
-        </n-scrollbar>
+            :pagination="pagination" :max-height="300" :loading="loadingAngsuran" v-show="dataAngsuran"/>
 
         <!-- </n-list> -->
       </n-card>
@@ -186,7 +187,7 @@ import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
 import { SearchRound as searchIcon, OpenInFullRound as fullIcon } from "@vicons/material";
-import { useDialog, useMessage, NIcon, NTag, NButton, NBadge, NAvatar } from "naive-ui";
+import { useDialog, useMessage, NIcon, NTag, NButton, NBadge, NAvatar, NInput, NInputNumber } from "naive-ui";
 import { computed, onMounted, ref } from "vue";
 
 const searchField = ref(false);
@@ -212,6 +213,9 @@ const createColumns = () => {
     {
       title: "Sisa Angsuran",
       key: "sisa_angsuran",
+      render(row) {
+      return h("div", row.sisa_angsuran.toLocaleString('US'));
+    },
     },
     {
       title: "Total Bayar",
@@ -219,6 +223,16 @@ const createColumns = () => {
     },
   ];
 };
+const parse = (input) => {
+  const nums = input.replace(/,/g, "").trim();
+  if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
+  return nums === "" ? null : Number.NaN;
+};
+const format = (value) => {
+  if (value === null) return "";
+  return value.toLocaleString("en-US");
+};
+
 const createColStruktur = () => {
   return [
     // {
@@ -246,12 +260,38 @@ const createColStruktur = () => {
     {
       title: "Dibayar",
       key: "installment",
+     render(row,index) {
+      return h(
+        NInputNumber,
+        {
+          format:format,
+          parse:parse,
+          showButton:false,
+          secondary: true,
+          placeholder:'pembayaran',
+          value:row.payment,
+          onUpdateValue(v){
+            dataStrukturKredit.value[index].flag = v;
+          }
+        }
+      );
+    },
     },
     {
       title: "Status",
       key: "status",
       render(row) {
+        if(row.flag ==0){
         return h(
+          NTag,
+          {
+            bordered: false,
+            type: "warning",
+          },
+          { default: () => "unpaid" }
+        );
+        }else{
+ return h(
           NTag,
           {
             bordered: false,
@@ -259,7 +299,7 @@ const createColStruktur = () => {
           },
           { default: () => "paid" }
         );
-
+        }
       }
     },
   ];
@@ -292,6 +332,12 @@ const dataCustomer = ref([]);
 const selectedCustomer = ref([]);
 const columns = createColumns();
 const columnStruktur = createColStruktur();
+const dataAngsuran = ref(false);
+const loadingAngsuran = ref(false);
+
+const handleFasilitas = (e) => {
+  getSkalaCredit(e);
+}
 
 const getDataCustomer = async () => {
   let userToken = localStorage.getItem("token");
@@ -324,7 +370,7 @@ const creditCustomer = ref([]);
 
 const getCreditCustomer = async () => {
   const dynamicBody = {
-    cust_code: "001240800001",
+    cust_code: selectedCustomer.value.CUST_CODE,
   };
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -339,16 +385,17 @@ const getCreditCustomer = async () => {
     router.replace("/");
   } else {
     creditCustomer.value = response.data;
-    getSkalaCredit();
+    // getSkalaCredit();
   }
 };
 
 
 const dataStrukturKredit = ref([]);
-const getSkalaCredit = async () => {
+const getSkalaCredit = async (e) => {
   const dynamicBody = {
-    loan_number: "001240800001"
+    loan_number: e
   }
+  loadingAngsuran.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -362,6 +409,8 @@ const getSkalaCredit = async () => {
     router.replace("/");
   } else {
     dataStrukturKredit.value = response.data;
+    dataAngsuran.value=true;
+     loadingAngsuran.value = false;
   }
 };
 
