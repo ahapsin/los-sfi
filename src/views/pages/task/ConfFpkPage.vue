@@ -47,7 +47,7 @@
 
                         <div class="flex flex-col">
                             <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
-                                value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir"
+                                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir"
                                 class="w-full" />
                             <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2">
                                 <n-icon color="#FF9100">
@@ -216,7 +216,7 @@
                 <div class="flex gap-2">
                     <n-form-item label="Tanggal Order" path="order" class="w-full">
                         <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataOrder.order_tanggal"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
                     </n-form-item>
                     <!-- <n-form-item label="Status Order" path="status_order" class="w-full">
                     <n-select filterable placeholder="status order" :options="optStatusOrder"
@@ -391,7 +391,7 @@
                         <n-input-group>
                             <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
                             <n-date-picker placeholder="Tanggal lahir"
-                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd"
+                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd" format="dd-MM-yyyy"
                                 type="date" class="w-full" />
                         </n-input-group>
                     </n-form-item>
@@ -416,7 +416,7 @@
                     </n-form-item>
                     <n-form-item label="Tanggal Lahir" path="order" class="w-full">
                         <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataPenjamin.tgl_lahir"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
                     </n-form-item>
                     <n-form-item label="Hubungan Dengan konsumen" path="hub_konsumen" class=" w-full">
                         <n-select filterable :options="optHubCust" v-model:value="dataPenjamin.hub_cust" />

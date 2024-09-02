@@ -39,6 +39,7 @@
             placeholder="Tanggal order"
             v-model:formatted-value="dynamicForm.awal"
             value-format="yyyy-MM-dd"
+             format="dd-MM-yyyy"
             type="date"
             class="w-full"
             :loading="lodingDateAwal"

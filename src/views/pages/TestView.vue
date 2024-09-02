@@ -1,14 +1,70 @@
 <template>
-    <div class="flex gap-2 p-2 items-center">
-        <img class="h-14 md:h-16 " src="../../assets/logo.png" alt="logo_company">
-        <div>
-            <n-p>
-                <b>KSP DJAYA</b><br />
-                <p class="text-xs lowercase">
-                    JL.BY PASS KANDANGHAUR DEPAN KANTOR PLN BLOK ANJUN DS.KARANGANYAR KEC.KANDANHAUR KAB.INDRAMAYU
-                    KARANGANYAR KANDANGHAUR INDRAMAYU
-                </p>
-            </n-p>
-        </div>
-    </div>
+    {{ checkedRowKeys }}
+  <n-p>
+    You have selected {{ checkedRowKeys.length }} row{{
+      checkedRowKeys.length < 2 ? '' : 's'
+    }}.
+  </n-p>
+
+  <n-data-table
+    :columns="columns"
+    :data="data"
+   :checked-row-keys="checkedRowKeys"
+    :pagination="pagination"
+    :row-key="rowKey"
+    @update:checked-row-keys="handleCheck"
+  />
 </template>
+
+<script>
+import { defineComponent, ref } from "vue";
+
+
+function createColumns() {
+  return [
+    {
+      type: "selection",
+      disabled(row) {
+        return row.name === "Edward King 3";
+      }
+    },
+    {
+      title: "Name",
+      key: "name"
+    },
+    {
+      title: "Age",
+      key: "age"
+    },
+    {
+      title: "Address",
+      key: "address"
+    }
+  ];
+}
+
+const data = Array.from({ length: 46 }).map((_, index) => ({
+  name: `Edward King ${index}`,
+  age: 32,
+  address: `London, Park Lane no. ${index}`
+}));
+
+export default defineComponent({
+  setup() {
+    const checkedRowKeysRef = ref([ "London, Park Lane no. 0", "London, Park Lane no. 2", "London, Park Lane no. 4" ]);
+    
+    return {
+      data,
+      columns: createColumns(),
+      checkedRowKeys: checkedRowKeysRef,
+      pagination: {
+        pageSize: 5
+      },
+      rowKey: (row) => row.address,
+      handleCheck(rowKeys) {
+        checkedRowKeysRef.value = rowKeys;
+      }
+    };
+  }
+});
+</script>

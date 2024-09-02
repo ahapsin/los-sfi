@@ -241,8 +241,8 @@
                 placeholder="Tanggal Lahir"
                 class="w-full"
                 v-model:formatted-value="pelanggan.tgl_lahir"
-                value-format="dd-MM-yyyy"
-                format="dd MMM yyyy"
+                value-format="yyyy-MM-dd"
+                format="dd-MM-yyyy"
                 type="date"
                 @update:value="handleTanggalLahir"
               />
@@ -442,6 +442,7 @@
               v-model:formatted-value="survey.tgl_survey"
               disabled
               value-format="yyyy-MM-dd"
+              format="dd-MM-yyyy"
               type="date"
             />
           </n-form-item>

@@ -505,7 +505,7 @@
             </n-form-item>
             <n-form-item label="Tanggal Lahir" path="order" class="w-full">
               <n-date-picker placeholder="Tanggal lahir" v-model:formatted-value="dataPenjamin.tgl_lahir"
-                value-format="yyyy-MM-dd" type="date" class="w-full" />
+                value-format="yyyy-MM-dd" format="dd-MM-YYYY" type="date" class="w-full" />
             </n-form-item>
           </div>
           <div class="grid grid-cols-3 gap-2">

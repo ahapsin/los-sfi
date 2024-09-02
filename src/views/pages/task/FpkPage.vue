@@ -70,13 +70,12 @@
   </div>
 
   <n-modal
-    preset="card"
     class="w-1/2"
     title="Upload Berkas Pencairan"
     v-model:show="showModal"
     :mask-closable="false"
   >
-    <n-card :bordered="false" role="dialog" aria-modal="true">
+    <n-card :bordered="false" aria-modal="true">
       <n-grid :cols="2">
         <n-gi>
           <div class="flex">
@@ -154,6 +153,9 @@
           </n-space>
         </div>
       </n-space>
+      <div class="pt-4 flex justify-end">
+        <n-button @click="handleSelesai" secondary type="success">Selesai</n-button>
+      </div>
     </n-card>
   </n-modal>
 </template>
@@ -182,7 +184,7 @@ import {
   FileDownloadOutlined as DownloadIcon,
   CalculateOutlined as CalcIcon,
   FilePresentOutlined as FileIcon,
-  FileUploadOutlined as UploadIcon,
+  ImageFilled as UploadIcon,
   DriveFolderUploadRound as FileUpload,
 } from "@vicons/material";
 import {
@@ -206,6 +208,14 @@ const loadingRef = reactive({
   messagePost: null,
 });
 const userToken = localStorage.getItem("token");
+
+const handleSelesai = () => {
+  console.log('selesai');
+  router.replace({
+    name: "Pengajuan Kredit",
+  });
+   showModal.value = false;
+};
 
 const columns = [
   {
@@ -289,11 +299,11 @@ const columns = [
         });
         let typeUpload;
         let classType;
-        if (row.attachment.length <=0) {
-            classType="animate-bounce";
+        if (row.attachment.length <= 0) {
+          classType = "animate-bounce";
           typeUpload = "error";
         } else {
-            classType="animate-none";
+          classType = "animate-none";
           typeUpload = "success";
         }
         return h(
@@ -305,7 +315,7 @@ const columns = [
             onClick: (e) => {
               selectedData.value = row;
               showModal.value = true;
-              console.log(row);
+              // console.log(row);
             },
           },
           {
