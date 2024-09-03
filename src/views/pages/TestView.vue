@@ -1,70 +1,27 @@
 <template>
-    {{ checkedRowKeys }}
-  <n-p>
-    You have selected {{ checkedRowKeys.length }} row{{
-      checkedRowKeys.length < 2 ? '' : 's'
-    }}.
-  </n-p>
-
-  <n-data-table
-    :columns="columns"
-    :data="data"
-   :checked-row-keys="checkedRowKeys"
-    :pagination="pagination"
-    :row-key="rowKey"
-    @update:checked-row-keys="handleCheck"
-  />
+  <n-popconfirm positive-text="ok" negative-text="batal" :show-icon="false">
+    <template #trigger>
+      <n-button text style="font-size: 24px"> <n-icon color="red">
+          <BlackIcon />
+        </n-icon></n-button>
+    </template>
+    <div>
+      tambahakan ke daftar blacklist ?
+      <n-input placeholder="keterangan" type="textarea" size="small" :size="{
+        minRows: 1,
+        maxRows: 1,
+      }" />
+    </div>
+  </n-popconfirm>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-
-
-function createColumns() {
-  return [
-    {
-      type: "selection",
-      disabled(row) {
-        return row.name === "Edward King 3";
-      }
-    },
-    {
-      title: "Name",
-      key: "name"
-    },
-    {
-      title: "Age",
-      key: "age"
-    },
-    {
-      title: "Address",
-      key: "address"
-    }
-  ];
-}
-
-const data = Array.from({ length: 46 }).map((_, index) => ({
-  name: `Edward King ${index}`,
-  age: 32,
-  address: `London, Park Lane no. ${index}`
-}));
+import { defineComponent } from "vue";
+import { BlockFilled as BlackIcon } from "@vicons/material";
 
 export default defineComponent({
-  setup() {
-    const checkedRowKeysRef = ref([ "London, Park Lane no. 0", "London, Park Lane no. 2", "London, Park Lane no. 4" ]);
-    
-    return {
-      data,
-      columns: createColumns(),
-      checkedRowKeys: checkedRowKeysRef,
-      pagination: {
-        pageSize: 5
-      },
-      rowKey: (row) => row.address,
-      handleCheck(rowKeys) {
-        checkedRowKeysRef.value = rowKeys;
-      }
-    };
+  components: {
+    BlackIcon
   }
 });
 </script>

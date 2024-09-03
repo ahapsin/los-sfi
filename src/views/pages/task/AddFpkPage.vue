@@ -35,6 +35,9 @@
         <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
           footer: 'soft',
         }">
+          <template #header-extra>
+            <black-list />
+          </template>
           <div class="flex w-full gap-2">
             <n-form-item label="Nama" path="nama" class="w-full">
               <n-input placeholder="nama" v-model:value="dataPelanggan.nama" />
@@ -227,7 +230,8 @@
                 Upload KK
               </n-upload>
             </n-space>
-            <n-upload :data="{ type: 'dokumen lain' }" multiple list-type="image-card" :custom-request="handleImagePost">
+            <n-upload :data="{ type: 'dokumen lain' }" multiple list-type="image-card"
+              :custom-request="handleImagePost">
             </n-upload>
           </n-space>
           <n-divider v-show="actionPage != 'view'" />
@@ -293,8 +297,9 @@
         }">
           <div class="flex gap-2">
             <n-form-item label="Tanggal Order" path="order" class="w-full">
-              <n-date-picker placeholder="Tanggal order" :default-value="Date.now()" v-model:value-formatted="dataOrder.order_tanggal"
-                value-format="yyyy-MM-dd" type="date" format="dd-MM-yyyy" class="w-full" disabled/>
+              <n-date-picker placeholder="Tanggal order" :default-value="Date.now()"
+                v-model:value-formatted="dataOrder.order_tanggal" value-format="yyyy-MM-dd" type="date"
+                format="dd-MM-yyyy" class="w-full" disabled />
             </n-form-item>
             <!-- <n-form-item label="Status Order" path="status_order" class="w-full">
                     <n-select filterable placeholder="status order" :options="optStatusOrder"
@@ -397,43 +402,37 @@
                                                 v-model:value="jaminan.tipe" />
                                 </n-form-item> -->
             <div class="flex gap-2">
-              <n-form-item label="No Polisi" path="no_polisi"  class="w-full">
+              <n-form-item label="No Polisi" path="no_polisi" class="w-full">
                 <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
               </n-form-item>
               <!-- <n-form-item label="Tahun" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
                                             <n-date-picker v-model:formatted-value="jaminan.tahun" value-format="yyyy"
                                                     type="year" placeholder="Tahun jaminan" clearable />
                                     </n-form-item> -->
-              <n-form-item label="Warna" path="warna"  class="w-full">
+              <n-form-item label="Warna" path="warna" class="w-full">
                 <n-input placeholder="warna" v-model:value="dataTaksasi.warna" />
               </n-form-item>
-              <n-form-item label="No BPKB" path="no_bpkb"  class="w-full">
+              <n-form-item label="No BPKB" path="no_bpkb" class="w-full">
                 <n-input placeholder="No BPKB" v-model:value="dataTaksasi.no_bpkb" />
               </n-form-item>
-              <n-form-item label="Atas Nama" path="atas_nama"  class="w-full">
+              <n-form-item label="Atas Nama" path="atas_nama" class="w-full">
                 <n-input placeholder="Atas Nama" v-model:value="dataTaksasi.atas_nama" />
               </n-form-item>
-              </div>
-              <div class="flex gap-2">
+            </div>
+            <div class="flex gap-2">
               <!-- <n-form-item label="No Polisi" path="no_polisi">
                             <n-input placeholder="No Polisi" v-model:value="dataTaksasi.no_polisi" />
                         </n-form-item> -->
-              <n-form-item label="No Rangka" path="no_rangka"  class="w-full">
+              <n-form-item label="No Rangka" path="no_rangka" class="w-full">
                 <n-input placeholder="No Rangka" v-model:value="dataTaksasi.no_rangka" />
               </n-form-item>
-              <n-form-item label="No Mesin" path="no_mesin"  class="w-full">
+              <n-form-item label="No Mesin" path="no_mesin" class="w-full">
                 <n-input placeholder="No Mesin" v-model:value="dataTaksasi.no_mesin" />
               </n-form-item>
-               <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
-                  <n-date-picker
-                    placeholder="Tanggal Berlaku STNK"
-                    v-model:formatted-value="dataTaksasi.tgl_stnk"
-                    value-format="yyyy-MM-dd"
-                    format="dd-MM-yyyy"
-                    type="date"
-                    class="w-full"
-                  />
-                </n-form-item>
+              <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
+                <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="dataTaksasi.tgl_stnk"
+                  value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
+              </n-form-item>
             </div>
             <!-- <n-form-item label="NO STNK" path="no_stnk">
                                         <n-input placeholder="No STNK" v-model:value="jaminan.no_stnk" />

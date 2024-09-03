@@ -6,18 +6,13 @@
           <n-space>
             <n-popover trigger="click" placement="bottom-end">
               <template #trigger>
-                <n-button>
+                <n-button circle>
                   <n-icon>
                     <search-icon />
                   </n-icon>
                 </n-button>
               </template>
-              <n-input
-                autofocus="true"
-                clearable
-                placeholder="cari disini.."
-                v-model:value="searchBox"
-              />
+              <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
             </n-popover>
             <!-- <n-button>
                             <template #icon>
@@ -27,7 +22,7 @@
                             </template>
                             download
                         </n-button> -->
-            <n-button @click="handleNavCalc">
+            <!-- <n-button @click="handleNavCalc">
               <template #icon>
                 <n-icon>
                   <calc-icon />
@@ -40,7 +35,7 @@
                   <file-icon />
                 </n-icon>
               </template>
-            </n-button>
+            </n-button> -->
             <!-- <n-button type="primary" @click="handleAdd">
                             <template #icon>
                                 <n-icon>
@@ -52,15 +47,8 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <n-data-table
-            size="small"
-            triped
-            :scroll-x="1000"
-            :columns="columns"
-            :data="showData"
-            :pagination="pagination"
-            :loading="loadData"
-          />
+          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="showData"
+            :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
     </n-space>
@@ -69,59 +57,38 @@
         </n-space> -->
   </div>
 
-  <n-modal
-    class="w-1/2"
-    title="Upload Berkas Pencairan"
-    v-model:show="showModal"
-    :mask-closable="false"
-  >
+  <n-modal class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal" :mask-closable="false">
     <n-card :bordered="false" aria-modal="true">
       <n-grid :cols="2">
         <n-gi>
           <div class="flex">
-            <label class="w-24">No Order</label
-            ><span>
-              <n-text strong> {{ selectedData.order_number }}</n-text></span
-            >
+            <label class="w-24">No Order</label><span>
+              <n-text strong> {{ selectedData.order_number }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-24">Nama </label
-            ><span>
-              <n-text strong> {{ selectedData.nama_debitur }}</n-text></span
-            >
+            <label class="w-24">Nama </label><span>
+              <n-text strong> {{ selectedData.nama_debitur }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-24">Plafond</label
-            ><span>
+            <label class="w-24">Plafond</label><span>
               <n-text strong>
-                {{ selectedData.plafond.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ selectedData.plafond.toLocaleString("US") }}</n-text></span>
           </div>
         </n-gi>
         <n-gi>
           <div class="flex">
-            <label class="w-24">Alamat</label
-            ><span>
-              <n-text strong> {{ selectedData.alamat }}</n-text></span
-            >
+            <label class="w-24">Alamat</label><span>
+              <n-text strong> {{ selectedData.alamat }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-24">No Hp</label
-            ><span>
-              <n-text strong> {{ selectedData.hp }}</n-text></span
-            >
+            <label class="w-24">No Hp</label><span>
+              <n-text strong> {{ selectedData.hp }}</n-text></span>
           </div>
         </n-gi>
       </n-grid>
       <n-divider />
-      <n-upload
-        list-type="image"
-        multiple
-        :data="{ type: 'berkas pencairan' }"
-        :custom-request="handleImagePost"
-        :max="5"
-      >
+      <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
+        :max="5">
         <n-upload-dragger>
           <div style="margin-bottom: 12px">
             <n-icon size="48" :depth="3">
@@ -134,18 +101,11 @@
         </n-upload-dragger>
       </n-upload>
       <n-space>
-        <div
-          v-for="attachment in selectedData.attachment"
-          :key="attachment"
-          class="bg-slate-50 !p-0"
-        >
+        <div v-for="attachment in selectedData.attachment" :key="attachment" class="bg-slate-50 !p-0">
           <n-space>
             <n-tooltip placement="top" trigger="hover">
               <template #trigger>
-                <n-image
-                  class="w-20 h-20 border-b border-2 rounded-md"
-                  :src="attachment.PATH"
-                >
+                <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
                 </n-image>
               </template>
               <span class="uppercase">{{ attachment.TYPE }}</span>
@@ -154,7 +114,7 @@
         </div>
       </n-space>
       <div class="pt-4 flex justify-end">
-        <n-button @click="handleSelesai" secondary type="success">Selesai</n-button>
+        <n-button @click="handleSelesai" secondary type="success" round>Selesai</n-button>
       </div>
     </n-card>
   </n-modal>
@@ -193,6 +153,7 @@ import {
   MoreVertRound as MoreIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
+import { round } from "lodash";
 
 const iconfile = defineComponent(() => FileIcon);
 const message = useMessage();
@@ -214,7 +175,7 @@ const handleSelesai = () => {
   router.replace({
     name: "Pengajuan Kredit",
   });
-   showModal.value = false;
+  showModal.value = false;
 };
 
 const columns = [
@@ -276,6 +237,7 @@ const columns = [
           {
             secondary: true,
             type: type,
+            round: true,
             onClick: (e) => {
               handlePrePrint(row);
 
@@ -311,6 +273,7 @@ const columns = [
           {
             class: classType,
             type: typeUpload,
+            circle: true,
             secondary: true,
             onClick: (e) => {
               selectedData.value = row;
@@ -334,6 +297,7 @@ const columns = [
         NButton,
         {
           secondary: true,
+          round: true,
           type: typeAction(row.status),
           onClick: (e) => {
             handleAction(row.status, row);

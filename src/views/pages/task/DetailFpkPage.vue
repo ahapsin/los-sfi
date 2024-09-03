@@ -1,7 +1,7 @@
 <template>
-  <n-alert title="Informasi" type="warning">
+  <!-- <n-alert title="Informasi" type="warning">
     keterangan informasi
-  </n-alert>
+  </n-alert> -->
   <n-card class="mt-2" title="Pengajuan Kredit" closable @close="handleClose">
     <!-- <n-collapse>
       <n-collapse-item title="skemaAngsuran" name="1">
@@ -17,6 +17,9 @@
         <pre>{{ calcCredit }}</pre>
       </n-collapse-item>
     </n-collapse> -->
+    <template #header-extra>
+      <black-list />
+    </template>
     <div class="p-2 flex gap-2">
       <div class="border p-2 rounded-lg bg-green-50 border-green-200 w-full" v-show="approval.kapos">
         <div class="flex gap-2">

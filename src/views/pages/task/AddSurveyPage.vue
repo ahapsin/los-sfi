@@ -1,12 +1,8 @@
 <template>
-  <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert>
+  <!-- <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert> -->
   <n-scrollbar x-scrollable>
     <n-space class="p-4">
-      <n-steps
-        :current="current"
-        :status="currentStatus"
-        v-model:current="current"
-      >
+      <n-steps :current="current" :status="currentStatus" v-model:current="current">
         <n-step title="Informasi Order" />
         <n-step title="Data Pelanggan" />
         <n-step title="Data Jaminan" />
@@ -15,62 +11,40 @@
     </n-space>
   </n-scrollbar>
   <n-space vertical class="pt-4">
-    <n-form
-      ref="formRef"
-      :model="pelanggan"
-      :rules="rules"
-      :label-placement="width <= 920 ? 'top' : 'top'"
-      require-mark-placement="right-hanging"
-      :size="size"
-      label-width="auto"
-    >
-      <n-card
-        v-show="current == 1"
-        title="Informasi Kredit"
-        :segmented="{
-          content: true,
-          footer: 'soft',
-        }"
-      >
+    <n-form ref="formRef" :model="pelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
+      require-mark-placement="right-hanging" :size="size" label-width="auto">
+      <n-card v-show="current == 1" title="Informasi Kredit" :segmented="{
+        content: true,
+        footer: 'soft',
+      }">
+        <div v-show="jaminan.nilai != '' && order.plafond > (jaminan.nilai * 0.5)" class="pb-4">
+          <n-alert title="Info" type="info"> Plafon > Harga Taksasi <b>{{ (jaminan.nilai * 0.5).toLocaleString('US')
+              }}</b></n-alert>
+        </div>
         <n-form-item label="Plafond" path="plafond">
-          <n-input-number
-            :parse="parse"
-            :format="format"
-            v-model:value="order.plafond"
-            placeholder="plafond"
-            :show-button="false"
-            class="flex !w-full"
-            :on-update:value="handlePlafond"
-            :loading="loading"
-          />
+
+          <n-input-number :parse="parse" :format="format" v-model:value="order.plafond" placeholder="plafond"
+            :show-button="false" class="flex !w-full" :on-update:value="handlePlafond" :loading="loading" />
         </n-form-item>
         <n-form-item label="Jenis Angsuran" path="jenis">
-          <n-select
-            filterable
-            placeholder="Jenis Angsuran"
-            :options="jenisAngsuran"
-            v-model:value="order.jenis_angsuran"
-            :on-update:value="handleTipe"
-            :disabled="order.plafond != 0 ? false : true"
-          />
+          <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
+            v-model:value="order.jenis_angsuran" :on-update:value="handleTipe"
+            :disabled="order.plafond != 0 ? false : true" />
         </n-form-item>
 
         <n-form-item label="Tenor / Angsuran" path="tenor">
           <!-- <n-select filterable placeholder="Tenor Kredit" :options="tenorKredit"
                                                 v-model:value="order.tenor" /> -->
-          <div
-            class="flex flex-col md:flex-row"
-            v-show="tipeAngsuran == 'bulanan'"
-          >
+          <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
             <n-radio-group v-model:value="order.tenor" name="radiogroup">
               <n-radio @change="handleChange" name="tenor" value="6">
                 6 bulan<n-text code>
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -81,9 +55,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -94,9 +68,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -107,28 +81,25 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
               </n-radio>
             </n-radio-group>
           </div>
-          <div
-            class="flex flex-col md:flex-row"
-            v-show="tipeAngsuran == 'musiman'"
-          >
+          <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
             <n-radio-group v-model:value="order.tenor" name="radiogroup">
               <n-radio @change="handleChange" name="tenor" value="3">
                 1x 3 bulan<n-text code>
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -139,9 +110,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -152,9 +123,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -165,9 +136,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                                                        ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
-                                                                          "US"
-                                                                        )}`
+                  ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
+                        "US"
+                      )}`
                       : ""
                   }}
                 </n-text>
@@ -176,50 +147,25 @@
           </div>
         </n-form-item>
         <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
-          <n-select
-            filterable
-            placeholder="Tujuan Kredit"
-            :options="tujuanKredit"
-            v-model:value="order.tujuan_kredit"
-          />
+          <n-select filterable placeholder="Tujuan Kredit" :options="tujuanKredit"
+            v-model:value="order.tujuan_kredit" />
         </n-form-item>
       </n-card>
-      <n-card
-        v-show="current == 2"
-        title="Data Pelanggan"
-        :segmented="{
-          content: true,
-          footer: 'soft',
-        }"
-      >
+      <n-card v-show="current == 2" title="Data Pelanggan" :segmented="{
+        content: true,
+        footer: 'soft',
+      }">
         <div class="flex gap-2">
           <n-form-item label="No KTP" path="no_ktp" class="w-full">
-            <n-input
-              :show-button="false"
-              placeholder="NO KTP"
-              v-model:value="pelanggan.no_ktp"
-              :loading="loadingKTP"
-              @change="handleKtp"
-              class="w-full"
-              maxlength="16"
-            />
+            <n-input :show-button="false" placeholder="NO KTP" v-model:value="pelanggan.no_ktp" :loading="loadingKTP"
+              @change="handleKtp" class="w-full" maxlength="16" />
           </n-form-item>
           <n-form-item label="Kategori Kredit" path="no_ktp" class="w-full">
-            <n-select
-              filterable
-              placeholder="Kategori Kredit"
-              :options="optKategori"
-              default-value="Baru"
-              v-model:value="order.category"
-              disabled
-            />
+            <n-select filterable placeholder="Kategori Kredit" :options="optKategori" default-value="Baru"
+              v-model:value="order.category" disabled />
           </n-form-item>
           <n-form-item label="No KK" path="no_kk" class="w-full">
-            <n-input
-              placeholder="No Kartu Keluarga"
-              v-model:value="pelanggan.no_kk"
-              maxlength="16"
-            />
+            <n-input placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk" maxlength="16" />
           </n-form-item>
         </div>
 
@@ -229,30 +175,14 @@
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
             <div>
-              <n-alert
-                title="Informasi"
-                type="warning"
-                :bordered="bordered"
-                v-if="notifUsia"
-              >
-                {{ noteUsia }}</n-alert
-              >
-              <n-date-picker
-                placeholder="Tanggal Lahir"
-                class="w-full"
-                v-model:formatted-value="pelanggan.tgl_lahir"
-                value-format="yyyy-MM-dd"
-                format="dd-MM-yyyy"
-                type="date"
-                @update:value="handleTanggalLahir"
-              />
+              <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia">
+                {{ noteUsia }}</n-alert>
+              <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
+                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
             </div>
           </n-form-item>
           <n-form-item label="No Handphone" path="HP" class="w-full">
-            <n-input
-              placeholder="No Handphone"
-              v-model:value="pelanggan.no_hp"
-            />
+            <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
           </n-form-item>
         </div>
         <n-form-item label="Alamat" path="alamat">
@@ -265,43 +195,24 @@
 
         <n-divider title-placement="left"> Dokumen Identitas </n-divider>
         <n-space>
-          <n-upload
-            :data="{ type: 'ktp' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'ktp' }" list-type="image-card" :custom-request="handleImagePost">
             Upload KTP
           </n-upload>
-          <n-upload
-            :data="{ type: 'ktp pasangan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'ktp pasangan' }" list-type="image-card" :custom-request="handleImagePost">
             Upload KTP Pasangan
           </n-upload>
-          <n-upload
-            :data="{ type: 'kartu keluarga' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'kartu keluarga' }" list-type="image-card" :custom-request="handleImagePost">
             Upload Kartu Keluarga
           </n-upload>
         </n-space>
       </n-card>
-      <n-card
-        v-show="current == 3"
-        class="flex"
-        title="Data Jaminan"
-        :segmented="{
-          content: true,
-          footer: 'soft',
-        }"
-      >
-        <div
-          v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai"
-          class="pb-4"
-        >
-          <n-alert title="Info" type="info"> Plafon > Harga Pasar </n-alert>
+      <n-card v-show="current == 3" class="flex" title="Data Jaminan" :segmented="{
+        content: true,
+        footer: 'soft',
+      }">
+        <div v-show="jaminan.nilai != '' && order.plafond > (jaminan.nilai * 0.5)" class="pb-4">
+          <n-alert title="Info" type="info"> Plafon > Harga Taksasi <b>{{ (jaminan.nilai * 0.5).toLocaleString('US')
+              }}</b></n-alert>
         </div>
         <!-- <n-form-item label="Jenis Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
@@ -313,12 +224,8 @@
                                         </n-alert>
                                 </n-form-item> -->
         <div>
-          <taksasi-select-state
-            v-model:brand="jaminan.merk"
-            v-model:tipe="jaminan.tipe"
-            v-model:tahun="jaminan.tahun"
-            v-model:pasar="jaminan.nilai"
-          />
+          <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe" v-model:tahun="jaminan.tahun"
+            v-model:pasar="jaminan.nilai" />
         </div>
         <!-- <n-form-item label="Tipe Kendaraan" path="tipe_kendaraan">
                                         <n-select filterable placeholder="Tipe Kendaraan" :options="tipeKendaraan"
@@ -330,22 +237,16 @@
                                                 type="year" placeholder="Tahun jaminan" clearable />
                                 </n-form-item> -->
         <div class="flex gap-2">
-                <n-form-item label="NO Polisi" path="no_polisi" class="w-full">
-                  <n-input placeholder="No Polisi" v-model:value="jaminan.no_polisi" />
-                </n-form-item>
-                <n-form-item label="Warna" path="warna" class="w-full">
-                  <n-input placeholder="warna" v-model:value="jaminan.warna" />
-                </n-form-item>
-                <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
-                  <n-date-picker
-                    placeholder="Tanggal Berlaku STNK"
-                    v-model:formatted-value="jaminan.tgl_stnk"
-                    value-format="yyyy-MM-dd"
-                    format="dd-MM-yyyy"
-                    type="date"
-                    class="w-full"
-                  />
-                </n-form-item>
+          <n-form-item label="NO Polisi" path="no_polisi" class="w-full">
+            <n-input placeholder="No Polisi" v-model:value="jaminan.no_polisi" />
+          </n-form-item>
+          <n-form-item label="Warna" path="warna" class="w-full">
+            <n-input placeholder="warna" v-model:value="jaminan.warna" />
+          </n-form-item>
+          <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
+            <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk"
+              value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
+          </n-form-item>
         </div>
         <!-- <n-form-item label="NO BPKB" path="no_bpkb">
                                         <n-input placeholder="No BPKB" v-model:value="jaminan.no_bpkb" />
@@ -372,148 +273,69 @@
                                 </n-form-item> -->
         <n-divider title-placement="left"> Dokumen Jaminan </n-divider>
         <n-space>
-          <n-upload
-            :data="{ type: 'no rangka' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'no rangka' }" list-type="image-card" :custom-request="handleImagePost">
             Upload No Rangka
           </n-upload>
-          <n-upload
-            :data="{ type: 'no mesin' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'no mesin' }" list-type="image-card" :custom-request="handleImagePost">
             Upload No Mesin
           </n-upload>
-          <n-upload
-            :data="{ type: 'stnk' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'stnk' }" list-type="image-card" :custom-request="handleImagePost">
             Upload STNK
           </n-upload>
         </n-space>
         <n-divider />
         <n-space>
-          <n-upload
-            :data="{ type: 'tampak depan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'tampak depan' }" list-type="image-card" :custom-request="handleImagePost">
             Upload tampak depan
           </n-upload>
-          <n-upload
-            :data="{ type: 'tampak belakang' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'tampak belakang' }" list-type="image-card" :custom-request="handleImagePost">
             Upload tampak belakang
           </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kanan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'tampak kanan' }" list-type="image-card" :custom-request="handleImagePost">
             Upload tampak kanan
           </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kiri' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
+          <n-upload :data="{ type: 'tampak kiri' }" list-type="image-card" :custom-request="handleImagePost">
             Upload tampak kiri
           </n-upload>
         </n-space>
       </n-card>
-      <n-card
-        v-show="current == 4"
-        title="Data Survey"
-        :segmented="{
-          content: true,
-          footer: 'soft',
-        }"
-      >
+      <n-card v-show="current == 4" title="Data Survey" :segmented="{
+        content: true,
+        footer: 'soft',
+      }">
         <div class="flex gap-4">
           <n-form-item label="Tanggal survey" path="tgl_survey" class="w-full">
-            <n-date-picker
-              placeholder="Tanggal Survey"
-              class="w-full"
-              v-model:formatted-value="survey.tgl_survey"
-              disabled
-              value-format="yyyy-MM-dd"
-              format="dd-MM-yyyy"
-              type="date"
-            />
+            <n-date-picker placeholder="Tanggal Survey" class="w-full" v-model:formatted-value="survey.tgl_survey"
+              disabled value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" />
           </n-form-item>
           <n-form-item label="Lama Bekerja" path="lama_berkerja" class="w-full">
-            <n-input
-              placeholder="lama bekerja"
-              v-model:value="survey.lama_bekerja"
-              class="w-full"
-            >
+            <n-input placeholder="lama bekerja" v-model:value="survey.lama_bekerja" class="w-full">
               <template #suffix> bulan </template>
             </n-input>
           </n-form-item>
         </div>
         <div class="flex gap-4">
-          <n-form-item
-            label="Pendapatan pelanggan "
-            path="pendapatan"
-            class="w-full"
-          >
-            <n-input-number
-              class="flex w-full"
-              :parse="parse"
-              :format="format"
-              v-model:value="survey.penghasilan.pribadi"
-              placeholder="pendapatan pelanggan"
-              :show-button="false"
-            >
+          <n-form-item label="Pendapatan pelanggan " path="pendapatan" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.pribadi" placeholder="pendapatan pelanggan" :show-button="false">
               <template #suffix> perbulan </template>
             </n-input-number>
           </n-form-item>
-          <n-form-item
-            label="Pendapatan Pasangan"
-            path="pendapatan"
-            class="w-full"
-          >
-            <n-input-number
-              class="flex w-full"
-              :parse="parse"
-              :format="format"
-              v-model:value="survey.penghasilan.pasangan"
-              placeholder="pendapatan pasangan"
-              :show-button="false"
-            >
+          <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.pasangan" placeholder="pendapatan pasangan" :show-button="false">
               <template #suffix> perbulan </template>
             </n-input-number>
           </n-form-item>
-          <n-form-item
-            label="Pendapatan Lainnya"
-            path="pendapatan"
-            class="w-full"
-          >
-            <n-input-number
-              class="flex w-full"
-              :parse="parse"
-              :format="format"
-              v-model:value="survey.penghasilan.lainnya"
-              placeholder="pendapatan lain-lain"
-              :show-button="false"
-            >
+          <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.lainnya" placeholder="pendapatan lain-lain" :show-button="false">
               <template #suffix> perbulan </template>
             </n-input-number>
           </n-form-item>
           <n-form-item label="Pengeluaran" path="pengeluaran" class="w-full">
-            <n-input-number
-              :parse="parse"
-              :format="format"
-              class="w-full"
-              v-model:value="survey.pengeluaran"
-              placeholder="pengeluaran"
-              :show-button="false"
-            >
+            <n-input-number :parse="parse" :format="format" class="w-full" v-model:value="survey.pengeluaran"
+              placeholder="pengeluaran" :show-button="false">
               <template #suffix> perbulan </template>
             </n-input-number>
           </n-form-item>
@@ -523,29 +345,14 @@
                                                 <n-input placeholder="usaha" v-model:value="survey.usaha" />
                                         </n-form-item> -->
           <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
-            <n-select
-              filterable
-              placeholder="pekerjaan"
-              counter
-              :options="optSektor"
-              v-model:value="survey.sektor"
-            />
+            <n-select filterable placeholder="pekerjaan" counter :options="optSektor" v-model:value="survey.sektor" />
           </n-form-item>
         </div>
         <n-form-item label="Catatan Survey" path="cat_survey">
-          <n-input
-            v-model:value="survey.catatan_survey"
-            type="textarea"
-            placeholder="catatan survey"
-            autosize
-          />
+          <n-input v-model:value="survey.catatan_survey" type="textarea" placeholder="catatan survey" autosize />
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
-        <n-upload
-          :data="{ type: 'dokumen pendukung' }"
-          list-type="image-card"
-          :custom-request="handleImagePost"
-        >
+        <n-upload :data="{ type: 'dokumen pendukung' }" list-type="image-card" :custom-request="handleImagePost">
         </n-upload>
       </n-card>
     </n-form>
@@ -567,13 +374,7 @@
         </template>
         Selanjutnya
       </n-button>
-      <n-button
-        :loading="loading"
-        icon-placement="left"
-        type="primary"
-        @click="handleSave"
-        v-else
-      >
+      <n-button :loading="loading" icon-placement="left" type="primary" @click="handleSave" v-else>
         simpan
       </n-button>
     </n-flex>

@@ -3,6 +3,9 @@
         keterangan informasi
     </n-alert>
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
+        <template #header-extra>
+            <black-list />
+        </template>
         <div class="p-2 flex gap-2">
             <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
                 <div class="flex  gap-2">
@@ -47,8 +50,8 @@
 
                         <div class="flex flex-col">
                             <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
-                                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir"
-                                class="w-full" />
+                                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date"
+                                @update:value="handleTanggalLahir" class="w-full" />
                             <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2">
                                 <n-icon color="#FF9100">
                                     <warning-icon />
@@ -391,8 +394,8 @@
                         <n-input-group>
                             <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
                             <n-date-picker placeholder="Tanggal lahir"
-                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd" format="dd-MM-yyyy"
-                                type="date" class="w-full" />
+                                v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd"
+                                format="dd-MM-yyyy" type="date" class="w-full" />
                         </n-input-group>
                     </n-form-item>
                     <n-form-item label="Pekerjaan" path="nama_kerabat" class=" w-full">
