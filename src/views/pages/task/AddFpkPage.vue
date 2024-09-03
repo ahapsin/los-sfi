@@ -36,7 +36,7 @@
           footer: 'soft',
         }">
           <template #header-extra>
-            <black-list />
+            <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk"/>
           </template>
           <div class="flex w-full gap-2">
             <n-form-item label="Nama" path="nama" class="w-full">
