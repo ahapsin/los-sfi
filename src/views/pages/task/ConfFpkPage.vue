@@ -1,7 +1,5 @@
 <template>
-    <n-alert title="Informasi" type="warning">
-        keterangan informasi
-    </n-alert>
+    <blacklist-alert :param="dataPelanggan.no_identitas" />
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
         <template #header-extra>
             <black-list />
@@ -68,9 +66,7 @@
                         <n-input-group>
                             <n-select filterable placeholder="Status Kawin" :options="optStatusKawin"
                                 v-model:value="dataPelanggan.status_kawin" />
-                            <!-- <n-date-picker placeholder="Tanggal Kawin"
-                            v-model:formatted-value="dynamicForm.pelanggan.tgl_kawin" value-format="yyyy-MM-dd"
-                            type="date" /> -->
+
                         </n-input-group>
                     </n-form-item>
                 </div>
@@ -810,7 +806,8 @@ const optPekerjaan = [
     (v) => ({
         label: v,
         value: v
-    });
+    }));
+
 const optJenisIdentitas = ["KTP", "SIM", 'PASPOR'].map(
     (v) => ({
         label: v,

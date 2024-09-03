@@ -1,7 +1,7 @@
 <template>
-  <!-- <n-alert title="Informasi" type="warning">
+  <n-alert title="Informasi" type="warning">
     keterangan informasi
-  </n-alert> -->
+  </n-alert>
   <n-card class="mt-2" title="Pengajuan Kredit" closable @close="handleClose">
     <!-- <n-collapse>
       <n-collapse-item title="skemaAngsuran" name="1">

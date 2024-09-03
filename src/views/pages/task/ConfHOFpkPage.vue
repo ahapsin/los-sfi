@@ -1,4 +1,5 @@
 <template>
+  <blacklist-alert :param="dataPelanggan.no_identitas" />
   <n-card title="Pengajuan Kredit" closable @close="handleClose">
     <template #header-extra>
       <black-list />
@@ -80,10 +81,7 @@
           <n-form-item label="No KK" path="no KK" class="w-full">
             <n-input placeholder="No Kartu Keluarga" v-model:value="dataPelanggan.no_kk" />
           </n-form-item>
-          <!-- <n-form-item label="Warganegara" path="warganegara" class="w-full">
-                    <n-input placeholder="Warganegara" v-model:value="dataPelanggan.warganegara">
-                    </n-input>
-                </n-form-item> -->
+
         </div>
         <!-- <div class="flex gap-2"> -->
         <!-- <n-form-item label="Pekerjaan" path="nama" class="w-full">
@@ -828,7 +826,7 @@ const optPekerjaan = [
   (v) => ({
     label: v,
     value: v
-  });
+  }));
 const optJenisIdentitas = ["KTP", "SIM", "PASPOR"].map((v) => ({
   label: v,
   value: v,
