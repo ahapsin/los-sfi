@@ -1,5 +1,5 @@
 <template>
-  <!-- <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert> -->
+  <blacklist-alert :pesan="bl_pesan"/>
   <n-scrollbar x-scrollable>
     <n-space class="p-4">
       <n-steps :current="current" :status="currentStatus" v-model:current="current">
@@ -158,7 +158,7 @@
         <div class="flex gap-2">
           <n-form-item label="No KTP" path="no_ktp" class="w-full">
             <n-input :show-button="false" placeholder="NO KTP" v-model:value="pelanggan.no_ktp" :loading="loadingKTP"
-              @change="handleKtp" class="w-full" maxlength="16" />
+              @change="handleKtp" class="w-full" maxlength="16" clearable />
           </n-form-item>
           <n-form-item label="Kategori Kredit" path="no_ktp" class="w-full">
             <n-select filterable placeholder="Kategori Kredit" :options="optKategori" default-value="Baru"
@@ -392,6 +392,7 @@ import { useMessage } from "naive-ui";
 import router from "../../../router";
 import { eagerComputed, useWindowSize } from "@vueuse/core";
 import { useApi } from "../../../helpers/axios";
+import { useBlacklist } from "../../../helpers/blacklist";
 import _ from "lodash";
 import { lyla } from "@lylajs/web";
 const { width, height } = useWindowSize();
@@ -571,11 +572,15 @@ const handlePlafond = (e) => {
   refAdmin(body);
 };
 const loadingKTP = ref(false);
+const bl_pesan=ref();
 const handleKtp = async (e) => {
   loadingKTP.value = true;
   const bodyForm = {
     no_ktp: e,
   };
+
+bl_pesan.value = await useBlacklist(e);
+
   const response = await useApi({
     method: "POST",
     api: "check_ro",
