@@ -1,4 +1,5 @@
 <template>
+  <blacklist-alert :pesan="bl_pesan" />
   <n-spin :show="suspense">
     <n-form ref="formRef" :model="dataPelanggan" :rules="rules" :label-placement="width <= 920 ? 'top' : 'top'"
       require-mark-placement="right-hanging" :size="size" label-width="auto">
@@ -36,7 +37,7 @@
           footer: 'soft',
         }">
           <template #header-extra>
-            <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk"/>
+            <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk" />
           </template>
           <div class="flex w-full gap-2">
             <n-form-item label="Nama" path="nama" class="w-full">
@@ -837,6 +838,7 @@ import {
 import { useRoute } from "vue-router";
 
 import { useApi } from "../../../helpers/axios";
+import { useBlacklist } from "../../../helpers/blacklist";
 import router from "../../../router";
 import { useMessage } from "naive-ui";
 const message = useMessage();
@@ -1099,49 +1101,55 @@ const rules = {
     message: "No identitas minimal 16 karakter",
   },
 };
-const response = () =>
-  useApi({
+
+const bl_pesan = ref();
+
+const getData = async () => {
+  const response = await useApi({
     method: "get",
     api: `cr_application/${idApp}`,
     token: userToken,
-  }).then((res) => {
-    if (!res.ok) {
-      message.error("halam tidak ditemukan !");
-      suspense.value = true;
-    } else {
-      message.loading("memuat fpk");
-      suspense.value = false;
-      pageData.value = res.data.response;
-      // dynamicForm.pelanggan = pageData.value.pelanggan;
-      // alamatIdentitas = pageData.value.alamat_identitas;
-      // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
-      // dynamicForm.pekerjaan = pageData.value.pekerjaan;
-      // dynamicForm.order = pageData.value.order;
-      // dynamicForm.tambahan = pageData.value.tambahan;
-      // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
-      // dynamicForm.surat = pageData.value.surat;
-      Object.assign(calcCredit, pageData.value.ekstra);
-      Object.assign(dataPelanggan.value, pageData.value.pelanggan);
-      Object.assign(dataPenjamin.value, pageData.value.penjamin);
-      Object.assign(dataPasangan.value, pageData.value.pasangan);
-      Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
-      Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
-      Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
-      Object.assign(dataOrder.value, pageData.value.order);
-      Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan);
-      Object.assign(dataTambahan.value, pageData.value.tambahan);
-      Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
-      Object.assign(dataSurat.value, pageData.value.surat);
-      Object.assign(dataBank.value, pageData.value.info_bank);
-      Object.assign(dataAttachment.value, pageData.value.attachment);
-      let tgllahir = toRef(pageData.value.pelanggan);
-      var myDate = tgllahir.value.tgl_lahir;
-      myDate = myDate.split("-");
-      var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
-      handleTanggalLahir(newDate.getTime());
-      handleEkstra();
-    }
   });
+  if (!response.ok) {
+    message.error("halam tidak ditemukan !");
+    suspense.value = true;
+  } else {
+    message.loading("memuat fpk");
+    suspense.value = false;
+    pageData.value = response.data.response;
+    // dynamicForm.pelanggan = pageData.value.pelanggan;
+    // alamatIdentitas = pageData.value.alamat_identitas;
+    // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
+    // dynamicForm.pekerjaan = pageData.value.pekerjaan;
+    // dynamicForm.order = pageData.value.order;
+    // dynamicForm.tambahan = pageData.value.tambahan;
+    // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
+    // dynamicForm.surat = pageData.value.surat;
+    Object.assign(calcCredit, pageData.value.ekstra);
+    Object.assign(calcCredit, pageData.value.pelanggan);
+    Object.assign(dataPelanggan.value, pageData.value.pelanggan);
+    Object.assign(dataPenjamin.value, pageData.value.penjamin);
+    Object.assign(dataPasangan.value, pageData.value.pasangan);
+    Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
+    Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
+    Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
+    Object.assign(dataOrder.value, pageData.value.order);
+    Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan);
+    Object.assign(dataTambahan.value, pageData.value.tambahan);
+    Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
+    Object.assign(dataSurat.value, pageData.value.surat);
+    Object.assign(dataBank.value, pageData.value.info_bank);
+    Object.assign(dataAttachment.value, pageData.value.attachment);
+    let tgllahir = toRef(pageData.value.pelanggan);
+    var myDate = tgllahir.value.tgl_lahir;
+    myDate = myDate.split("-");
+    var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
+    handleTanggalLahir(newDate.getTime());
+    handleEkstra();
+  }
+  bl_pesan.value = await useBlacklist(calcCredit.no_identitas);
+};
+
 
 const refAdmin = async (body) => {
   skemaAngsuran.value = [];
@@ -1180,7 +1188,7 @@ const handlePlafond = (e) => {
   handleChange();
 };
 const handleEkstra = () => {
-  calcCredit.tenor = calcCredit.tenor.toString();
+  calcCredit.tenor = calcCredit.tenor ? calcCredit.tenor.toString() : null;
   const body = {
     plafond: calcCredit.nilai_yang_diterima,
     jenis_angsuran: calcCredit.jenis_angsuran,
@@ -1242,7 +1250,6 @@ const format = (value) => {
 const notifUsia = ref();
 const noteUsia = ref(false);
 const handleTanggalLahir = (e) => {
-  console.log(e)
   var month_diff = Date.now() - e;
   var age_dt = new Date(month_diff);
   var year = age_dt.getUTCFullYear();
@@ -1329,7 +1336,7 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
       onError();
     });
 };
-onMounted(() => {
-  response();
-});
+onMounted(
+  getData
+);
 </script>

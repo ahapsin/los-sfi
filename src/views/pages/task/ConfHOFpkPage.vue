@@ -1,8 +1,8 @@
 <template>
-  <blacklist-alert :param="dataPelanggan.no_identitas" />
+  <blacklist-alert :pesan="bl_pesan" />
   <n-card title="Pengajuan Kredit" closable @close="handleClose">
     <template #header-extra>
-      <black-list />
+      <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk" />
     </template>
     <div class="p-2 flex gap-2">
       <div class="border p-2 rounded-lg bg-green-50 border-green-200 w-full" v-show="approval.kapos">
@@ -687,6 +687,7 @@ import {
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
+import { useBlacklist } from "../../../helpers/blacklist";
 import router from "../../../router";
 const message = useMessage();
 const loading = ref(false);
@@ -919,51 +920,53 @@ const sum = (num1, num2) => {
   }
   return num1 + num2;
 };
-
-const response = () =>
-  useApi({
+const bl_pesan = ref();
+const getData = async () => {
+  const response = await useApi({
     method: "get",
     api: `cr_application/${idApp}`,
     token: userToken,
-  }).then((res) => {
-    if (!res.ok) {
-      message.error("halam tidak ditemukan !");
-      suspense.value = true;
-    } else {
-      message.loading("memuat fpk");
-      suspense.value = false;
-      pageData.value = res.data.response;
-      // dynamicForm.pelanggan = pageData.value.pelanggan;
-      // alamatIdentitas = pageData.value.alamat_identitas;
-      // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
-      // dynamicForm.pekerjaan = pageData.value.pekerjaan;
-      // dynamicForm.order = pageData.value.order;
-      // dynamicForm.tambahan = pageData.value.tambahan;
-      // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
-      // dynamicForm.surat = pageData.value.surat;
-      Object.assign(calcCredit, pageData.value.ekstra);
-      Object.assign(dataPelanggan.value, pageData.value.pelanggan);
-      Object.assign(dataPenjamin.value, pageData.value.penjamin);
-      Object.assign(dataPasangan.value, pageData.value.pasangan);
-      Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
-      Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
-      Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
-      Object.assign(dataOrder.value, pageData.value.order);
-      Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan);
-      Object.assign(dataTambahan.value, pageData.value.tambahan);
-      Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
-      Object.assign(dataSurat.value, pageData.value.surat);
-      Object.assign(dataBank.value, pageData.value.info_bank);
-      Object.assign(dataAttachment.value, pageData.value.attachment);
-      Object.assign(approval.value, pageData.value.approval);
-      let tgllahir = toRef(pageData.value.pelanggan);
-      var myDate = tgllahir.value.tgl_lahir;
-      myDate = myDate.split("-");
-      var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
-      handleTanggalLahir(newDate.getTime());
-      handleEkstra();
-    }
   });
+  if (!response.ok) {
+    message.error("halam tidak ditemukan !");
+    suspense.value = true;
+  } else {
+    message.loading("memuat fpk");
+    suspense.value = false;
+    pageData.value = response.data.response;
+    // dynamicForm.pelanggan = pageData.value.pelanggan;
+    // alamatIdentitas = pageData.value.alamat_identitas;
+    // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
+    // dynamicForm.pekerjaan = pageData.value.pekerjaan;
+    // dynamicForm.order = pageData.value.order;
+    // dynamicForm.tambahan = pageData.value.tambahan;
+    // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
+    // dynamicForm.surat = pageData.value.surat;
+    Object.assign(calcCredit, pageData.value.ekstra);
+    Object.assign(calcCredit, pageData.value.pelanggan);
+    Object.assign(dataPelanggan.value, pageData.value.pelanggan);
+    Object.assign(dataPenjamin.value, pageData.value.penjamin);
+    Object.assign(dataPasangan.value, pageData.value.pasangan);
+    Object.assign(alamatIdentitas.value, pageData.value.alamat_identitas);
+    Object.assign(alamatTagih.value, pageData.value.alamat_tagih);
+    Object.assign(dataPekerjaan.value, pageData.value.pekerjaan);
+    Object.assign(dataOrder.value, pageData.value.order);
+    Object.assign(dataTaksasi.value, pageData.value.jaminan_kendaraan);
+    Object.assign(dataTambahan.value, pageData.value.tambahan);
+    Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
+    Object.assign(dataSurat.value, pageData.value.surat);
+    Object.assign(dataBank.value, pageData.value.info_bank);
+    Object.assign(dataAttachment.value, pageData.value.attachment);
+    let tgllahir = toRef(pageData.value.pelanggan);
+    var myDate = tgllahir.value.tgl_lahir;
+    myDate = myDate.split("-");
+    var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
+    handleTanggalLahir(newDate.getTime());
+    handleEkstra();
+  }
+  bl_pesan.value = await useBlacklist(calcCredit.no_identitas);
+};
+
 
 const refAdmin = async (body) => {
   skemaAngsuran.value = [];

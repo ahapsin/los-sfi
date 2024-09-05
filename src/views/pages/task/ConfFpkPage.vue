@@ -1,8 +1,8 @@
 <template>
-    <blacklist-alert :param="dataPelanggan.no_identitas" />
+    <blacklist-alert :pesan="bl_pesan" />
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
         <template #header-extra>
-            <black-list />
+            <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk" />
         </template>
         <div class="p-2 flex gap-2">
             <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
@@ -690,6 +690,7 @@ import { MessageOutlined as MessageIcon, ArrowForwardOutlined as ArrowForward, S
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
+import { useBlacklist } from "../../../helpers/blacklist";
 import router from '../../../router';
 const message = useMessage();
 const loading = ref(false);
@@ -878,7 +879,7 @@ const optHubCust = ["PASANGAN", "SAUDARA", "ORANG TUA"].map(
 const idApp = baseRoute.params.idapplication;
 const actionPage = baseRoute.params.action;
 const approval = ref({});
-
+const bl_pesan = ref();
 const copyAddress = () => Object.assign(alamatTagih.value, alamatIdentitas.value);
 const sum = (num1, num2) => {
     if (isNaN(num1) || isNaN(num2)) {
@@ -887,19 +888,19 @@ const sum = (num1, num2) => {
     return num1 + num2;
 };
 
-const response = () => useApi({
-    method: 'get',
-    api: `cr_application/${idApp}`,
-    token: userToken
-}).then(res => {
-
-    if (!res.ok) {
+const getData = async () => {
+    const response = await useApi({
+        method: "get",
+        api: `cr_application/${idApp}`,
+        token: userToken,
+    });
+    if (!response.ok) {
         message.error("halam tidak ditemukan !");
         suspense.value = true;
     } else {
         message.loading("memuat fpk");
         suspense.value = false;
-        pageData.value = res.data.response;
+        pageData.value = response.data.response;
         // dynamicForm.pelanggan = pageData.value.pelanggan;
         // alamatIdentitas = pageData.value.alamat_identitas;
         // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
@@ -909,6 +910,7 @@ const response = () => useApi({
         // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
         // dynamicForm.surat = pageData.value.surat;
         Object.assign(calcCredit, pageData.value.ekstra);
+        Object.assign(calcCredit, pageData.value.pelanggan);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(dataPenjamin.value, pageData.value.penjamin);
         Object.assign(dataPasangan.value, pageData.value.pasangan);
@@ -922,7 +924,6 @@ const response = () => useApi({
         Object.assign(dataSurat.value, pageData.value.surat);
         Object.assign(dataBank.value, pageData.value.info_bank);
         Object.assign(dataAttachment.value, pageData.value.attachment);
-        Object.assign(approval.value, pageData.value.approval);
         let tgllahir = toRef(pageData.value.pelanggan);
         var myDate = tgllahir.value.tgl_lahir;
         myDate = myDate.split("-");
@@ -930,7 +931,9 @@ const response = () => useApi({
         handleTanggalLahir(newDate.getTime());
         handleEkstra();
     }
-});
+    bl_pesan.value = await useBlacklist(calcCredit.no_identitas);
+};
+
 
 const refAdmin = async (body) => {
     skemaAngsuran.value = [];

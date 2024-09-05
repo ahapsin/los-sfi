@@ -1,6 +1,6 @@
 <template>
   <div class="py-2" v-show="props.pesan">
-    <n-alert title="ditemukan didata Blacklist" type="warning">
+    <n-alert title="data ditemukan didaftar blacklist" type="warning">
       <template #icon>
         <n-icon>
           <block-icon />
