@@ -28,13 +28,13 @@ const routes = [
     component: () => import("../views/pages/DashboardPage.vue"),
     children: [
       {
-        path: "cash-in",
-        name: "penerimaan uang",
+        path: "payment",
+        name: "pembayaran",
         component: () => import("../views/pages/transaction/cashInPage.vue"),
       },
       {
-        path: "serah-jaminan",
-        name: "serah jaminan",
+        path: "bpkb",
+        name: "bpkb",
         component: () => import("../views/pages/transaction/deliveryPage.vue"),
       },
     ],

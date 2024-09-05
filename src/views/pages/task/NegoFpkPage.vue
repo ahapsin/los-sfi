@@ -18,7 +18,7 @@
                     </n-form-item>
                     <n-form-item label="Tanggal Lahir" path="tgl_lahir" class="w-full">
                         <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" disabled />
+                            value-format="yyyy-MM-dd"  format="dd-MM-yyyy" type="date" class="w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Golongan Darah" path="gol_darah" class="w-full">
                         <n-input placeholder="golongan darah" v-model:value="dataPelanggan.gol_darah" readonly>
@@ -158,7 +158,7 @@
                 <div class="flex gap-2">
                     <n-form-item label="Tanggal Order" path="order" class="w-full">
                         <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataOrder.order_tanggal"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" disabled />
+                            value-format="yyyy-MM-dd"  format="dd-MM-yyyy" type="date" class="w-full" disabled />
                     </n-form-item>
                     <n-form-item label="Status Order" path="status_order" class="w-full">
                         <n-select disabled placeholder="status order" :options="optStatusOrder"

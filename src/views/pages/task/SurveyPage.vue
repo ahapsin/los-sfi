@@ -7,7 +7,7 @@
                                                 <div class="me-1">
                                                         <n-popover trigger="click" placement="bottom-end">
                                                                 <template #trigger>
-                                                                        <n-button>
+                                                                        <n-button circle>
                                                                                 <n-icon>
                                                                                         <search-icon />
                                                                                 </n-icon>
@@ -29,7 +29,7 @@
                                                         </n-button>
                                                 </div> -->
                                                 <div class="md:hidden">
-                                                        <n-button>
+                                                        <n-button circle>
                                                                 <template #icon>
                                                                         <n-icon>
                                                                                 <download-icon />
@@ -38,13 +38,13 @@
                                                         </n-button>
                                                 </div>
                                                 <div class="hidden md:flex">
-                                                        <n-button type="primary" @click="handleAdd">
+                                                        <n-button type="primary" strong @click="handleAdd" round>
                                                                 <template #icon>
                                                                         <n-icon>
                                                                                 <add-icon />
                                                                         </n-icon>
                                                                 </template>
-                                                                <strong>tambah</strong>
+                                                                tambah
                                                         </n-button>
                                                 </div>
                                                 <div class=" md:hidden">
@@ -119,7 +119,7 @@ const columns = [
                         return h(
                                 NTag,
                                 {
-                                        bordered: false,
+
                                         type: statusTag(row.status),
                                         size: "small",
                                 },
@@ -151,6 +151,7 @@ const columns = [
                                 },
                                 {
                                         default: h(NButton, {
+                                                round: true,
                                                 size: "small",
                                         }, { default: () => 'Action' })
                                 }

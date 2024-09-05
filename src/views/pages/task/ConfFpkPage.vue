@@ -1,5 +1,9 @@
 <template>
+    <blacklist-alert :pesan="bl_pesan" />
     <n-card title="Pengajuan Kredit" closable @close="handleClose">
+        <template #header-extra>
+            <black-list :no_ktp="dataPelanggan.no_identitas" :no_kk="dataPelanggan.no_kk" />
+        </template>
         <div class="p-2 flex gap-2">
             <div class="border p-2 rounded-lg  bg-green-50 border-green-200 w-full" v-show="approval.kapos">
                 <div class="flex  gap-2">
@@ -44,8 +48,8 @@
 
                         <div class="flex flex-col">
                             <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
-                                value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir"
-                                class="w-full" />
+                                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date"
+                                @update:value="handleTanggalLahir" class="w-full" />
                             <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2">
                                 <n-icon color="#FF9100">
                                     <warning-icon />
@@ -62,9 +66,7 @@
                         <n-input-group>
                             <n-select filterable placeholder="Status Kawin" :options="optStatusKawin"
                                 v-model:value="dataPelanggan.status_kawin" />
-                            <!-- <n-date-picker placeholder="Tanggal Kawin"
-                            v-model:formatted-value="dynamicForm.pelanggan.tgl_kawin" value-format="yyyy-MM-dd"
-                            type="date" /> -->
+
                         </n-input-group>
                     </n-form-item>
                 </div>
@@ -103,10 +105,14 @@
                     </n-form-item> -->
                 <!-- </div> -->
                 <div class="flex gap-4">
-                    <n-form-item label="Usaha" path="usaha" class="w-full">
-                        <n-input placeholder="usaha" v-model:value="dataPekerjaan.pekerjaan" />
+                    <!-- <n-form-item label="Usaha" path="usaha" class="w-full"> -->
+                    <!-- <n-input placeholder="usaha" v-model:value="dataPekerjaan.pekerjaan" />
                     </n-form-item>
                     <n-form-item label="Sektor" path="sektor" class="w-full">
+                        <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
+                            v-model:value="dataPekerjaan.pekerjaan_id" />
+                    </n-form-item> -->
+                    <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
                         <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
                             v-model:value="dataPekerjaan.pekerjaan_id" />
                     </n-form-item>
@@ -190,33 +196,26 @@
                     Dokumen
                 </n-divider>
 
-                  <n-space>
-            <div
-              v-for="attachment in dataAttachment"
-              :key="attachment"
-              class="bg-slate-50 !p-0"
-            >
-              <n-space>
-                <n-tooltip placement="top" trigger="hover">
-                  <template #trigger>
-                    <n-image
-                      class="w-20 h-20 border-b border-2 rounded-md"
-                      :src="attachment.PATH"
-                    >
-                    </n-image>
-                  </template>
-                  <span class="uppercase">{{ attachment.TYPE}}</span>
-                </n-tooltip>
-              </n-space>
-            </div>
-          </n-space>
+                <n-space>
+                    <div v-for="attachment in dataAttachment" :key="attachment" class="bg-slate-50 !p-0">
+                        <n-space>
+                            <n-tooltip placement="top" trigger="hover">
+                                <template #trigger>
+                                    <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
+                                    </n-image>
+                                </template>
+                                <span class="uppercase">{{ attachment.TYPE }}</span>
+                            </n-tooltip>
+                        </n-space>
+                    </div>
+                </n-space>
             </n-tab-pane>
             <n-tab-pane name="order" tab="Order">
 
                 <div class="flex gap-2">
                     <n-form-item label="Tanggal Order" path="order" class="w-full">
                         <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataOrder.order_tanggal"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
                     </n-form-item>
                     <!-- <n-form-item label="Status Order" path="status_order" class="w-full">
                     <n-select filterable placeholder="status order" :options="optStatusOrder"
@@ -392,7 +391,7 @@
                             <n-input placeholder="Tempat lahir" v-model:value="dataPasangan.tmptlahir_pasangan" />
                             <n-date-picker placeholder="Tanggal lahir"
                                 v-model:formatted-value="dataPasangan.tgllahir_pasangan" value-format="yyyy-MM-dd"
-                                type="date" class="w-full" />
+                                format="dd-MM-yyyy" type="date" class="w-full" />
                         </n-input-group>
                     </n-form-item>
                     <n-form-item label="Pekerjaan" path="nama_kerabat" class=" w-full">
@@ -416,7 +415,7 @@
                     </n-form-item>
                     <n-form-item label="Tanggal Lahir" path="order" class="w-full">
                         <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dataPenjamin.tgl_lahir"
-                            value-format="yyyy-MM-dd" type="date" class="w-full" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
                     </n-form-item>
                     <n-form-item label="Hubungan Dengan konsumen" path="hub_konsumen" class=" w-full">
                         <n-select filterable :options="optHubCust" v-model:value="dataPenjamin.hub_cust" />
@@ -533,10 +532,10 @@
                                     <n-radio @change="handleChange" name="tenor" value="6">
                                         6 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_6.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -544,10 +543,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="12">
                                         12 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_12.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -555,10 +554,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="18">
                                         18 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_18.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -566,10 +565,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="24">
                                         24 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_24.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -580,10 +579,10 @@
                                     <n-radio @change="handleChange" name="tenor" value="3">
                                         1x 3 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_6.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -591,10 +590,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="6">
                                         1 x 6 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_12.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -602,10 +601,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="12">
                                         2 x 12 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_18.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -613,10 +612,10 @@
                                     <n-radio name="tenor" @change="handleChange" value="18">
                                         3 x 18 bulan<n-text code>
                                             {{ skemaAngsuran.length == null ?
-                                            ` /
+                                                ` /
                                             ${skemaAngsuran.tenor_24.angsuran.toLocaleString('US')}`
-                                            :
-                                            ''
+                                                :
+                                                ''
                                             }}
                                         </n-text>
                                     </n-radio>
@@ -691,6 +690,7 @@ import { MessageOutlined as MessageIcon, ArrowForwardOutlined as ArrowForward, S
 import { useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
+import { useBlacklist } from "../../../helpers/blacklist";
 import router from '../../../router';
 const message = useMessage();
 const loading = ref(false);
@@ -788,11 +788,27 @@ const optJenisKelamin = ["Laki-laki", "perempuan"].map(
         label: v,
         value: v
     }));
-const optPekerjaan = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
+const optPekerjaan = [
+    "BURUH HARIAN LEPAS",
+    "BURUH PABRIK",
+    "GURU",
+    "MENGURUS RUMAH TANGGA",
+    "NELAYAN",
+    "PEDAGANG",
+    "PEDAGANG KELONTONG",
+    "PEDAGANG MAKANAN",
+    "PEGAWAI SWASTA",
+    "PELAJAR",
+    "PETANI / PEKEBUN",
+    "PNS",
+    "SOPIR",
+    "WIRASWASTA"
+].map(
     (v) => ({
         label: v,
         value: v
     }));
+
 const optJenisIdentitas = ["KTP", "SIM", 'PASPOR'].map(
     (v) => ({
         label: v,
@@ -863,7 +879,7 @@ const optHubCust = ["PASANGAN", "SAUDARA", "ORANG TUA"].map(
 const idApp = baseRoute.params.idapplication;
 const actionPage = baseRoute.params.action;
 const approval = ref({});
-
+const bl_pesan = ref();
 const copyAddress = () => Object.assign(alamatTagih.value, alamatIdentitas.value);
 const sum = (num1, num2) => {
     if (isNaN(num1) || isNaN(num2)) {
@@ -872,19 +888,19 @@ const sum = (num1, num2) => {
     return num1 + num2;
 };
 
-const response = () => useApi({
-    method: 'get',
-    api: `cr_application/${idApp}`,
-    token: userToken
-}).then(res => {
-
-    if (!res.ok) {
+const getData = async () => {
+    const response = await useApi({
+        method: "get",
+        api: `cr_application/${idApp}`,
+        token: userToken,
+    });
+    if (!response.ok) {
         message.error("halam tidak ditemukan !");
         suspense.value = true;
     } else {
         message.loading("memuat fpk");
         suspense.value = false;
-        pageData.value = res.data.response;
+        pageData.value = response.data.response;
         // dynamicForm.pelanggan = pageData.value.pelanggan;
         // alamatIdentitas = pageData.value.alamat_identitas;
         // dynamicForm.alamat_tagih = pageData.value.alamat_tagih;
@@ -894,6 +910,7 @@ const response = () => useApi({
         // dynamicForm.kerabat_darurat = pageData.value.kerabat_darurat;
         // dynamicForm.surat = pageData.value.surat;
         Object.assign(calcCredit, pageData.value.ekstra);
+        Object.assign(calcCredit, pageData.value.pelanggan);
         Object.assign(dataPelanggan.value, pageData.value.pelanggan);
         Object.assign(dataPenjamin.value, pageData.value.penjamin);
         Object.assign(dataPasangan.value, pageData.value.pasangan);
@@ -907,7 +924,6 @@ const response = () => useApi({
         Object.assign(dataSurat.value, pageData.value.surat);
         Object.assign(dataBank.value, pageData.value.info_bank);
         Object.assign(dataAttachment.value, pageData.value.attachment);
-        Object.assign(approval.value, pageData.value.approval);
         let tgllahir = toRef(pageData.value.pelanggan);
         var myDate = tgllahir.value.tgl_lahir;
         myDate = myDate.split("-");
@@ -915,7 +931,9 @@ const response = () => useApi({
         handleTanggalLahir(newDate.getTime());
         handleEkstra();
     }
-});
+    bl_pesan.value = await useBlacklist(calcCredit.no_identitas);
+};
+
 
 const refAdmin = async (body) => {
     skemaAngsuran.value = [];

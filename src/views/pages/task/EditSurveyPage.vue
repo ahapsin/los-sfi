@@ -1,4 +1,7 @@
 <template>
+    <n-alert title="Informasi" type="warning">
+        keterangan informasi
+    </n-alert>
     <n-scrollbar x-scrollable>
         <n-space class="p-4">
             <n-steps :current="current" :status="currentStatus" v-model:current="current">
@@ -163,7 +166,7 @@
                         <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
                             }}</n-alert>
                         <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="pelanggan.tgl_lahir"
-                            value-format="yyyy-MM-dd" type="date" @update:value="handleTanggalLahir" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
                     </n-space>
                 </n-form-item>
                 <n-form-item label="Alamat" path="alamat">
@@ -310,7 +313,7 @@
             }">
                 <n-form-item label="Tanggal survey" path="tgl_survey">
                     <n-date-picker v-model:formatted-value="survey.tgl_survey" placeholder="Tanggal Survey"
-                        value-format="yyyy-MM-dd" type="date" clearable disabled />
+                        value-format="yyyy-MM-dd"  format="dd-MM-yyyy" type="date" clearable disabled />
                 </n-form-item>
 
                 <n-form-item label="Lama Bekerja" path="lama_berkerja">
@@ -357,9 +360,9 @@
                         </n-input-number>
                     </n-form-item>
                 </div>
-                <n-form-item label="Usaha" path="usaha">
+                <!-- <n-form-item label="Usaha" path="usaha">
                     <n-input placeholder="usaha" v-model:value="survey.usaha" />
-                </n-form-item>
+                </n-form-item> -->
                 <n-form-item label="Sektor" path="sektor">
                     <n-select filterable placeholder="sektor" :options="optSektor" v-model:value="survey.sektor" />
                 </n-form-item>
@@ -564,7 +567,22 @@ const tipeKendaraan = ["motor", "mobil"].map(
         label: v,
         value: v
     }));
-const optSektor = ["PERDAGANGAN UMUM", "JASA", "HOTEL DAN PENGINAPAN", "INDUSTRI"].map(
+const optSektor = [
+    "BURUH HARIAN LEPAS",
+    "BURUH PABRIK",
+    "GURU",
+    "MENGURUS RUMAH TANGGA",
+    "NELAYAN",
+    "PEDAGANG",
+    "PEDAGANG KELONTONG",
+    "PEDAGANG MAKANAN",
+    "PEGAWAI SWASTA",
+    "PELAJAR",
+    "PETANI / PEKEBUN",
+    "PNS",
+    "SOPIR"
+WIRASWASTA"
+].map(
     (v) => ({
         label: v,
         value: v
