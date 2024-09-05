@@ -166,7 +166,8 @@
                         <n-alert title="Informasi" type="warning" :bordered="bordered" v-if="notifUsia"> {{ noteUsia
                             }}</n-alert>
                         <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="pelanggan.tgl_lahir"
-                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
+                            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date"
+                            @update:value="handleTanggalLahir" />
                     </n-space>
                 </n-form-item>
                 <n-form-item label="Alamat" path="alamat">
@@ -313,7 +314,7 @@
             }">
                 <n-form-item label="Tanggal survey" path="tgl_survey">
                     <n-date-picker v-model:formatted-value="survey.tgl_survey" placeholder="Tanggal Survey"
-                        value-format="yyyy-MM-dd"  format="dd-MM-yyyy" type="date" clearable disabled />
+                        value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" clearable disabled />
                 </n-form-item>
 
                 <n-form-item label="Lama Bekerja" path="lama_berkerja">
@@ -580,8 +581,8 @@ const optSektor = [
     "PELAJAR",
     "PETANI / PEKEBUN",
     "PNS",
-    "SOPIR"
-WIRASWASTA"
+    "SOPIR",
+    "WIRASWASTA"
 ].map(
     (v) => ({
         label: v,
