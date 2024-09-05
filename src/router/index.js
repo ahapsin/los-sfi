@@ -37,6 +37,12 @@ const routes = [
         name: "bpkb",
         component: () => import("../views/pages/transaction/deliveryPage.vue"),
       },
+      {
+        path: "bpkb-action",
+        name: "bpkb action",
+        component: () =>
+          import("../views/pages/transaction/addDeliveryPage.vue"),
+      },
     ],
   },
   {
