@@ -7,9 +7,9 @@
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
-                <n-data-table striped size="small" :row-key="(row) => row.no_bpkb" :columns="columns" :data="dataBpkb"
-                    :max-height="300" :checked-row-keys="checkedRow" :loading="loadingAngsuran"
-                    :on-update:checked-row-keys="handleAngsuran" />
+                <n-data-table striped size="small" :row-key="(row) => row" :columns="columns" :data="dataBpkb"
+                    :max-height="300"  :loading="loadingAngsuran"
+                    :on-update:checked-row-keys="handleChecked" />
             </n-space>
             <n-form-item label="Tujuan" path="cabang">
                 <n-select filterable placeholder="Pilih Cabang" label-field="nama" value-field="id"
@@ -27,6 +27,9 @@
                 </n-button>
                 <n-button type="error" @click="handleCancel">
                     Batal
+                </n-button>
+                <n-button type="info" @click="handleCancel">
+                    Cetak
                 </n-button>
             </n-space>
         </template>
@@ -60,7 +63,7 @@ const url = ref();
 const message = useMessage();
 const PageData = ref();
 const baseRoute = useRoute();
-const checkedRow = ref([]);
+const checkedRow = ref();
 const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
 const handleCancel = () => router.replace('/master/users');
@@ -145,6 +148,9 @@ const getBranch = useApi({
         dataBranch.value = res.data.response;
     }
 });
+const handleChecked = (e) =>{
+    checkedRow.value=e;
+}
 const dataBpkb = ref([]);
 const getBpkb = useApi({
     method: 'GET',
