@@ -3,6 +3,7 @@
         content: true,
         footer: 'soft'
     }" :title="`Form`">
+        {{ dynamicForm }}
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-form-item label="Transaksi" path="cabang">
@@ -112,6 +113,11 @@ const columns = [
         key: "no_rangka",
 
     },
+    {
+        title: "id",
+        key: "id",
+
+    },
 ]
 const response = () => useApi({
     method: 'get',
@@ -119,6 +125,7 @@ const response = () => useApi({
     token: userToken
 }).then(res => {
     if (res.ok) {
+        dataBPKB.value = res.data;
         message.loading("memuat data BPKB");
     } else {
         message.error("error");
@@ -180,7 +187,7 @@ const getBpkb = useApi({
         console.log(res);
         message.error("error koneksi api");
     } else {
-        dataBpkb.value = res.data.response;
+        dataBpkb.value = res.data;
     }
 });
 

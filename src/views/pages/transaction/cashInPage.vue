@@ -1,12 +1,7 @@
 <template>
   <n-card>
-    <!-- {{ pageData }} || {{ dynamicForm }} -->
-    <!-- {{ checkedRowCredit }} | {{totalPay}} -->
-    <!-- <pre>{{ dataStrukturKredit }}</pre> -->
-    <!-- <pre>{{ selectedCustomer.CUST_CODE }}</pre>
-    <pre>{{ checkedRowFasilitas }}</pre> -->
     <template #header>Penerimaan Uang</template>
-    <!-- {{ pageData }} -->
+
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
       <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
@@ -17,12 +12,25 @@
         </template>
       </n-button>
     </template>
-    <n-form ref="formRef" :model="model" :rules="rules" label-placement="top" require-mark-placement="right-hanging"
-      :size="size" label-width="auto">
-      <n-form-item label="Transaksi" :show-feedback="false" class="w-full">
-        <n-grid :cols="2">
-          <n-form-item-gi path="nestedValue.path1">
-            <!-- <n-radio-group v-model:value="size" name="left-size">
+    <div class="flex flex-col md:flex-row gap-2">
+      <n-form-item label="Nama Pelanggan" class="w-full">
+        <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch" clearable />
+      </n-form-item>
+      <n-form-item label="No Polisi" class="w-full">
+        <n-input v-model:value="dynamicSearch.no_polisi" type="text" placeholder="No Polisi" @blur="handleSearch"
+          clearable />
+      </n-form-item>
+      <n-form-item label="No Kontrak" class="w-full">
+        <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="No Kontrak" @blur="handleSearch"
+          clearable />
+      </n-form-item>
+    </div>
+    <!-- <n-form ref="formRef" :model="model" :rules="rules" label-placement="top" require-mark-placement="right-hanging"
+      :size="size" label-width="auto"> -->
+    <!-- <n-form-item :show-feedback="false" class="w-full"> -->
+    <!-- <n-grid :cols="2"> -->
+    <!-- <n-form-item-gi path="nestedValue.path1"> -->
+    <!-- <n-radio-group v-model:value="size" name="left-size">
                             <n-radio-button value="small">
                                 Angsuran
                             </n-radio-button>
@@ -30,12 +38,12 @@
                                 Pelunasan
                             </n-radio-button>
                         </n-radio-group> -->
-            <n-switch size="large" :rail-style="railStyle" :disabled="searchField">
+    <!-- <n-switch size="large" :rail-style="railStyle" :disabled="searchField">
               <template #checked> Pelunasan </template>
               <template #unchecked> Pembayaran </template>
             </n-switch>
-          </n-form-item-gi>
-          <n-form-item-gi path="nestedValue.path2">
+          </n-form-item-gi> -->
+    <!-- <n-form-item-gi path="nestedValue.path2">
             <n-auto-complete v-model:value="valOptSearch" :options="listCustomer" :on-select="handleInputSearch">
               <template #default="{
                 handleInput,
@@ -52,102 +60,103 @@
                 </n-input>
               </template>
             </n-auto-complete>
-            <!-- {{ dataCustomer }} -->
-          </n-form-item-gi>
+          
+          </n-form-item-gi> -->
+    <!-- </n-grid> -->
+    <!-- </n-form-item> -->
+    <n-form-item v-show="searchField">
+      <!-- {{ selectedCustomer }} -->
+      <n-card title="Data Nasabah" :bordered="false" embedded size="small">
+        <template #header-extra>
+          <n-button type="error" @click="handleCloseNasabah" size="small">
+            ganti
+          </n-button>
+        </template>
+        <n-grid :cols="2">
+          <n-gi>
+            <div class="flex">
+              <label class="w-24">No Pelanggan</label><span>
+                <n-text strong>{{ selectedCustomer.CUST_CODE }}</n-text></span>
+            </div>
+            <div class="flex">
+              <label class="w-24">Nama </label><span>
+                <n-text strong>{{ selectedCustomer.NAME }}</n-text></span>
+            </div>
+            <div class="flex">
+              <label class="w-24">Tanggal Lahir</label><span>
+                <n-text strong>{{ selectedCustomer.BIRTHDATE }}</n-text></span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="flex">
+              <label class="w-24">No KTP</label><span>
+                <n-text strong>{{ selectedCustomer.ID_NUMBER }}</n-text></span>
+            </div>
+            <div class="flex">
+              <label class="w-24">Alamat</label><span>
+                <n-text strong>{{ selectedCustomer.ADDRESS }}, RT
+                  {{ selectedCustomer.RT }} RW
+                  {{ selectedCustomer.RW }}</n-text></span>
+            </div>
+            <div class="flex">
+              <label class="w-24">Ibu Kandung</label><span>
+                <n-text strong>{{
+                  selectedCustomer.MOTHER_NAME
+                  }}</n-text></span>
+            </div>
+          </n-gi>
         </n-grid>
-      </n-form-item>
-      <n-form-item v-show="searchField">
-        <!-- {{ selectedCustomer }} -->
-        <n-card title="Data Nasabah" :bordered="false" embedded size="small">
-          <template #header-extra>
-            <n-button type="error" @click="handleCloseNasabah" size="small">
-              ganti
-            </n-button>
-          </template>
-          <n-grid :cols="2">
-            <n-gi>
-              <div class="flex">
-                <label class="w-24">No Pelanggan</label><span>
-                  <n-text strong>{{ selectedCustomer.CUST_CODE }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Nama </label><span>
-                  <n-text strong>{{ selectedCustomer.NAME }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Tanggal Lahir</label><span>
-                  <n-text strong>{{ selectedCustomer.BIRTHDATE }}</n-text></span>
-              </div>
-            </n-gi>
-            <n-gi>
-              <div class="flex">
-                <label class="w-24">No KTP</label><span>
-                  <n-text strong>{{ selectedCustomer.ID_NUMBER }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Alamat</label><span>
-                  <n-text strong>{{ selectedCustomer.ADDRESS }}, RT
-                    {{ selectedCustomer.RT }} RW
-                    {{ selectedCustomer.RW }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Ibu Kandung</label><span>
-                  <n-text strong>{{
-                    selectedCustomer.MOTHER_NAME
-                    }}</n-text></span>
-              </div>
-            </n-gi>
-          </n-grid>
-        </n-card>
-      </n-form-item>
+      </n-card>
+    </n-form-item>
 
-      <div v-show="searchField">
-        <n-form-item>
-          <!-- <pre>{{ creditCustomer }}</pre> -->
-          <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
-            :data="creditCustomer" :pagination="pagination" :on-update:checked-row-keys="handleFasilitas" />
-        </n-form-item>
-        <n-card embedded class="mb-2">
-          <div class="flex gap-2">
-            <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
-              <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
-                v-model:value="pageData.payment_method" />
-            </n-form-item>
-            <n-form-item path="nestedValue.path2" label="Jumlah Uang">
-              <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pageData.jumlah_uang" :show-button="false"
-                :parse="parse" :format="format" clearable @blur="pushJumlahUang">
-              </n-input-number>
-            </n-form-item>
-            <n-form-item label="pembulatan">
-              <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.pembulatan"
-                clearable />
-            </n-form-item>
-            <n-form-item label="kembalian">
-              <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.kembalian"
-                readonly />
-            </n-form-item>
-          </div>
-        </n-card>
-      </div>
+    <div v-show="!searchField">
+      <n-form-item>
+        <!-- <pre>{{ creditCustomer }}</pre> -->
+        <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
+          :pagination="pagination" :max-height="300" :on-update:checked-row-keys="handleFasilitas"
+          :loading="loadingSearch" />
+      </n-form-item>
+      <n-card embedded class="mb-2">
+        <div class="flex gap-2">
+          <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
+            <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
+              v-model:value="pageData.payment_method" />
+          </n-form-item>
+          <n-form-item path="nestedValue.path2" label="Jumlah Uang">
+            <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pageData.jumlah_uang" :show-button="false"
+              :parse="parse" :format="format" clearable @blur="pushJumlahUang">
+            </n-input-number>
+          </n-form-item>
+          <n-form-item label="pembulatan">
+            <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.pembulatan"
+              clearable />
+          </n-form-item>
+          <n-form-item label="kembalian">
+            <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.kembalian"
+              readonly />
+          </n-form-item>
+        </div>
+      </n-card>
+    </div>
 
-      <n-card title="Daftar Angsuran" size="small" v-show="searchField">
-        <template #action>
-          <n-space v-show="pageData.payment_method == 'transfer'">
-            <n-form-item path="nestedValue.path2" label="Bank">
-              <n-select filterable :options="optBank" placeholder="Bank Tujuan" v-model:value="dynamicForm.nama_bank" />
-            </n-form-item>
-            <n-form-item label="No Rekening">
-              <n-input v-model:value="dynamicForm.no_rekening" />
-            </n-form-item>
-            <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
-              'naive-info': 'hello!',
-            }" :data="{
-              'naive-data': 'cool! naive!',
-            }">
-              <n-button>Bukti Transfer</n-button>
-            </n-upload>
-          </n-space>
-          <!-- <n-space v-show="pageData.payment_method == 'cash'">
+    <n-card title="Daftar Angsuran" size="small" v-show="!searchField">
+      <template #action>
+        <n-space v-show="pageData.payment_method == 'transfer'">
+          <n-form-item path="nestedValue.path2" label="Bank">
+            <n-select filterable :options="optBank" placeholder="Bank Tujuan" v-model:value="dynamicForm.nama_bank" />
+          </n-form-item>
+          <n-form-item label="No Rekening">
+            <n-input v-model:value="dynamicForm.no_rekening" />
+          </n-form-item>
+          <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :headers="{
+            'naive-info': 'hello!',
+          }" :data="{
+            'naive-data': 'cool! naive!',
+          }">
+            <n-button>Bukti Transfer</n-button>
+          </n-upload>
+        </n-space>
+        <!-- <n-space v-show="pageData.payment_method == 'cash'">
             <n-form-item label="pembulatan">
               <n-input size="large" />
             </n-form-item>
@@ -158,8 +167,8 @@
               <n-input size="large" />
             </n-form-item>
           </n-space> -->
-          <n-space>
-            <!-- <n-upload
+        <n-space>
+          <!-- <n-upload
               action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
               :headers="{
                 'naive-info': 'hello!',
@@ -170,10 +179,10 @@
             >
               <n-button>Attachment</n-button>
             </n-upload> -->
-            <n-button type="primary" @click="handleProses" :loading="loadProses"> Proses </n-button>
-          </n-space>
-        </template>
-        <!-- <n-list size="small" bordered>
+          <n-button type="primary" @click="handleProses" :loading="loadProses"> Proses </n-button>
+        </n-space>
+      </template>
+      <!-- <n-list size="small" bordered>
           <n-list-item class="bg-slate-50">
             <template #prefix>
               <n-checkbox> </n-checkbox>
@@ -199,13 +208,13 @@
               <n-tag size="small" :bordered="false" type="error" v-else>UNPAID</n-tag>
             </n-space>
           </n-list-item> -->
-        <n-data-table striped size="small" :row-key="(row) => row.id_structur" :columns="columnStruktur"
-          :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadingAngsuran"
-          v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran" />
+      <n-data-table striped size="small" :row-key="(row) => row.id_structur" :columns="columnStruktur"
+        :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadingAngsuran"
+        v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran" />
 
-        <!-- </n-list> -->
-      </n-card>
-    </n-form>
+      <!-- </n-list> -->
+    </n-card>
+    <!-- </n-form> -->
   </n-card>
 
   <n-modal class="w-3/4" title="Upload Berkas Pencairan" v-model:show="dialogProses" :mask-closable="false">
@@ -287,6 +296,7 @@
 </template>
 
 <script setup>
+import { data } from "autoprefixer";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
@@ -328,6 +338,12 @@ const pageData = reactive({
   bukti_transafer: null,
 });
 
+const dynamicSearch = reactive({
+  nama: '',
+  no_polisi: '',
+  no_kontrak: ''
+});
+
 const dynamicForm = reactive({
   loan_number: computed(() => pageData.no_facility),
   payment_method: computed(() => pageData.payment_method),
@@ -346,26 +362,23 @@ const createColumns = () => {
     },
     {
       title: "No Kontrak",
-      key: "loan_number",
+      key: "no_kontrak",
+    },
+    {
+      title: "Nama",
+      key: "nama",
     },
     {
       title: "No Polisi",
-      key: "jaminan.POLICE_NUMBER",
+      key: "no_polisi",
     },
     {
-      title: "NO PK",
-      key: "order_number",
+      title: "Alamat",
+      key: "alamat",
     },
     {
-      title: "Sisa Angsuran",
-      key: "sisa_angsuran",
-      render(row) {
-        return h("div", row.sisa_angsuran.toLocaleString("US"));
-      },
-    },
-    {
-      title: "Total Bayar",
-      key: "total_bayar",
+      title: "Angsuran",
+      key: "angsuran",
     },
   ];
 };
@@ -484,6 +497,7 @@ const optBank = [
 ];
 
 const dataCustomer = ref([]);
+const jaminanCustomer = ref([]);
 const selectedCustomer = ref([]);
 const columns = createColumns();
 const columnStruktur = createColStruktur();
@@ -544,8 +558,9 @@ const getDataCustomer = async () => {
     router.replace("/");
   } else {
     loadCustomer.value = false;
-
     dataCustomer.value = response.data;
+    let customer = dataCustomer.value;
+    console.log(customer);
   }
 };
 
@@ -582,7 +597,24 @@ const getCreditCustomer = async () => {
     // getSkalaCredit();
   }
 };
-
+const dataSearch = ref([]);
+const handleSearch = async () => {
+  let userToken = localStorage.getItem("token");
+  loadProses.value = true;
+  const response = await useApi({
+    method: "POST",
+    api: "search_customer",
+    data: dynamicSearch,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("sesi berakhir");
+    localStorage.removeItem("token");
+    router.replace("/");
+  } else {
+    dataSearch.value = response.data;
+  }
+}
 const dataStrukturKredit = ref([]);
 
 const getSkalaCredit = async (e) => {

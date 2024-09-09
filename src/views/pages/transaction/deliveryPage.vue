@@ -54,7 +54,7 @@
         </template>
         <n-space vertical :size="12" class="pt-4">
           <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :pagination="pagination"
-            :loading="loadData" />
+            :loading="loadData" :data="dataBpkbTransaction" />
         </n-space>
       </n-card>
     </n-space>
@@ -185,9 +185,62 @@ const handleSelesai = () => {
   showModal.value = false;
 };
 
+const dataBpkbTransaction = [
+  {
+    "ID": "533ae4a3-264a-4445-bd06-dd701e3a68a3",
+    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
+    "TO_BRANCH": "ho",
+    "CATEGORY": "permintaan",
+    "NOTE": "asdasdasdsadasdasd",
+    "STATUS": null,
+    "CREATED_BY": null,
+    "CREATED_AT": "2024-09-06 09:53:03"
+  },
+  {
+    "ID": "7238947c-eb42-4159-8e7b-5e83260f2b53",
+    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
+    "TO_BRANCH": "ho",
+    "CATEGORY": "permintaan",
+    "NOTE": "asdasdasdsadasdasd",
+    "STATUS": null,
+    "CREATED_BY": null,
+    "CREATED_AT": "2024-09-06 09:53:05"
+  },
+  {
+    "ID": "888c6ed3-e1b1-44f8-8419-22068e7d4930",
+    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
+    "TO_BRANCH": "ho",
+    "CATEGORY": "permintaan",
+    "NOTE": "asdasdasdsadasdasd",
+    "STATUS": null,
+    "CREATED_BY": null,
+    "CREATED_AT": "2024-09-06 09:52:21"
+  },
+  {
+    "ID": "e1f104ec-04c2-4eb6-8830-958472e9337c",
+    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
+    "TO_BRANCH": "ho",
+    "CATEGORY": "permintaan",
+    "NOTE": "asdasdasdsadasdasd",
+    "STATUS": null,
+    "CREATED_BY": null,
+    "CREATED_AT": "2024-09-06 09:53:04"
+  },
+  {
+    "ID": "f9168405-8e23-42b5-9d7d-49935833bcde",
+    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
+    "TO_BRANCH": "ho",
+    "CATEGORY": "permintaan",
+    "NOTE": "asdasdasdsadasdasd",
+    "STATUS": null,
+    "CREATED_BY": null,
+    "CREATED_AT": "2024-09-06 09:53:01"
+  }
+]
+
 const columns = [
   {
-    title: "Tanggal",
+    title: "Asal",
     key: "visit_date",
     width: 110,
     render(row) {
@@ -195,17 +248,17 @@ const columns = [
     },
   },
   {
-    title: "Order",
+    title: "Tujuan",
     key: "order_number",
     width: 180,
   },
   {
-    title: "Nama",
+    title: "Kategori",
     key: "nama_debitur",
     width: 180,
   },
   {
-    title: "Plafond",
+    title: "Catatan",
     width: 180,
     key: "plafond",
     render(row) {
