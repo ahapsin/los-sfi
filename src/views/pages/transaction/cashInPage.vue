@@ -1,6 +1,14 @@
 <template>
   <n-card>
     <template #header>Penerimaan Uang</template>
+    <n-collapse>
+      <n-collapse-item title="struktur" name="1">
+        <pre> {{ dataStrukturKredit }}</pre>
+      </n-collapse-item>
+      <n-collapse-item title="dataPage" name="2">
+        <pre> {{ jml_uang }}</pre>
+      </n-collapse-item>
+    </n-collapse>
 
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
@@ -64,9 +72,9 @@
           </n-form-item-gi> -->
     <!-- </n-grid> -->
     <!-- </n-form-item> -->
-    <n-form-item v-show="searchField">
-      <!-- {{ selectedCustomer }} -->
-      <n-card title="Data Nasabah" :bordered="false" embedded size="small">
+    <!-- <n-form-item v-show="searchField"> -->
+    <!-- {{ selectedCustomer }} -->
+    <!-- <n-card title="Data Nasabah" :bordered="false" embedded size="small">
         <template #header-extra>
           <n-button type="error" @click="handleCloseNasabah" size="small">
             ganti
@@ -102,44 +110,43 @@
               <label class="w-24">Ibu Kandung</label><span>
                 <n-text strong>{{
                   selectedCustomer.MOTHER_NAME
-                  }}</n-text></span>
+                }}</n-text></span>
             </div>
           </n-gi>
         </n-grid>
       </n-card>
-    </n-form-item>
-
-    <div v-show="!searchField">
+    </n-form-item> -->
+    <div>
       <n-form-item>
         <!-- <pre>{{ creditCustomer }}</pre> -->
         <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
           :pagination="pagination" :max-height="300" :on-update:checked-row-keys="handleFasilitas"
-          :loading="loadingSearch" />
+          :loading="loadSearch" />
       </n-form-item>
       <n-card embedded class="mb-2">
         <div class="flex gap-2">
-          <n-form-item path="nestedValue.path2" label="Jenis Pembayaran">
+          <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
             <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
               v-model:value="pageData.payment_method" />
           </n-form-item>
-          <n-form-item path="nestedValue.path2" label="Jumlah Uang">
+          <n-form-item path="nestedValue.path2" label="Jumlah Uang" class="w-full">
             <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pageData.jumlah_uang" :show-button="false"
-              :parse="parse" :format="format" clearable @blur="pushJumlahUang">
+              :parse="parse" :format="format" clearable @blur="pushJumlahUang" class="w-full">
             </n-input-number>
           </n-form-item>
-          <n-form-item label="pembulatan">
+          <n-form-item label="pembulatan" class="w-full">
             <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.pembulatan"
-              clearable />
+              clearable class="w-full" />
           </n-form-item>
-          <n-form-item label="kembalian">
+          <n-form-item label="kembalian" class="w-full">
             <n-input-number :show-button="false" :parse="parse" :format="format" v-model:value="pageData.kembalian"
-              readonly />
+              readonly class="w-full" />
           </n-form-item>
         </div>
       </n-card>
     </div>
 
-    <n-card title="Daftar Angsuran" size="small" v-show="!searchField">
+    <n-card title="Daftar Angsuran" size="small" v-show="dataAngsuran">
       <template #action>
         <n-space v-show="pageData.payment_method == 'transfer'">
           <n-form-item path="nestedValue.path2" label="Bank">
@@ -330,7 +337,7 @@ const pageData = reactive({
   no_cust: null,
   no_facility: null,
   jumlah_uang: null,
-  payment_method: null,
+  payment_method: 'Tunai',
   pembulatan: 0,
   kembalian: computed(() => pageData.jumlah_uang - totalPay.value - pageData.pembulatan),
   bank_tujuan: null,
@@ -362,7 +369,7 @@ const createColumns = () => {
     },
     {
       title: "No Kontrak",
-      key: "no_kontrak",
+      key: "loan_number",
     },
     {
       title: "Nama",
@@ -379,13 +386,16 @@ const createColumns = () => {
     {
       title: "Angsuran",
       key: "angsuran",
+      render(row) {
+        return h("div", row.angsuran.toLocaleString('US'));
+      },
     },
   ];
 };
 
 const handleDone = () => {
   dialogProses.value = false;
-  router.replace({ name: "Pengajuan Kredit" });
+  router.replace({ name: "pembayaran" });
   searchField.value = false;
   valOptSearch.value = null;
 }
@@ -399,13 +409,15 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 
+const jml_uang = ref(0);
+
 const createColStruktur = () => {
   return [
     {
       type: "selection",
     },
     {
-      title: "Angsuran ke",
+      title: "ke",
       key: "angsuran_ke",
     },
     {
@@ -417,19 +429,80 @@ const createColStruktur = () => {
       key: "tgl_angsuran",
     },
     {
-      title: "Tagihan",
+      title: "Angsuran",
       key: "installment",
-    },
-    {
-      title: "Dibayar",
-      key: "before_payment",
+      render(row) {
+        return h("div", row.installment.toLocaleString('US'));
+      },
     },
     {
       title: "Denda",
+      key: "denda",
+      render(row) {
+        return h("div", row.denda.toLocaleString('US'));
+      },
+    },
+    // {
+    //   title: "Jumlah Uang",
+    //   key: "jumlah_uang",
+    //   render(row, index) {
+    //     return h(NInputNumber, {
+    //       readonly: false,
+    //       format: format,
+    //       parse: parse,
+    //       showButton: false,
+    //       secondary: true,
+    //       placeholder: "pembayaran",
+    //       value: jml_uang.value,
+    //       onUpdateValue(v) {
+    //         dataStrukturKredit.value[index].bayar_angsuran = v;
+    //       },
+    //     });
+    //   },
+    // },
+    {
+      title: "Bayar Angsuran",
+      key: "installment",
+      render(row, index) {
+        return h(NInputNumber, {
+          readonly: false,
+          format: format,
+          parse: parse,
+          showButton: false,
+          secondary: true,
+          placeholder: "pembayaran",
+          value: row.bayar_angsuran,
+          onUpdateValue(v) {
+            dataStrukturKredit.value[index].bayar_angsuran = v;
+          },
+        });
+      },
     },
     {
-      title: "Dibayar",
+      title: "Bayar Denda",
       key: "installment",
+      render(row, index) {
+        return h(NInputNumber, {
+          readonly: false,
+          clearable: true,
+          min: 0,
+          format: format,
+          parse: parse,
+          showButton: false,
+          secondary: true,
+          placeholder: "pembayaran",
+          value: row.bayar_denda,
+          onUpdateValue(v) {
+            dataStrukturKredit.value[index].bayar_denda = v;
+            dataStrukturKredit.value[index].payment = dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda;
+            jml_uang.value = jml_uang.value - dataStrukturKredit.value[index].payment;
+          },
+        });
+      },
+    },
+    {
+      title: "Total Bayar",
+      key: "payment",
       render(row, index) {
         return h(NInputNumber, {
           readonly: true,
@@ -440,36 +513,36 @@ const createColStruktur = () => {
           placeholder: "pembayaran",
           value: row.payment,
           onUpdateValue(v) {
-            dataStrukturKredit.value[index].flag = v;
+            dataStrukturKredit.value[index].payment = v;
           },
         });
       },
     },
-    {
-      title: "Status",
-      key: "status",
-      render(row) {
-        if (row.flag == 0) {
-          return h(
-            NTag,
-            {
-              bordered: false,
-              type: "warning",
-            },
-            { default: () => "unpaid" }
-          );
-        } else {
-          return h(
-            NTag,
-            {
-              bordered: false,
-              type: "success",
-            },
-            { default: () => "paid" }
-          );
-        }
-      },
-    },
+    // {
+    //   title: "Status",
+    //   key: "status",
+    //   render(row) {
+    //     if (row.flag == 0) {
+    //       return h(
+    //         NTag,
+    //         {
+    //           bordered: false,
+    //           type: "warning",
+    //         },
+    //         { default: () => "unpaid" }
+    //       );
+    //     } else {
+    //       return h(
+    //         NTag,
+    //         {
+    //           bordered: false,
+    //           type: "success",
+    //         },
+    //         { default: () => "paid" }
+    //       );
+    //     }
+    //   },
+    // },
   ];
 };
 
@@ -598,9 +671,11 @@ const getCreditCustomer = async () => {
   }
 };
 const dataSearch = ref([]);
+
+const loadSearch = ref(false);
 const handleSearch = async () => {
   let userToken = localStorage.getItem("token");
-  loadProses.value = true;
+  loadSearch.value = true;
   const response = await useApi({
     method: "POST",
     api: "search_customer",
@@ -612,6 +687,7 @@ const handleSearch = async () => {
     localStorage.removeItem("token");
     router.replace("/");
   } else {
+    loadSearch.value = false;
     dataSearch.value = response.data;
   }
 }
@@ -646,6 +722,7 @@ const totalPayment = computed(() => {
   return dataStrukturKredit.value;
 });
 const pushJumlahUang = async () => {
+  jml_uang.value = pageData.jumlah_uang;
   const dynamicBody = {
     loan_number: pageData.no_facility,
     jumlah_uang: pageData.jumlah_uang,

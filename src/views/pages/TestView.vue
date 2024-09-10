@@ -1,27 +1,84 @@
 <template>
-  <n-popconfirm positive-text="ok" negative-text="batal" :show-icon="false">
-    <template #trigger>
-      <n-button text style="font-size: 24px"> <n-icon color="red">
-          <BlackIcon />
-        </n-icon></n-button>
-    </template>
-    <div>
-      tambahakan ke daftar blacklist ?
-      <n-input placeholder="keterangan" type="textarea" size="small" :size="{
-        minRows: 1,
-        maxRows: 1,
-      }" />
-    </div>
-  </n-popconfirm>
+  <n-data-table :columns="columns" :data="data" :pagination="pagination" />
+  <pre>{{ JSON.stringify(data, null, 2) }}</pre>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { BlockFilled as BlackIcon } from "@vicons/material";
+import { defineComponent, h, ref } from "vue";
+import { NInput } from "naive-ui";
+
+
+function createData() {
+  return [
+    {
+      key: 0,
+      name: "John Brown",
+      age: "32",
+      address: "New York No. 1 Lake Park"
+    },
+    {
+      key: 1,
+      name: "Jim Green",
+      age: "42",
+      address: "London No. 1 Lake Park"
+    },
+    {
+      key: 2,
+      name: "Joe Black",
+      age: "32",
+      address: "Sidney No. 1 Lake Park"
+    }
+  ];
+}
 
 export default defineComponent({
-  components: {
-    BlackIcon
+  setup() {
+    const data = ref(createData());
+    const createColumns = () => [
+      {
+        title: "Name",
+        key: "name",
+        render(row, index) {
+          return h(NInput, {
+            value: row.name,
+            onUpdateValue(v) {
+              data.value[index].name = v;
+            }
+          });
+        }
+      },
+      {
+        title: "Age",
+        key: "age",
+        render(row, index) {
+          return h(NInput, {
+            value: row.age,
+            onUpdateValue(v) {
+              data.value[index].age = v;
+            }
+          });
+        }
+      },
+      {
+        title: "Address",
+        key: "address",
+        render(row, index) {
+          return h(NInput, {
+            value: row.address,
+            onUpdateValue(v) {
+              data.value[index].address = v;
+            }
+          });
+        }
+      }
+    ];
+    return {
+      data,
+      columns: createColumns(),
+      pagination: {
+        pageSize: 10
+      }
+    };
   }
 });
 </script>
