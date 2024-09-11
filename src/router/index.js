@@ -33,6 +33,11 @@ const routes = [
         component: () => import("../views/pages/transaction/cashInPage.vue"),
       },
       {
+        path: "repayment",
+        name: "pelunasan",
+        component: () => import("../views/pages/transaction/repaymentPage.vue"),
+      },
+      {
         path: "bpkb",
         name: "bpkb",
         component: () => import("../views/pages/transaction/deliveryPage.vue"),

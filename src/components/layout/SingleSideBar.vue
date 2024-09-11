@@ -8,7 +8,7 @@
                         </div>
                 </div>
                 <div class="w-full overflow-auto content bg-sc-50">
-                        <n-page-header class="sticky top-0 z-50 bg-sc-50/80 backdrop-blur border-b p-2">
+                        <n-page-header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b p-2">
                                 <template #title>
                                         <n-space align="center" class="md:!hidden">
                                                 <n-button strong circle @click="activate('left')">
@@ -20,7 +20,7 @@
                                                         alt="logo_company">
                                                 KSPDJAYA
                                         </n-space>
-                                        <span class="hidden md:flex capitalize">{{ $route.name }}</span>
+                                        <span class="hidden md:flex capitalize"></span>
                                 </template>
                                 <template #extra>
                                         <account-avatar />
