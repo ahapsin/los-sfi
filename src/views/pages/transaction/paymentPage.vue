@@ -70,22 +70,28 @@
                             <n-text strong> {{ bodyModal.total_bayar.toLocaleString('US') }}</n-text></span>
                     </div>
                     <div class="flex">
-                        <label class="w-24">Keterangan</label><span>
-                            <n-text strong v-for="pembayaran in bodyModal.pembayaran"> {{ pembayaran.title
-                                }}</n-text></span>
+                        <label class="w-24">Keterangan</label>
+
+                        <n-space>
+                            <n-tag size="small" v-for="pembayaran in bodyModal.pembayaran" :bordered="false">{{
+                                pembayaran.title }}</n-tag>
+                        </n-space>
+
                     </div>
 
                 </div>
-                <div class="flex">
-                    <label class="w-24">Status</label><span>
+                <div class="flex gap-2">
+                    <label>Status</label><span>
                         <n-tag strong :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'"> {{
                             bodyModal.STATUS
                         }}</n-tag></span>
                 </div>
                 <!-- <n-button>Approval</n-button> -->
             </div>
-            <n-divider>bukti transfer</n-divider>
-            <n-image :src="bodyModal.attachment" />
+            <div v-show="bodyModal.payment_method == 'transfer'">
+                <n-divider>bukti transfer</n-divider>
+                <n-image :src="bodyModal.attachment" />
+            </div>
         </n-card>
     </n-modal>
 </template>
