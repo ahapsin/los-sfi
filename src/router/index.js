@@ -30,6 +30,11 @@ const routes = [
       {
         path: "payment",
         name: "pembayaran",
+        component: () => import("../views/pages/transaction/paymentPage.vue"),
+      },
+      {
+        path: "addpayment",
+        name: "tambah penerimaan",
         component: () => import("../views/pages/transaction/cashInPage.vue"),
       },
       {

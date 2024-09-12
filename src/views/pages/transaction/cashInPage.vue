@@ -11,6 +11,14 @@
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
       <n-space>
+        <n-button v-show="!searchField" strong secondary type="warning" @click="handleBack">
+          <template #icon>
+            <n-icon>
+              <back-icon />
+            </n-icon>
+          </template>
+          kembali
+        </n-button>
         <n-button v-show="!searchField" strong secondary type="success" @click="handlePayFull">
           <template #icon>
             <n-icon>
@@ -26,7 +34,6 @@
             </n-icon>
           </template>
         </n-button>
-
       </n-space>
     </template>
     <div class="flex flex-col md:flex-row gap-2">
@@ -128,15 +135,19 @@
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
       <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
-        :pagination="pagination" :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch"
-        class="pb-2" />
+        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" />
       <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur" :data="dataStrukturKredit"
-        :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadingAngsuran" v-show="dataAngsuran"
+        :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure" v-show="dataAngsuran"
         :on-update:checked-row-keys="handleAngsuran" class="py-2" />
       <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4">
         <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
-          <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
-            v-model:value="pageData.payment_method" />
+          <div class="flex gap-2 ">
+            <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
+              v-model:value="pageData.payment_method" />
+            <n-button v-show="pageData.payment_method == 'transfer'" type="warning" @click="buktiTransfer = true">
+              Bukti ({{ dataBuktiTransfer.length }})
+            </n-button>
+          </div>
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
           <n-input-number placeholder="Jumlah Pembayaran" v-model:value="totalPay" :show-button="false" :parse="parse"
@@ -158,7 +169,6 @@
         </n-form-item>
         <n-form-item label="" class="w-full">
           <n-space>
-            <n-button v-show="pageData.payment_method == 'transfer'"> Bukti </n-button>
             <n-button type="primary" @click="handleProses" :loading="loadProses"> Proses </n-button>
           </n-space>
         </n-form-item>
@@ -316,15 +326,37 @@
       </template>
     </n-card>
   </n-modal>
+
+  <n-modal class="w-1/4" v-model:show="buktiTransfer">
+    <n-card>
+      <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
+        :max="5">
+        <n-upload-dragger>
+          <div style="margin-bottom: 12px">
+            <n-icon size="48" :depth="3">
+              <add-icon />
+            </n-icon>
+          </div>
+          <n-text style="font-size: 16px">
+            Klik atau seret file ke area ini untuk diunggah
+          </n-text>
+        </n-upload-dragger>
+      </n-upload>
+      <n-image v-for="imageBukti in dataBuktiTransfer " :src="imageBukti" />
+    </n-card>
+  </n-modal>
 </template>
 
 <script setup>
-import { data } from "autoprefixer";
+import { v4 as uuidv4 } from "uuid";
+import { lyla } from "@lylajs/web";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
 import {
   SearchRound as searchIcon,
+  PlusFilled as addIcon,
+  ChevronLeftRound as backIcon,
   OpenInFullRound as fullIcon,
   PriceCheckFilled as fullPay,
 } from "@vicons/material";
@@ -340,6 +372,7 @@ import {
   NInputNumber,
 } from "naive-ui";
 import { computed, onMounted, reactive, readonly, ref } from "vue";
+import { constant } from "lodash";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
@@ -351,6 +384,8 @@ const dialogTransfer = ref(false);
 const dialogProses = ref(false);
 const paymentData = ref([]);
 
+const buktiTransfer = ref(false);
+const dataBuktiTransfer = ref([]);
 
 const totalPay = computed(() => {
   const totalInstallment = () => checkedRowCredit.value.reduce((total, installment) => total + installment.bayar_angsuran, 0);
@@ -361,8 +396,9 @@ const totalPay = computed(() => {
 
   return combinedTotal();
 });
+const uuid = uuidv4();
 const pageData = reactive({
-  no_facility: null,
+  uid: uuid,
   total_bayar: totalPay,
   jumlah_uang: 0,
   payment_method: 'cash',
@@ -601,7 +637,9 @@ const columnStruktur = createColStruktur();
 const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 
+const loadStructure = ref(false);
 const handleFasilitas = (e) => {
+  pageData.struktur = [];
   getSkalaCredit(e);
 };
 
@@ -614,24 +652,37 @@ const handleAngsuran = (e) => {
 
 const loadCustomer = ref(false);
 
+const dialog = useDialog();
 const loadProses = ref(false);
 const handleProses = async () => {
   let userToken = localStorage.getItem("token");
-  loadProses.value = true;
-  const response = await useApi({
-    method: "POST",
-    api: "payment",
-    data: pageData,
-    token: userToken,
+  // loadProses.value = true;
+  dialog.warning({
+    title: "Konfirmasi",
+    content: "apakah data yang anda masukan sudah benar ?",
+    positiveText: "Ya",
+    negativeText: "cek kembali",
+    onPositiveClick: () => {
+      postDynamic();
+      router.replace({ name: 'pembayaran' });
+    },
   });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    loadProses.value = false;
-    paymentData.value = response.data;
-    dialogProses.value = true;
+  const postDynamic = async () => {
+    await useApi({
+      method: "POST",
+      api: "payment",
+      data: pageData,
+      token: userToken,
+    });
+    if (!response.ok) {
+      message.error("sesi berakhir");
+      localStorage.removeItem("token");
+      router.replace("/");
+    } else {
+      loadProses.value = false;
+      paymentData.value = response.data;
+      dialogProses.value = true;
+    }
   }
 }
 
@@ -692,6 +743,7 @@ const dataSearch = ref([]);
 
 const loadSearch = ref(false);
 const handleSearch = async () => {
+  dataAngsuran.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
   const response = await useApi({
@@ -713,6 +765,7 @@ const dataStrukturKredit = ref([]);
 
 const getSkalaCredit = async (e) => {
   pageData.no_facility = e[0];
+  loadStructure.value = true;
   const dynamicBody = {
     loan_number: pageData.no_facility,
     jumlah_uang: pageData.jumlah_uang,
@@ -732,13 +785,56 @@ const getSkalaCredit = async (e) => {
   } else {
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
-    loadingAngsuran.value = false;
+    loadStructure.value = false;
   }
 };
+const message = useMessage();
+const handleImagePost = ({
+  idApp,
+  file,
+  data,
+  onError,
+  onFinish,
+  onProgress,
+}) => {
+  let userToken = localStorage.getItem("token");
+  // let idApp = pageData.value.order.cr_prospect_id;
+  const form = new FormData();
+  form.append("uid", pageData.uid);
+  form.append("image", file.file);
+  // form.append("type", data.type);
+  //   console.log(pageData.value);
+
+  const headers = {
+    Authorization: `Bearer ${userToken}`,
+  };
+  //   console.log(form);
+  lyla
+    .post("https://api.kspdjaya.id/payment_attachment", {
+      headers,
+      body: form,
+      onUploadProgress: ({ percent }) => {
+        onProgress({ percent: Math.ceil(percent) });
+      },
+    })
+    .then(({ json }) => {
+      dataBuktiTransfer.value.push(json);
+      message.success('image berhasil di upload');
+      onFinish();
+    })
+    .catch((error) => {
+      message.error("upload image gagal !");
+      onError();
+    });
+};
+
 const totalPayment = computed(() => {
   // return checkedRowCredit.value;
   return dataStrukturKredit.value;
 });
+
+
+
 const pushJumlahUang = async () => {
   // jml_uang.value = pageData.jumlah_uang;
   // const dynamicBody = {
@@ -816,6 +912,9 @@ const handleExpand = () => {
 };
 const handlePayFull = () => {
   router.replace({ name: "pelunasan" });
+};
+const handleBack = () => {
+  router.replace({ name: "pembayaran" });
 };
 
 const handleFocusField = () => {
