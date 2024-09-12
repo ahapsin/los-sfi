@@ -2,13 +2,13 @@
     <n-card>
         <template #header>Pelunasan Angsuran</template>
         <!-- <n-collapse>
-      <n-collapse-item title="struktur" name="1">
-        <pre> {{ pageData }}</pre>
-      </n-collapse-item>
-      <n-collapse-item title="dataPage" name="2">
-        <pre> {{ checkedRowCredit }}</pre>
-      </n-collapse-item>
-    </n-collapse> -->
+            <n-collapse-item title="struktur" name="1">
+                <pre> {{ dataPelunasan }}</pre>
+            </n-collapse-item>
+            <n-collapse-item title="dataPage" name="2">
+                <pre> {{ checkedRowCredit }}</pre>
+            </n-collapse-item>
+        </n-collapse> -->
 
         <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
         <template #header-extra>
@@ -133,10 +133,9 @@
             <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
                 :pagination="pagination" :max-height="300" :on-update:checked-row-keys="handleFasilitas"
                 :loading="loadSearch" class="pb-2" />
-            <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur"
-                :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit"
-                :loading="loadingAngsuran" v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran"
-                class="py-2" />
+            <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur" :data="dataPelunasan"
+                :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadingAngsuran" v-show="dataPelunasan"
+                :on-update:checked-row-keys="handleAngsuran" class="py-2" />
             <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4">
                 <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
                     <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
@@ -447,126 +446,31 @@ const createColStruktur = () => {
     return [
         {
             title: "Sisa Pokok",
-            key: "angsuran_ke",
+            key: "sisa_pokok",
         },
         {
             title: "Bunga Berjalan",
-            key: "loan_number",
+            key: "BUNGA_BERJALAN",
         },
         {
             title: "Tunggakan Bunga",
-            key: "tgl_angsuran",
+            key: "TUNGGAKAN BUNGA",
         },
         {
             title: "Denda",
             key: "installment",
             render(row) {
-                return h("div", row.installment.toLocaleString('US'));
+                return h("div", row.DENDA);
             },
         },
         {
             title: "Pinalti",
             key: "denda",
             render(row) {
-                return h("div", row.denda.toLocaleString('US'));
+                return h("div", row.PINALTI);
             },
         },
-        // {
-        //   title: "Jumlah Uang",
-        //   key: "jumlah_uang",
-        //   render(row, index) {
-        //     return h(NInputNumber, {
-        //       readonly: false,
-        //       format: format,
-        //       parse: parse,
-        //       showButton: false,
-        //       secondary: true,
-        //       placeholder: "pembayaran",
-        //       value: jml_uang.value,
-        //       onUpdateValue(v) {
-        //         dataStrukturKredit.value[index].bayar_angsuran = v;
-        //       },
-        //     });
-        //   },
-        // },
-        {
-            title: "Bayar Angsuran",
-            key: "installment",
-            render(row, index) {
-                return h(NInputNumber, {
-                    readonly: false,
-                    format: format,
-                    parse: parse,
-                    showButton: false,
-                    secondary: true,
-                    placeholder: "pembayaran",
-                    value: row.bayar_angsuran,
-                    onUpdateValue(v) {
-                        dataStrukturKredit.value[index].bayar_angsuran = v;
-                    },
-                });
-            },
-        },
-        {
-            title: "Bayar Denda",
-            key: "installment",
-            render(row, index) {
-                return h(NInputNumber, {
-                    readonly: false,
-                    clearable: true,
-                    min: 0,
-                    format: format,
-                    parse: parse,
-                    showButton: false,
-                    secondary: true,
-                    placeholder: "pembayaran",
-                    value: row.bayar_denda,
-                    onUpdateValue(v) {
-                        dataStrukturKredit.value[index].bayar_denda = v;
-                    },
-                });
-            },
-        },
-        {
-            title: "Jumlah Bayar",
-            key: "payment",
-            render(row, index) {
-                return h(NInputNumber, {
-                    readonly: true,
-                    format: format,
-                    parse: parse,
-                    showButton: false,
-                    secondary: true,
-                    placeholder: "pembayaran",
-                    value: dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda,
-                });
-            },
-        },
-        // {
-        //   title: "Status",
-        //   key: "status",
-        //   render(row) {
-        //     if (row.flag == 0) {
-        //       return h(
-        //         NTag,
-        //         {
-        //           bordered: false,
-        //           type: "warning",
-        //         },
-        //         { default: () => "unpaid" }
-        //       );
-        //     } else {
-        //       return h(
-        //         NTag,
-        //         {
-        //           bordered: false,
-        //           type: "success",
-        //         },
-        //         { default: () => "paid" }
-        //       );
-        //     }
-        //   },
-        // },
+
     ];
 };
 
@@ -602,7 +506,7 @@ const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 
 const handleFasilitas = (e) => {
-    getSkalaCredit(e);
+    getDataPelunasan(e);
 };
 
 const handleAngsuran = (e) => {
@@ -734,6 +638,27 @@ const getSkalaCredit = async (e) => {
         loadingAngsuran.value = false;
     }
 };
+
+const dataPelunasan = ref([]);
+const getDataPelunasan = async (e) => {
+    const dynamicBody = {
+        loan_number: e[0],
+    };
+    let userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: "POST",
+        api: "pelunasan",
+        data: dynamicBody,
+        token: userToken,
+    });
+    if (!response.ok) {
+        localStorage.removeItem("token");
+        router.replace("/");
+    } else {
+        dataPelunasan.value = response.data;
+        loadingAngsuran.value = false;
+    }
+}
 const totalPayment = computed(() => {
     // return checkedRowCredit.value;
     return dataStrukturKredit.value;
