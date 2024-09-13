@@ -2,11 +2,8 @@
   <n-card>
     <template #header>Penerimaan Uang</template>
     <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
-      <n-collapse-item
-        title="post payment"
-        name="1"
-        class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]"
-      >
+      <n-collapse-item title="post payment" name="1"
+        class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]">
         <pre> {{ dataPayment }}</pre>
       </n-collapse-item>
     </n-collapse>
@@ -14,13 +11,7 @@
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
       <n-space>
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          type="success"
-          @click="handleAddPay"
-        >
+        <n-button v-show="!searchField" strong secondary type="success" @click="handleAddPay">
           <template #icon>
             <n-icon>
               <add-icon />
@@ -28,29 +19,7 @@
           </template>
           tambah penerimaan
         </n-button>
-        <n-badge :value="789" :max="99" type="warning">
-          <n-button
-            v-show="!searchField"
-            strong
-            secondary
-            type="success"
-            @click="handleAddPay"
-          >
-            <template #icon>
-              <n-icon>
-                <add-icon />
-              </n-icon>
-            </template>
-            acc HO
-          </n-button>
-        </n-badge>
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          type="success"
-          @click="handlePayFull"
-        >
+        <n-button v-show="!searchField" strong secondary type="success" @click="handlePayFull">
           <template #icon>
             <n-icon>
               <full-pay />
@@ -58,13 +27,7 @@
           </template>
           pindah ke pelunasan
         </n-button>
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          circle
-          @click="handleExpand"
-        >
+        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
               <full-icon />
@@ -76,115 +39,72 @@
 
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
-      <n-data-table
-        striped
-        size="small"
-        :row-key="(row) => row.loan_number"
-        :columns="columns"
-        :data="dataPayment"
-        :max-height="300"
-        :on-update:checked-row-keys="handleFasilitas"
-        :loading="loadSearch"
-        class="pb-2"
-      />
+      <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataPayment"
+        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" />
     </div>
   </n-card>
-  <n-modal
-    class="w-1/2"
-    title="Upload Berkas Pencairan"
-    v-model:show="showModal"
-  >
+  <n-modal class="w-1/2 md:w-1/3" title="Upload Berkas Pencairan" v-model:show="showModal">
     <n-card :bordered="false" aria-modal="true">
       <!-- {{ bodyModal }} -->
       <div class="flex justify-between">
         <div>
           <div class="flex">
-            <label class="w-36">Tanggal</label
-            ><span>
-              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span
-            >
+            <label class="w-36">Tanggal</label><span>
+              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">No Transaksi</label
-            ><span>
-              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span
-            >
+            <label class="w-36">No Transaksi</label><span>
+              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Atas Nama </label
-            ><span>
-              <n-text strong> {{ bodyModal.nama }}</n-text></span
-            >
+            <label class="w-36">Atas Nama </label><span>
+              <n-text strong> {{ bodyModal.nama }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Alamat</label
-            ><span>
-              <n-text strong> {{ bodyModal.alamat }}</n-text></span
-            >
+            <label class="w-36">Alamat</label><span>
+              <n-text strong> {{ bodyModal.alamat }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Total Bayar</label
-            ><span>
+            <label class="w-36">Total Bayar</label><span>
               <n-text strong>
-                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Jumlah Uang</label
-            ><span>
+            <label class="w-36">Jumlah Uang</label><span>
               <n-text strong>
-                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Pembulatan</label
-            ><span>
+            <label class="w-36">Pembulatan</label><span>
               <n-text strong>
-                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Metode Pembayaran</label
-            ><span>
-              <n-text strong> {{ bodyModal.payment_method }}</n-text></span
-            >
+            <label class="w-36">Metode Pembayaran</label><span>
+              <n-text strong> {{ bodyModal.payment_method }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">kembalian</label
-            ><span>
+            <label class="w-36">kembalian</label><span>
               <n-text strong>
-                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
             <label class="w-36">Untuk Pembayaran</label>
 
             <n-space>
-              <n-tag
-                size="small"
-                v-for="pembayaran in bodyModal.pembayaran"
-                :bordered="false"
-                >{{ pembayaran.title }}
+              <n-tag size="small" v-for="pembayaran in bodyModal.pembayaran" :bordered="false">{{ pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
-                ,denda {{ pembayaran.bayar_denda }}
+                <span v-show="pembayaran.bayar_denda > 0">,denda {{
+                  parseInt(pembayaran.bayar_denda).toLocaleString("US")
+                  }}</span>
               </n-tag>
             </n-space>
           </div>
         </div>
         <div class="flex gap-2">
-          <label>Status</label
-          ><span>
-            <n-tag
-              strong
-              :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'"
-            >
-              {{ bodyModal.STATUS }}</n-tag
-            ></span
-          >
+          <label>Status</label><span>
+            <n-tag strong :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'">
+              {{ bodyModal.STATUS }}</n-tag></span>
         </div>
         <!-- <n-button>Approval</n-button> -->
       </div>
@@ -323,30 +243,20 @@ const createColumns = () => {
       },
     },
     {
-       align: "right",
+      align: "right",
       key: "action",
       render(row) {
-        return h(
-          NBadge,
+        return h(NButton,
           {
-            dot:true,
+            secondary: true,
+            round: true,
+            onClick: () => {
+              handleAction(row);
+            },
           },
           {
-            default: () => {
-              return h(NButton,
-                {
-                  secondary: true,
-                  round: true,
-                  onClick: () => {
-                    handleAction(row);
-                  },
-                },
-                {
-                  default: () => "detail",
-                });
-            },
-          }
-        );
+            default: () => "detail",
+          });
       },
     },
   ];
@@ -357,7 +267,6 @@ const bodyModal = ref();
 const handleAction = (e) => {
   showModal.value = true;
   bodyModal.value = e;
-  console.log(e);
 };
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();

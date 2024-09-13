@@ -1,10 +1,10 @@
 <template>
   <div class="pt-4" id="drawer-target">
     <n-space vertical>
-      <n-card :title="`Tabel BPKB`">
+      <n-card :title="`Transaksi serah terima jaminan`">
         <template #header-extra>
           <n-space>
-            <n-popover trigger="click" placement="bottom-end">
+            <!-- <n-popover trigger="click" placement="bottom-end">
               <template #trigger>
                 <n-button circle>
                   <n-icon>
@@ -12,22 +12,16 @@
                   </n-icon>
                 </n-button>
               </template>
-              <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
-            </n-popover>
-            <n-button round type="success" @click="handleActionDevlivery">
-              <n-icon>
-                <add-icon />
-              </n-icon>
-              Tambah
+<n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+</n-popover> -->
+            <n-button secondary @click="handleAdd" type="success" v-show="dataMe.me.USERNAME == 'admin'">
+              <template #icon>
+                <n-icon>
+                  <send-icon />
+                </n-icon>
+              </template>
+              tambah pengiriman jaminan
             </n-button>
-            <!-- <n-button>
-                            <template #icon>
-                                <n-icon>
-                                    <download-icon />
-                                </n-icon>
-                            </template>
-                            download
-                        </n-button> -->
             <!-- <n-button @click="handleNavCalc">
               <template #icon>
                 <n-icon>
@@ -53,76 +47,64 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :pagination="pagination"
-            :loading="loadData" :data="dataBpkbTransaction" />
+          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="dataTable"
+            :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
     </n-space>
-
     <!-- <n-space>
             online at: {{ fingerprint }}
         </n-space> -->
   </div>
 
-  <n-modal class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal" :mask-closable="false">
+  <n-modal class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal">
     <n-card :bordered="false" aria-modal="true">
-      <n-grid :cols="2">
-        <n-gi>
+      <div class="flex justify-between">
+        <div>
           <div class="flex">
-            <label class="w-24">No Order</label><span>
-              <n-text strong> {{ selectedData.order_number }}</n-text></span>
-          </div>
-          <div class="flex">
-            <label class="w-24">Nama </label><span>
-              <n-text strong> {{ selectedData.nama_debitur }}</n-text></span>
+            <label class="w-24">id</label>
+            <n-ellipsis style="max-width: 240px">
+              {{ selectedData.id }}</n-ellipsis>
           </div>
           <div class="flex">
-            <label class="w-24">Plafond</label><span>
-              <n-text strong>
-                {{ selectedData.plafond.toLocaleString("US") }}</n-text></span>
-          </div>
-        </n-gi>
-        <n-gi>
-          <div class="flex">
-            <label class="w-24">Alamat</label><span>
-              <n-text strong> {{ selectedData.alamat }}</n-text></span>
+            <label class="w-24">dari</label><span>
+              <n-text strong> {{ selectedData.dari_cabang }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-24">No Hp</label><span>
-              <n-text strong> {{ selectedData.hp }}</n-text></span>
+            <label class="w-24">tujuan</label><span>
+              <n-text strong> {{ selectedData.ke_cabang }}</n-text></span>
           </div>
-        </n-gi>
-      </n-grid>
-      <n-divider />
-      <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
-        :max="5">
-        <n-upload-dragger>
-          <div style="margin-bottom: 12px">
-            <n-icon size="48" :depth="3">
-              <file-upload />
-            </n-icon>
+          <div class="flex">
+            <label class="w-24">kurir</label><span>
+              <n-text strong> {{ selectedData.kurir }}</n-text></span>
           </div>
-          <n-text style="font-size: 16px">
-            Klik atau seret file ke area ini untuk diunggah
-          </n-text>
-        </n-upload-dragger>
-      </n-upload>
-      <n-space>
-        <div v-for="attachment in selectedData.attachment" :key="attachment" class="bg-slate-50 !p-0">
-          <n-space>
-            <n-tooltip placement="top" trigger="hover">
-              <template #trigger>
-                <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
-                </n-image>
-              </template>
-              <span class="uppercase">{{ attachment.TYPE }}</span>
-            </n-tooltip>
-          </n-space>
+          <div class="flex">
+            <label class="w-24">Keterangan</label><span>
+              <n-text strong> {{ selectedData.keterangan }}</n-text></span>
+          </div>
+          <div class="flex">
+            <label class="w-24">STATUS</label>
+            <n-tag type="info">{{ selectedData.status }}</n-tag>
+          </div>
         </div>
-      </n-space>
-      <div class="pt-4 flex justify-end">
-        <n-button @click="handleSelesai" secondary type="success" round>Selesai</n-button>
+        <div class="flex gap-2 items-top">
+
+          <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick()" positive-text="konfirmasi"
+            ponegative-text="reject" @negative-click="handleNegativeClick">
+            <template #activator>
+              <n-button secondary type="success"
+                v-show="dataMe.me.USERNAME == 'ho' && selectedData.status == 'SENDING'">Konfirmasi
+              </n-button>
+            </template>
+            <n-input type="textarea" placeholder="keterangan" v-model:value="dynamicForm.catatan"></n-input>
+          </n-popconfirm>
+        </div>
       </div>
+      <n-divider />
+      <n-space vertical :size="12" class="mb-4">
+        <n-data-table striped size="small" :row-key="(row) => row" :columns="columnsBpkb" :data="selectedData.bpkb"
+          :max-height="300" :on-update:checked-row-keys="handleChecked" />
+      </n-space>
     </n-card>
   </n-modal>
 </template>
@@ -149,7 +131,7 @@ import {
   AddCircleOutlineRound as AddIcon,
   SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
-  CalculateOutlined as CalcIcon,
+  AttachEmailOutlined as SendIcon,
   FilePresentOutlined as FileIcon,
   ImageFilled as UploadIcon,
   DriveFolderUploadRound as FileUpload,
@@ -159,8 +141,10 @@ import {
   DeleteOutlined as DeleteIcon,
   MoreVertRound as MoreIcon,
   ListAltOutlined as DetailIcon,
+  LocalPrintshopOutlined as PrintIcon,
 } from "@vicons/material";
 import { round } from "lodash";
+import { useMeStore } from "../../../stores/me";
 
 const iconfile = defineComponent(() => FileIcon);
 const message = useMessage();
@@ -175,8 +159,54 @@ const loadingRef = reactive({
   type: "loading",
   messagePost: null,
 });
+
+const dataMe = useMeStore();
 const userToken = localStorage.getItem("token");
 
+const columnsBpkb = [
+  {
+    type: "selection",
+  },
+  {
+    title: "No BPKB",
+    key: "BPKB_NUMBER",
+
+  },
+  {
+    title: "Atas Nama",
+    key: "ON_BEHALF",
+    // render(row) {
+    //     return h("div", row.no_polisi);
+    // }
+  },
+  {
+    title: "No Polisi",
+    key: "POLICE_NUMBER",
+    // render(row) {
+    //     return h("div", row.no_polisi);
+    // }
+  },
+  {
+    title: "No Rangka",
+    key: "CHASIS_NUMBER",
+  },
+  {
+    title: "status",
+    key: "status",
+    render(row) {
+      return h(NTag, {
+        type: row.STATUS == 'yes' ? 'success' : 'warning',
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () =>
+          row.STATUS ? row.STATUS : '-'
+        ,
+      });
+    },
+
+  },
+]
 const handleSelesai = () => {
   console.log('selesai');
   router.replace({
@@ -185,188 +215,85 @@ const handleSelesai = () => {
   showModal.value = false;
 };
 
-const dataBpkbTransaction = [
-  {
-    "ID": "533ae4a3-264a-4445-bd06-dd701e3a68a3",
-    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
-    "TO_BRANCH": "ho",
-    "CATEGORY": "permintaan",
-    "NOTE": "asdasdasdsadasdasd",
-    "STATUS": null,
-    "CREATED_BY": null,
-    "CREATED_AT": "2024-09-06 09:53:03"
-  },
-  {
-    "ID": "7238947c-eb42-4159-8e7b-5e83260f2b53",
-    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
-    "TO_BRANCH": "ho",
-    "CATEGORY": "permintaan",
-    "NOTE": "asdasdasdsadasdasd",
-    "STATUS": null,
-    "CREATED_BY": null,
-    "CREATED_AT": "2024-09-06 09:53:05"
-  },
-  {
-    "ID": "888c6ed3-e1b1-44f8-8419-22068e7d4930",
-    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
-    "TO_BRANCH": "ho",
-    "CATEGORY": "permintaan",
-    "NOTE": "asdasdasdsadasdasd",
-    "STATUS": null,
-    "CREATED_BY": null,
-    "CREATED_AT": "2024-09-06 09:52:21"
-  },
-  {
-    "ID": "e1f104ec-04c2-4eb6-8830-958472e9337c",
-    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
-    "TO_BRANCH": "ho",
-    "CATEGORY": "permintaan",
-    "NOTE": "asdasdasdsadasdasd",
-    "STATUS": null,
-    "CREATED_BY": null,
-    "CREATED_AT": "2024-09-06 09:53:04"
-  },
-  {
-    "ID": "f9168405-8e23-42b5-9d7d-49935833bcde",
-    "FROM_BRANCH": "c9b93fe8-240f-4a58-991c-f3e42d3cc379",
-    "TO_BRANCH": "ho",
-    "CATEGORY": "permintaan",
-    "NOTE": "asdasdasdsadasdasd",
-    "STATUS": null,
-    "CREATED_BY": null,
-    "CREATED_AT": "2024-09-06 09:53:01"
-  }
-]
-
 const columns = [
   {
-    title: "Asal",
-    key: "visit_date",
-    width: 110,
+    title: "id",
+    key: "tgl",
     render(row) {
-      return h("div", row.visit_date);
+      return h("div", row.id);
     },
   },
   {
-    title: "Tujuan",
-    key: "order_number",
-    width: 180,
+    title: "Tanggal",
+    key: "tgl",
+    render(row) {
+      return h("div", row.tgl);
+    },
   },
   {
-    title: "Kategori",
+    title: "dari",
+    key: "dari_cabang",
+  },
+  {
+    title: "kurir",
+    key: "kurir",
+
+  },
+  {
+    title: "tujuan",
+    key: "ke_cabang",
+
+  },
+  {
+    title: "jumlah",
+    key: "jml_bpkb",
+
+  },
+  {
+    title: "status",
+    key: "status",
+    render(row) {
+      return h(NTag, {
+        type: row.status == 'SENDING' ? 'info' : 'success',
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () =>
+          row.status
+        ,
+      });
+    },
+
+  },
+  {
     key: "nama_debitur",
     width: 180,
-  },
-  {
-    title: "Catatan",
-    width: 180,
-    key: "plafond",
-    render(row) {
-      return h("div", format(row.plafond));
-    },
-  },
-  {
-    title: "Status",
-    key: "status",
-    render(row) {
-      return h(
-        NTag,
-        {
-          bordered: false,
-          type: statusTag(row.status),
-        },
-        { default: () => statusLabel(row.status) }
-      );
-    },
-  },
-  {
-    width: 150,
-    key: "status",
-    render(row) {
-      let status = row.status.at(0);
-      if (row.flag == 0) {
-        var cetak = "CETAK";
-        var type = "primary";
-      } else {
-        var cetak = "CETAK ULANG";
-        var type = "warning";
-      }
-      if (status === "6") {
-        return h(
-          NButton,
-          {
-            secondary: true,
-            type: type,
-            round: true,
-            onClick: (e) => {
-              handlePrePrint(row);
-
-              //showModal.value = true;
-              // handlePrint(row)
-            },
-          },
-          {
-            default: `${cetak} PK`,
-          }
-        );
-      }
-    },
-  },
-  {
-    key: "status",
-    render(row) {
-      if (row.flag != 0) {
-        const iconUpload = h(NIcon, null, {
-          default: () => h(UploadIcon),
-        });
-        let typeUpload;
-        let classType;
-        if (row.attachment.length <= 0) {
-          classType = "animate-bounce";
-          typeUpload = "error";
-        } else {
-          classType = "animate-none";
-          typeUpload = "success";
-        }
-        return h(
-          NButton,
-          {
-            class: classType,
-            type: typeUpload,
-            circle: true,
-            secondary: true,
-            onClick: (e) => {
-              selectedData.value = row;
-              showModal.value = true;
-              // console.log(row);
-            },
-          },
-          {
-            default: iconUpload,
-          }
-        );
-      }
-    },
-  },
-  {
-    title: "Action",
-    align: "right",
-    key: "more",
     render(row) {
       return h(
         NButton,
         {
+          circle: true,
           secondary: true,
-          round: true,
-          type: typeAction(row.status),
-          onClick: (e) => {
-            handleAction(row.status, row);
-          },
         },
         {
-          default: () => actionLabel(row.status),
+          default: h(NIcon, null, {
+            default: () => h(PrintIcon),
+          })
         }
       );
+    },
+  },
+  {
+    key: "nama_debitur",
+    align: 'right',
+    width: 180,
+    render(row) {
+      return h(NButton, {
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () => 'detail',
+      });
     },
   },
 ];
@@ -396,6 +323,30 @@ const statusLabel = (e) => {
   // }
   return e.substring(2);
 };
+const dynamicForm = reactive({
+  id_surat: null,
+  tujuan: null,
+  bpkb: [],
+  flag_approval: null,
+  catatan: '',
+});
+const handleChecked = (e) => {
+  dynamicForm.bpkb = e;
+}
+const selectedMail = ref([]);
+const handleDetail = (e) => {
+  // if (dataMe.me.USERNAME == 'ho') {
+  //   columnsBpkb.unshift({
+  //     type: "selection",
+  //   },);
+  // }
+  showModal.value = true;
+  dynamicForm.id_surat = e.id;
+  dynamicForm.tujuan = e.ke_cabang;
+  dynamicForm.flag_approval = 'yes';
+  selectedData.value = e;
+}
+
 const typeAction = (e) => {
   let status = e.at(0);
   if (status === "1") {
@@ -407,7 +358,6 @@ const typeAction = (e) => {
   }
   return "info";
 };
-
 const actionLabel = (e) => {
   let status = e.at(0);
   if (status === "1") {
@@ -486,7 +436,7 @@ function generatePdf() {
 
   // doc.save('test.pdf');
 }
-const handleActionDevlivery = () => {
+const handleAdd = () => {
   router.replace({ name: 'bpkb action' });
 };
 
@@ -494,7 +444,7 @@ const getData = async () => {
   loadData.value = true;
   const response = await useApi({
     method: "GET",
-    api: "kunjungan_admin",
+    api: "bpkb_transaction",
     token: userToken,
   });
   if (!response.ok) {
@@ -503,14 +453,15 @@ const getData = async () => {
     router.replace("/");
   } else {
     loadData.value = false;
-    dataTable.value = response.data.response;
+    dataTable.value = response.data;
   }
 };
 
-const refAdmin = async () => {
+const handlePositiveClick = async () => {
   const response = await useApi({
     method: "post",
-    api: "kunjungan_admin",
+    api: "bpkb_transaction",
+    data: dynamicForm,
     token: userToken,
   });
   if (!response.ok) {
@@ -518,7 +469,10 @@ const refAdmin = async () => {
     localStorage.removeItem("token");
     router.replace("/");
   } else {
-    dataTable.value = response.data.response;
+    message.success("berhasil update");
+    gertData();
+    showModal.value = false;
+
   }
 };
 
@@ -567,7 +521,10 @@ function generateBrowserFingerprint() {
   return hash;
 }
 const fingerprint = generateBrowserFingerprint();
-onMounted(() => getData());
+onMounted(() => {
+  getData();
+
+});
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
   // return filterIt(dataTable.value, searchBox.value);

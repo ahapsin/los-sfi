@@ -27,6 +27,7 @@
                                 </template>
                         </n-page-header>
                         <div class="p-4">
+
                                 <RouterView />
                         </div>
                 </div>
@@ -41,6 +42,11 @@
 <script setup>
 import { MenuFilled as MenuIcon } from "@vicons/material";
 import router from '../../router';
+import { useMeStore } from "../../stores/me";
+
+const dataMe = useMeStore();
+
+
 const active = ref(false);
 const activate = () => {
         active.value = true;

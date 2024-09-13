@@ -533,6 +533,7 @@ const createColStruktur = () => {
           readonly: false,
           format: format,
           parse: parse,
+          max: row.bayar_angsuran,
           showButton: false,
           secondary: true,
           placeholder: "pembayaran",
@@ -551,6 +552,7 @@ const createColStruktur = () => {
           readonly: false,
           clearable: true,
           min: 0,
+          max: row.bayar_denda,
           format: format,
           parse: parse,
           showButton: false,
@@ -668,7 +670,7 @@ const handleProses = async () => {
     },
   });
   const postDynamic = async () => {
-    await useApi({
+    const response = await useApi({
       method: "POST",
       api: "payment",
       data: pageData,

@@ -2,24 +2,29 @@
     <n-card :segmented="{
         content: true,
         footer: 'soft'
-    }" :title="`Form`">
-        {{ dynamicForm }}
+    }" :title="`Form Kirim Jaminan`">
+
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
-            <n-form-item label="Transaksi" path="cabang">
+            <!-- <n-form-item label="Transaksi" path="cabang">
                 <n-switch size="large" :rail-style="railStyle" :disabled="searchField">
                     <template #checked> Pengambilan </template>
-                    <template #unchecked> Pengiriman </template>
-                </n-switch>
-            </n-form-item>
+<template #unchecked> Pengiriman </template>
+</n-switch>
+</n-form-item> -->
             <n-space vertical :size="12" class="mb-4">
                 <n-data-table striped size="small" :row-key="(row) => row" :columns="columns" :data="dataBpkb"
-                    :max-height="300" :loading="loadingAngsuran" :on-update:checked-row-keys="handleChecked" />
+                    :max-height="300" :on-update:checked-row-keys="handleChecked" />
             </n-space>
-            <n-form-item label="Tujuan" path="cabang">
-                <n-select filterable placeholder="Pilih Cabang" label-field="nama" value-field="id"
-                    :options="dataBranch" v-model:value="dynamicForm.cabang_id" />
-            </n-form-item>
+            <n-space>
+                <n-form-item label="Tujuan" path="cabang">
+                    <n-select filterable placeholder="Pilih Cabang" :options="optTujuan"
+                        v-model:value="dynamicForm.tujuan" default-value="HO" />
+                </n-form-item>
+                <n-form-item label="Kurir" path="cabang">
+                    <n-input filterable placeholder="Kurir" v-model:value="dynamicForm.kurir" />
+                </n-form-item>
+            </n-space>
             <n-form-item label="Catatan" path="cabang">
                 <n-input type="textarea" v-model:value="dynamicForm.catatan" />
             </n-form-item>
@@ -28,7 +33,6 @@
             <n-space>
                 <n-button :loading="loading" type="success" @click="handleSave">
                     <span v-if="!param">Simpan</span>
-                    <span v-else>Ubah</span>
                 </n-button>
                 <n-button type="error" @click="handleCancel">
                     Batal
@@ -53,7 +57,7 @@ const dataBranch = ref();
 
 const dynamicForm = reactive({
     bpkb: null,
-    tujuan: null,
+    tujuan: 'HO',
     catatan: null,
 
 });
@@ -149,30 +153,21 @@ const bpkbToArray = (objects) => {
 const colHeader = ['No', 'No BPKB', 'No Polisi', 'No Rangka'];
 const handleSave = async (e) => {
     printAfter.value = true;
-    // e.preventDefault(e);
-    // loading.value = true;
-    // if (param) {
-    //     action.value = "PUT";
-    //     url.value = `users/${param}`;
-    // } else {
-    //     url.value = `users`;
-    //     action.value = "POST";
-    // }
-    // const response = await useApi({
-    //     method: action.value,
-    //     api: url.value,
-    //     data: dynamicForm,
-    //     token: userToken
-    // });
+    const response = await useApi({
+        method: 'POST',
+        api: 'bpkb_transaction',
+        data: dynamicForm,
+        token: userToken
+    });
 
-    // if (!response.ok) {
-    //     message.error("data gagal disimpan");
-    //     loading.value = false;
-    // } else {
-    //     message.success("data berhasil disimpan");
-    //     loading.value = false;
-    //     router.replace({ name: 'pengguna' });
-    // }
+    if (!response.ok) {
+        message.error("data gagal disimpan");
+        loading.value = false;
+    } else {
+        router.replace({ name: 'bpkb' })
+        message.success("data berhasil disimpan");
+        loading.value = false;
+    }
 }
 const handleChecked = (e) => {
     dynamicForm.bpkb = e;
@@ -270,7 +265,7 @@ const handlePrint = () => {
 
 }
 
-const optJabatan = ["MCF", "ADMIN", "KAPOS", "HO", "SUPERADMIN"].map(
+const optTujuan = ["HO"].map(
     (v) => ({
         label: v,
         value: v

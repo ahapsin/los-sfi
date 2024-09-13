@@ -126,6 +126,12 @@ const routes = [
         component: () => import("../views/pages/task/ApprovalHOPage.vue"),
       },
       {
+        path: "approval_trf",
+        name: "pending transfer",
+        component: () =>
+          import("../views/pages/task/HO/PendingTransferPage.vue"),
+      },
+      {
         path: "new-survey",
         name: "tambah survey",
         component: () => import("../views/pages/task/AddSurveyPage.vue"),
