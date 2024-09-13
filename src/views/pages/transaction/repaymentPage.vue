@@ -1,6 +1,6 @@
 <template>
     <n-card>
-        <template #header>Pelunasan Angsuran</template>
+        <template #header>Pelunasan Angsuran {{ totalBayar }}</template>
         <!-- <n-collapse>
             <n-collapse-item title="struktur" name="1">
                 <pre> {{ dataPelunasan }}</pre>
@@ -142,8 +142,8 @@
                         v-model:value="pageData.payment_method" />
                 </n-form-item>
                 <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
-                    <n-input-number placeholder="Jumlah Pembayaran" v-model:value="totalPay" :show-button="false"
-                        :parse="parse" :format="format" clearable @blur="pushJumlahUang" class="w-full">
+                    <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pageData.total_bayar"
+                        :show-button="false" :parse="parse" :format="format" clearable class="w-full">
                     </n-input-number>
                 </n-form-item>
                 <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
@@ -354,18 +354,10 @@ const dialogProses = ref(false);
 const paymentData = ref([]);
 
 
-const totalPay = computed(() => {
-    const totalInstallment = () => checkedRowCredit.value.reduce((total, installment) => total + installment.bayar_angsuran, 0);
 
-    const totalPenalty = () => checkedRowCredit.value.reduce((total, installment) => total + installment.bayar_denda, 0);
-
-    const combinedTotal = () => totalInstallment() + totalPenalty();
-
-    return combinedTotal();
-});
 const pageData = reactive({
     no_facility: null,
-    total_bayar: totalPay,
+    total_bayar: computed(() => dataPelunasan.value.SISA_POKOK),
     jumlah_uang: 0,
     payment_method: 'cash',
     pembulatan: 0,
@@ -446,7 +438,7 @@ const createColStruktur = () => {
     return [
         {
             title: "Sisa Pokok",
-            key: "sisa_pokok",
+            key: "SISA_POKOK",
         },
         {
             title: "Bunga Berjalan",
@@ -454,7 +446,7 @@ const createColStruktur = () => {
         },
         {
             title: "Tunggakan Bunga",
-            key: "TUNGGAKAN BUNGA",
+            key: "TUNGGAKAN_BUNGA",
         },
         {
             title: "Denda",
@@ -638,7 +630,7 @@ const getSkalaCredit = async (e) => {
         loadingAngsuran.value = false;
     }
 };
-
+const totalBayar = ref();
 const dataPelunasan = ref([]);
 const getDataPelunasan = async (e) => {
     const dynamicBody = {
@@ -657,6 +649,7 @@ const getDataPelunasan = async (e) => {
     } else {
         dataPelunasan.value = response.data;
         loadingAngsuran.value = false;
+        totalBayar.value = dataPelunasan.value[0].SISA_POKOK + dataPelunasan.value[0].BUNGA_BERJALAN + dataPelunasan.value[0].TUNGAKAN_BUNGA + dataPelunasan.value[0].DENDA + dataPelunasan.value[0].PINALTI;
     }
 }
 const totalPayment = computed(() => {
@@ -694,7 +687,11 @@ const pushJumlahUang = async () => {
     //   loadingAngsuran.value = false;
     // }
 };
+const totalPay = computed(() => {
+    const combinedTotal = () => dataPelunasan.value.SISA_POKOK;
 
+    return combinedTotal();
+});
 const dataKontrak = Array.from({ length: 5 }).map((_, index) => ({
     id: `01905df3-${index}`,
     loan_number: `0052406${index}`,
