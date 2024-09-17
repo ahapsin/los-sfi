@@ -568,7 +568,7 @@ const getCreditCustomer = async () => {
     const dynamicBody = {
         cust_code: selectedCustomer.value.CUST_CODE,
     };
-    let userToken = localStorage.getItem("token");
+    let userToken = localStorage.getItem("token"); a
     const response = await useApi({
         method: "POST",
         api: "kontrak_fasilitas",
