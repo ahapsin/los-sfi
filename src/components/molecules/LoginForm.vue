@@ -10,8 +10,8 @@
                     <n-input v-model:value="dynamicForm.username" placeholder="username" />
                 </n-form-item>
                 <n-form-item label="password" path="password" :rule="rules.password">
-                    <n-input type="password" v-model:value="dynamicForm.password" show-password-on="mousedown"
-                        placeholder="Password" @keyup.enter="handleLogin" />
+                    <n-input type="password" v-model:value="dynamicForm.password" placeholder="Password"
+                        @keyup.enter="handleLogin" />
                 </n-form-item>
                 <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary"
                     @click="handleLogin">
@@ -48,6 +48,7 @@ const rules = {
 }
 const handleLogin = async (e) => {
     e.preventDefault(e);
+
     formRef.value?.validate((errors) => {
         if (errors) {
             loading.value = false
@@ -73,6 +74,8 @@ const handleLogin = async (e) => {
         router.push('dashboard');
     }
 }
+
+
 onMounted(() => {
     if (localStorage.getItem("token")) {
         const userToken = localStorage.getItem("token");
@@ -87,6 +90,7 @@ onMounted(() => {
                 message.warning("sesi anda sudah berakhir");
                 router.replace('/');
             } else {
+
                 message.loading("memulihkan sesi...");
                 router.push('dashboard');
             }

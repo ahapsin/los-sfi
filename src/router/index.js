@@ -30,12 +30,28 @@ const routes = [
       {
         path: "payment",
         name: "pembayaran",
+        component: () => import("../views/pages/transaction/paymentPage.vue"),
+      },
+      {
+        path: "addpayment",
+        name: "tambah penerimaan",
         component: () => import("../views/pages/transaction/cashInPage.vue"),
+      },
+      {
+        path: "repayment",
+        name: "pelunasan",
+        component: () => import("../views/pages/transaction/repaymentPage.vue"),
       },
       {
         path: "bpkb",
         name: "bpkb",
         component: () => import("../views/pages/transaction/deliveryPage.vue"),
+      },
+      {
+        path: "bpkb-action",
+        name: "bpkb action",
+        component: () =>
+          import("../views/pages/transaction/addDeliveryPage.vue"),
       },
     ],
   },
@@ -108,6 +124,12 @@ const routes = [
         path: "approval_ho",
         name: "Approval HO",
         component: () => import("../views/pages/task/ApprovalHOPage.vue"),
+      },
+      {
+        path: "approval_trf",
+        name: "pending transfer",
+        component: () =>
+          import("../views/pages/task/HO/PendingTransferPage.vue"),
       },
       {
         path: "new-survey",

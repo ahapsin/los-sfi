@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-1">
-        <div v-for="menu in  props.menus " :key="menu.menuid" @click="!open">
+        <div v-for="menu in props.menus " :key="menu.menuid" @click="!open">
             <Disclosure v-slot="{ open }" as="div">
                 <DisclosureButton v-if="menu.menuitem.submenu.length == 0" class="rounded-xl w-full flex">
                     <router-link :to="menu.menuitem.routename" class="flex w-full">
@@ -36,6 +36,7 @@
                             <template #action v-if="!menu.menuitem.action">
                                 <v-icon :name="open ? 'ri-arrow-drop-up-line' : 'ri-arrow-drop-down-line'" scale="2"
                                     class="p-2" />
+
                             </template>
                         </MenuAt>
                     </DisclosureButton>
@@ -43,7 +44,7 @@
                         <div
                             :class="!typeMenus && 'bg-primary/10 backdrop-blur-sm absolute left-12 -top-10 p-2 z-50 shadow-md rounded-md'">
                             <ul class="list-none2 flex flex-col gap-1">
-                                <li v-for="sub in  menu.menuitem.submenu " :key="sub.subid"
+                                <li v-for="sub in menu.menuitem.submenu " :key="sub.subid"
                                     class="text-sm ps-4 pe-4 dark:text-pr-400 rounded-md cursor-pointer">
                                     <RouterLink :to="menu.menuitem.routename + '' + sub.subroute" v-slot="{ isActive }">
                                         <div class="transition ease-in-out flex items-center text-nowrap w-full rounded-lg hover:bg-pr hover:text-sf dark:hover:bg-sf-drk-200"

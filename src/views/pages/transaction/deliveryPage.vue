@@ -1,284 +1,576 @@
 <template>
-  <n-card>
-    <template #header>Serah Terima Jaminan</template>
-    <template #header-extra>
-      <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
-        <template #icon>
-          <n-icon>
-            <full-icon />
-          </n-icon>
-        </template>
-      </n-button>
-    </template>
-    <n-form ref="formRef" :model="model" :rules="rules" label-placement="left" require-mark-placement="right-hanging"
-      :size="size" label-width="auto">
-      <n-form-item label="Transaksi" :show-feedback="false" class="w-full">
-        <n-grid :cols="2">
-          <n-form-item-gi path="nestedValue.path1">
-            <!-- <n-radio-group v-model:value="size" name="left-size">
-                            <n-radio-button value="small">
-                                Angsuran
-                            </n-radio-button>
-                            <n-radio-button value="medium">
-                                Pelunasan
-                            </n-radio-button>
-                        </n-radio-group> -->
-            <n-switch size="large" :rail-style="railStyle" :disabled="searchField">
-              <template #checked> Terima Jaminan</template>
-              <template #unchecked> Serah Jaminan </template>
-            </n-switch>
-          </n-form-item-gi>
-          <n-form-item-gi path="nestedValue.path2">
-            <n-auto-complete v-model:value="valOptSearch" :options="listCustomer" :on-select="handleInputSearch">
-              <template #default="{
-                handleInput,
-                handleBlur,
-                handleFocus,
-                value: slotValue,
-              }">
-                <n-input clearable @clear="handleCloseNasabah" :value="valOptSearch" placeholder="Pelanggan"
-                  @input="handleInput" @focus="handleFocus" @blur="handleBlur" >
-                  <template #prefix>
-                    <n-icon :component="searchIcon" />
-                  </template>
-                </n-input>
+  <div class="pt-4" id="drawer-target">
+    <n-space vertical>
+      <n-card :title="`Transaksi serah terima jaminan`">
+        <template #header-extra>
+          <n-space>
+            <!-- <n-popover trigger="click" placement="bottom-end">
+              <template #trigger>
+                <n-button circle>
+                  <n-icon>
+                    <search-icon />
+                  </n-icon>
+                </n-button>
               </template>
-            </n-auto-complete>
-          </n-form-item-gi>
-        </n-grid>
-      </n-form-item>
-      <div v-show="searchField" class="flex gap-4">
-        <n-card title="Data Nasabah" :bordered="false" embedded size="small">
-          <n-grid :cols="2">
-            <n-gi>
-              <div class="flex">
-                <label class="w-24">No Pelanggan</label><span>
-                  <n-text strong>{{ selectedCustomer.CUST_CODE }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Nama </label><span>
-                  <n-text strong>{{ selectedCustomer.NAME }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Tanggal Lahir</label><span>
-                  <n-text strong>{{ selectedCustomer.BIRTHDATE }}</n-text></span>
-              </div>
-            </n-gi>
-            <n-gi>
-              <div class="flex">
-                <label class="w-24">No KTP</label><span>
-                  <n-text strong>{{ selectedCustomer.ID_NUMBER }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Alamat</label><span>
-                  <n-text strong>{{ selectedCustomer.ADDRESS }}, RT {{ selectedCustomer.RT }} RW {{ selectedCustomer.RW
-                    }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-24">Ibu Kandung</label><span>
-                  <n-text strong>{{ selectedCustomer.MOTHER_NAME }}</n-text></span>
-              </div>
-            </n-gi>
-          </n-grid>
-        </n-card>
-        <n-card title="Data Jaminan" :bordered="false" embedded size="small">
-          <n-grid :cols="1">
-            <n-gi>
-              <div class="flex">
-                <label class="w-1/3">No PK</label><span>
-                  <n-text strong>{{ selectedCustomer.CUST_CODE }}</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-1/3">BPKB No </label><span>
-                  <n-text strong>##no bpkb##</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-1/3">BPKB atas nama</label><span>
-                  <n-text strong>##atasnama bpkb##</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-1/3">Merk / Type/ Tahun</label><span>
-                  <n-text strong>KAWASAKI/V01153 - NINJA150LVR/SS/2010</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-1/3">Warna/No.Polisi</label><span>
-                  <n-text strong>HITAM/E 123 yy</n-text></span>
-              </div>
-              <div class="flex">
-                <label class="w-1/3">No. Rangka/Mesin</label><span>
-                  <n-text strong>norangka/nomesin</n-text></span>
-              </div>
-            </n-gi>
-          </n-grid>
-        </n-card>
+<n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+</n-popover> -->
+            <n-button secondary @click="handleAdd" type="success" v-show="dataMe.me.USERNAME == 'admin'">
+              <template #icon>
+                <n-icon>
+                  <send-icon />
+                </n-icon>
+              </template>
+              tambah pengiriman jaminan
+            </n-button>
+            <!-- <n-button @click="handleNavCalc">
+              <template #icon>
+                <n-icon>
+                  <calc-icon />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button @click="handleNavFile">
+              <template #icon>
+                <n-icon>
+                  <file-icon />
+                </n-icon>
+              </template>
+            </n-button> -->
+            <!-- <n-button type="primary" @click="handleAdd">
+                            <template #icon>
+                                <n-icon>
+                                    <add-icon />
+                                </n-icon>
+                            </template>
+                            tambah
+                        </n-button> -->
+          </n-space>
+        </template>
+        <n-space vertical :size="12" class="pt-4">
+          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="dataTable"
+            :pagination="pagination" :loading="loadData" />
+        </n-space>
+      </n-card>
+    </n-space>
+    <!-- <n-space>
+            online at: {{ fingerprint }}
+        </n-space> -->
+  </div>
+
+  <n-modal class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal">
+    <n-card :bordered="false" aria-modal="true">
+      <div class="flex justify-between">
+        <div>
+          <div class="flex">
+            <label class="w-24">id</label>
+            <n-ellipsis style="max-width: 240px">
+              {{ selectedData.id }}</n-ellipsis>
+          </div>
+          <div class="flex">
+            <label class="w-24">dari</label><span>
+              <n-text strong> {{ selectedData.dari_cabang }}</n-text></span>
+          </div>
+          <div class="flex">
+            <label class="w-24">tujuan</label><span>
+              <n-text strong> {{ selectedData.ke_cabang }}</n-text></span>
+          </div>
+          <div class="flex">
+            <label class="w-24">kurir</label><span>
+              <n-text strong> {{ selectedData.kurir }}</n-text></span>
+          </div>
+          <div class="flex">
+            <label class="w-24">Keterangan</label><span>
+              <n-text strong> {{ selectedData.keterangan }}</n-text></span>
+          </div>
+          <div class="flex">
+            <label class="w-24">STATUS</label>
+            <n-tag type="info">{{ selectedData.status }}</n-tag>
+          </div>
+        </div>
+        <div class="flex gap-2 items-top">
+
+          <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick()" positive-text="konfirmasi"
+            ponegative-text="reject" @negative-click="handleNegativeClick">
+            <template #activator>
+              <n-button secondary type="success"
+                v-show="dataMe.me.USERNAME == 'ho' && selectedData.status == 'SENDING'">Konfirmasi
+              </n-button>
+            </template>
+            <n-input type="textarea" placeholder="keterangan" v-model:value="dynamicForm.catatan"></n-input>
+          </n-popconfirm>
+        </div>
       </div>
-      <div class="pt-4">
-         <n-form-item label="Tujuan">
-        <n-input placeholder="tujuan"/>
-        </n-form-item>
-        <n-form-item>
-           <n-button type="primary">
-      Simpan
-    </n-button>
-        </n-form-item>
-      </div>
-     
-    </n-form>
-  </n-card>
+      <n-divider />
+      <n-space vertical :size="12" class="mb-4">
+        <n-data-table striped size="small" :row-key="(row) => row" :columns="columnsBpkb" :data="selectedData.bpkb"
+          :max-height="300" :on-update:checked-row-keys="handleChecked" />
+      </n-space>
+    </n-card>
+  </n-modal>
 </template>
-
 <script setup>
+import { ref, reactive, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
+import { lyla } from "@lylajs/web";
+import router from "../../../router";
+import {
+  useDialog,
+  useMessage,
+  NIcon,
+  NTag,
+  NButton,
+  NBadge,
+  NAvatar,
+} from "naive-ui";
+import { jsPDF } from "jspdf";
+import { useNetwork } from "@vueuse/core";
+const { onlineAt } = useNetwork();
+import { sha256, sha224 } from "js-sha256";
 import { useSearch } from "../../../helpers/searchObject";
-import router from '../../../router';
-import { SearchRound as searchIcon, OpenInFullRound as fullIcon } from "@vicons/material";
+import {
+  AddCircleOutlineRound as AddIcon,
+  SearchOutlined as SearchIcon,
+  FileDownloadOutlined as DownloadIcon,
+  AttachEmailOutlined as SendIcon,
+  FilePresentOutlined as FileIcon,
+  ImageFilled as UploadIcon,
+  DriveFolderUploadRound as FileUpload,
+} from "@vicons/material";
+import {
+  EditOutlined as EditIcon,
+  DeleteOutlined as DeleteIcon,
+  MoreVertRound as MoreIcon,
+  ListAltOutlined as DetailIcon,
+  LocalPrintshopOutlined as PrintIcon,
+} from "@vicons/material";
+import { round } from "lodash";
+import { useMeStore } from "../../../stores/me";
 
-import { computed, onMounted, ref } from "vue";
-
-const searchField = ref(false);
-const valOptSearch = ref(null);
-
-const checkedRowFasilitas=ref([1]);
-
-const createColumns = () => {
-  return [
-    {
-      type: "selection",
-      multiple: false,
-    },
-    {
-      title: "No Kontrak",
-      key: "loan_number",
-    },
-    {
-      title: "NO PK",
-      key: "no_pk",
-    },
-    {
-      title: "Sisa Angsuran",
-      key: "sisa_angsuran",
-    },
-    {
-      title: "Total Bayar",
-      key: "total_bayar",
-    },
-  ];
-};
-
-const tipe_pay = ref("Tunai");
-const bank = ref(null);
-const optTipePay = [
-  {
-    label: "Tunai",
-    value: "cash",
-  },
-  {
-    label: "Transfer",
-    value: "transfer",
-  },
-];
-const optBank = [
-  {
-    label: "BCA",
-    value: "bca",
-  },
-  {
-    label: "Mandiri",
-    value: "mandiri",
-  },
-];
-
-const dataCustomer = ref([]);
-const selectedCustomer = ref([]);
-const columns = createColumns();
-
-const getDataCustomer = async () => {
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "GET",
-    api: "customer",
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    dataCustomer.value = response.data;
-  }
-};
-
-const handleInputSearch = (e) => {
-  selectedCustomer.value = e;
-  searchField.value = true;
-  getCreditCustomer();
-};
-const handleCloseNasabah = () => {
-  searchField.value = false;
-  valOptSearch.value = null;
-  console.log("search");
-};
-
-const creditCustomer = ref([]);
-const getCreditCustomer = async () => {
-  const dynamicBody = {
-    cust_code: "005240600001",
-  };
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "POST",
-    api: "kontrak_fasilitas",
-    data: dynamicBody,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    creditCustomer.value = response.data;
-  }
-};
-const dataKontrak = Array.from({ length: 5 }).map((_, index) => ({
-   id: `01905df3-${index}`,
-  loan_number: `0052406${index}`,
-    cust_code: "005240600001",
-    no_pk: `FPK/20240621/ ${index}`,
-  sisa_angsuran: `7.050.000`,
-  key: index
-}));
-
-
-const listCustomer = computed(() => {
-  let dataList = useSearch(dataCustomer.value, valOptSearch.value);
-  return dataList.map((suffix) => {
-    return {
-      label: suffix.CUST_CODE + "-" + suffix.NAME,
-      value: suffix,
-    };
-  });
+const iconfile = defineComponent(() => FileIcon);
+const message = useMessage();
+const dialog = useDialog();
+const pk = ref(null);
+const showModal = ref(false);
+const dataTable = ref([]);
+const searchBox = ref();
+const selectedData = ref();
+const loadData = ref(false);
+const loadingRef = reactive({
+  type: "loading",
+  messagePost: null,
 });
-const railStyle = ({ focused, checked }) => {
-  const style = {};
-  if (checked) {
-    style.background = "#d03050";
-    if (focused) {
-      style.boxShadow = "0 0 0 2px #d0305040";
-    }
-  } else {
-    style.background = "#008000";
-    if (focused) {
-      style.boxShadow = "0 0 0 2px #2080f040";
-    }
-  }
-  return style;
+
+const dataMe = useMeStore();
+const userToken = localStorage.getItem("token");
+
+const columnsBpkb = [
+  {
+    type: "selection",
+  },
+  {
+    title: "No BPKB",
+    key: "BPKB_NUMBER",
+
+  },
+  {
+    title: "Atas Nama",
+    key: "ON_BEHALF",
+    // render(row) {
+    //     return h("div", row.no_polisi);
+    // }
+  },
+  {
+    title: "No Polisi",
+    key: "POLICE_NUMBER",
+    // render(row) {
+    //     return h("div", row.no_polisi);
+    // }
+  },
+  {
+    title: "No Rangka",
+    key: "CHASIS_NUMBER",
+  },
+  {
+    title: "status",
+    key: "status",
+    render(row) {
+      return h(NTag, {
+        type: row.STATUS == 'yes' ? 'success' : 'warning',
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () =>
+          row.STATUS ? row.STATUS : '-'
+        ,
+      });
+    },
+
+  },
+]
+const handleSelesai = () => {
+  console.log('selesai');
+  router.replace({
+    name: "Pengajuan Kredit",
+  });
+  showModal.value = false;
 };
 
-const handleExpand = () => {
-  console.log('asdasdas');
-  const fullPage = router.resolve({ name: 'expand transaction' });
-  window.open(fullPage.href, '_blank');
+const columns = [
+  {
+    title: "id",
+    key: "tgl",
+    render(row) {
+      return h("div", row.id);
+    },
+  },
+  {
+    title: "Tanggal",
+    key: "tgl",
+    render(row) {
+      return h("div", row.tgl);
+    },
+  },
+  {
+    title: "dari",
+    key: "dari_cabang",
+  },
+  {
+    title: "kurir",
+    key: "kurir",
+
+  },
+  {
+    title: "tujuan",
+    key: "ke_cabang",
+
+  },
+  {
+    title: "jumlah",
+    key: "jml_bpkb",
+
+  },
+  {
+    title: "status",
+    key: "status",
+    render(row) {
+      return h(NTag, {
+        type: row.status == 'SENDING' ? 'info' : 'success',
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () =>
+          row.status
+        ,
+      });
+    },
+
+  },
+  {
+    key: "nama_debitur",
+    width: 180,
+    render(row) {
+      return h(
+        NButton,
+        {
+          circle: true,
+          secondary: true,
+        },
+        {
+          default: h(NIcon, null, {
+            default: () => h(PrintIcon),
+          })
+        }
+      );
+    },
+  },
+  {
+    key: "nama_debitur",
+    align: 'right',
+    width: 180,
+    render(row) {
+      return h(NButton, {
+        secondary: true,
+        onClick: () => handleDetail(row),
+      }, {
+        default: () => 'detail',
+      });
+    },
+  },
+];
+
+const activeRef = ref(false);
+const placementRef = ref("right");
+const activate = (place) => {
+  activeRef.value = true;
+  placementRef.value = place;
+};
+
+const statusTag = (e) => {
+  let status = e.at(0);
+  if (status === "1") {
+    return "warning";
+  } else if (status === "2") {
+    return "info";
+  }
+  return "warning";
+};
+const statusLabel = (e) => {
+  let status = e.at(0);
+  // if (status === "1") {
+  //     return "menunggu PFK";
+  // } else if (status === "2") {
+  //     return "pembuatan PFK";
+  // }
+  return e.substring(2);
+};
+const dynamicForm = reactive({
+  id_surat: null,
+  tujuan: null,
+  bpkb: [],
+  flag_approval: null,
+  catatan: '',
+});
+const handleChecked = (e) => {
+  dynamicForm.bpkb = e;
+}
+const selectedMail = ref([]);
+const handleDetail = (e) => {
+  // if (dataMe.me.USERNAME == 'ho') {
+  //   columnsBpkb.unshift({
+  //     type: "selection",
+  //   },);
+  // }
+  showModal.value = true;
+  dynamicForm.id_surat = e.id;
+  dynamicForm.tujuan = e.ke_cabang;
+  dynamicForm.flag_approval = 'yes';
+  selectedData.value = e;
 }
 
-onMounted(() => getDataCustomer());
+const typeAction = (e) => {
+  let status = e.at(0);
+  if (status === "1") {
+    return "warning";
+  } else if (status === "2") {
+    return "info";
+  } else {
+    return "success";
+  }
+  return "info";
+};
+const actionLabel = (e) => {
+  let status = e.at(0);
+  if (status === "1") {
+    return "Buat PFK";
+  } else if (status === "2") {
+    return "Update PFK";
+  }
+  return "lihat FPK";
+};
+const format = (e) => {
+  const toNum = parseInt(e);
+  return toNum.toLocaleString("en-US");
+};
+const handleSelect = (e) => console.log(e);
+const handleAction = (e, data) => {
+  let status = e.at(0);
+  const dynamicBody = {
+    cr_prospect_id: data.id,
+  };
+  if (status === "1") {
+    message.create("membuat FPK, silakan tunggu !", { type: loadingRef.type });
+    useApi({
+      method: "POST",
+      data: dynamicBody,
+      api: `cr_application_generate`,
+      token: userToken,
+    }).then((res) => {
+      if (res.ok) {
+        message.success("FPK berhsil dibuat");
+        router.replace({
+          name: "Form Pengajuan Kredit",
+          params: { idapplication: data.id },
+        });
+      } else {
+        message.error("FPK gagal dibuat!");
+      }
+    });
+  } else if (status === "2") {
+    router.replace({
+      name: "Form Pengajuan Kredit",
+      params: { idapplication: data.id },
+    });
+  } else {
+    router.replace({
+      name: "Detail Kredit",
+      params: { idapplication: data.id, action: "view" },
+    });
+  }
+};
+const handlePrint = (evt) => {
+  generatePdf();
+};
+
+const handlePrePrint = (row) => {
+  router.replace({ name: "pre print pk", params: { idapplication: row.id } });
+};
+
+function generatePdf() {
+  console.log("generate pdf");
+  var doc = new jsPDF("p", "pt", "legal");
+  const margins = {
+    top: 80,
+    bottom: 60,
+    left: 40,
+    width: 522,
+  };
+
+  doc.html(pk.value, {
+    callback: function (doc) {
+      doc.output("dataurlnewwindow");
+      // doc.save();
+    },
+    x: 10,
+    y: 10,
+  });
+
+  // doc.save('test.pdf');
+}
+const handleAdd = () => {
+  router.replace({ name: 'bpkb action' });
+};
+
+const getData = async () => {
+  loadData.value = true;
+  const response = await useApi({
+    method: "GET",
+    api: "bpkb_transaction",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("sesi berakhir");
+    localStorage.removeItem("token");
+    router.replace("/");
+  } else {
+    loadData.value = false;
+    dataTable.value = response.data;
+  }
+};
+
+const handlePositiveClick = async () => {
+  const response = await useApi({
+    method: "post",
+    api: "bpkb_transaction",
+    data: dynamicForm,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("sesi berakhir");
+    localStorage.removeItem("token");
+    router.replace("/");
+  } else {
+    message.success("berhasil update");
+    gertData();
+    showModal.value = false;
+
+  }
+};
+
+const renderIcon = (icon) => {
+  return () => {
+    return h(NIcon, null, {
+      default: () => h(icon),
+    });
+  };
+};
+const options = [
+  {
+    label: "Edit",
+    key: "edit",
+    icon: renderIcon(EditIcon),
+  },
+  {
+    label: "Hapus",
+    key: "hapus",
+    icon: renderIcon(DeleteIcon),
+  },
+  {
+    label: "Detail",
+    key: "detail",
+    icon: renderIcon(DetailIcon),
+  },
+];
+const pagination = {
+  pageSize: 10,
+};
+function generateBrowserFingerprint() {
+  let fingerprint = [];
+
+  // User agent string
+  fingerprint.push(navigator.userAgent);
+
+  // Language
+  fingerprint.push(navigator.language || navigator.userLanguage);
+  // Screen resolution
+  fingerprint.push(screen.width + "x" + screen.height);
+  // Timezone offset
+  fingerprint.push(new Date().getTimezoneOffset());
+  // Generate a hash of the fingerprint components
+  let fingerprintString = fingerprint.join("###");
+  let hash = sha256(fingerprintString); // You would need a SHA-256 function here
+  return hash;
+}
+const fingerprint = generateBrowserFingerprint();
+onMounted(() => {
+  getData();
+
+});
+const showData = computed(() => {
+  return useSearch(dataTable.value, searchBox.value);
+  // return filterIt(dataTable.value, searchBox.value);
+});
+
+const handleNavCalc = () => {
+  router.replace({ name: "penerimaan uang" });
+};
+const handleNavFile = () => {
+  router.replace({ name: "serah jaminan" });
+};
+
+const handleImagePost = ({
+  idApp,
+  file,
+  data,
+  onError,
+  onFinish,
+  onProgress,
+}) => {
+  // let idApp = pageData.value.order.cr_prospect_id;
+  const idSurvey = selectedData.value.id;
+  const form = new FormData();
+  form.append("image", file.file);
+  form.append("type", data.type);
+  //   console.log(pageData.value);
+  form.append("cr_prospect_id", idSurvey);
+  const headers = {
+    Authorization: `Bearer ${userToken}`,
+  };
+  //   console.log(form);
+  lyla
+    .post("https://api.kspdjaya.id/image_upload_prospect", {
+      headers,
+      body: form,
+      onUploadProgress: ({ percent }) => {
+        onProgress({ percent: Math.ceil(percent) });
+      },
+    })
+    .then(({ json }) => {
+      message.success("upload image berhasil");
+      onFinish();
+    })
+    .catch((error) => {
+      message.error("upload image gagal !");
+      onError();
+    });
+};
 </script>

@@ -25,6 +25,7 @@ import {
         LogOutOutlined as SignOut
 } from '@vicons/material'
 import { useApi } from "../../helpers/axios"
+import { useMeStore } from "../../stores/me";
 const message = useMessage();
 
 const dataUser = ref();
@@ -75,7 +76,7 @@ const options = [
                 }
         },
 ];
-
+const me = useMeStore();
 const GetMe = async () => {
         let userToken = localStorage.getItem("token");
         const response = await useApi({
@@ -87,6 +88,7 @@ const GetMe = async () => {
                 localStorage.removeItem("token");
         } else {
                 dataUser.value = response.data.response;
+                me.storeMe(response.data.response);
         }
 }
 

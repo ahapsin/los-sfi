@@ -7,14 +7,17 @@ import { OhVueIcon, addIcons } from "oh-vue-icons";
 import "./style.css";
 import * as HIIcons from "oh-vue-icons/icons/hi";
 import * as RIcons from "oh-vue-icons/icons/ri";
+import { createPinia } from "pinia";
 const Ri = Object.values({ ...RIcons });
 const Hi = Object.values({ ...HIIcons });
 addIcons(...Hi, ...Ri);
 
 const app = createApp(App);
+const pinia = createPinia();
 app.use(naive);
 app.use(PDFPlugin);
 app.component("v-icon", OhVueIcon);
 // app.component("downloadExcel", JsonExcel);
 app.use(router);
+app.use(pinia);
 app.mount("#app");
