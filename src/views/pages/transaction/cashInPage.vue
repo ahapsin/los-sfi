@@ -435,18 +435,22 @@ const createColumns = () => {
     {
       title: "No Kontrak",
       key: "loan_number",
+      sorter: 'default',
     },
     {
       title: "Nama",
       key: "nama",
+      sorter: 'default',
     },
     {
       title: "No Polisi",
       key: "no_polisi",
+      sorter: 'default',
     },
     {
       title: "Alamat",
       key: "alamat",
+      sorter: 'default',
     },
     {
       title: "Angsuran",
@@ -484,17 +488,21 @@ const createColStruktur = () => {
     {
       title: "ke",
       key: "angsuran_ke",
+      sorter: 'default',
     },
     {
       title: "No Kontrak",
       key: "loan_number",
+      sorter: 'default',
     },
     {
       title: "Jatuh Tempo",
       key: "tgl_angsuran",
+      sorter: 'default',
     },
     {
       title: "Angsuran",
+      sorter: 'default',
       key: "installment",
       render(row) {
         return h("div", row.installment.toLocaleString('US'));
@@ -502,6 +510,7 @@ const createColStruktur = () => {
     },
     {
       title: "Denda",
+      sorter: 'default',
       key: "denda",
       render(row) {
         return h("div", row.denda.toLocaleString('US'));

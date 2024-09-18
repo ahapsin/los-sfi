@@ -8,7 +8,7 @@
                         <div class="me-1">
                             <n-popover trigger="click" placement="bottom-end">
                                 <template #trigger>
-                                    <n-button>
+                                    <n-button circle>
                                         <n-icon>
                                             <search-icon />
                                         </n-icon>
@@ -18,7 +18,7 @@
                                     v-model:value="searchBox" />
                             </n-popover>
                         </div>
-                        <div class="hidden md:flex">
+                        <!-- <div class="hidden md:flex">
                             <n-button>
                                 <template #icon>
                                     <n-icon>
@@ -27,7 +27,7 @@
                                 </template>
                                 <strong class="hidden md:!block">download</strong>
                             </n-button>
-                        </div>
+                        </div> -->
                         <div class="md:hidden">
                             <n-button>
                                 <template #icon>
@@ -92,15 +92,18 @@ const dataTable = ref([]);
 const columns = [
     {
         title: "Username",
-        key: "username"
+        key: "username",
+        sorter: 'default',
     },
     {
         title: "Nama",
         key: "nama",
+        sorter: 'default',
     },
     {
         title: "Cabang",
         key: "cabang_nama",
+        sorter: 'default',
         render(row) {
             return h(NEllipsis, {
                 style: "max-width:150px"
@@ -109,6 +112,7 @@ const columns = [
     },
     {
         title: "Hp",
+        sorter: 'default',
         key: "no_hp",
     },
     {

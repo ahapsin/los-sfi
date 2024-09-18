@@ -7,7 +7,7 @@
                         <div class="me-1">
                             <n-popover trigger="click" placement="bottom-end">
                                 <template #trigger>
-                                    <n-button>
+                                    <n-button circle>
                                         <n-icon>
                                             <search-icon />
                                         </n-icon>
@@ -17,7 +17,7 @@
                                     v-model:value="searchBox" />
                             </n-popover>
                         </div>
-                        <div class="hidden md:flex">
+                        <!-- <div class="hidden md:flex">
                             <n-button>
                                 <template #icon>
                                     <n-icon>
@@ -26,16 +26,16 @@
                                 </template>
                                 <strong class="hidden md:!block">download</strong>
                             </n-button>
-                        </div>
-                        <div class="md:hidden">
-                            <n-button>
+                        </div> -->
+                        <!-- <div class="md:hidden">
+                            <n-button circle>
                                 <template #icon>
                                     <n-icon>
                                         <download-icon />
                                     </n-icon>
                                 </template>
                             </n-button>
-                        </div>
+                        </div> -->
 
                     </n-space>
                 </template>
@@ -76,30 +76,36 @@ const searchBox = ref();
 const columns = [
     {
         title: "Cabang",
-        key: "cabang"
+        key: "cabang",
+        sorter: 'default',
     },
     {
         title: "AO",
-        key: "nama_ao"
+        key: "nama_ao",
+        sorter: 'default',
     },
     {
         title: "Nama Debitur",
-        key: "nama_debitur"
+        key: "nama_debitur",
+        sorter: 'default',
     },
     {
         title: "Plafond",
         key: "plafond",
+        sorter: 'default',
         render(row) {
             return h('div', format(row.plafond));
         }
     },
     {
         title: "Tenor",
-        key: "tenor"
+        key: "tenor",
+        sorter: 'default',
     },
     {
         title: "Status",
         key: "status",
+        sorter: 'default',
         render(row) {
             return h(
                 NTag,

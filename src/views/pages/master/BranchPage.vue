@@ -7,7 +7,7 @@
                         <div class="me-1">
                             <n-popover trigger="click" placement="bottom-end">
                                 <template #trigger>
-                                    <n-button>
+                                    <n-button circle>
                                         <n-icon>
                                             <search-icon />
                                         </n-icon>
@@ -17,7 +17,7 @@
                                     v-model:value="searchBox" />
                             </n-popover>
                         </div>
-                        <div class="hidden md:flex">
+                        <!-- <div class="hidden md:flex">
                             <n-button>
                                 <template #icon>
                                     <n-icon>
@@ -26,7 +26,7 @@
                                 </template>
                                 <strong class="hidden md:!block">download</strong>
                             </n-button>
-                        </div>
+                        </div> -->
                         <div class="md:hidden">
                             <n-button>
                                 <template #icon>
@@ -91,21 +91,25 @@ const searchBox = ref();
 const columns = [
     {
         title: "Kode",
-        key: "kode"
+        key: "kode",
+        sorter: 'default',
     },
     {
         title: "Nama",
-        key: "nama"
+        key: "nama",
+        sorter: 'default',
     },
     {
         title: "Alamat",
         key: "alamat",
+        sorter: 'default',
         ellipsis: {
             tooltip: true,
         }
     },
     {
         title: "Kota",
+        sorter: 'default',
         key: "kota",
         ellipsis: {
             tooltip: true,

@@ -20,7 +20,7 @@
                                     v-model:value="searchBox" />
                             </n-popover>
                         </div>
-                        <div class="hidden md:flex">
+                        <!-- <div class="hidden md:flex">
                             <n-button>
                                 <template #icon>
                                     <n-icon>
@@ -29,9 +29,9 @@
                                 </template>
                                 <strong class="hidden md:!block">download</strong>
                             </n-button>
-                        </div>
+                        </div> -->
                         <div class="md:hidden">
-                            <n-button>
+                            <n-button circle>
                                 <template #icon>
                                     <n-icon>
                                         <download-icon />
@@ -78,15 +78,19 @@ const searchBox = ref();
 const columns = [
     {
         title: "Cabang",
-        key: "cabang"
+        key: "cabang",
+        sorter: 'default',
     },
     {
         title: "AO",
-        key: "nama_ao"
+        key: "nama_ao",
+        sorter: 'default',
+
     },
     {
         title: "Nama Debitur",
-        key: "nama_debitur"
+        key: "nama_debitur",
+        sorter: 'default',
     },
     {
         title: "Plafond",
@@ -97,11 +101,13 @@ const columns = [
     },
     {
         title: "Tenor",
-        key: "tenor"
+        key: "tenor",
+        sorter: 'default',
     },
     {
         title: "Status",
         key: "status",
+        sorter: 'default',
         render(row) {
             return h(
                 NTag,

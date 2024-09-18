@@ -181,6 +181,7 @@ const handleSelesai = () => {
 const columns = [
   {
     title: "Tanggal",
+    sorter: 'default',
     key: "visit_date",
     width: 110,
     render(row) {
@@ -189,16 +190,19 @@ const columns = [
   },
   {
     title: "Order",
+    sorter: 'default',
     key: "order_number",
     width: 180,
   },
   {
     title: "Nama",
+    sorter: 'default',
     key: "nama_debitur",
     width: 180,
   },
   {
     title: "Plafond",
+    sorter: 'default',
     width: 180,
     key: "plafond",
     render(row) {
@@ -207,6 +211,7 @@ const columns = [
   },
   {
     title: "Status",
+    sorter: 'default',
     key: "status",
     render(row) {
       return h(
