@@ -393,21 +393,26 @@ const createColumns = () => {
         {
             title: "No Kontrak",
             key: "loan_number",
+            sorter: 'default',
         },
         {
             title: "Nama",
             key: "nama",
+            sorter: 'default',
         },
         {
             title: "No Polisi",
             key: "no_polisi",
+            sorter: 'default',
         },
         {
             title: "Alamat",
             key: "alamat",
+            sorter: 'default',
         },
         {
             title: "Angsuran",
+            sorter: 'default',
             key: "angsuran",
             render(row) {
                 return h("div", row.angsuran.toLocaleString('US'));

@@ -27,6 +27,16 @@
           </template>
           pindah ke pelunasan
         </n-button>
+        <n-popover trigger="click" placement="bottom-end">
+          <template #trigger>
+            <n-button circle>
+              <n-icon>
+                <search-icon />
+              </n-icon>
+            </n-button>
+          </template>
+          <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+        </n-popover>
         <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
@@ -39,8 +49,9 @@
 
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
-      <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataPayment"
-        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" />
+      <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="showData"
+        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadDataPayment" class="pb-2"
+        :pagination="pagination" />
     </div>
   </n-card>
   <n-modal class="w-1/2 md:w-1/3" title="Upload Berkas Pencairan" v-model:show="showModal">
@@ -141,7 +152,7 @@ import { computed, onMounted, reactive, readonly, ref } from "vue";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
-
+const searchBox = ref();
 const checkedRowCredit = ref([]);
 
 const dialogProses = ref(false);
@@ -181,6 +192,8 @@ const pageData = reactive({
   bukti_transafer: null,
 });
 
+const pagination = ref({ pageSize: 10 });
+
 const dynamicSearch = reactive({
   nama: "",
   no_polisi: "",
@@ -204,14 +217,17 @@ const createColumns = () => {
     {
       title: "no transaksi",
       key: "no_transaksi",
+      sorter: 'default',
     },
     {
       title: "tanggal",
       key: "tgl_transaksi",
+      sorter: 'default',
     },
     {
       title: "metode",
       key: "payment_method",
+      sorter: 'default',
     },
     {
       title: "atas nama",
@@ -223,10 +239,12 @@ const createColumns = () => {
       render(row) {
         return h("div", row.total_bayar.toLocaleString("US"));
       },
+      sorter: 'default',
     },
     {
       title: "status",
       key: "STATUS",
+      defaultFilterOptionValues: ['PAID', 'UNPAID'],
       render(row) {
         return h(
           NTag,
@@ -528,5 +546,9 @@ const handlePayFull = () => {
 const handleFocusField = () => {
   getDataCustomer();
 };
+const showData = computed(() => {
+  return useSearch(dataPayment.value, searchBox.value);
+  // return filterIt(dataTable.value, searchBox.value);
+});
 onMounted(() => getDataPayment());
 </script>

@@ -38,7 +38,7 @@
                                                         </n-button>
                                                 </div>
                                                 <div class="hidden md:flex">
-                                                        <n-button type="primary" strong @click="handleAdd" round>
+                                                        <n-button type="primary" strong @click="handleAdd">
                                                                 <template #icon>
                                                                         <n-icon>
                                                                                 <add-icon />
@@ -95,10 +95,12 @@ const dataTable = ref([]);
 const columns = [
         {
                 title: "Tanggal",
+                sorter: 'default',
                 key: "visit_date",
         },
         {
                 title: "Nama",
+                sorter: 'default',
                 key: "nama_debitur",
                 fixed: 'left',
                 ellipsis: {
@@ -107,6 +109,7 @@ const columns = [
         },
         {
                 title: "Plafond",
+                sorter: 'default',
                 key: "plafond",
                 render(row) {
                         return h('div', format(row.plafond));
@@ -114,6 +117,7 @@ const columns = [
         },
         {
                 title: "Status",
+                sorter: 'default',
                 key: "status",
                 render(row) {
                         return h(

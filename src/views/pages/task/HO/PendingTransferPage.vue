@@ -34,10 +34,10 @@
         <div>
             <!-- <pre>{{ creditCustomer }}</pre> -->
             <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
-                :data="dataPayment" :max-height="300" class="pb-2" />
+                :data="dataPayment" :max-height="300" class="pb-2" :pagination="pagination" />
         </div>
     </n-card>
-    <n-modal class="w-1/4" title="Upload Berkas Pencairan" v-model:show="showModal">
+    <n-modal class="w-2/5" title="Upload Berkas Pencairan" v-model:show="showModal">
         <n-card :bordered="false" aria-modal="true">
             <!-- {{ bodyModal }} -->
             <div class="flex justify-between">
@@ -150,6 +150,7 @@ const checkedRowCredit = ref([]);
 
 const dialogProses = ref(false);
 const paymentData = ref([]);
+const pagination = ref({ pageSize: 10 });
 
 const totalPay = computed(() => {
     const totalInstallment = () =>
@@ -207,19 +208,23 @@ const createColumns = () => {
     return [
         {
             title: "no transaksi",
+            sorter: 'default',
             key: "no_transaksi",
         },
         {
             title: "tanggal",
             key: "tgl_transaksi",
+            sorter: 'default',
         },
         {
             title: "metode",
             key: "payment_method",
+            sorter: 'default',
         },
         {
             title: "atas nama",
             key: "nama",
+            sorter: 'default',
         },
         {
             title: "nominal",
@@ -227,6 +232,7 @@ const createColumns = () => {
             render(row) {
                 return h("div", row.total_bayar.toLocaleString("US"));
             },
+            sorter: 'default',
         },
         {
             title: "status",

@@ -4,7 +4,7 @@
       <n-card :title="`Transaksi serah terima jaminan`">
         <template #header-extra>
           <n-space>
-            <!-- <n-popover trigger="click" placement="bottom-end">
+            <n-popover trigger="click" placement="bottom-end">
               <template #trigger>
                 <n-button circle>
                   <n-icon>
@@ -12,8 +12,8 @@
                   </n-icon>
                 </n-button>
               </template>
-<n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
-</n-popover> -->
+              <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+            </n-popover>
             <n-button secondary @click="handleAdd" type="success" v-show="dataMe.me.USERNAME == 'admin'">
               <template #icon>
                 <n-icon>
@@ -47,7 +47,7 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="dataTable"
+          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="showData"
             :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
@@ -143,7 +143,7 @@ import {
   ListAltOutlined as DetailIcon,
   LocalPrintshopOutlined as PrintIcon,
 } from "@vicons/material";
-import { round } from "lodash";
+import { round, sortBy } from "lodash";
 import { useMeStore } from "../../../stores/me";
 
 const iconfile = defineComponent(() => FileIcon);
@@ -162,15 +162,18 @@ const loadingRef = reactive({
 
 const dataMe = useMeStore();
 const userToken = localStorage.getItem("token");
-
+const showData = computed(() => {
+  return useSearch(dataTable.value, searchBox.value);
+  // return filterIt(dataTable.value, searchBox.value);
+});
 const columnsBpkb = [
   {
-    type: "selection",
+    type: dataMe.me.USERNAME == 'ho' ? 'selection' : 'none',
   },
   {
     title: "No BPKB",
     key: "BPKB_NUMBER",
-
+    sorter: 'default'
   },
   {
     title: "Atas Nama",
@@ -219,12 +222,14 @@ const columns = [
   {
     title: "id",
     key: "tgl",
+    sorter: 'default',
     render(row) {
       return h("div", row.id);
     },
   },
   {
     title: "Tanggal",
+    sorter: 'default',
     key: "tgl",
     render(row) {
       return h("div", row.tgl);
@@ -232,25 +237,30 @@ const columns = [
   },
   {
     title: "dari",
+    sorter: 'default',
     key: "dari_cabang",
   },
   {
     title: "kurir",
+    sorter: 'default',
     key: "kurir",
 
   },
   {
     title: "tujuan",
+    sorter: 'default',
     key: "ke_cabang",
 
   },
   {
     title: "jumlah",
+    sorter: 'default',
     key: "jml_bpkb",
 
   },
   {
     title: "status",
+    sorter: 'default',
     key: "status",
     render(row) {
       return h(NTag, {
@@ -334,12 +344,8 @@ const handleChecked = (e) => {
   dynamicForm.bpkb = e;
 }
 const selectedMail = ref([]);
+
 const handleDetail = (e) => {
-  // if (dataMe.me.USERNAME == 'ho') {
-  //   columnsBpkb.unshift({
-  //     type: "selection",
-  //   },);
-  // }
   showModal.value = true;
   dynamicForm.id_surat = e.id;
   dynamicForm.tujuan = e.ke_cabang;
@@ -525,10 +531,7 @@ onMounted(() => {
   getData();
 
 });
-const showData = computed(() => {
-  return useSearch(dataTable.value, searchBox.value);
-  // return filterIt(dataTable.value, searchBox.value);
-});
+
 
 const handleNavCalc = () => {
   router.replace({ name: "penerimaan uang" });
