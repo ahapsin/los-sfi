@@ -538,55 +538,67 @@ const createColStruktur = () => {
       title: "Bayar Angsuran",
       key: "installment",
       render(row, index) {
-        return h(NInputNumber, {
-          readonly: false,
-          format: format,
-          parse: parse,
-          max: row.bayar_angsuran,
-          showButton: false,
-          secondary: true,
-          placeholder: "pembayaran",
-          value: row.bayar_angsuran,
-          onUpdateValue(v) {
-            dataStrukturKredit.value[index].bayar_angsuran = v;
-          },
-        });
+        if (row.flag == 'PENDING') {
+          return h(NTag, { type: 'warning' }, { default: 'dalam proses' });
+        } else {
+          return h(NInputNumber, {
+            readonly: false,
+            format: format,
+            parse: parse,
+            max: row.bayar_angsuran,
+            showButton: false,
+            secondary: true,
+            placeholder: "pembayaran",
+            value: row.bayar_angsuran,
+            onUpdateValue(v) {
+              dataStrukturKredit.value[index].bayar_angsuran = v;
+            },
+          });
+        }
       },
     },
     {
       title: "Bayar Denda",
       key: "installment",
       render(row, index) {
-        return h(NInputNumber, {
-          readonly: false,
-          clearable: true,
-          min: 0,
-          max: row.bayar_denda,
-          format: format,
-          parse: parse,
-          showButton: false,
-          secondary: true,
-          placeholder: "pembayaran",
-          value: row.bayar_denda,
-          onUpdateValue(v) {
-            dataStrukturKredit.value[index].bayar_denda = v;
-          },
-        });
+        if (row.flag == 'PENDING') {
+          return h(NTag, { type: 'warning' }, { default: 'dalam proses' });
+        } else {
+          return h(NInputNumber, {
+            readonly: false,
+            clearable: true,
+            min: 0,
+            max: row.bayar_denda,
+            format: format,
+            parse: parse,
+            showButton: false,
+            secondary: true,
+            placeholder: "pembayaran",
+            value: row.bayar_denda,
+            onUpdateValue(v) {
+              dataStrukturKredit.value[index].bayar_denda = v;
+            },
+          });
+        }
       },
     },
     {
       title: "Jumlah Bayar",
       key: "payment",
       render(row, index) {
-        return h(NInputNumber, {
-          readonly: true,
-          format: format,
-          parse: parse,
-          showButton: false,
-          secondary: true,
-          placeholder: "pembayaran",
-          value: dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda,
-        });
+        if (row.flag == 'PENDING') {
+          return h(NTag, { type: 'warning' }, { default: 'dalam proses' });
+        } else {
+          return h(NInputNumber, {
+            readonly: true,
+            format: format,
+            parse: parse,
+            showButton: false,
+            secondary: true,
+            placeholder: "pembayaran",
+            value: dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda,
+          });
+        }
       },
     },
     // {
