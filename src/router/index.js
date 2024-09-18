@@ -223,6 +223,18 @@ const routes = [
         name: "detail cabang",
         component: () => import("../views/pages/master/ActionBranchPage.vue"),
       },
+      {
+        path: "blacklist",
+        name: "blacklist",
+        component: () =>
+          import("../views/pages/master/blacklist/BlacklistPage.vue"),
+      },
+      {
+        path: "customer",
+        name: "customer",
+        component: () =>
+          import("../views/pages/master/customer/CustomerPage.vue"),
+      },
     ],
   },
 ];
