@@ -1,14 +1,14 @@
 <template>
     <n-card>
         <template #header>Pelunasan Angsuran</template>
-        <!-- <n-collapse>
+        <n-collapse>
             <n-collapse-item title="struktur" name="1">
                 <pre> {{ pelunasan }}</pre>
             </n-collapse-item>
             <n-collapse-item title="dataPage" name="2">
                 <pre> {{ dataPelunasan }}</pre>
             </n-collapse-item>
-        </n-collapse> -->
+        </n-collapse>
 
         <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
         <template #header-extra>
@@ -145,27 +145,27 @@
                 <tbody>
                     <tr>
                         <td>Pokok</td>
-                        <td>{{ pelunasan.SISA_POKOK.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.BAYAR_POKOK.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.DISKON_POKOK.toLocaleString('US') }}</td>
+                        <td>{{ pelunasan.SISA_POKOK }}</td>
+                        <td>{{ pelunasan.BAYAR_POKOK }}</td>
+                        <td>{{ pelunasan.DISKON_POKOK }}</td>
                     </tr>
                     <tr>
                         <td>Bunga</td>
-                        <td>{{ pelunasan.BUNGA_BERJALAN.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.BAYAR_BUNGA.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.DISKON_BUNGA.toLocaleString('US') }}</td>
+                        <td>{{ pelunasan.BUNGA_BERJALAN }}</td>
+                        <td>{{ pelunasan.BAYAR_BUNGA }}</td>
+                        <td>{{ pelunasan.DISKON_BUNGA }}</td>
                     </tr>
                     <tr>
                         <td>Pinalti</td>
-                        <td>{{ pelunasan.PINALTI.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.BAYAR_PINALTI.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.DISKON_PINALTI.toLocaleString('US') }}</td>
+                        <td>{{ pelunasan.PINALTI }}</td>
+                        <td>{{ pelunasan.BAYAR_PINALTI }}</td>
+                        <td>{{ pelunasan.DISKON_PINALTI }}</td>
                     </tr>
                     <tr>
                         <td>Denda</td>
-                        <td>{{ pelunasan.DENDA.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.DENDA.toLocaleString('US') }}</td>
-                        <td>{{ pelunasan.DISKON_DENDA.toLocaleString('US') }}</td>
+                        <td>{{ pelunasan.DENDA }}</td>
+                        <td>{{ pelunasan.DENDA }}</td>
+                        <td>{{ pelunasan.DISKON_DENDA }}</td>
                     </tr>
                 </tbody>
             </n-table>
@@ -301,7 +301,7 @@
                     <tr>
                         <td>Jumlah Uang </td>
                         <td>:</td>
-                        <td> {{ paymentData.jml_pembayaran.toLocaleString('US') }} </td>
+                        <td> {{ paymentData.jml_pembayaran }} </td>
                     </tr>
                     <tr>
                         <td>Terbilang</td>
@@ -312,7 +312,7 @@
                         <td valign="top">Keterangan</td>
                         <td valign="top">:</td>
                         <td><span v-for="pembayaran in paymentData.pembayaran">{{ pembayaran.title }} ({{
-                            pembayaran.payment_value.toLocaleString('US') }}), </span></td>
+                            pembayaran.payment_value }}), </span></td>
                     </tr>
                 </table>
                 <table class="table-auto  w-1/2" height="0">
@@ -452,7 +452,7 @@ const createColumns = () => {
             sorter: 'default',
             key: "angsuran",
             render(row) {
-                return h("div", row.angsuran.toLocaleString('US'));
+                return h("div", row.angsuran);
             },
         },
     ];
@@ -482,35 +482,35 @@ const createColStruktur = () => {
             title: "Sisa Pokok",
             key: "SISA_POKOK",
             render(row) {
-                return h("div", row.SISA_POKOK.toLocaleString('US'));
+                return h("div", row.SISA_POKOK);
             },
         },
         {
             title: "Bunga Berjalan",
             key: "BUNGA_BERJALAN",
             render(row) {
-                return h("div", row.BUNGA_BERJALAN.toLocaleString('US'));
+                return h("div", row.BUNGA_BERJALAN);
             },
         },
         {
             title: "Tunggakan Bunga",
             key: "TUNGGAKAN_BUNGA",
             render(row) {
-                return h("div", row.TUNGGAKAN_BUNGA.toLocaleString('US'));
+                return h("div", row.TUNGGAKAN_BUNGA);
             },
         },
         {
             title: "Denda",
             key: "DENDA",
             render(row) {
-                return h("div", row.DENDA.toLocaleString('US'));
+                return h("div", row.DENDA);
             },
         },
         {
             title: "Pinalti",
             key: "denda",
             render(row) {
-                return h("div", row.PINALTI.toLocaleString('US'));
+                return h("div", row.PINALTI);
             },
         },
 
@@ -715,6 +715,7 @@ const pelunasan = reactive({
                         pelunasan.BAYAR_DENDA = bayarDenda;
                     }
                 } else {
+                    pelunasan.DISKON_PINLATI = Math.abs(bayarPinalti);
                     pelunasan.BAYAR_PINALTI = bayarBunga;
                 }
 
