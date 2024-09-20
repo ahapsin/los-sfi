@@ -53,6 +53,12 @@ const routes = [
         component: () =>
           import("../views/pages/transaction/addDeliveryPage.vue"),
       },
+      {
+        path: "jaminan-action",
+        name: "jaminan action",
+        component: () =>
+          import("../views/pages/transaction/updateJaminanPage.vue"),
+      },
     ],
   },
   {

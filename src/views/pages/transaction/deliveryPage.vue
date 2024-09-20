@@ -22,6 +22,14 @@
               </template>
               tambah pengiriman jaminan
             </n-button>
+            <n-button secondary @click="handleUpdate" type="info" v-show="dataMe.me.USERNAME == 'admin'">
+              <template #icon>
+                <n-icon>
+                  <change-icon />
+                </n-icon>
+              </template>
+              Update Status jaminan
+            </n-button>
             <!-- <n-button @click="handleNavCalc">
               <template #icon>
                 <n-icon>
@@ -129,6 +137,7 @@ import { sha256, sha224 } from "js-sha256";
 import { useSearch } from "../../../helpers/searchObject";
 import {
   AddCircleOutlineRound as AddIcon,
+  RestartAltRound as ChangeIcon,
   SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
   AttachEmailOutlined as SendIcon,
@@ -444,6 +453,9 @@ function generatePdf() {
 }
 const handleAdd = () => {
   router.replace({ name: 'bpkb action' });
+};
+const handleUpdate = () => {
+  router.replace({ name: 'jaminan action' });
 };
 
 const getData = async () => {

@@ -1,14 +1,14 @@
 <template>
     <n-card>
         <template #header>Pelunasan Angsuran</template>
-        <n-collapse>
+        <!-- <n-collapse>
             <n-collapse-item title="struktur" name="1">
                 <pre> {{ pelunasan }}</pre>
             </n-collapse-item>
             <n-collapse-item title="dataPage" name="2">
                 <pre> {{ dataPelunasan }}</pre>
             </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
 
         <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
         <template #header-extra>
@@ -145,27 +145,33 @@
                 <tbody>
                     <tr>
                         <td>Pokok</td>
-                        <td>{{ pelunasan.SISA_POKOK }}</td>
-                        <td>{{ pelunasan.BAYAR_POKOK }}</td>
-                        <td>{{ pelunasan.DISKON_POKOK }}</td>
+                        <td>{{ pelunasan.SISA_POKOK.toLocaleString() }}</td>
+                        <td>{{ pelunasan.BAYAR_POKOK.toLocaleString() }}</td>
+                        <td>{{ pelunasan.DISKON_POKOK.toLocaleString() }}</td>
                     </tr>
                     <tr>
                         <td>Bunga</td>
-                        <td>{{ pelunasan.BUNGA_BERJALAN }}</td>
-                        <td>{{ pelunasan.BAYAR_BUNGA }}</td>
-                        <td>{{ pelunasan.DISKON_BUNGA }}</td>
+                        <td>{{ pelunasan.BUNGA_BERJALAN.toLocaleString() }}</td>
+                        <td>{{ pelunasan.BAYAR_BUNGA.toLocaleString() }}</td>
+                        <td>{{ pelunasan.DISKON_BUNGA.toLocaleString() }}</td>
                     </tr>
                     <tr>
                         <td>Pinalti</td>
-                        <td>{{ pelunasan.PINALTI }}</td>
-                        <td>{{ pelunasan.BAYAR_PINALTI }}</td>
-                        <td>{{ pelunasan.DISKON_PINALTI }}</td>
+                        <td>{{ pelunasan.PINALTI.toLocaleString() }}</td>
+                        <td>{{ pelunasan.BAYAR_PINALTI.toLocaleString() }}</td>
+                        <td>{{ pelunasan.DISKON_PINALTI.toLocaleString() }}</td>
                     </tr>
                     <tr>
                         <td>Denda</td>
-                        <td>{{ pelunasan.DENDA }}</td>
-                        <td>{{ pelunasan.DENDA }}</td>
-                        <td>{{ pelunasan.DISKON_DENDA }}</td>
+                        <td>{{ pelunasan.DENDA.toLocaleString() }}</td>
+                        <td>{{ pelunasan.DENDA.toLocaleString() }}</td>
+                        <td>{{ pelunasan.DISKON_DENDA.toLocaleString() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Jumlah</th>
+                        <th>{{ pelunasan.JUMLAH_TAGIHAN.toLocaleString() }}</th>
+                        <th>{{ pelunasan.JUMLAH_BAYAR.toLocaleString() }}</th>
+                        <th>{{ pelunasan.JUMLAH_DISKON.toLocaleString() }}</th>
                     </tr>
                 </tbody>
             </n-table>
@@ -702,7 +708,7 @@ const pelunasan = reactive({
             if (bayarBunga > 0) {
                 pelunasan.BAYAR_BUNGA = pelunasan.BUNGA_BERJALAN;
                 pelunasan.DISKON_BUNGA = 0;
-                let bayarPinalti = bayarBunga - pelunasan.TUNGGAKAN_BUNGA;
+                let bayarPinalti = bayarBunga - pelunasan.PINALTI;
                 if (bayarPinalti > 0) {
                     pelunasan.BAYAR_PINALTI = pelunasan.PINALTI;
                     pelunasan.DISKON_PINALTI = 0;
@@ -715,8 +721,9 @@ const pelunasan = reactive({
                         pelunasan.BAYAR_DENDA = bayarDenda;
                     }
                 } else {
-                    pelunasan.DISKON_PINLATI = Math.abs(bayarPinalti);
-                    pelunasan.BAYAR_PINALTI = bayarBunga;
+
+                    pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
+                    pelunasan.DISKON_PINALTI = pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
                 }
 
             } else {
@@ -726,9 +733,11 @@ const pelunasan = reactive({
                 pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
             }
         } else {
+            pelunasan.BAYAR_POKOK = bayarPokok + pelunasan.SISA_POKOK;
             pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK - pelunasan.UANG_PELANGGAN;
             pelunasan.DISKON_BUNGA = pelunasan.BUNGA_BERJALAN;
             pelunasan.DISKON_DENDA = pelunasan.DENDA;
+            pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
             pelunasan.KEMBALIAN = 0;
         }
     }),
@@ -736,9 +745,13 @@ const pelunasan = reactive({
     BAYAR_BUNGA: 0,
     BAYAR_PINALTI: 0,
     BAYAR_DENDA: 0,
+    DISKON_POKOK: 0,
     DISKON_PINALTI: 0,
     DISKON_BUNGA: 0,
     DISKON_DENDA: 0,
+    JUMLAH_TAGIHAN: computed(() => pelunasan.SISA_POKOK + pelunasan.BUNGA_BERJALAN + pelunasan.PINALTI + pelunasan.DENDA),
+    JUMLAH_BAYAR: computed(() => pelunasan.BAYAR_POKOK + pelunasan.BAYAR_BUNGA + pelunasan.BAYAR_PINALTI),
+    JUMLAH_DISKON: computed(() => pelunasan.DISKON_POKOK + pelunasan.DISKON_BUNGA + pelunasan.DISKON_PINALTI + pelunasan.DISKON_DENDA),
     PEMBULATAN: 0,
     KEMBALIAN: 0,
 });
