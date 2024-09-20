@@ -46,6 +46,14 @@
                         <label class="w-36">Tanggal</label><span>
                             <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
                     </div>
+                    <!-- <div class="flex">
+                        <label class="w-36">Cabang</label><span>
+                            <n-text strong> {{ bodyModal }}</n-text></span>
+                    </div> -->
+                    <div class="flex">
+                        <label class="w-36">No Kontrak</label><span>
+                            <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span>
+                    </div>
                     <div class="flex">
                         <label class="w-36">No Transaksi</label><span>
                             <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span>
@@ -91,7 +99,7 @@
                                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                                 <span v-show="pembayaran.bayar_denda > 0">,denda {{
                                     parseInt(pembayaran.bayar_denda).toLocaleString("US")
-                                }}</span>
+                                    }}</span>
                             </n-tag>
                         </n-space>
                     </div>
@@ -102,7 +110,8 @@
                             {{ bodyModal.STATUS }}</n-tag></span>
                 </div>
                 <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick(bodyModal.no_transaksi)"
-                    positive-text="konfirmasi" negative-text="reject" @negative-click="handleNegativeClick">
+                    positive-text="konfirmasi" negative-text="reject"
+                    @negative-click="handleNegativeClick(bodyModal.no_transaksi)">
                     <template #activator>
                         <n-button :loading="loadingConf" type="success"
                             v-show="bodyModal.STATUS == 'PENDING'">Konfirmasi</n-button>
@@ -206,6 +215,16 @@ const dynamicForm = reactive({
 
 const createColumns = () => {
     return [
+        {
+            title: "cabang",
+            sorter: 'default',
+            key: "cabang",
+        },
+        {
+            title: "no kontrak",
+            sorter: 'default',
+            key: "no_fasilitas",
+        },
         {
             title: "no transaksi",
             sorter: 'default',
@@ -361,8 +380,32 @@ const handlePositiveClick = async (e) => {
         router.replace({ name: 'pending transfer' });
     }
 }
+const handleNegativeClick = async (e) => {
+    loadingConf.value = true;
+    const bodyPost = {
+        no_invoice: e,
+        flag: "no",
+        keterangan: keterangan.value,
+    }
+    const response = await useApi({
+        method: 'POST',
+        api: `payment_approval`,
+        data: bodyPost,
+        token: userToken
+    });
+    if (!response.ok) {
+        loadingConf.value = true;
+        message.error("konfirmasi gagal");
 
-const handleNegativeClick = () => { };
+    } else {
+        loadingConf.value = false;
+        message.success("konfirmasi berhasil");
+        getDataPayment();
+        showModal.value = false;
+        router.replace({ name: 'pending transfer' });
+    }
+};
+
 
 const loadCustomer = ref(false);
 

@@ -19,7 +19,7 @@
           </template>
           tambah penerimaan
         </n-button>
-        <n-button v-show="!searchField" strong secondary type="success" @click="handlePayFull">
+        <n-button v-show="!searchField" strong secondary type="warning" @click="handlePayFull">
           <template #icon>
             <n-icon>
               <full-pay />
@@ -64,6 +64,10 @@
               <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
           </div>
           <div class="flex">
+            <label class="w-36">No Kontrak</label><span>
+              <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span>
+          </div>
+          <div class="flex">
             <label class="w-36">No Transaksi</label><span>
               <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span>
           </div>
@@ -103,7 +107,8 @@
             <label class="w-36">Untuk Pembayaran</label>
 
             <n-space>
-              <n-tag size="small" v-for="pembayaran in bodyModal.pembayaran" :bordered="false">{{ pembayaran.title }}
+              <n-tag size="small" type="success" v-for="pembayaran in bodyModal.pembayaran" :bordered="false">{{
+                pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                 <span v-show="pembayaran.bayar_denda > 0">,denda {{
                   parseInt(pembayaran.bayar_denda).toLocaleString("US")
