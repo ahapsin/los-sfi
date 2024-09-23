@@ -1,12 +1,12 @@
 <template>
   <n-card>
     <template #header>Penerimaan Uang</template>
-    <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl ">
+    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl ">
       <n-collapse-item title="post payment" name="1"
         class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]">
         <pre> {{ checkedRowCredit }}</pre>
       </n-collapse-item>
-    </n-collapse>
+    </n-collapse> -->
 
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
@@ -135,11 +135,12 @@
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
       <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
-        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" />
+        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2"
+        v-show="dataFasilitas" />
       <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur" :data="dataStrukturKredit"
         :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure" v-show="dataAngsuran"
         :on-update:checked-row-keys="handleAngsuran" class="py-2" :row-props="rowProps" />
-      <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4">
+      <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4" v-show="dataPayment">
         <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
           <div class="flex gap-2 ">
             <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
@@ -151,12 +152,12 @@
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
           <n-input-number placeholder="Jumlah Pembayaran" v-model:value="totalPay" :show-button="false" :parse="parse"
-            :format="format" clearable @blur="pushJumlahUang" class="w-full" readonly>
+            :format="format" clearable @update:value="pushJumlahUang" class="w-full" readonly>
           </n-input-number>
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
           <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pageData.jumlah_uang" :show-button="false"
-            :parse="parse" :format="format" clearable @blur="pushJumlahUang" class="w-full">
+            :parse="parse" :format="format" clearable @input="pushJumlahUang" class="w-full">
           </n-input-number>
         </n-form-item>
         <n-form-item label="Pembulatan" class="w-full">
@@ -170,7 +171,8 @@
         <n-form-item label="" class="w-full">
           <n-space>
             <n-button type="primary" @click="handleProses" :loading="loadProses"
-              :disabled="pageData.jumlah_uang >= totalPay ? false : true"> Proses </n-button>
+              :disabled="totalPay === 0 ? true : (pageData.kembalian >= 0 ? false : true)">
+              Proses </n-button>
           </n-space>
         </n-form-item>
       </div>
@@ -378,7 +380,7 @@ import { constant } from "lodash";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
-
+const prosesButton = ref(true);
 const checkedRowFasilitas = ref([]);
 const checkedRowCredit = ref([]);
 
@@ -489,7 +491,7 @@ const createColStruktur = () => {
     {
       type: "selection",
       disabled(row) {
-        return row.key > checkedRowCredit.value.length;
+        return row.key > checkedRowCredit.value.length || row.flag === 'PENDING';
       },
     },
     {
@@ -669,6 +671,7 @@ const loadingAngsuran = ref(false);
 
 const loadStructure = ref(false);
 const handleFasilitas = (e) => {
+  prosesButton.value = true;
   pageData.struktur = [];
   getSkalaCredit(e);
 };
@@ -772,6 +775,7 @@ const getCreditCustomer = async () => {
 const dataSearch = ref([]);
 
 const loadSearch = ref(false);
+const dataFasilitas = ref(false);
 const handleSearch = async () => {
   dataAngsuran.value = false;
   let userToken = localStorage.getItem("token");
@@ -787,12 +791,13 @@ const handleSearch = async () => {
     localStorage.removeItem("token");
     router.replace("/");
   } else {
+    dataFasilitas.value = true;
     loadSearch.value = false;
     dataSearch.value = response.data;
   }
 }
 const dataStrukturKredit = ref([]);
-
+const dataPayment = ref(false);
 const getSkalaCredit = async (e) => {
   pageData.no_facility = e[0];
   loadStructure.value = true;
@@ -813,7 +818,7 @@ const getSkalaCredit = async (e) => {
     localStorage.removeItem("token");
     router.replace("/");
   } else {
-
+    dataPayment.value = true;
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
     loadStructure.value = false;
@@ -865,39 +870,9 @@ const totalPayment = computed(() => {
 });
 
 
-
-const pushJumlahUang = async () => {
-  // jml_uang.value = pageData.jumlah_uang;
-  // const dynamicBody = {
-  //   loan_number: pageData.no_facility,
-  //   jumlah_uang: pageData.jumlah_uang,
-  // };
-  // loadingAngsuran.value = true;
-  // let userToken = localStorage.getItem("token");
-  // const response = await useApi({
-  //   method: "POST",
-  //   api: "struktur_kredit",
-  //   data: dynamicBody,
-  //   token: userToken,
-  // });
-  // if (!response.ok) {
-  //   message.error("sesi berakhir");
-  //   localStorage.removeItem("token");
-  //   router.replace("/");
-  // } else {
-  //   checkedRowCredit.value = [];
-  //   dataStrukturKredit.value = response.data;
-  //   dataStrukturKredit.value.map((v, index) => {
-  //     if (v.after_payment != 0) {
-  //       checkedRowCredit.value.push(v.id_structur);
-  //     }
-
-  //   });
-  //   dataAngsuran.value = true;
-  //   loadingAngsuran.value = false;
-  // }
-};
-
+// const pushJumlahUang = async () => {
+//   return pageData.kembalian >= 0 ? prosesButton.value = true : prosesButton.value = false;
+// };
 const dataKontrak = Array.from({ length: 5 }).map((_, index) => ({
   id: `01905df3-${index}`,
   loan_number: `0052406${index}`,

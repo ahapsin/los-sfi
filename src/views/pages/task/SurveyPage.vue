@@ -13,10 +13,18 @@
                                                                                 </n-icon>
                                                                         </n-button>
                                                                 </template>
-                                                                <n-input autofocus="true" clearable
-                                                                        placeholder="cari disini.."
-                                                                        v-model:value="searchBox" />
+                                                                <n-space vertical>
+                                                                        <n-input autofocus="true" clearable
+                                                                                placeholder="cari disini.."
+                                                                                v-model:value="searchBox" />
+                                                                        <n-date-picker
+                                                                                :default-value="[Date.now(), Date.now()]"
+                                                                                :update-value-on-close="updateValueOnClose"
+                                                                                type="daterange"
+                                                                                @update:value="onConfirmDate" />
+                                                                </n-space>
                                                         </n-popover>
+
                                                 </div>
                                                 <!-- <div class="hidden md:flex">
                                                         <n-button>
@@ -28,8 +36,8 @@
                                                                 <strong class="hidden md:!block">download</strong>
                                                         </n-button>
                                                 </div> -->
-                                                <div class="md:hidden">
-                                                        <n-button circle>
+                                                <div>
+                                                        <n-button type="success" secondary circle @click="downloadCsv">
                                                                 <template #icon>
                                                                         <n-icon>
                                                                                 <download-icon />
@@ -59,8 +67,9 @@
                                         </n-space>
                                 </template>
                                 <n-space vertical :size="12" class="pt-4">
-                                        <n-data-table striped :scroll-x="500" size="small" :columns="columns"
-                                                :data="showData" :pagination="pagination" :loading="loadData" />
+                                        <n-data-table striped ref="tableRef" :scroll-x="500" size="small"
+                                                :columns="columns" :data="showData" :pagination="pagination"
+                                                :loading="loadData" />
                                 </n-space>
                         </n-card>
                 </n-space>
@@ -91,7 +100,8 @@ const message = useMessage();
 const dialog = useDialog();
 const loadData = ref(false);
 const dataTable = ref([]);
-
+const tableRef = ref();
+const downloadCsv = () => tableRef.value?.downloadCsv({ fileName: "export-data-survey" });
 const columns = [
         {
                 title: "Tanggal",
