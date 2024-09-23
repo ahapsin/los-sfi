@@ -1,82 +1,59 @@
 <template>
-  <n-data-table :columns="columns" :data="data" :pagination="pagination" />
-  <pre>{{ JSON.stringify(data, null, 2) }}</pre>
+  <n-p>
+    You have selected {{ checkedRowKeys.length }} row{{
+      checkedRowKeys.length < 2 ? '' : 's' }}. </n-p>
+
+      <n-data-table :columns="columns" :data="data" :pagination="pagination" :row-key="rowKey"
+        @update:checked-row-keys="handleCheck" />
 </template>
 
 <script>
-import { defineComponent, h, ref } from "vue";
-import { NInput } from "naive-ui";
+import { defineComponent, ref } from "vue";
 
 
-function createData() {
+function createColumns() {
   return [
     {
-      key: 0,
-      name: "John Brown",
-      age: "32",
-      address: "New York No. 1 Lake Park"
+      type: "selection",
+      disabled(row) {
+        return row.name === "Edward King 3";
+      }
     },
     {
-      key: 1,
-      name: "Jim Green",
-      age: "42",
-      address: "London No. 1 Lake Park"
+      title: "Name",
+      key: "name"
     },
     {
-      key: 2,
-      name: "Joe Black",
-      age: "32",
-      address: "Sidney No. 1 Lake Park"
+      title: "Age",
+      key: "age"
+    },
+    {
+      title: "Address",
+      key: "address"
     }
   ];
 }
 
+const data = Array.from({ length: 46 }).map((_, index) => ({
+  name: `Edward King ${index}`,
+  age: 32,
+  address: `London, Park Lane no. ${index}`
+}));
+
 export default defineComponent({
   setup() {
-    const data = ref(createData());
-    const createColumns = () => [
-      {
-        title: "Name",
-        key: "name",
-        render(row, index) {
-          return h(NInput, {
-            value: row.name,
-            onUpdateValue(v) {
-              data.value[index].name = v;
-            }
-          });
-        }
-      },
-      {
-        title: "Age",
-        key: "age",
-        render(row, index) {
-          return h(NInput, {
-            value: row.age,
-            onUpdateValue(v) {
-              data.value[index].age = v;
-            }
-          });
-        }
-      },
-      {
-        title: "Address",
-        key: "address",
-        render(row, index) {
-          return h(NInput, {
-            value: row.address,
-            onUpdateValue(v) {
-              data.value[index].address = v;
-            }
-          });
-        }
-      }
-    ];
+    const checkedRowKeysRef = ref([]);
+
     return {
       data,
       columns: createColumns(),
+      checkedRowKeys: checkedRowKeysRef,
       pagination: {
-        pageSize: 10
+        pageSize: 5
+      },
+      rowKey: (row) => row,
+      handleCheck(rowKeys) {
+        checkedRowKeysRef.value = rowKeys;
       }
     };
   }

@@ -1,12 +1,12 @@
 <template>
   <n-card>
     <template #header>Penerimaan Uang</template>
-    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl ">
+    <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl ">
       <n-collapse-item title="post payment" name="1"
         class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]">
-        <pre> {{ checkedRowCredit.length }}</pre>
+        <pre> {{ checkedRowCredit }}</pre>
       </n-collapse-item>
-    </n-collapse> -->
+    </n-collapse>
 
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
@@ -138,7 +138,7 @@
         :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" />
       <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur" :data="dataStrukturKredit"
         :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure" v-show="dataAngsuran"
-        :on-update:checked-row-keys="handleAngsuran" class="py-2" />
+        :on-update:checked-row-keys="handleAngsuran" class="py-2" :row-props="rowProps" />
       <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4">
         <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
           <div class="flex gap-2 ">
@@ -151,7 +151,7 @@
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
           <n-input-number placeholder="Jumlah Pembayaran" v-model:value="totalPay" :show-button="false" :parse="parse"
-            :format="format" clearable @blur="pushJumlahUang" class="w-full">
+            :format="format" clearable @blur="pushJumlahUang" class="w-full" readonly>
           </n-input-number>
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
@@ -169,7 +169,8 @@
         </n-form-item>
         <n-form-item label="" class="w-full">
           <n-space>
-            <n-button type="primary" @click="handleProses" :loading="loadProses"> Proses </n-button>
+            <n-button type="primary" @click="handleProses" :loading="loadProses"
+              :disabled="pageData.jumlah_uang >= totalPay ? false : true"> Proses </n-button>
           </n-space>
         </n-form-item>
       </div>
@@ -353,6 +354,7 @@ import { lyla } from "@lylajs/web";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
+import _ from "lodash";
 import {
   SearchRound as searchIcon,
   PlusFilled as addIcon,
@@ -411,27 +413,28 @@ const pageData = reactive({
   bukti_transafer: null,
 });
 
+const rowProps = (row) => {
+  return {
+    style: "cursor: pointer;background-color:red;",
+    // onClick: () => {
+    //   message.info(row.key);
+    // }
+  }
+}
+
 const dynamicSearch = reactive({
   nama: '',
   no_polisi: '',
   no_kontrak: ''
 });
 
-const dynamicForm = reactive({
-  loan_number: computed(() => pageData.no_facility),
-  payment_method: computed(() => pageData.payment_method),
-  nilai_pembayaran: computed(() => pageData.jumlah_uang - pageData.kembalian - pageData.pembulatan),
-  pembulatan: computed(() => pageData.pembulatan),
-  kembalian: computed(() => pageData.kembalian),
-  nama_bank: null,
-  no_rekening: null
-});
 
 const createColumns = () => {
   return [
     {
       type: "selection",
       multiple: false,
+
     },
     {
       title: "No Kontrak",
@@ -484,11 +487,10 @@ const jml_uang = ref(0);
 const createColStruktur = () => {
   return [
     {
-      title: 'pilih',
       type: "selection",
       disabled(row) {
         return row.key > checkedRowCredit.value.length;
-      }
+      },
     },
     {
       title: "ke",
@@ -546,14 +548,14 @@ const createColStruktur = () => {
           return h(NTag, { type: 'warning' }, { default: 'dalam proses' });
         } else {
           return h(NInputNumber, {
-            readonly: false,
+            disabled: _.find(checkedRowCredit.value, ['key', row.key]) ? false : true,
             format: format,
             parse: parse,
             max: row.bayar_angsuran,
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",
-            value: row.bayar_angsuran,
+            value: _.find(checkedRowCredit.value, ['key', row.key]) ? row.bayar_angsuran : 0,
             onUpdateValue(v) {
               dataStrukturKredit.value[index].bayar_angsuran = v;
             },
@@ -569,7 +571,7 @@ const createColStruktur = () => {
           return h(NTag, { type: 'warning' }, { default: 'dalam proses' });
         } else {
           return h(NInputNumber, {
-            readonly: false,
+            disabled: _.find(checkedRowCredit.value, ['key', row.key]) ? false : true,
             clearable: true,
             min: 0,
             max: row.bayar_denda,
@@ -578,7 +580,7 @@ const createColStruktur = () => {
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",
-            value: row.bayar_denda,
+            value: _.find(checkedRowCredit.value, ['key', row.key]) ? row.bayar_denda : 0,
             onUpdateValue(v) {
               dataStrukturKredit.value[index].bayar_denda = v;
             },
@@ -595,12 +597,13 @@ const createColStruktur = () => {
         } else {
           return h(NInputNumber, {
             readonly: true,
+            disabled: _.find(checkedRowCredit.value, ['key', row.key]) ? false : true,
             format: format,
             parse: parse,
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",
-            value: dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda,
+            value: _.find(checkedRowCredit.value, ['key', row.key]) ? dataStrukturKredit.value[index].bayar_angsuran + dataStrukturKredit.value[index].bayar_denda : 0,
           });
         }
       },
@@ -810,6 +813,7 @@ const getSkalaCredit = async (e) => {
     localStorage.removeItem("token");
     router.replace("/");
   } else {
+
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
     loadStructure.value = false;

@@ -1,12 +1,12 @@
 <template>
   <n-card>
     <template #header>Penerimaan Uang</template>
-    <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
+    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
       <n-collapse-item title="post payment" name="1"
         class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]">
         <pre> {{ dataPayment }}</pre>
       </n-collapse-item>
-    </n-collapse>
+    </n-collapse> -->
 
     <!-- <n-button @click="dialogProses = true">dasdasd</n-button> -->
     <template #header-extra>
@@ -49,6 +49,24 @@
 
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
+      <n-space class="flex py-2">
+        <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+          type="daterange" @update:value="onConfirmDate" />
+        <n-button circle>
+          <template #icon>
+            <n-icon>
+              <print-icon />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button circle>
+          <template #icon>
+            <n-icon>
+              <download-file />
+            </n-icon>
+          </template>
+        </n-button>
+      </n-space>
       <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="showData"
         :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadDataPayment" class="pb-2"
         :pagination="pagination" />
@@ -112,7 +130,7 @@
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                 <span v-show="pembayaran.bayar_denda > 0">,denda {{
                   parseInt(pembayaran.bayar_denda).toLocaleString("US")
-                  }}</span>
+                }}</span>
               </n-tag>
             </n-space>
           </div>
@@ -141,6 +159,8 @@ import {
   PlusFilled as addIcon,
   OpenInFullRound as fullIcon,
   PriceCheckFilled as fullPay,
+  LocalPrintshopOutlined as PrintIcon,
+  FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
 import {
   useDialog,
@@ -204,7 +224,10 @@ const dynamicSearch = reactive({
   no_polisi: "",
   no_kontrak: "",
 });
-
+const onConfirmDate = () => {
+  getDataPayment();
+  console.log('asdasdsa');
+}
 const dynamicForm = reactive({
   loan_number: computed(() => pageData.no_facility),
   payment_method: computed(() => pageData.payment_method),
@@ -467,6 +490,7 @@ const totalPayment = computed(() => {
   // return checkedRowCredit.value;
   return dataStrukturKredit.value;
 });
+const updateValueOnClose = ref(true);
 const pushJumlahUang = async () => {
   // jml_uang.value = pageData.jumlah_uang;
   // const dynamicBody = {

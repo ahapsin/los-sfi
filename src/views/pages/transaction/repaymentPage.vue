@@ -1,8 +1,9 @@
 <template>
     <n-card>
         <template #header>Pelunasan Angsuran</template>
+        <span class="hidden">{{ pelunasan }}</span>
         <!-- <n-collapse>
-            <n-collapse-item title="struktur" name="1">
+            <n-collapse-item title="struktur" name="1" class="display-none">
                 <pre> {{ pelunasan }}</pre>
             </n-collapse-item>
             <n-collapse-item title="dataPage" name="2">
@@ -144,7 +145,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Pokok</td>
+                        <td>pokok</td>
                         <td>{{ pelunasan.SISA_POKOK.toLocaleString() }}</td>
                         <td>{{ pelunasan.BAYAR_POKOK.toLocaleString() }}</td>
                         <td>{{ pelunasan.DISKON_POKOK.toLocaleString() }}</td>
@@ -194,10 +195,10 @@
                         class="w-full">
                     </n-input-number>
                 </n-form-item>
-                <!-- <n-form-item label="Pembulatan" class="w-full">
+                <n-form-item label="Pembulatan" class="w-full">
                     <n-input-number :show-button="false" :parse="parse" :format="format"
                         v-model:value="pelunasan.PEMBULATAN" clearable class="w-full" />
-                </n-form-item> -->
+                </n-form-item>
                 <n-form-item label="Kembalian" class="w-full">
                     <n-input-number :show-button="false" :parse="parse" :format="format"
                         v-model:value="pelunasan.KEMBALIAN" readonly class="w-full" />
@@ -721,7 +722,6 @@ const pelunasan = reactive({
                         pelunasan.BAYAR_DENDA = bayarDenda;
                     }
                 } else {
-
                     pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
                     pelunasan.DISKON_PINALTI = pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
                 }
