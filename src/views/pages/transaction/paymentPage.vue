@@ -35,8 +35,19 @@
               </n-icon>
             </n-button>
           </template>
-          <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+          <n-space vertical>
+            <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+            <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+              type="daterange" @update:value="onConfirmDate" />
+          </n-space>
         </n-popover>
+        <n-button type="success" secondary circle @click="downloadCsv">
+          <template #icon>
+            <n-icon>
+              <download-file />
+            </n-icon>
+          </template>
+        </n-button>
         <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
@@ -50,26 +61,18 @@
     <div>
       <!-- <pre>{{ creditCustomer }}</pre> -->
       <n-space class="flex py-2">
-        <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
-          type="daterange" @update:value="onConfirmDate" />
-        <n-button circle>
+
+        <!-- <n-button circle>
           <template #icon>
             <n-icon>
               <print-icon />
             </n-icon>
           </template>
-        </n-button>
-        <n-button circle>
-          <template #icon>
-            <n-icon>
-              <download-file />
-            </n-icon>
-          </template>
-        </n-button>
+        </n-button> -->
       </n-space>
-      <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="showData"
-        :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadDataPayment" class="pb-2"
-        :pagination="pagination" />
+      <n-data-table ref="tableRef" striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
+        :data="showData" :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadDataPayment"
+        class="pb-2" :pagination="pagination" />
     </div>
   </n-card>
   <n-modal class="w-1/2 md:w-1/3" title="Upload Berkas Pencairan" v-model:show="showModal">
@@ -182,7 +185,8 @@ const checkedRowCredit = ref([]);
 
 const dialogProses = ref(false);
 const paymentData = ref([]);
-
+const tableRef = ref();
+const downloadCsv = () => tableRef.value?.downloadCsv({ fileName: "export-penerimaan-uang" });
 const totalPay = computed(() => {
   const totalInstallment = () =>
     checkedRowCredit.value.reduce(

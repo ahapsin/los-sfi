@@ -12,8 +12,20 @@
                   </n-icon>
                 </n-button>
               </template>
-              <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+              <n-space vertical>
+                <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+                <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+                  type="daterange" @update:value="onConfirmDate" />
+              </n-space>
             </n-popover>
+            <n-button type="success" secondary circle @click="downloadCsv">
+              <template #icon>
+                <n-icon>
+                  <download-file />
+                </n-icon>
+              </template>
+            </n-button>
+
             <!-- <n-button>
                             <template #icon>
                                 <n-icon>
@@ -47,7 +59,7 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <n-data-table size="small" triped :scroll-x="1000" :columns="columns" :data="showData"
+          <n-data-table size="small" ref="tableRef" triped :scroll-x="1000" :columns="columns" :data="showData"
             :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
@@ -145,6 +157,7 @@ import {
   CalculateOutlined as CalcIcon,
   FilePresentOutlined as FileIcon,
   ImageFilled as UploadIcon,
+  FileDownloadOutlined as DownloadFile,
   DriveFolderUploadRound as FileUpload,
 } from "@vicons/material";
 import {
@@ -159,6 +172,8 @@ const iconfile = defineComponent(() => FileIcon);
 const message = useMessage();
 const dialog = useDialog();
 const pk = ref(null);
+const tableRef = ref();
+const downloadCsv = () => tableRef.value?.downloadCsv({ fileName: "export-data-fpk" });
 const showModal = ref(false);
 const dataTable = ref([]);
 const searchBox = ref();
