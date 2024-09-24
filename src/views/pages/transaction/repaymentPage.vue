@@ -34,7 +34,7 @@
         </template>
         <div class="flex flex-col md:flex-row gap-2">
             <n-form-item label="Nama Pelanggan" class="w-full">
-                <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch"
+                <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @input="handleSearch"
                     clearable />
             </n-form-item>
             <n-form-item label="No Polisi" class="w-full">
@@ -133,7 +133,7 @@
             <!-- <pre>{{ creditCustomer }}</pre> -->
             <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch"
                 :pagination="pagination" :max-height="300" :on-update:checked-row-keys="handleFasilitas"
-                :loading="loadSearch" class="pb-2" />
+                :loading="loadSearch" class="pb-2" v-show="displayFasilitas" />
             <n-table size="small" v-show="displayDetail" class="mb-2">
                 <thead>
                     <tr>
@@ -165,7 +165,7 @@
                     <tr>
                         <td>Denda</td>
                         <td>{{ pelunasan.DENDA.toLocaleString() }}</td>
-                        <td>{{ pelunasan.DENDA.toLocaleString() }}</td>
+                        <td>{{ pelunasan.BAYAR_DENDA.toLocaleString() }}</td>
                         <td>{{ pelunasan.DISKON_DENDA.toLocaleString() }}</td>
                     </tr>
                     <tr>
@@ -179,11 +179,11 @@
             <!-- <n-data-table striped size="small" :row-key="(row) => row" :columns="columnStruktur" :data="dataPelunasan"
                 :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadingAngsuran" v-show="dataPelunasan"
                 :on-update:checked-row-keys="handleAngsuran" class="py-2" /> -->
-            <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4">
-                <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
+            <div class="flex gap-2  bg-pr/10  rounded-xl items-center pt-4 px-4" v-show="displayPayment">
+                <!-- <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
                     <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
                         v-model:value="pageData.payment_method" />
-                </n-form-item>
+                </n-form-item> -->
                 <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
                     <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pelunasan.TOTAL_BAYAR"
                         :show-button="false" :parse="parse" :format="format" readonly class="w-full">
@@ -195,13 +195,21 @@
                         class="w-full">
                     </n-input-number>
                 </n-form-item>
+                <n-form-item path="nestedValue.path2" label="Jumlah Diskon" class="w-full">
+                    <n-input-number placeholder="Jumlah Pembayaran" v-model:value="pelunasan.JUMLAH_DISKON"
+                        :show-button="false" :parse="parse" :format="format" clearable @blur="pushJumlahUang"
+                        class="w-full" readonly>
+                    </n-input-number>
+                </n-form-item>
                 <n-form-item label="Pembulatan" class="w-full">
                     <n-input-number :show-button="false" :parse="parse" :format="format"
-                        v-model:value="pelunasan.PEMBULATAN" clearable class="w-full" />
+                        v-model:value="pelunasan.PEMBULATAN" clearable class="w-full"
+                        :disabled="pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false" />
                 </n-form-item>
                 <n-form-item label="Kembalian" class="w-full">
                     <n-input-number :show-button="false" :parse="parse" :format="format"
-                        v-model:value="pelunasan.KEMBALIAN" readonly class="w-full" />
+                        v-model:value="pelunasan.KEMBALIAN" readonly class="w-full"
+                        :disabled="pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false" />
                 </n-form-item>
                 <n-form-item label="" class="w-full">
                     <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full"> Proses
@@ -556,7 +564,13 @@ const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 
 const displayDetail = ref(false);
+const displayPayment = ref(false);
 const handleFasilitas = (e) => {
+    pelunasan.UANG_PELANGGAN = 0;
+    pelunasan.BAYAR_POKOK = 0;
+    pelunasan.BAYAR_BUNGA = 0;
+    pelunasan.BAYAR_DENDA = 0;
+    pelunasan.BAYAR_PINALTI = 0;
     displayDetail.value = true;
     getDataPelunasan(e);
 };
@@ -647,6 +661,7 @@ const getCreditCustomer = async () => {
 const dataSearch = ref([]);
 
 const loadSearch = ref(false);
+const displayFasilitas = ref(false);
 const handleSearch = async () => {
     let userToken = localStorage.getItem("token");
     loadSearch.value = true;
@@ -661,6 +676,7 @@ const handleSearch = async () => {
         localStorage.removeItem("token");
         router.replace("/");
     } else {
+        displayFasilitas.value = true;
         loadSearch.value = false;
         dataSearch.value = response.data;
     }
@@ -713,13 +729,13 @@ const pelunasan = reactive({
                 if (bayarPinalti > 0) {
                     pelunasan.BAYAR_PINALTI = pelunasan.PINALTI;
                     pelunasan.DISKON_PINALTI = 0;
-                    let bayarDenda = bayarPinalti - pelunasan.PINALTI;
+                    let bayarDenda = bayarPinalti - pelunasan.DENDA;
                     if (bayarDenda > 0) {
-                        pelunasan.KEMBALIAN = bayarDenda;
-                        pelunasan.BAYAR_DENDA = bayarDenda;
+                        pelunasan.BAYAR_DENDA = pelunasan.DENDA;
+                        pelunasan.DISKON_DENDA = 0
                     } else {
-                        pelunasan.KEMBALIAN = bayarDenda;
-                        pelunasan.BAYAR_DENDA = bayarDenda;
+                        pelunasan.BAYAR_DENDA = bayarDenda + pelunasan.DENDA;
+                        pelunasan.DISKON_DENDA = pelunasan.DENDA - pelunasan.BAYAR_DENDA;
                     }
                 } else {
                     pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
@@ -729,7 +745,7 @@ const pelunasan = reactive({
             } else {
                 pelunasan.BAYAR_BUNGA = pelunasan.BUNGA_BERJALAN + bayarBunga;
                 pelunasan.DISKON_POKOK = 0;
-                pelunasan.KEMBALIAN = 0;
+
                 pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
             }
         } else {
@@ -738,7 +754,7 @@ const pelunasan = reactive({
             pelunasan.DISKON_BUNGA = pelunasan.BUNGA_BERJALAN;
             pelunasan.DISKON_DENDA = pelunasan.DENDA;
             pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
-            pelunasan.KEMBALIAN = 0;
+
         }
     }),
     BAYAR_POKOK: 0,
@@ -750,10 +766,10 @@ const pelunasan = reactive({
     DISKON_BUNGA: 0,
     DISKON_DENDA: 0,
     JUMLAH_TAGIHAN: computed(() => pelunasan.SISA_POKOK + pelunasan.BUNGA_BERJALAN + pelunasan.PINALTI + pelunasan.DENDA),
-    JUMLAH_BAYAR: computed(() => pelunasan.BAYAR_POKOK + pelunasan.BAYAR_BUNGA + pelunasan.BAYAR_PINALTI),
+    JUMLAH_BAYAR: computed(() => pelunasan.BAYAR_POKOK + pelunasan.BAYAR_BUNGA + pelunasan.BAYAR_PINALTI + pelunasan.BAYAR_DENDA),
     JUMLAH_DISKON: computed(() => pelunasan.DISKON_POKOK + pelunasan.DISKON_BUNGA + pelunasan.DISKON_PINALTI + pelunasan.DISKON_DENDA),
     PEMBULATAN: 0,
-    KEMBALIAN: 0,
+    KEMBALIAN: computed(() => (pelunasan.UANG_PELANGGAN - pelunasan.JUMLAH_TAGIHAN - pelunasan.PEMBULATAN) < 0 ? 0 : (pelunasan.UANG_PELANGGAN - pelunasan.JUMLAH_TAGIHAN - pelunasan.PEMBULATAN)),
 });
 const getDataPelunasan = async (e) => {
     const dynamicBody = {
@@ -772,6 +788,7 @@ const getDataPelunasan = async (e) => {
     } else {
         dataPelunasan.value = response.data;
         Object.assign(pelunasan, response.data[0]);
+        displayPayment.value = true;
         loadingAngsuran.value = false;
         // totalBayar.value = dataPelunasan.value[0].SISA_POKOK + dataPelunasan.value[0].BUNGA_BERJALAN + dataPelunasan.value[0].TUNGAKAN_BUNGA + dataPelunasan.value[0].DENDA + dataPelunasan.value[0].PINALTI;
     }
@@ -781,6 +798,7 @@ const totalPayment = computed(() => {
     return dataStrukturKredit.value;
 });
 const pushJumlahUang = async () => {
+    pelunasan.PEMBULATAN = 0;
     // jml_uang.value = pageData.jumlah_uang;
     // const dynamicBody = {
     //   loan_number: pageData.no_facility,
