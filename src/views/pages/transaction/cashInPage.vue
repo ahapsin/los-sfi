@@ -285,8 +285,11 @@
           <tr>
             <td valign="top">Keterangan</td>
             <td valign="top">:</td>
-            <td><span v-for="pembayaran in paymentData.pembayaran">{{ pembayaran.title }} ({{
-              pembayaran.payment_value.toLocaleString('US') }}), </span></td>
+            <td>
+              <span v-for="pembayaran in paymentData.pembayaran">
+                {{ pembayaran.title }} ({{
+                  pembayaran.payment_value.toLocaleString('US') }}), </span>
+            </td>
           </tr>
         </table>
         <table class="table-auto  w-1/2" height="0">

@@ -80,21 +80,17 @@ import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
-import _ from "lodash";
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, rowProps } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton } from "naive-ui";
 import {
         AddCircleOutlineRound as AddIcon,
         SearchOutlined as SearchIcon,
         FileDownloadOutlined as DownloadIcon,
 
-} from "@vicons/material"
+} from "@vicons/material";
 import {
         EditOutlined as EditIcon,
-        DeleteOutlined as DeleteIcon,
-        MoreVertRound as MoreIcon,
-        ListAltOutlined as DetailIcon
+        DeleteOutlined as DeleteIcon, ListAltOutlined as DetailIcon
 } from "@vicons/material";
-
 
 const message = useMessage();
 const dialog = useDialog();
@@ -296,6 +292,4 @@ const options = (e) => {
 const pagination = {
         pageSize: 10
 }
-
-
 </script>
