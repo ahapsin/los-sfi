@@ -7,7 +7,6 @@ export async function useApi({ ...args }) {
       params: args.params,
       headers: {
         ...args.header,
-        // "Content-Type": "multipart/form-data",
         "Content-Type": "application/json",
         Authorization: `Bearer ${args.token}`,
       },
@@ -18,7 +17,6 @@ export async function useApi({ ...args }) {
     return { ok: false, error: error.response };
   }
 }
-
 const useAPIPost = async (route, payload, token) => {
   const apibase = import.meta.env.VITE_APP_API_BASE;
   const config = {
