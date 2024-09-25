@@ -43,6 +43,7 @@
   </n-drawer>
 </template>
 <script setup>
+import { ref } from "vue";
 import { MenuFilled as MenuIcon } from "@vicons/material";
 
 const active = ref(false);
