@@ -4,6 +4,7 @@
     <template #header-extra>
       <n-space>
         <n-button
+          round
           v-show="!searchField"
           strong
           secondary
@@ -15,9 +16,10 @@
               <back-icon />
             </n-icon>
           </template>
-          kembali
+          <p class="hidden">kembali</p>
         </n-button>
         <n-button
+          round
           v-show="!searchField"
           strong
           secondary
@@ -29,7 +31,7 @@
               <full-pay />
             </n-icon>
           </template>
-          pindah ke pelunasan
+          <p class="hidden">pindah ke pelunasan</p>
         </n-button>
         <n-button
           v-show="!searchField"
@@ -79,6 +81,7 @@
       <n-data-table
         striped
         size="small"
+        :scroll-x="800"
         :row-key="(row) => row.loan_number"
         :columns="columns"
         :data="dataSearch"
@@ -91,6 +94,7 @@
       <n-data-table
         striped
         size="small"
+        :scroll-x="1200"
         :row-key="(row) => row"
         :columns="columnStruktur"
         :data="dataStrukturKredit"
@@ -103,7 +107,7 @@
         :row-props="rowProps"
       />
       <div
-        class="flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
+        class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
         v-show="dataPayment"
       >
         <n-form-item
@@ -139,7 +143,6 @@
             :parse="parse"
             :format="format"
             clearable
-            @update:value="pushJumlahUang"
             class="w-full"
             readonly
           >
@@ -157,7 +160,6 @@
             :parse="parse"
             :format="format"
             clearable
-            @input="pushJumlahUang"
             class="w-full"
           >
           </n-input-number>
@@ -182,19 +184,18 @@
             class="w-full"
           />
         </n-form-item>
-        <n-form-item label="" class="w-full">
-          <n-space>
-            <n-button
-              type="primary"
-              @click="handleProses"
-              :loading="loadProses"
-              :disabled="
-                totalPay === 0 ? true : pageData.kembalian >= 0 ? false : true
-              "
-            >
-              Proses
-            </n-button>
-          </n-space>
+        <n-form-item class="w-full">
+          <n-button
+            type="primary"
+            @click="handleProses"
+            :loading="loadProses"
+            class="w-full"
+            :disabled="
+              totalPay === 0 ? true : pageData.kembalian >= 0 ? false : true
+            "
+          >
+            Proses
+          </n-button>
         </n-form-item>
       </div>
     </div>
@@ -396,6 +397,7 @@ const createColumns = () => {
     {
       type: "selection",
       multiple: false,
+      fixed: "left",
     },
     {
       title: "No Kontrak",
@@ -406,6 +408,7 @@ const createColumns = () => {
       title: "Nama",
       key: "nama",
       sorter: "default",
+      fixed: "left",
     },
     {
       title: "No Polisi",
@@ -444,6 +447,7 @@ const format = (value) => {
 const createColStruktur = () => {
   return [
     {
+      fixed: "left",
       type: "selection",
       disabled(row) {
         return (
@@ -454,24 +458,30 @@ const createColStruktur = () => {
     {
       title: "ke",
       key: "angsuran_ke",
+      width: 40,
+      fixed: "left",
     },
     {
       title: "No Kontrak",
       key: "loan_number",
+      width: 150,
     },
     {
       title: "Jatuh Tempo",
       key: "tgl_angsuran",
+      width: 150,
     },
     {
       title: "Angsuran",
       key: "installment",
+      width: 150,
       render(row) {
         return h("div", row.installment.toLocaleString("US"));
       },
     },
     {
       title: "Denda",
+      width: 150,
       key: "denda",
       render(row) {
         return h("div", row.denda.toLocaleString("US"));
@@ -479,6 +489,7 @@ const createColStruktur = () => {
     },
     {
       title: "Bayar Angsuran",
+      width: 150,
       key: "installment",
       render(row, index) {
         if (row.flag == "PENDING") {
@@ -506,6 +517,7 @@ const createColStruktur = () => {
     },
     {
       title: "Bayar Denda",
+      width: 150,
       key: "installment",
       render(row, index) {
         if (row.flag == "PENDING") {
@@ -535,6 +547,7 @@ const createColStruktur = () => {
     },
     {
       title: "Jumlah Bayar",
+      width: 150,
       key: "payment",
       render(row, index) {
         if (row.flag == "PENDING") {
@@ -570,8 +583,6 @@ const optTipePay = [
     value: "transfer",
   },
 ];
-const dataCustomer = ref([]);
-const selectedCustomer = ref([]);
 const columns = createColumns();
 const columnStruktur = createColStruktur();
 const dataAngsuran = ref(false);
@@ -585,7 +596,6 @@ const handleFasilitas = (e) => {
 const handleAngsuran = (e) => {
   checkedRowCredit.value = e;
 };
-const loadCustomer = ref(false);
 const dialog = useDialog();
 const loadProses = ref(false);
 const handleProses = async () => {
@@ -617,43 +627,6 @@ const handleProses = async () => {
       dialogProses.value = true;
     }
   };
-};
-const getDataCustomer = async () => {
-  loadCustomer.value = true;
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "GET",
-    api: "customer",
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    loadCustomer.value = false;
-    dataCustomer.value = response.data;
-  }
-};
-const creditCustomer = ref([]);
-const getCreditCustomer = async () => {
-  const dynamicBody = {
-    cust_code: selectedCustomer.value.CUST_CODE,
-  };
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "POST",
-    api: "kontrak_fasilitas",
-    data: dynamicBody,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    creditCustomer.value = response.data;
-  }
 };
 const dataSearch = ref([]);
 const loadSearch = ref(false);
@@ -707,12 +680,7 @@ const getSkalaCredit = async (e) => {
   }
 };
 const message = useMessage();
-const handleImagePost = ({
-  file,
-  onError,
-  onFinish,
-  onProgress,
-}) => {
+const handleImagePost = ({ file, onError, onFinish, onProgress }) => {
   let userToken = localStorage.getItem("token");
   const form = new FormData();
   form.append("uid", pageData.uid);

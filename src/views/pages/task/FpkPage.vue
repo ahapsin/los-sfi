@@ -1,7 +1,13 @@
 <template>
-  <div class="pt-4" id="drawer-target">
+  <div id="drawer-target">
     <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`">
+      <n-card
+        :title="`Tabel ${$route.name}`"
+        :segmented="{
+          content: true,
+          footer: 'soft',
+        }"
+      >
         <template #header-extra>
           <n-space>
             <n-popover trigger="click" placement="bottom-end">
@@ -41,7 +47,7 @@
             size="small"
             ref="tableRef"
             triped
-            :scroll-x="1000"
+            :scroll-x="1200"
             :columns="columns"
             :data="showData"
             :pagination="pagination"
@@ -148,12 +154,7 @@ import { ref, reactive, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { lyla } from "@lylajs/web";
 import router from "../../../router";
-import {
-  useMessage,
-  NIcon,
-  NTag,
-  NButton,
-} from "naive-ui";
+import { useMessage, NIcon, NTag, NButton } from "naive-ui";
 import { useNetwork } from "@vueuse/core";
 const { onlineAt } = useNetwork();
 import { useSearch } from "../../../helpers/searchObject";
@@ -414,13 +415,7 @@ onMounted(() => getData());
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
 });
-const handleImagePost = ({
-  file,
-  data,
-  onError,
-  onFinish,
-  onProgress,
-}) => {
+const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
   const idSurvey = selectedData.value.id;
   const form = new FormData();
   form.append("image", file.file);

@@ -1,5 +1,10 @@
 <template>
-  <n-card>
+  <n-card
+    :segmented="{
+      content: true,
+      footer: 'soft',
+    }"
+  >
     <template #header>Penerimaan Uang</template>
     <template #header-extra>
       <n-space>
@@ -86,6 +91,7 @@
         size="small"
         :row-key="(row) => row.loan_number"
         :columns="columns"
+        :scroll-x="1200"
         :data="showData"
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
@@ -96,7 +102,7 @@
     </div>
   </n-card>
   <n-modal
-    class="w-1/2 md:w-1/3"
+    class="w-full md:w-1/2"
     title="Upload Berkas Pencairan"
     v-model:show="showModal"
   >
@@ -232,18 +238,8 @@ import {
   LocalPrintshopOutlined as PrintIcon,
   FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
-import {
-  useDialog,
-  useMessage,
-  NIcon,
-  NTag,
-  NButton,
-  NBadge,
-  NAvatar,
-  NInput,
-  NInputNumber,
-} from "naive-ui";
-import { computed, onMounted, reactive, readonly, ref } from "vue";
+import { useMessage, NIcon, NTag, NButton, NInput } from "naive-ui";
+import { computed, onMounted, reactive, ref } from "vue";
 const searchField = ref(false);
 const searchBox = ref();
 const checkedRowCredit = ref([]);
@@ -283,31 +279,35 @@ const pageData = reactive({
 const pagination = ref({ pageSize: 10 });
 const onConfirmDate = () => {
   getDataPayment();
-  console.log("asdasdsa");
 };
 const createColumns = () => {
   return [
     {
       title: "no transaksi",
+      width: 150,
       key: "no_transaksi",
       sorter: "default",
     },
     {
       title: "tanggal",
+      width: 150,
       key: "tgl_transaksi",
       sorter: "default",
     },
     {
       title: "metode",
+      width: 150,
       key: "payment_method",
       sorter: "default",
     },
     {
       title: "atas nama",
       key: "nama",
+      width: 150,
     },
     {
       title: "nominal",
+      width: 150,
       key: "total_bayar",
       render(row) {
         return h("div", row.total_bayar.toLocaleString("US"));
@@ -316,6 +316,7 @@ const createColumns = () => {
     },
     {
       title: "status",
+      width: 150,
       key: "STATUS",
       defaultFilterOptionValues: ["PAID", "UNPAID"],
       render(row) {
@@ -334,6 +335,7 @@ const createColumns = () => {
       },
     },
     {
+      width: 150,
       align: "right",
       key: "action",
       render(row) {

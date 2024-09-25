@@ -8,7 +8,7 @@
     </div>
     <div class="w-full overflow-auto content bg-sc-50">
       <n-page-header
-        class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b p-2"
+        class="sticky bg-white border-b top-0 z-50 backdrop-blur p-2"
       >
         <template #title>
           <n-space align="center" class="md:!hidden">
@@ -30,7 +30,7 @@
           <account-avatar />
         </template>
       </n-page-header>
-      <div class="p-4">
+      <div class="p-0 md:p-4">
         <RouterView />
       </div>
     </div>
@@ -44,16 +44,11 @@
 </template>
 <script setup>
 import { MenuFilled as MenuIcon } from "@vicons/material";
-import router from "../../router";
-import { useMeStore } from "../../stores/me";
-
-const dataMe = useMeStore();
 
 const active = ref(false);
 const activate = () => {
   active.value = true;
 };
-const handleBack = () => router.go(-1);
 </script>
 <style scoped>
 .sidebar {

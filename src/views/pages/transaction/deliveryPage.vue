@@ -150,6 +150,10 @@ import { ref, reactive, onMounted } from "vue";
 import { useApi } from "../../../helpers/axios";
 import router from "../../../router";
 import { useMessage } from "naive-ui";
+
+import { useMeStore } from "../../../stores/me";
+
+const dataMe = useMeStore();
 const message = useMessage();
 const showModal = ref(false);
 const dataTable = ref([]);

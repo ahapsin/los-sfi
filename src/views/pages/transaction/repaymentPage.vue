@@ -1,5 +1,10 @@
 <template>
-  <n-card>
+  <n-card
+    :segmented="{
+      content: true,
+      footer: 'soft',
+    }"
+  >
     <template #header>Pelunasan Angsuran</template>
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
@@ -9,6 +14,7 @@
           strong
           secondary
           type="warning"
+          round
           @click="handleBtnAngsuran"
         >
           <template #icon>
@@ -16,7 +22,7 @@
               <angsuran-icon />
             </n-icon>
           </template>
-          pindah ke penerimaan
+          <span class="hidden md:flex">pindah ke penerimaan</span>
         </n-button>
         <n-button
           v-show="!searchField"
@@ -65,11 +71,11 @@
     <div>
       <n-data-table
         striped
+        :scroll-x="1200"
         size="small"
         :row-key="(row) => row.loan_number"
         :columns="columns"
         :data="dataSearch"
-        :pagination="pagination"
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
         :loading="loadSearch"
@@ -119,7 +125,7 @@
         </tbody>
       </n-table>
       <div
-        class="flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
+        class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
         v-show="displayPayment"
       >
         <n-form-item
@@ -199,7 +205,7 @@
             "
           />
         </n-form-item>
-        <n-form-item label="" class="w-full">
+        <n-form-item class="w-full">
           <n-button
             type="primary"
             @click="handleProses"
@@ -303,27 +309,14 @@
   </n-modal>
 </template>
 <script setup>
-import { data } from "autoprefixer";
 import { useApi } from "../../../helpers/axios";
-import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
 import {
   FactCheckOutlined as angsuranIcon,
   OpenInFullRound as fullIcon,
-  PriceCheckFilled as fullPay,
 } from "@vicons/material";
-import {
-  useDialog,
-  useMessage,
-  NIcon,
-  NTag,
-  NButton,
-  NBadge,
-  NAvatar,
-  NInput,
-  NInputNumber,
-} from "naive-ui";
-import { computed, onMounted, reactive, readonly, ref } from "vue";
+import { NIcon, NButton, NInput, NInputNumber } from "naive-ui";
+import { computed, reactive, ref } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
@@ -367,6 +360,7 @@ const createColumns = () => {
     {
       type: "selection",
       multiple: false,
+      fixed: "left",
     },
     {
       title: "No Kontrak",
@@ -377,6 +371,7 @@ const createColumns = () => {
       title: "Nama",
       key: "nama",
       sorter: "default",
+      fixed: "left",
     },
     {
       title: "No Polisi",
@@ -390,10 +385,9 @@ const createColumns = () => {
     },
     {
       title: "Angsuran",
-      sorter: "default",
       key: "angsuran",
       render(row) {
-        return h("div", row.angsuran);
+        return h("div", row.angsuran.toLocaleString("US"));
       },
     },
   ];
@@ -413,49 +407,7 @@ const format = (value) => {
   if (value === null) return "";
   return value.toLocaleString("en-US");
 };
-const createColStruktur = () => {
-  return [
-    {
-      title: "Sisa Pokok",
-      key: "SISA_POKOK",
-      render(row) {
-        return h("div", row.SISA_POKOK);
-      },
-    },
-    {
-      title: "Bunga Berjalan",
-      key: "BUNGA_BERJALAN",
-      render(row) {
-        return h("div", row.BUNGA_BERJALAN);
-      },
-    },
-    {
-      title: "Tunggakan Bunga",
-      key: "TUNGGAKAN_BUNGA",
-      render(row) {
-        return h("div", row.TUNGGAKAN_BUNGA);
-      },
-    },
-    {
-      title: "Denda",
-      key: "DENDA",
-      render(row) {
-        return h("div", row.DENDA);
-      },
-    },
-    {
-      title: "Pinalti",
-      key: "denda",
-      render(row) {
-        return h("div", row.PINALTI);
-      },
-    },
-  ];
-};
-const dataCustomer = ref([]);
-const selectedCustomer = ref([]);
 const columns = createColumns();
-const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 const displayDetail = ref(false);
 const displayPayment = ref(false);
@@ -468,7 +420,6 @@ const handleFasilitas = (e) => {
   displayDetail.value = true;
   getDataPelunasan(e);
 };
-const loadCustomer = ref(false);
 const loadProses = ref(false);
 const handleProses = async () => {
   let userToken = localStorage.getItem("token");
@@ -487,44 +438,6 @@ const handleProses = async () => {
     loadProses.value = false;
     paymentData.value = response.data;
     dialogProses.value = true;
-  }
-};
-const getDataCustomer = async () => {
-  loadCustomer.value = true;
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "GET",
-    api: "customer",
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    loadCustomer.value = false;
-    dataCustomer.value = response.data;
-  }
-};
-const creditCustomer = ref([]);
-const getCreditCustomer = async () => {
-  const dynamicBody = {
-    cust_code: selectedCustomer.value.CUST_CODE,
-  };
-  let userToken = localStorage.getItem("token");
-  a;
-  const response = await useApi({
-    method: "POST",
-    api: "kontrak_fasilitas",
-    data: dynamicBody,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
-  } else {
-    creditCustomer.value = response.data;
   }
 };
 const dataSearch = ref([]);
@@ -549,7 +462,6 @@ const handleSearch = async () => {
     dataSearch.value = response.data;
   }
 };
-const dataStrukturKredit = ref([]);
 const dataPelunasan = ref([]);
 const pelunasan = reactive({
   SISA_POKOK: 0,
