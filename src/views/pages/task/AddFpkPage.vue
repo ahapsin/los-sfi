@@ -1002,12 +1002,6 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { lyla } from "@lylajs/web";
-import {
-  ArrowBackOutlined as ArrowBack,
-  ArrowForwardOutlined as ArrowForward,
-  SendRound as SendIcon,
-  WarningRound as WarningIcon,
-} from "@vicons/material";
 import { useRoute } from "vue-router";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
