@@ -243,6 +243,25 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/laporan",
+    name: "laporan",
+    component: () => import("../views/pages/DashboardPage.vue"),
+    children:[
+      {
+        path: "inq_pinjaman",
+        name: "inquery pinjaman",
+        component: () =>
+          import("../views/pages/laporan/LapPinjaman.vue"),
+      },
+      {
+        path: "inq_jaminan",
+        name: "inquery jaminan",
+        component: () =>
+          import("../views/pages/laporan/LapJaminan.vue"),
+      },
+    ]
+  },
 ];
 
 const router = createRouter({
