@@ -1,82 +1,88 @@
 <template>
-  <div>
-    <button @click="connectToPrinter">Hubungkan ke Printer</button>
-    <button @click="print" :disabled="!printer">Cetak</button>
-  </div>
-  <div class="grid grid-cols-1 gap-x-4 gap-y-4">
-    <div>
-      {{
-        isSupported
-          ? "Bluetooth Web API Supported"
-          : "Your browser does not support the Bluetooth Web API"
-      }}
-    </div>
-    <div v-if="isSupported">
-      <button @click="requestDevice()">Request Bluetooth Device</button>
-    </div>
-    <div v-if="device">
-      <p>Device Name: {{ device.name }}</p>
-    </div>
-    <div v-if="isConnected" class="bg-green-500 text-white p-3 rounded-md">
-      <p>Connected</p>
-    </div>
-    <div v-if="!isConnected" class="bg-orange-800 text-white p-3 rounded-md">
-      <p>Not Connected</p>
-    </div>
-    <div v-if="error">
-      <div>Errors:</div>
-      <pre>
-      <code class="block p-5 whitespace-pre">{{ error }}</code>
-    </pre>
-    </div>
-  </div>
+  {{ data }}
+  <n-data-table :columns="columns" :data="data" :row-props="rowProps" :row-class-name="rowClassName"/>
 </template>
+
 <script>
-import { ref } from "vue";
-import { useBluetooth } from "@vueuse/core";
-export default {
+import { defineComponent,reactive } from "vue";
+import { useMessage } from "naive-ui";
+export default defineComponent({
   setup() {
-    const { isSupported, isConnected, device, requestDevice, server } =
-      useBluetooth({
-        acceptAllDevices: true,
-      });
-    const printer = ref(null);
-    const connectToPrinter = async () => {
-      try {
-        const device = await navigator.bluetooth.requestDevice({
-          filters: [{ services: ["your-printer-service-uuid"] }],
-        });
-        printer.value = await device.gatt.connect();
-        console.log("Terhubung ke printer:", device.name);
-      } catch (error) {
-        console.error("Koneksi gagal!", error);
-      }
-    };
-    const print = async () => {
-      if (!printer.value) {
-        console.error("Printer tidak terhubung");
-        return;
-      }
-      const service = await printer.value.getPrimaryService(
-        "your-printer-service-uuid"
-      );
-      const characteristic = await service.getCharacteristic(
-        "your-characteristic-uuid"
-      );
-      const data = new TextEncoder().encode("Halo, Dunia!");
-      try {
-        await characteristic.writeValue(data);
-        console.log("Perintah cetak terkirim");
-      } catch (error) {
-        console.error("Cetak gagal!", error);
-      }
-    };
+    const message = useMessage();
     return {
-      printer,
-      connectToPrinter,
-      print,
+      rowProps: (row) => {
+        return {
+          style: "cursor: pointer;",
+          onClick: () => {
+            row.active=!row.active;
+            message.info(row);
+          }
+        };
+      },
+      columns: [
+      {
+      key: 'name',
+      title() {
+      }
+    },
+        {
+          type:"selection",
+          title: "Name",
+          key: "name"
+        },
+        {
+          title: "Age",
+          key: "age"
+        },
+        {
+          title: "Address",
+          key: "address"
+        }
+      ],
+      data: reactive([
+        {
+          key: 0,
+          name: "07akioni",
+          age: "18",
+          active:false,
+          address: "Yiheyuan Road"
+        },
+        {
+          key: 1,
+          name: "08akioni",
+          age: "14",
+          active:false,
+          address: "Pingshan Road"
+        },
+        {
+          key: 2,
+          name: "09akioni",
+          age: "22",
+          active:false,
+          address: "Haidian Bridge"
+        }
+      ]),
+      rowClassName(row) {
+        if (row.active) {
+          return "too-old";
+        }
+        return "";
+      }
     };
-  },
-};
+    
+  }
+});
 </script>
-<style></style>
+
+<style scoped>
+:deep(.too-old td) {
+  background-color:  rgba(0, 128, 0, 0.1) !important;
+  color: rgba(0, 128, 0, 0.75) !important;
+}
+:deep(.age) {
+  color: rgba(0, 128, 0, 0.75) !important;
+}
+:deep(.too-old .age) {
+  color: rgba(0, 0, 128, 0.75) !important;
+}
+</style>

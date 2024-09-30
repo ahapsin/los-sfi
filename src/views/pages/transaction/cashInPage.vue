@@ -1,6 +1,9 @@
 <template>
-  <n-card>
-    <template #header>Penerimaan Uang</template>
+  <n-card :segmented="{
+      content: true,
+      footer: 'soft',
+    }">
+    <template #header>Tambah Penerimaan Uang </template>
     <template #header-extra>
       <n-space>
         <n-button
@@ -8,7 +11,7 @@
           v-show="!searchField"
           strong
           secondary
-          type="warning"
+          type="success"
           @click="handleBack"
         >
           <template #icon>
@@ -16,9 +19,9 @@
               <back-icon />
             </n-icon>
           </template>
-          <p class="hidden">kembali</p>
+          <p class="hidden md:flex">kembali</p>
         </n-button>
-        <n-button
+        <!-- <n-button
           round
           v-show="!searchField"
           strong
@@ -32,7 +35,7 @@
             </n-icon>
           </template>
           <p class="hidden">pindah ke pelunasan</p>
-        </n-button>
+        </n-button> -->
         <n-button
           v-show="!searchField"
           strong
@@ -79,7 +82,9 @@
     </div>
     <div>
       <n-data-table
+        :row-props="rowProps"
         striped
+        :row-class-name="rowClassName"
         size="small"
         :scroll-x="800"
         :row-key="(row) => row.loan_number"
@@ -104,7 +109,6 @@
         v-show="dataAngsuran"
         :on-update:checked-row-keys="handleAngsuran"
         class="py-2"
-        :row-props="rowProps"
       />
       <div
         class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
@@ -243,7 +247,10 @@
             <td valign="top">Keterangan</td>
             <td valign="top">:</td>
             <td>
-              <span v-for="pembayaran in paymentData.pembayaran">
+              <span
+                v-for="pembayaran in paymentData.pembayaran"
+                v-bind:key="pembayaran.id"
+              >
                 {{ pembayaran.title }} ({{
                   pembayaran.payment_value.toLocaleString("US")
                 }}),
@@ -311,7 +318,11 @@
           </n-text>
         </n-upload-dragger>
       </n-upload>
-      <n-image v-for="imageBukti in dataBuktiTransfer" :src="imageBukti" />
+      <n-image
+        v-for="imageBukti in dataBuktiTransfer"
+        :src="imageBukti"
+        v-bind:key="imageBukti"
+      />
     </n-card>
   </n-modal>
 </template>
@@ -319,15 +330,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { lyla } from "@lylajs/web";
 import { useApi } from "../../../helpers/axios";
-import { useSearch } from "../../../helpers/searchObject";
+
 import router from "../../../router";
 import _ from "lodash";
 import {
-  SearchRound as searchIcon,
   PlusFilled as addIcon,
   ChevronLeftRound as backIcon,
   OpenInFullRound as fullIcon,
-  PriceCheckFilled as fullPay,
 } from "@vicons/material";
 import {
   useDialog,
@@ -335,13 +344,10 @@ import {
   NIcon,
   NTag,
   NButton,
-  NBadge,
-  NAvatar,
   NInput,
   NInputNumber,
 } from "naive-ui";
-import { computed, onMounted, reactive, readonly, ref } from "vue";
-import { constant } from "lodash";
+import { computed, reactive, ref, h } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const prosesButton = ref(true);
@@ -382,9 +388,13 @@ const pageData = reactive({
   no_rekening: null,
   bukti_transafer: null,
 });
-const rowProps = () => {
+const rowProps = (row) => {
   return {
-    style: "cursor: pointer;background-color:red;",
+    style: "cursor: pointer;",
+    onClick: () => {
+     selectedFasilitas.value=row.loan_number;
+     getSkalaCredit(row.loan_number);
+    },
   };
 };
 const dynamicSearch = reactive({
@@ -394,11 +404,6 @@ const dynamicSearch = reactive({
 });
 const createColumns = () => {
   return [
-    {
-      type: "selection",
-      multiple: false,
-      fixed: "left",
-    },
     {
       title: "No Kontrak",
       key: "loan_number",
@@ -428,6 +433,12 @@ const createColumns = () => {
       },
     },
   ];
+};
+const rowClassName = (row) => {
+  if (row.loan_number == selectedFasilitas.value) {
+    return "row-active";
+  }
+  return "";
 };
 const handleDone = () => {
   dialogProses.value = false;
@@ -588,9 +599,11 @@ const columnStruktur = createColStruktur();
 const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 const loadStructure = ref(false);
+const selectedFasilitas = ref();
 const handleFasilitas = (e) => {
+  selectedFasilitas.value = e;
   prosesButton.value = true;
-  pageData.struktur = [];
+
   getSkalaCredit(e);
 };
 const handleAngsuran = (e) => {
@@ -654,7 +667,7 @@ const handleSearch = async () => {
 const dataStrukturKredit = ref([]);
 const dataPayment = ref(false);
 const getSkalaCredit = async (e) => {
-  pageData.no_facility = e[0];
+  pageData.no_facility = e;
   loadStructure.value = true;
   const dynamicBody = {
     loan_number: pageData.no_facility,
@@ -710,10 +723,15 @@ const handleExpand = () => {
   const fullPage = router.resolve({ name: "expand transaction" });
   window.open(fullPage.href, "_blank");
 };
-const handlePayFull = () => {
-  router.replace({ name: "pelunasan" });
-};
+
 const handleBack = () => {
   router.replace({ name: "pembayaran" });
 };
 </script>
+
+<style scoped>
+:deep(.row-active td) {
+  background-color: rgba(24, 160, 88, 0.2) !important;
+  color: rgba(24, 160, 88, 1) !important;
+}
+</style>

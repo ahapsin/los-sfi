@@ -335,7 +335,7 @@
                   <th align="left">ANGSURAN</th>
                   <th align="left">BAKI DEBET</th>
                 </tr>
-                <tr v-for="skala in pkData.struktur">
+                <tr v-for="skala in pkData.struktur" v-bind:key='skala.id'>
                   <td>{{ skala.angsuran_ke }}</td>
                   <td>{{ skala.tgl_angsuran }}</td>
                   <td>{{ skala.pokok }}</td>
@@ -1410,8 +1410,7 @@ const createPdf = () => {
     },
   ]);
 
-  const genPDF = pdfmake
-    .createPdf({
+pdfmake.createPdf({
       info: {
         title: `Perjanjian Kredit-${pihak2.value.nama}`,
         author: "ahapsin",
@@ -1592,7 +1591,7 @@ const handlePrint = () => {
     data: bodySend,
     api: `pk`,
     token: userToken,
-  }).then((res) => {
+  }).then(() => {
     router.replace({ name: "Pengajuan Kredit" });
     // if (!res.ok) {
     //     message.warning('gagal proses print!');

@@ -150,13 +150,11 @@
   </n-modal>
 </template>
 <script setup>
-import { ref, reactive, onMounted, h } from "vue";
+import { ref, reactive, onMounted, h,computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { lyla } from "@lylajs/web";
 import router from "../../../router";
 import { useMessage, NIcon, NTag, NButton } from "naive-ui";
-import { useNetwork } from "@vueuse/core";
-const { onlineAt } = useNetwork();
 import { useSearch } from "../../../helpers/searchObject";
 import {
   SearchOutlined as SearchIcon,
@@ -240,8 +238,8 @@ const columns = [
         var cetak = "CETAK";
         var type = "primary";
       } else {
-        var cetak = "CETAK ULANG";
-        var type = "warning";
+         cetak = "CETAK ULANG";
+         type = "warning";
       }
       if (status === "6") {
         return h(
@@ -339,7 +337,6 @@ const typeAction = (e) => {
   } else {
     return "success";
   }
-  return "info";
 };
 const actionLabel = (e) => {
   let status = e.at(0);
