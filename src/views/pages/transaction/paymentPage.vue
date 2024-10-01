@@ -1,5 +1,6 @@
 <template>
   <n-card
+  content-style="padding: 0;"
     :segmented="{
       content: true,
       footer: 'soft',
@@ -96,7 +97,7 @@
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
         :loading="loadDataPayment"
-        class="pb-2"
+        class="p-4"
         :pagination="pagination"
       />
     </div>

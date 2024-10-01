@@ -539,8 +539,7 @@ const createColStruktur = () => {
               ? false
               : true,
             clearable: true,
-            min: 0,
-            max: row.bayar_denda,
+            max: row.denda,
             format: format,
             parse: parse,
             showButton: false,

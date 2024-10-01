@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-4">
+    <div>
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>

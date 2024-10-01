@@ -1,17 +1,20 @@
 <template>
-  <n-menu
-    v-model:value="activeKey"
-    :root-indent="36"
-    :indent="12"
-    :options="dataMenu"
-  />
+  <n-collapse accordion>
+    <n-collapse-item v-for="menu in dataMenu" :key="menu.id" :title="menu.menuitem.labelmenu" :name="menu.menuitem.labelmenu">
+      <div v-for="child in menu.menuitem.submenu" class="p-4 capitalize" :key="child.id" >
+        <router-link to="menu" class="flex w-full">
+        {{ child.sublabel }}||{{ menu.menuitem.routename }}||{{ child.subroute }}
+      </router-link>
+      </div>
+    </n-collapse-item>
+  </n-collapse>
 </template>
   
   <script setup>
 import { defineComponent, h, onMounted, ref } from "vue";
 import { NIcon } from "naive-ui";
 import {
-  HappyOutline as DefIcon,
+  Apps as AppIcon,
   FolderOutline as FolderIcon,
   PersonOutline as PersonIcon,
   WineOutline as WineIcon,
@@ -94,6 +97,7 @@ function renderIcon(icon) {
 //     }
 //   ];
 const dataMenu = ref([]);
+const rawMenu = ref([]);
 const getDataMenu = async () => {
   let userToken = localStorage.getItem("token");
   try {
@@ -105,11 +109,7 @@ const getDataMenu = async () => {
     // const labelArray = response.data.response.map(item => ({
     //   label: item.menuitem.labelmenu
     // }));
-     dataMenu.value = response.data.response.map(item => ({
-      label: item.menuitem.labelmenu,
-      key:item.menuitem.labelmenu,
-      icon: renderIcon(FolderIcon),
-    }));
+    dataMenu.value = response.data.response;
   } catch (error) {
     console.error("Error fetching data:", error);
   }
