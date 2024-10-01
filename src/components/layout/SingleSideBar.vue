@@ -22,7 +22,16 @@
           <span class="hidden md:flex capitalize"></span>
         </template>
         <template #extra>
-          <account-avatar />
+          <div class="flex items-center">
+            <n-badge :value="1" :max="15" :offset="offset">
+            <n-button strong circle quaternary @click="collapse = !collapse">
+                <template #icon>
+                  <n-icon ><alert-icon /></n-icon>
+                </template>
+              </n-button>
+              </n-badge>
+            <account-avatar />
+            </div>
         </template>
       </n-page-header>
     </n-layout-header>
@@ -53,6 +62,7 @@
 <script setup>
 import { ref } from "vue";
 import { 
+  NotificationsOutline as AlertIcon,
   Close as CloseIcon,
   ReorderTwo as BurgerIcon } from "@vicons/ionicons5";
 
