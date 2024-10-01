@@ -23,7 +23,7 @@
           </template>
           <span class="hidden md:flex">tambah penerimaan</span>
         </n-button>
-        <n-button
+        <!-- <n-button
           round
           v-show="!searchField"
           strong
@@ -37,7 +37,7 @@
             </n-icon>
           </template>
           <span class="hidden md:flex">pindah ke pelunasan</span>
-        </n-button>
+        </n-button> -->
         <n-popover trigger="click" placement="bottom-end">
           <template #trigger>
             <n-button circle>
@@ -91,7 +91,7 @@
         size="small"
         :row-key="(row) => row.loan_number"
         :columns="columns"
-        :scroll-x="1200"
+        :scroll-x="870"
         :data="showData"
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
@@ -185,7 +185,7 @@
                 type="success"
                 v-for="pembayaran in bodyModal.pembayaran"
                 :bordered="false"
-                >{{ pembayaran.title }}
+                v-bind:key="pembayaran.id">{{ pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                 <span v-show="pembayaran.bayar_denda > 0"
                   >,denda
@@ -234,12 +234,12 @@ import {
   SearchRound as searchIcon,
   PlusFilled as addIcon,
   OpenInFullRound as fullIcon,
-  PriceCheckFilled as fullPay,
+
   LocalPrintshopOutlined as PrintIcon,
   FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
 import { useMessage, NIcon, NTag, NButton, NInput } from "naive-ui";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref,h } from "vue";
 const searchField = ref(false);
 const searchBox = ref();
 const checkedRowCredit = ref([]);
@@ -286,28 +286,30 @@ const createColumns = () => {
       title: "no transaksi",
       width: 150,
       key: "no_transaksi",
+      fixed:'left',
       sorter: "default",
     },
     {
       title: "tanggal",
-      width: 150,
+      width: 120,
       key: "tgl_transaksi",
       sorter: "default",
     },
     {
       title: "metode",
-      width: 150,
+      width: 100,
       key: "payment_method",
       sorter: "default",
     },
     {
       title: "atas nama",
       key: "nama",
-      width: 150,
+
+      width: 200,
     },
     {
       title: "nominal",
-      width: 150,
+      width: 100,
       key: "total_bayar",
       render(row) {
         return h("div", row.total_bayar.toLocaleString("US"));
@@ -316,7 +318,7 @@ const createColumns = () => {
     },
     {
       title: "status",
-      width: 150,
+      width: 100,
       key: "STATUS",
       defaultFilterOptionValues: ["PAID", "UNPAID"],
       render(row) {
@@ -335,7 +337,7 @@ const createColumns = () => {
       },
     },
     {
-      width: 150,
+      width: 100,
       align: "right",
       key: "action",
       render(row) {
@@ -431,7 +433,7 @@ const printReceipt = () => {
   pdfmake
     .createPdf({
       info: {
-        title: `kwitansi-no`,
+        title: `${bodyModal.value.no_transaksi}`,
         author: "ahapsin",
       },
       content: [
@@ -508,7 +510,6 @@ const printReceipt = () => {
             ],
           },
           layout: "noBorders",
-          margin: [-15, 5, 5, 5],
         },
         {
           text: "*** signature not required **",
@@ -577,9 +578,6 @@ const handleExpand = () => {
 };
 const handleAddPay = () => {
   router.replace({ name: "tambah penerimaan" });
-};
-const handlePayFull = () => {
-  router.replace({ name: "pelunasan" });
 };
 const showData = computed(() => {
   return useSearch(dataPayment.value, searchBox.value);

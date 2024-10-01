@@ -43,6 +43,11 @@ const routes = [
         component: () => import("../views/pages/transaction/repaymentPage.vue"),
       },
       {
+        path: "addrepayment",
+        name: "tambah pelunasan",
+        component: () => import("../views/pages/transaction/repayPage.vue"),
+      },
+      {
         path: "bpkb",
         name: "bpkb",
         component: () => import("../views/pages/transaction/deliveryPage.vue"),
@@ -242,6 +247,25 @@ const routes = [
           import("../views/pages/master/customer/CustomerPage.vue"),
       },
     ],
+  },
+  {
+    path: "/laporan",
+    name: "laporan",
+    component: () => import("../views/pages/DashboardPage.vue"),
+    children:[
+      {
+        path: "inq_pinjaman",
+        name: "inquery pinjaman",
+        component: () =>
+          import("../views/pages/laporan/LapPinjaman.vue"),
+      },
+      {
+        path: "inq_jaminan",
+        name: "inquery jaminan",
+        component: () =>
+          import("../views/pages/laporan/LapJaminan.vue"),
+      },
+    ]
   },
 ];
 

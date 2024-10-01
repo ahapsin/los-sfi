@@ -1,18 +1,32 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
-    <n-message-provider>
-      <n-dialog-provider>
-        <n-loading-bar-provider>
-          <RouterView />
-        </n-loading-bar-provider>
-      </n-dialog-provider>
-    </n-message-provider>
-  </n-config-provider>
+ <div id="app">
+    <LoadingScreen class="absolute" :isLoading="isLoading" />
+    <main v-if="!isLoading">
+      <n-config-provider :theme-overrides="themeOverrides">
+        <n-message-provider>
+          <n-dialog-provider>
+            <n-loading-bar-provider>
+              <RouterView />
+            </n-loading-bar-provider>
+          </n-dialog-provider>
+        </n-message-provider>
+      </n-config-provider>
+    </main>
+  </div>
 </template>
 <script setup>
+import { ref,onMounted } from "vue";
+import LoadingScreen from "../src/components/organism/LoadingScreen.vue";
+
 const themeOverrides = {
   common: {
-    borderRadius: "10px",
+    // primaryColor: '#FF0000',
+    // primaryColorHover: "#4deee4",
+    borderRadius: "20px"
   },
-};
+}
+const isLoading = ref(true);
+onMounted(() => {
+  setTimeout(()=>isLoading.value = false,1000);
+});
 </script>
