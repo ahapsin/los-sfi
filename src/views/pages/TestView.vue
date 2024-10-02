@@ -1,88 +1,68 @@
 <template>
-  {{ data }}
-  <n-data-table :columns="columns" :data="data" :row-props="rowProps" :row-class-name="rowClassName"/>
+  <n-p>
+    You have selected {{ checkedRowKeys.length }} row{{
+      checkedRowKeys.length < 2 ? '' : 's'
+    }}.
+  </n-p>
+
+  <n-data-table
+    :columns="columns"
+    :data="data"
+    :pagination="pagination"
+    :row-key="rowKey"
+    @update:checked-row-keys="handleCheck"
+  />
 </template>
 
 <script>
-import { defineComponent,reactive } from "vue";
-import { useMessage } from "naive-ui";
-export default defineComponent({
-  setup() {
-    const message = useMessage();
-    return {
-      rowProps: (row) => {
-        return {
-          style: "cursor: pointer;",
-          onClick: () => {
-            row.active=!row.active;
-            message.info(row);
-          }
-        };
-      },
-      columns: [
-      {
-      key: 'name',
-      title() {
+import { defineComponent, ref } from "vue";
+
+
+function createColumns() {
+  return [
+    {
+      type: "selection",
+      disabled(row) {
+        return row.name === "Edward King 3";
       }
     },
-        {
-          type:"selection",
-          title: "Name",
-          key: "name"
-        },
-        {
-          title: "Age",
-          key: "age"
-        },
-        {
-          title: "Address",
-          key: "address"
-        }
-      ],
-      data: reactive([
-        {
-          key: 0,
-          name: "07akioni",
-          age: "18",
-          active:false,
-          address: "Yiheyuan Road"
-        },
-        {
-          key: 1,
-          name: "08akioni",
-          age: "14",
-          active:false,
-          address: "Pingshan Road"
-        },
-        {
-          key: 2,
-          name: "09akioni",
-          age: "22",
-          active:false,
-          address: "Haidian Bridge"
-        }
-      ]),
-      rowClassName(row) {
-        if (row.active) {
-          return "too-old";
-        }
-        return "";
+    {
+      title: "Name",
+      key: "name"
+    },
+    {
+      title: "Age",
+      key: "age"
+    },
+    {
+      title: "Address",
+      key: "address"
+    }
+  ];
+}
+
+const data = Array.from({ length: 46 }).map((_, index) => ({
+  name: `Edward King ${index}`,
+  age: 32,
+  address: `London, Park Lane no. ${index}`
+}));
+
+export default defineComponent({
+  setup() {
+    const checkedRowKeysRef = ref([]);
+    
+    return {
+      data,
+      columns: createColumns(),
+      checkedRowKeys: checkedRowKeysRef,
+      pagination: {
+        pageSize: 5
+      },
+      rowKey: (row) => row.address,
+      handleCheck(rowKeys) {
+        checkedRowKeysRef.value = rowKeys;
       }
     };
-    
   }
 });
 </script>
-
-<style scoped>
-:deep(.too-old td) {
-  background-color:  rgba(0, 128, 0, 0.1) !important;
-  color: rgba(0, 128, 0, 0.75) !important;
-}
-:deep(.age) {
-  color: rgba(0, 128, 0, 0.75) !important;
-}
-:deep(.too-old .age) {
-  color: rgba(0, 0, 128, 0.75) !important;
-}
-</style>

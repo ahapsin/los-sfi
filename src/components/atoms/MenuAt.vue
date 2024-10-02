@@ -5,7 +5,7 @@
             <div class="">
                 <slot name="leading"></slot>
             </div>
-            <span class="font-semibold flex">
+            <span class=" flex">
                 <slot name="label"></slot>
             </span>
         </div>

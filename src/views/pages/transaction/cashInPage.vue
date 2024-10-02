@@ -3,7 +3,7 @@
       content: true,
       footer: 'soft',
     }">
-    <template #header>Tambah Penerimaan Uang </template>
+    <template #header>Tambah Penerimaan Uang</template>
     <template #header-extra>
       <n-space>
         <n-button
@@ -52,12 +52,13 @@
       </n-space>
     </template>
     <div class="flex flex-col md:flex-row gap-2">
+
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input
           v-model:value="dynamicSearch.nama"
           type="text"
           placeholder="Nama"
-          @blur="handleSearch"
+          @input="handleSearch"
           clearable
         />
       </n-form-item>
@@ -66,7 +67,7 @@
           v-model:value="dynamicSearch.no_polisi"
           type="text"
           placeholder="No Polisi"
-          @blur="handleSearch"
+          @input="handleSearch"
           clearable
         />
       </n-form-item>
@@ -75,7 +76,7 @@
           v-model:value="dynamicSearch.no_kontrak"
           type="text"
           placeholder="No Kontrak"
-          @blur="handleSearch"
+          @input="handleSearch"
           clearable
         />
       </n-form-item>
@@ -348,6 +349,7 @@ import {
   NInputNumber,
 } from "naive-ui";
 import { computed, reactive, ref, h } from "vue";
+import { useWindowSize } from '@vueuse/core';
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const prosesButton = ref(true);
@@ -455,6 +457,10 @@ const format = (value) => {
   if (value === null) return "";
   return value.toLocaleString("en-US");
 };
+
+
+
+
 const createColStruktur = () => {
   return [
     {
@@ -539,8 +545,7 @@ const createColStruktur = () => {
               ? false
               : true,
             clearable: true,
-            min: 0,
-            max: row.bayar_denda,
+            max: row.denda,
             format: format,
             parse: parse,
             showButton: false,
@@ -601,9 +606,9 @@ const loadingAngsuran = ref(false);
 const loadStructure = ref(false);
 const selectedFasilitas = ref();
 const handleFasilitas = (e) => {
+  
   selectedFasilitas.value = e;
   prosesButton.value = true;
-
   getSkalaCredit(e);
 };
 const handleAngsuran = (e) => {
@@ -638,6 +643,7 @@ const handleProses = async () => {
       loadProses.value = false;
       paymentData.value = response.data;
       dialogProses.value = true;
+      router.replace({ name: "pembayaran" });
     }
   };
 };
@@ -687,6 +693,7 @@ const getSkalaCredit = async (e) => {
     router.replace("/");
   } else {
     dataPayment.value = true;
+    checkedRowCredit.value=[];
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
     loadStructure.value = false;

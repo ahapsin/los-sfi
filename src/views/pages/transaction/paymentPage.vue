@@ -1,11 +1,20 @@
 <template>
   <n-card
+    content-style="padding: 0;"
     :segmented="{
       content: true,
       footer: 'soft',
     }"
   >
-    <template #header>Penerimaan Uang</template>
+    <template #header
+      >Penerimaan Uang
+      <n-icon v-if="width <=620">
+        <phone-icon />
+      </n-icon>
+      <n-icon v-else>
+        <desktop-icon />
+      </n-icon>
+    </template>
     <template #header-extra>
       <n-space>
         <n-button
@@ -68,6 +77,13 @@
             </n-icon>
           </template>
         </n-button>
+        <n-button type="error" secondary circle @click="handleBug">
+          <template #icon>
+            <n-icon>
+              <bug-icon />
+            </n-icon>
+          </template>
+        </n-button>
         <n-button
           v-show="!searchField"
           strong
@@ -96,7 +112,7 @@
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
         :loading="loadDataPayment"
-        class="pb-2"
+        class="p-4"
         :pagination="pagination"
       />
     </div>
@@ -185,7 +201,8 @@
                 type="success"
                 v-for="pembayaran in bodyModal.pembayaran"
                 :bordered="false"
-                v-bind:key="pembayaran.id">{{ pembayaran.title }}
+                v-bind:key="pembayaran.id"
+                >{{ pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                 <span v-show="pembayaran.bayar_denda > 0"
                   >,denda
@@ -234,16 +251,22 @@ import {
   SearchRound as searchIcon,
   PlusFilled as addIcon,
   OpenInFullRound as fullIcon,
-
   LocalPrintshopOutlined as PrintIcon,
   FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
+import { useWindowSize } from "@vueuse/core";
+import {
+  BugOutline as BugIcon,
+  DesktopOutline as DesktopIcon,
+  PhonePortraitOutline as PhoneIcon,
+} from "@vicons/ionicons5";
 import { useMessage, NIcon, NTag, NButton, NInput } from "naive-ui";
-import { computed, onMounted, reactive, ref,h } from "vue";
+import { computed, onMounted, reactive, ref, h } from "vue";
 const searchField = ref(false);
 const searchBox = ref();
 const checkedRowCredit = ref([]);
 const tableRef = ref();
+const { width } = useWindowSize();
 const downloadCsv = () =>
   tableRef.value?.downloadCsv({ fileName: "export-penerimaan-uang" });
 const totalPay = computed(() => {
@@ -286,7 +309,7 @@ const createColumns = () => {
       title: "no transaksi",
       width: 150,
       key: "no_transaksi",
-      fixed:'left',
+      fixed: "left",
       sorter: "default",
     },
     {
@@ -577,7 +600,10 @@ const handleExpand = () => {
   window.open(fullPage.href, "_blank");
 };
 const handleAddPay = () => {
-  router.replace({ name: "tambah penerimaan" });
+  router.push({ name: "tambah penerimaan" });
+};
+const handleBug = () => {
+  router.replace({ name: "pembayaran" });
 };
 const showData = computed(() => {
   return useSearch(dataPayment.value, searchBox.value);
