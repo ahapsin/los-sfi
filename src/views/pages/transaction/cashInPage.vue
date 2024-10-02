@@ -11,7 +11,7 @@
           v-show="!searchField"
           strong
           secondary
-          type="success"
+          type="warning"
           @click="handleBack"
         >
           <template #icon>
@@ -205,100 +205,7 @@
       </div>
     </div>
   </n-card>
-  <n-modal
-    class="w-3/4"
-    title="Upload Berkas Pencairan"
-    v-model:show="dialogProses"
-    :mask-closable="false"
-  >
-    <n-card title="Transaksi Berhasil">
-      <div class="flex gap-8 font-mono">
-        <table class="table-auto w-1/2">
-          <tr>
-            <td>No Transaksi</td>
-            <td>:</td>
-            <td>
-              <b>{{ paymentData.no_transaksi }}</b>
-            </td>
-          </tr>
-          <tr>
-            <td width="120px">Tgl Transaksi</td>
-            <td>:</td>
-            <td>{{ paymentData.tgl_transaksi }}</td>
-          </tr>
-          <tr>
-            <td>Terima Dari</td>
-            <td>:</td>
-            <td>
-              {{ paymentData.detail_pelanggan.cust_code }} -
-              {{ paymentData.detail_pelanggan.nama }}
-            </td>
-          </tr>
-          <tr>
-            <td>Jumlah Uang</td>
-            <td>:</td>
-            <td>{{ paymentData.jml_pembayaran.toLocaleString("US") }}</td>
-          </tr>
-          <tr>
-            <td>Terbilang</td>
-            <td>:</td>
-            <td>{{ paymentData.terbilang }}</td>
-          </tr>
-          <tr>
-            <td valign="top">Keterangan</td>
-            <td valign="top">:</td>
-            <td>
-              <span
-                v-for="pembayaran in paymentData.pembayaran"
-                v-bind:key="pembayaran.id"
-              >
-                {{ pembayaran.title }} ({{
-                  pembayaran.payment_value.toLocaleString("US")
-                }}),
-              </span>
-            </td>
-          </tr>
-        </table>
-        <table class="table-auto w-1/2" height="0">
-          <tr>
-            <td width="120px">Metode</td>
-            <td>:</td>
-            <td>{{ paymentData.payment_method }}</td>
-          </tr>
-          <tbody v-if="paymentData.payment_method == 'cash'">
-            <tr>
-              <td width="120px">Pembulatan</td>
-              <td>:</td>
-              <td>{{ paymentData.pembulatan }}</td>
-            </tr>
-            <tr>
-              <td width="120px">Kembalian</td>
-              <td>:</td>
-              <td>{{ paymentData.kembalian }}</td>
-            </tr>
-          </tbody>
-          <tbody v-else>
-            <tr>
-              <td width="120px">Bank Tujuan</td>
-              <td>:</td>
-              <td>{{ paymentData.nama_bank.toUpperCase() }}</td>
-            </tr>
-            <tr>
-              <td width="120px">No Rekening</td>
-              <td>:</td>
-              <td>{{ paymentData.no_rekening }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <template #action>
-        <n-space>
-          <n-button type="success">Cetak</n-button>
-          <n-button @click="handleDone">Selesai</n-button>
-        </n-space>
-      </template>
-    </n-card>
-  </n-modal>
+
   <n-modal class="w-1/4" v-model:show="buktiTransfer">
     <n-card>
       <n-upload
