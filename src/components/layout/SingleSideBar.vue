@@ -14,12 +14,12 @@
                 <n-icon v-else><close-icon /></n-icon>
               </template>
             </n-button>
-            <img
+            <!-- <img
               class="h-10 md:h-10"
               src="../../assets/logo.png"
               alt="logo_company"
             />
-            KSPDJAYA
+            KSPDJAYA -->
           </n-space>
           <span class="hidden md:flex capitalize"></span>
         </template>
