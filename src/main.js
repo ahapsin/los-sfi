@@ -6,14 +6,16 @@ import * as RIcons from "oh-vue-icons/icons/ri";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 
 import App from "./App.vue";
-import { PDFPlugin } from 'vue3-pdfmake';
+import { PDFPlugin } from "vue3-pdfmake";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 
 const Ri = Object.values({ ...RIcons });
 const Hi = Object.values({ ...HIIcons });
+
 addIcons(...Hi, ...Ri);
+
 const app = createApp(App);
 const pinia = createPinia();
 app.component("v-icon", OhVueIcon);

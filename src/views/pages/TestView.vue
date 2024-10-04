@@ -1,68 +1,32 @@
 <template>
-  <n-p>
-    You have selected {{ checkedRowKeys.length }} row{{
-      checkedRowKeys.length < 2 ? '' : 's'
-    }}.
-  </n-p>
-
-  <n-data-table
-    :columns="columns"
-    :data="data"
-    :pagination="pagination"
-    :row-key="rowKey"
-    @update:checked-row-keys="handleCheck"
-  />
+  <div class="popup">
+    <div class="content">
+      <p>Loaded API: {{ article }}</p>
+      <h4>Login to your account</h4>
+      <input type="text" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Log in</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-
-
-function createColumns() {
-  return [
-    {
-      type: "selection",
-      disabled(row) {
-        return row.name === "Edward King 3";
-      }
-    },
-    {
-      title: "Name",
-      key: "name"
-    },
-    {
-      title: "Age",
-      key: "age"
-    },
-    {
-      title: "Address",
-      key: "address"
-    }
-  ];
-}
-
-const data = Array.from({ length: 46 }).map((_, index) => ({
-  name: `Edward King ${index}`,
-  age: 32,
-  address: `London, Park Lane no. ${index}`
-}));
-
-export default defineComponent({
-  setup() {
-    const checkedRowKeysRef = ref([]);
-    
-    return {
-      data,
-      columns: createColumns(),
-      checkedRowKeys: checkedRowKeysRef,
-      pagination: {
-        pageSize: 5
-      },
-      rowKey: (row) => row.address,
-      handleCheck(rowKeys) {
-        checkedRowKeysRef.value = rowKeys;
-      }
-    };
+const getArticleInfo = async () => {
+  // wait 3 seconds to mimic API call
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  const article = {
+    title: 'My Vue 3 Article',
+    author: 'Matt Maribojoc',
   }
-});
+  return article
+}
+export default {
+  async setup() {
+    const article = await getArticleInfo()
+    console.log(article)
+    return {
+      article,
+    }
+  },
+}
 </script>

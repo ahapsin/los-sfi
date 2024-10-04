@@ -307,9 +307,9 @@ import {
   NInputNumber,
 } from "naive-ui";
 import { computed, reactive, ref, h } from "vue";
-import { useWindowSize } from "@vueuse/core";
+
 const searchField = ref(false);
-const valOptSearch = ref(null);
+
 const prosesButton = ref(true);
 const checkedRowCredit = ref([]);
 const dialogProses = ref(false);
@@ -428,12 +428,7 @@ const rowClassName = (row) => {
   }
   return "";
 };
-const handleDone = () => {
-  dialogProses.value = false;
-  router.replace({ name: "pembayaran" });
-  searchField.value = false;
-  valOptSearch.value = null;
-};
+
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
@@ -501,7 +496,7 @@ const createColStruktur = () => {
               : true,
             format: format,
             parse: parse,
-            max: row.bayar_angsuran,
+            max: row.installment,
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",

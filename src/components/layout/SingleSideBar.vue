@@ -7,7 +7,6 @@
         
         <template #title>
           <n-space align="center">
-            
             <n-button strong secondary circle @click="collapse = !collapse">
               <template #icon>
                 <n-icon v-if="collapse"><burger-icon /></n-icon>
