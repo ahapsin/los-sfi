@@ -1,15 +1,15 @@
 <template>
   <n-card>
     <template #header>Pending Transfer</template>
-    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
+    <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
       <n-collapse-item
         title="post payment"
         name="1"
         class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]"
       >
-        <pre> {{ dataPending }}</pre>
+        <pre> {{ bodyPost }}</pre>
       </n-collapse-item>
-    </n-collapse> -->
+    </n-collapse>
     <template #header-extra>
       <n-space>
         <n-badge :value="dataPending.length" :max="99" type="warning">
@@ -139,6 +139,7 @@
                 size="small"
                 v-for="pembayaran in bodyModal.pembayaran"
                 :bordered="false"
+                :key="pembayaran"
                 >{{ pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
                 <span v-show="pembayaran.bayar_denda > 0"
@@ -193,27 +194,15 @@
 </template>
 <script setup>
 import { useApi } from "../../../../helpers/axios";
-import { useSearch } from "../../../../helpers/searchObject";
+// import { useSearch } from "../../../../helpers/searchObject";
 import router from "../../../../router";
 import _ from "lodash";
 import {
-  SearchRound as searchIcon,
   AccessTimeRound as pendingIcon,
   OpenInFullRound as fullIcon,
-  PriceCheckFilled as fullPay,
 } from "@vicons/material";
-import {
-  useDialog,
-  useMessage,
-  NIcon,
-  NTag,
-  NButton,
-  NBadge,
-  NAvatar,
-  NInput,
-  NInputNumber,
-} from "naive-ui";
-import { computed, onMounted, reactive, readonly, ref } from "vue";
+import { useMessage, NIcon, NTag, NButton, NBadge, NInput } from "naive-ui";
+import { computed, onMounted, reactive, h, ref } from "vue";
 const searchField = ref(false);
 const checkedRowCredit = ref([]);
 const pagination = ref({ pageSize: 10 });
@@ -353,6 +342,7 @@ const handlePositiveClick = async (e) => {
     no_invoice: e,
     flag: "yes",
     keterangan: keterangan.value,
+    struktur: bodyModal.value.struktur,
   };
   const response = await useApi({
     method: "POST",
@@ -377,6 +367,7 @@ const handleNegativeClick = async (e) => {
     no_invoice: e,
     flag: "no",
     keterangan: keterangan.value,
+    struktur: bodyModal.value.struktur,
   };
   const response = await useApi({
     method: "POST",

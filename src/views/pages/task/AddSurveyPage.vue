@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <n-scrollbar x-scrollable>
-    <n-space class="p-4">
+    <n-space class="bg-white  border rounded-2xl p-4">
       <n-steps
         :current="current"
         :status="currentStatus"

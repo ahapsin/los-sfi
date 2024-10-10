@@ -5,9 +5,12 @@
       footer: 'soft',
     }"
   >
+  <!-- <pre>{{ dataStrukturKredit }}</pre> -->
     <template #header>Tambah Penerimaan Uang</template>
     <template #header-extra>
+      
       <n-space>
+        
         <n-button
           round
           v-show="!searchField"
@@ -123,12 +126,11 @@
             <div class="flex w-full justify-start gap-4 items-center">
               <div>Tungakan denda</div>
               <div class="text-lg">
-                {{ pageData.tunggakan_denda.toLocaleString('US') }}
+                {{ pageData.tunggakan_denda.toLocaleString("US") }}
               </div>
             </div>
             <div class="flex w-full justify-end items-center gap-2">
-              <div>Diskon
-              </div>
+              <div>Diskon</div>
               <div class="flex gap-2">
                 <n-input-number
                   :show-button="false"
@@ -145,8 +147,8 @@
                   v-model:value="pageData.diskon_tunggakan"
                 />
                 <n-button secondary circle @click="diskonInput = !diskonInput">
-                    <span v-if="diskonInput">Rp</span>
-                    <span v-else>%</span>
+                  <span v-if="diskonInput">Rp</span>
+                  <span v-else>%</span>
                 </n-button>
               </div>
             </div>
@@ -316,7 +318,7 @@ const dialogProses = ref(false);
 const paymentData = ref([]);
 const buktiTransfer = ref(false);
 const dataBuktiTransfer = ref([]);
-const diskonInput = ref('false');
+const diskonInput = ref("false");
 const isLast = ref(false);
 
 const totalPay = computed(() => {
@@ -330,8 +332,14 @@ const totalPay = computed(() => {
       (total, installment) => total + installment.bayar_denda,
       0
     );
-  const combinedTotal = () => totalInstallment() + totalPenalty()+pageData.tunggakan_denda-pageData.diskon_tunggakan;
-  return combinedTotal();
+  const combinedTotal = () => totalInstallment() + totalPenalty();
+  if (isLasted.value) {
+    return (
+      combinedTotal() + pageData.tunggakan_denda - pageData.diskon_tunggakan
+    );
+  } else {
+    return combinedTotal();
+  }
 });
 const uuid = uuidv4();
 const pageData = reactive({
@@ -340,8 +348,8 @@ const pageData = reactive({
   jumlah_uang: 0,
   payment_method: "cash",
   pembayaran: "angsuran",
-  tunggakan_denda:0,
-  diskon_tunggakan:0,
+  tunggakan_denda: 0,
+  diskon_tunggakan: 0,
   pembulatan: 0,
   kembalian: computed(() =>
     pageData.jumlah_uang
@@ -371,7 +379,7 @@ const getDataPelunasan = async (e) => {
     router.replace("/");
   } else {
     dataRepayment.value = response.data;
-    pageData.tunggakan_denda=dataRepayment.value[0].DENDA;
+    pageData.tunggakan_denda = dataRepayment.value[0].DENDA;
   }
 };
 const rowProps = (row) => {
@@ -384,7 +392,7 @@ const rowProps = (row) => {
     },
   };
 };
-const diskonFormat= computed(()=>pageData.tunggakan_bunga);
+const diskonFormat = computed(() => pageData.tunggakan_bunga);
 const dynamicSearch = reactive({
   nama: "",
   no_polisi: "",

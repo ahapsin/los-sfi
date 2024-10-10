@@ -127,10 +127,8 @@
       <div class="flex justify-between">
         <div>
           <div class="flex">
-            <label class="w-36">Tanggal</label
-            ><span>
-              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span
-            >
+            <label class="w-36">Tanggal</label><span>
+              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
           </div>
           <div class="flex">
             <label class="w-36">No Kontrak</label
@@ -482,9 +480,9 @@ const printReceipt = () => {
     " " +
     today.getHours() +
     ":" +
-    today.getMinutes() +
+    String(today.getMinutes()).padStart(2,"0") +
     ":" +
-    today.getSeconds();
+    String(today.getSeconds()).padStart(2,"0");
   pdfmake
     .createPdf({
       info: {
@@ -506,6 +504,7 @@ const printReceipt = () => {
             width: ["*", "auto"],
             body: [
               ["Tgl Cetak", { text: today, style: "tableHeader" }],
+              ["Cetak Oleh", { text: bodyModal.value.created_by, style: "tableHeader" }],
               [
                 "Tgl Trx",
                 { text: bodyModal.value.tgl_transaksi, style: "tableHeader" },
@@ -559,8 +558,8 @@ const printReceipt = () => {
                 },
               ],
               [
-                "Pembayaran",
-                { text: descPay.value.toString(), style: "tableHeader" },
+                "Angsuran ke",
+                { text: bodyModal.value.installment, style: "tableHeader" },
               ],
             ],
           },
@@ -623,9 +622,9 @@ const printReceiptDesktop = () => {
     " " +
     today.getHours() +
     ":" +
-    today.getMinutes() +
+    String(today.getMinutes()).padStart(2,"0") +
     ":" +
-    today.getSeconds();
+    String(today.getSeconds()).padStart(2,"0");
   pdfmake
     .createPdf({
       info: {
@@ -647,6 +646,7 @@ const printReceiptDesktop = () => {
             width: ["*", "auto"],
             body: [
               ["Tgl Cetak", { text: today, style: "tableHeader" }],
+              ["Cetak Oleh", { text: bodyModal.value.created_by, style: "tableHeader" }],
               [
                 "Tgl Trx",
                 { text: bodyModal.value.tgl_transaksi, style: "tableHeader" },
@@ -700,8 +700,8 @@ const printReceiptDesktop = () => {
                 },
               ],
               [
-                "Pembayaran",
-                { text: descPay.value.toString(), style: "tableHeader" },
+                "Angsuran ke",
+                { text: bodyModal.value.installment, style: "tableHeader" },
               ],
             ],
           },

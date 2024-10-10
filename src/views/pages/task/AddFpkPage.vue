@@ -10,7 +10,7 @@
       :size="size"
       label-width="auto"
     >
-      <n-space vertical class="p-2">
+      <n-space vertical class="bg-white  border rounded-2xl p-4">
         <n-steps
           :current="current"
           :status="currentStatus"
@@ -22,7 +22,7 @@
           <n-step title="Ekstra" />
         </n-steps>
       </n-space>
-      <n-flex class="pt-4">
+      <n-flex class="pt-2">
         <n-card
           v-show="current == 1"
           title="Informasi pelanggan"
@@ -1007,6 +1007,15 @@ import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
 import router from "../../../router";
 import { useMessage } from "naive-ui";
+
+import {
+
+  ChevronBack as ArrowBack,
+  ChevronForward as ArrowForward,
+  Send as SendIcon,
+
+} from "@vicons/ionicons5";
+
 const message = useMessage();
 const loading = ref(false);
 const loadingSend = ref(false);
@@ -1048,7 +1057,7 @@ const dataPelanggan = ref({
 const alamatIdentitas = ref({});
 const alamatTagih = ref({});
 const dataPekerjaan = ref({});
-var dt = new Date();
+// var dt = new Date();
 const dataOrder = ref({});
 const dataTaksasi = ref({});
 const dataTambahan = ref({});
@@ -1201,7 +1210,7 @@ const getData = async () => {
     Object.assign(dataSurat.value, pageData.value.surat);
     Object.assign(dataBank.value, pageData.value.info_bank);
     Object.assign(dataAttachment.value, pageData.value.attachment);
-    let tgllahir = toRef(pageData.value.pelanggan);
+    // let tgllahir = toRef(pageData.value.pelanggan);
     var myDate = tgllahir.value.tgl_lahir;
     myDate = myDate.split("-");
     var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);

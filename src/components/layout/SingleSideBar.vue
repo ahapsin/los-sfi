@@ -1,24 +1,24 @@
 <template>
   <n-layout class="h-screen">
+
     <n-layout-header style="height: 64px" bordered>
       <n-page-header
         class="sticky bg-white border-b top-0 z-50 backdrop-blur p-2"
       >
-        
         <template #title>
           <n-space align="center">
-            <n-button strong secondary circle @click="collapse = !collapse">
+            <n-button circle quaternary @click="collapse = !collapse" color="#424242">
               <template #icon>
                 <n-icon v-if="collapse"><burger-icon /></n-icon>
                 <n-icon v-else><close-icon /></n-icon>
               </template>
             </n-button>
-            <!-- <img
+            <img
               class="h-10 md:h-10"
               src="../../assets/logo.png"
               alt="logo_company"
             />
-            KSPDJAYA -->
+            KSPDJAYA
           </n-space>
           <span class="hidden md:flex capitalize"></span>
         </template>
@@ -60,19 +60,27 @@
   </n-drawer>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {
-  NotificationsOutline as AlertIcon,
-  Close as CloseIcon,
-  ReorderTwo as BurgerIcon,
-} from "@vicons/ionicons5";
+  LayoutSidebarLeftCollapse as CloseIcon,
+  LayoutSidebarRightCollapse as BurgerIcon,
+} from "@vicons/tabler";
 import { useWindowSize } from "@vueuse/core";
+
 const { width } = useWindowSize();
 const active = ref(false);
 
 const collapse = ref(false);
-
-
+const ukuran=ref(0);
+const widthScreen = () => {
+  ukuran.value = width.value;
+    if(ukuran.value < 620){
+      collapse.value = true;
+    }else{
+      collapse.value = false;
+    }
+};
+onMounted(() => widthScreen());
 </script>
 
 <style scoped>

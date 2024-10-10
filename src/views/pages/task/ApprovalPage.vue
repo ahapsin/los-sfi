@@ -47,17 +47,16 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
-import { useDialog, useMessage, NIcon, NTag, NButton } from "naive-ui";
+import { useMessage, NIcon, NTag, NButton } from "naive-ui";
 import {
   SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 const message = useMessage();
-const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const columns = [
@@ -117,7 +116,7 @@ const columns = [
             handelAction(row);
           },
         },
-        { default: statusHandle(row) }
+        { default: () => statusHandle(row) }
       );
     },
   },

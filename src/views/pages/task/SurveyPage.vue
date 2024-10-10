@@ -1,7 +1,14 @@
 <template>
   <div class="pt-4">
     <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`">
+      <n-card
+  
+        title="Data Pelanggan"
+        :segmented="{
+          content: true,
+          footer: 'soft',
+        }"
+      >
         <template #header-extra>
           <n-space class="!gap-1">
             <div class="me-1">
@@ -76,7 +83,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h,computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
