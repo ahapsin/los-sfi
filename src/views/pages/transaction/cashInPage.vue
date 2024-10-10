@@ -1,17 +1,22 @@
 <template>
-  <n-card :segmented="{
+  <n-card
+    :segmented="{
       content: true,
       footer: 'soft',
-    }">
+    }"
+  >
+  <!-- <pre>{{ dataStrukturKredit }}</pre> -->
     <template #header>Tambah Penerimaan Uang</template>
     <template #header-extra>
+      
       <n-space>
+        
         <n-button
           round
           v-show="!searchField"
           strong
           secondary
-          type="success"
+          type="warning"
           @click="handleBack"
         >
           <template #icon>
@@ -52,7 +57,6 @@
       </n-space>
     </template>
     <div class="flex flex-col md:flex-row gap-2">
-
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input
           v-model:value="dynamicSearch.nama"
@@ -111,6 +115,46 @@
         :on-update:checked-row-keys="handleAngsuran"
         class="py-2"
       />
+      <n-space vertical>
+        <n-alert
+          type="warning"
+          :show-icon="false"
+          class="mb-2"
+          v-show="isLasted"
+        >
+          <div class="flex justify-between gap-4">
+            <div class="flex w-full justify-start gap-4 items-center">
+              <div>Tungakan denda</div>
+              <div class="text-lg">
+                {{ pageData.tunggakan_denda.toLocaleString("US") }}
+              </div>
+            </div>
+            <div class="flex w-full justify-end items-center gap-2">
+              <div>Diskon</div>
+              <div class="flex gap-2">
+                <n-input-number
+                  :show-button="false"
+                  :min="0"
+                  :default-value="0"
+                  clearable
+                  icon
+                  size=""
+                  :parse="parse"
+                  :format="format"
+                  :max="pageData.tunggakan_denda"
+                  @input="diskonFormat"
+                  placeholder="Jumlah Diskon"
+                  v-model:value="pageData.diskon_tunggakan"
+                />
+                <n-button secondary circle @click="diskonInput = !diskonInput">
+                  <span v-if="diskonInput">Rp</span>
+                  <span v-else>%</span>
+                </n-button>
+              </div>
+            </div>
+          </div>
+        </n-alert>
+      </n-space>
       <div
         class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
         v-show="dataPayment"
@@ -173,7 +217,9 @@
           <n-input-number
             :show-button="false"
             :parse="parse"
+            min="0"
             :format="format"
+            :max="pageData.jumlah_uang - totalPay"
             v-model:value="pageData.pembulatan"
             clearable
             class="w-full"
@@ -182,6 +228,7 @@
         <n-form-item label="Kembalian" class="w-full">
           <n-input-number
             :show-button="false"
+            min="0;"
             :parse="parse"
             :format="format"
             v-model:value="pageData.kembalian"
@@ -196,7 +243,13 @@
             :loading="loadProses"
             class="w-full"
             :disabled="
-              totalPay === 0 ? true : pageData.kembalian >= 0 ? false : true
+              totalPay === 0
+                ? true
+                : pageData.jumlah_uang <= 0
+                ? true
+                : pageData.kembalian < 0
+                ? true
+                : false
             "
           >
             Proses
@@ -205,100 +258,7 @@
       </div>
     </div>
   </n-card>
-  <n-modal
-    class="w-3/4"
-    title="Upload Berkas Pencairan"
-    v-model:show="dialogProses"
-    :mask-closable="false"
-  >
-    <n-card title="Transaksi Berhasil">
-      <div class="flex gap-8 font-mono">
-        <table class="table-auto w-1/2">
-          <tr>
-            <td>No Transaksi</td>
-            <td>:</td>
-            <td>
-              <b>{{ paymentData.no_transaksi }}</b>
-            </td>
-          </tr>
-          <tr>
-            <td width="120px">Tgl Transaksi</td>
-            <td>:</td>
-            <td>{{ paymentData.tgl_transaksi }}</td>
-          </tr>
-          <tr>
-            <td>Terima Dari</td>
-            <td>:</td>
-            <td>
-              {{ paymentData.detail_pelanggan.cust_code }} -
-              {{ paymentData.detail_pelanggan.nama }}
-            </td>
-          </tr>
-          <tr>
-            <td>Jumlah Uang</td>
-            <td>:</td>
-            <td>{{ paymentData.jml_pembayaran.toLocaleString("US") }}</td>
-          </tr>
-          <tr>
-            <td>Terbilang</td>
-            <td>:</td>
-            <td>{{ paymentData.terbilang }}</td>
-          </tr>
-          <tr>
-            <td valign="top">Keterangan</td>
-            <td valign="top">:</td>
-            <td>
-              <span
-                v-for="pembayaran in paymentData.pembayaran"
-                v-bind:key="pembayaran.id"
-              >
-                {{ pembayaran.title }} ({{
-                  pembayaran.payment_value.toLocaleString("US")
-                }}),
-              </span>
-            </td>
-          </tr>
-        </table>
-        <table class="table-auto w-1/2" height="0">
-          <tr>
-            <td width="120px">Metode</td>
-            <td>:</td>
-            <td>{{ paymentData.payment_method }}</td>
-          </tr>
-          <tbody v-if="paymentData.payment_method == 'cash'">
-            <tr>
-              <td width="120px">Pembulatan</td>
-              <td>:</td>
-              <td>{{ paymentData.pembulatan }}</td>
-            </tr>
-            <tr>
-              <td width="120px">Kembalian</td>
-              <td>:</td>
-              <td>{{ paymentData.kembalian }}</td>
-            </tr>
-          </tbody>
-          <tbody v-else>
-            <tr>
-              <td width="120px">Bank Tujuan</td>
-              <td>:</td>
-              <td>{{ paymentData.nama_bank.toUpperCase() }}</td>
-            </tr>
-            <tr>
-              <td width="120px">No Rekening</td>
-              <td>:</td>
-              <td>{{ paymentData.no_rekening }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <template #action>
-        <n-space>
-          <n-button type="success">Cetak</n-button>
-          <n-button @click="handleDone">Selesai</n-button>
-        </n-space>
-      </template>
-    </n-card>
-  </n-modal>
+
   <n-modal class="w-1/4" v-model:show="buktiTransfer">
     <n-card>
       <n-upload
@@ -349,15 +309,18 @@ import {
   NInputNumber,
 } from "naive-ui";
 import { computed, reactive, ref, h } from "vue";
-import { useWindowSize } from '@vueuse/core';
+
 const searchField = ref(false);
-const valOptSearch = ref(null);
+
 const prosesButton = ref(true);
 const checkedRowCredit = ref([]);
 const dialogProses = ref(false);
 const paymentData = ref([]);
 const buktiTransfer = ref(false);
 const dataBuktiTransfer = ref([]);
+const diskonInput = ref("false");
+const isLast = ref(false);
+
 const totalPay = computed(() => {
   const totalInstallment = () =>
     checkedRowCredit.value.reduce(
@@ -370,7 +333,13 @@ const totalPay = computed(() => {
       0
     );
   const combinedTotal = () => totalInstallment() + totalPenalty();
-  return combinedTotal();
+  if (isLasted.value) {
+    return (
+      combinedTotal() + pageData.tunggakan_denda - pageData.diskon_tunggakan
+    );
+  } else {
+    return combinedTotal();
+  }
 });
 const uuid = uuidv4();
 const pageData = reactive({
@@ -379,6 +348,8 @@ const pageData = reactive({
   jumlah_uang: 0,
   payment_method: "cash",
   pembayaran: "angsuran",
+  tunggakan_denda: 0,
+  diskon_tunggakan: 0,
   pembulatan: 0,
   kembalian: computed(() =>
     pageData.jumlah_uang
@@ -390,15 +361,38 @@ const pageData = reactive({
   no_rekening: null,
   bukti_transafer: null,
 });
+
+const dataRepayment = ref([]);
+const getDataPelunasan = async (e) => {
+  const dynamicBody = {
+    loan_number: e,
+  };
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "POST",
+    api: "pelunasan",
+    data: dynamicBody,
+    token: userToken,
+  });
+  if (!response.ok) {
+    localStorage.removeItem("token");
+    router.replace("/");
+  } else {
+    dataRepayment.value = response.data;
+    pageData.tunggakan_denda = dataRepayment.value[0].DENDA;
+  }
+};
 const rowProps = (row) => {
   return {
     style: "cursor: pointer;",
     onClick: () => {
-     selectedFasilitas.value=row.loan_number;
-     getSkalaCredit(row.loan_number);
+      selectedFasilitas.value = row.loan_number;
+      getSkalaCredit(row.loan_number);
+      getDataPelunasan(row.loan_number);
     },
   };
 };
+const diskonFormat = computed(() => pageData.tunggakan_bunga);
 const dynamicSearch = reactive({
   nama: "",
   no_polisi: "",
@@ -442,12 +436,7 @@ const rowClassName = (row) => {
   }
   return "";
 };
-const handleDone = () => {
-  dialogProses.value = false;
-  router.replace({ name: "pembayaran" });
-  searchField.value = false;
-  valOptSearch.value = null;
-};
+
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
@@ -457,9 +446,6 @@ const format = (value) => {
   if (value === null) return "";
   return value.toLocaleString("en-US");
 };
-
-
-
 
 const createColStruktur = () => {
   return [
@@ -486,19 +472,19 @@ const createColStruktur = () => {
     {
       title: "Jatuh Tempo",
       key: "tgl_angsuran",
-      width: 150,
+      width: 100,
     },
     {
       title: "Angsuran",
       key: "installment",
-      width: 150,
+      width: 100,
       render(row) {
         return h("div", row.installment.toLocaleString("US"));
       },
     },
     {
       title: "Denda",
-      width: 150,
+      width: 100,
       key: "denda",
       render(row) {
         return h("div", row.denda.toLocaleString("US"));
@@ -518,7 +504,7 @@ const createColStruktur = () => {
               : true,
             format: format,
             parse: parse,
-            max: row.bayar_angsuran,
+            max: row.installment,
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",
@@ -605,15 +591,30 @@ const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 const loadStructure = ref(false);
 const selectedFasilitas = ref();
+
 const handleFasilitas = (e) => {
-  
+  // isLasted(e);
+  isLast.value = true;
   selectedFasilitas.value = e;
   prosesButton.value = true;
-  getSkalaCredit(e);
+  // getSkalaCredit(e);
 };
+const isLasted = computed(() => {
+  let mxChecked = Math.max(...checkedRowCredit.value.map((o) => o.angsuran_ke));
+  let mxStruct = Math.max(
+    ...dataStrukturKredit.value.map((o) => o.angsuran_ke)
+  );
+  if (checkedRowCredit.value.length != 0) {
+    return mxChecked === mxStruct ? true : false;
+  } else {
+    return false;
+  }
+});
 const handleAngsuran = (e) => {
   checkedRowCredit.value = e;
+  console.log(e);
 };
+
 const dialog = useDialog();
 const loadProses = ref(false);
 const handleProses = async () => {
@@ -693,7 +694,7 @@ const getSkalaCredit = async (e) => {
     router.replace("/");
   } else {
     dataPayment.value = true;
-    checkedRowCredit.value=[];
+    checkedRowCredit.value = [];
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
     loadStructure.value = false;

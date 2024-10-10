@@ -135,8 +135,6 @@
 <script setup>
 import { useMessage } from "naive-ui";
 import { ref, reactive, onMounted } from "vue";
-import { useWindowSize } from "@vueuse/core";
-const { width, height } = useWindowSize();
 import { useApi } from "../../../helpers/axios";
 import { usePDF } from "vue3-pdfmake";
 import router from "../../../router";

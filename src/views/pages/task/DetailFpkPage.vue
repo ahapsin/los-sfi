@@ -1,5 +1,4 @@
 <template>
-  <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert>
   <n-card class="mt-2" title="Pengajuan Kredit" closable @close="handleClose">
     <template #header-extra>
       <black-list />
@@ -763,7 +762,7 @@
   </n-card>
 </template>
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed,onMounted } from "vue";
 import {
   MessageOutlined as MessageIcon,
   WarningRound as WarningIcon,

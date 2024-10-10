@@ -1,6 +1,6 @@
 <template>
   <n-popconfirm positive-text="ok" negative-text="batal" :show-icon="false" @positive-click="handlePositiveClick"
-    @negative-click="handleNegativeClick">
+   >
     <template #trigger>
       <n-button secondary type="warning" strong circle>
         <template #icon>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { BlockFilled as BlackIcon } from "@vicons/material";
 import { useMessage } from 'naive-ui';
 import { useApi } from "../../helpers/axios";

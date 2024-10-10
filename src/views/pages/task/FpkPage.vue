@@ -43,6 +43,7 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
+          <!-- <pre>{{ showData }}</pre> -->
           <n-data-table
             size="small"
             ref="tableRef"
@@ -150,7 +151,7 @@
   </n-modal>
 </template>
 <script setup>
-import { ref, reactive, onMounted, h,computed } from "vue";
+import { ref, reactive, onMounted, h, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { lyla } from "@lylajs/web";
 import router from "../../../router";
@@ -177,10 +178,7 @@ const loadingRef = reactive({
 });
 const userToken = localStorage.getItem("token");
 const handleSelesai = () => {
-  console.log("selesai");
-  router.replace({
-    name: "Pengajuan Kredit",
-  });
+  getData();
   showModal.value = false;
 };
 const columns = [
@@ -222,7 +220,6 @@ const columns = [
       return h(
         NTag,
         {
-          bordered: false,
           type: statusTag(row.status),
         },
         { default: () => statusLabel(row.status) }
@@ -238,22 +235,22 @@ const columns = [
         var cetak = "CETAK";
         var type = "primary";
       } else {
-         cetak = "CETAK ULANG";
-         type = "warning";
+        cetak = "CETAK ULANG";
+        type = "warning";
       }
       if (status === "6") {
         return h(
           NButton,
           {
-            secondary: true,
             type: type,
+            secondary:true,
             round: true,
             onClick: () => {
               handlePrePrint(row);
             },
           },
           {
-            default: `${cetak} PK`,
+            default: () => `${cetak} PK`,
           }
         );
       }
@@ -280,15 +277,15 @@ const columns = [
           {
             class: classType,
             type: typeUpload,
+            secondary:true,
             circle: true,
-            secondary: true,
             onClick: () => {
               selectedData.value = row;
               showModal.value = true;
             },
           },
           {
-            default: iconUpload,
+            default: () => iconUpload,
           }
         );
       }
@@ -302,7 +299,7 @@ const columns = [
       return h(
         NButton,
         {
-          secondary: true,
+          secondary:true,
           round: true,
           type: typeAction(row.status),
           onClick: () => {
@@ -353,6 +350,7 @@ const format = (e) => {
 };
 const handleAction = (e, data) => {
   let status = e.at(0);
+  const userToken = localStorage.getItem("token");
   const dynamicBody = {
     cr_prospect_id: data.id,
   };

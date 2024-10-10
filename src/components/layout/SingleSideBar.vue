@@ -1,14 +1,15 @@
 <template>
   <n-layout class="h-screen">
+
     <n-layout-header style="height: 64px" bordered>
       <n-page-header
         class="sticky bg-white border-b top-0 z-50 backdrop-blur p-2"
       >
         <template #title>
           <n-space align="center">
-            <n-button strong secondary circle @click="collapse = !collapse">
+            <n-button circle quaternary @click="collapse = !collapse" color="#424242">
               <template #icon>
-                <n-icon v-if="collapse <= 620"><burger-icon /></n-icon>
+                <n-icon v-if="collapse"><burger-icon /></n-icon>
                 <n-icon v-else><close-icon /></n-icon>
               </template>
             </n-button>
@@ -23,13 +24,13 @@
         </template>
         <template #extra>
           <div class="flex items-center">
-            <n-badge :value="1" :max="15" :offset="offset">
+            <!-- <n-badge :value="1" :max="15" :offset="offset">
               <n-button strong circle quaternary @click="collapse = !collapse">
                 <template #icon>
                   <n-icon><alert-icon /></n-icon>
                 </template>
               </n-button>
-            </n-badge>
+            </n-badge> -->
             <account-avatar />
           </div>
         </template>
@@ -40,7 +41,7 @@
         :width="180"
         :collapsed-width="0"
         :show-collapsed-content="false"
-        :collapsed="collapse "
+        :collapsed="collapse"
         content-style="padding: 10px;"
         bordered
       >
@@ -61,18 +62,27 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import {
-  NotificationsOutline as AlertIcon,
-  Close as CloseIcon,
-  ReorderTwo as BurgerIcon,
-} from "@vicons/ionicons5";
+  LayoutSidebarLeftCollapse as CloseIcon,
+  LayoutSidebarRightCollapse as BurgerIcon,
+} from "@vicons/tabler";
 import { useWindowSize } from "@vueuse/core";
+
 const { width } = useWindowSize();
 const active = ref(false);
+
 const collapse = ref(false);
-const activate = () => {
-  active.value = true;
+const ukuran=ref(0);
+const widthScreen = () => {
+  ukuran.value = width.value;
+    if(ukuran.value < 620){
+      collapse.value = true;
+    }else{
+      collapse.value = false;
+    }
 };
+onMounted(() => widthScreen());
 </script>
+
 <style scoped>
 .sidebar {
   @apply p-2 bg-white md:flex flex-col justify-between border-r hidden;

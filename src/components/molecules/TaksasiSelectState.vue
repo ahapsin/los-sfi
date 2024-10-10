@@ -5,12 +5,12 @@
                 @update:value="brandChanged" :loading="loadingBrand" />
         </n-form-item>
         <n-form-item label="Tipe" path="Tipe" class="w-full">
-            <n-select filterable :disabled placeholder="Pilih Tipe" label-field="label" value-field="value"
+            <n-select filterable  placeholder="Pilih Tipe" label-field="label" value-field="value"
                 v-model:value="props.tipe" :options="filter_tipe" @update:value="tipeChanged" :loading="loadingTipe"
                 class="w-full" />
         </n-form-item>
         <n-form-item label="Tahun" path="tahun" class="w-full">
-            <n-select filterable :disabled placeholder="Pilih Tahun" label-field="label" value-field="value"
+            <n-select filterable  placeholder="Pilih Tahun" label-field="label" value-field="value"
                 v-model:value="props.tahun" :options="col_tahun" @update:value="tahunChanged" :loading="loadingTahun"
                 class="w-full" />
         </n-form-item>
@@ -23,12 +23,10 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import _ from "lodash";
+
 import { useApi } from "../../helpers/axios";
 
 const sel_brand = ref('pilih');
-const sel_tipe = ref('pilih');
-const sel_tahun = ref('pilih');
 
 const loadingBrand = ref(false);
 const col_brand = ref([]);
@@ -88,7 +86,7 @@ const getBrand = async () => {
     } else {
         loadingBrand.value = false;
         let resBrand = response.data.brand;
-        col_brand.value = resBrand.map((v, i) => ({
+        col_brand.value = resBrand.map((v) => ({
             label: v,
             value: v,
         }));
@@ -111,7 +109,7 @@ const getTipe = async () => {
     } else {
         loadingTipe.value = false;
         col_tipe.value = response.data;
-        filter_tipe.value = col_tipe.value.map((v, i) => ({
+        filter_tipe.value = col_tipe.value.map((v) => ({
             label: `${v.code} - ${v.model}`,
             value: `${v.code} - ${v.model}`,
         }));
@@ -136,7 +134,7 @@ const getTahun = async () => {
         loadingTahun.value = false;
         // emit('update:pasar', 0);
         let resTahun = response.data
-        col_tahun.value = resTahun.map((v, i) => ({
+        col_tahun.value = resTahun.map((v) => ({
             label: v,
             value: v,
         }));
@@ -165,7 +163,7 @@ const brandChanged = async (value, option) => {
         emit('update:tahun', null);
         emit('update:pasar', 0);
         col_tipe.value = response.data;
-        filter_tipe.value = col_tipe.value.map((v, i) => ({
+        filter_tipe.value = col_tipe.value.map((v) => ({
             label: `${v.code} - ${v.model}`,
             value: `${v.code} - ${v.model}`,
         }));
@@ -206,7 +204,7 @@ const tipeChanged = async (value, option) => {
         emit('update:tahun', null);
         emit('update:pasar', 0);
         let resTahun = response.data
-        col_tahun.value = resTahun.map((v, i) => ({
+        col_tahun.value = resTahun.map((v) => ({
             label: v,
             value: v,
         }));
