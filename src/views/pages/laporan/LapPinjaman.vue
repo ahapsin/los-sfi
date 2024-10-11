@@ -177,13 +177,13 @@ const handleConfirm = (row, index) => {
   });
 };
 const handleDetail = (evt) => {
-  router.replace(`/master/branch-action/${evt.id}/detail`);
+  router.push(`/master/branch-action/${evt.id}/detail`);
 };
 const handleUpdate = (evt) => {
-  router.replace(`/master/branch-action/${evt.id}`);
+  router.push(`/master/branch-action/${evt.id}`);
 };
 const handleAdd = () => {
-  router.replace("/master/branch-action");
+  router.push("/master/branch-action");
 };
 const getData = async () => {
   let userToken = localStorage.getItem("token");
@@ -195,7 +195,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataTable.value = response.data;
   }

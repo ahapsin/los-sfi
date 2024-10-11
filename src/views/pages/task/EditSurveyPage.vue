@@ -593,7 +593,7 @@ const refAdmin = async (body) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loading.value = false;
     skemaAngsuran.value = response.data;
@@ -707,7 +707,7 @@ const handleSave = async (e) => {
   } else {
     message.success("data berhasil diubah");
     loading.value = false;
-    router.replace("/task/survey");
+    router.push("/task/survey");
   }
 };
 const notifUsia = ref(false);

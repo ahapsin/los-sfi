@@ -358,7 +358,7 @@ const handlePositiveClick = async (e) => {
     message.success("konfirmasi berhasil");
     getDataPayment();
     showModal.value = false;
-    router.replace({ name: "pending transfer" });
+    router.push({ name: "pending transfer" });
   }
 };
 const handleNegativeClick = async (e) => {
@@ -383,7 +383,7 @@ const handleNegativeClick = async (e) => {
     message.success("konfirmasi berhasil");
     getDataPayment();
     showModal.value = false;
-    router.replace({ name: "pending transfer" });
+    router.push({ name: "pending transfer" });
   }
 };
 const dataPayment = ref([]);
@@ -401,7 +401,7 @@ const getDataPayment = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadDataPayment.value = false;
     dataPayment.value = response.data;

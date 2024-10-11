@@ -177,7 +177,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadData.value = false;
     dataTable.value = response.data;

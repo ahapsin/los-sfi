@@ -376,7 +376,7 @@ const getDataPelunasan = async (e) => {
   });
   if (!response.ok) {
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataRepayment.value = response.data;
     pageData.tunggakan_denda = dataRepayment.value[0].DENDA;
@@ -626,7 +626,7 @@ const handleProses = async () => {
     negativeText: "cek kembali",
     onPositiveClick: () => {
       postDynamic();
-      router.replace({ name: "pembayaran" });
+      router.push({ name: "pembayaran" });
     },
   });
   const postDynamic = async () => {
@@ -639,12 +639,12 @@ const handleProses = async () => {
     if (!response.ok) {
       message.error("sesi berakhir");
       localStorage.removeItem("token");
-      router.replace("/");
+      router.push("/");
     } else {
       loadProses.value = false;
       paymentData.value = response.data;
       dialogProses.value = true;
-      router.replace({ name: "pembayaran" });
+      router.push({ name: "pembayaran" });
     }
   };
 };
@@ -664,7 +664,7 @@ const handleSearch = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataFasilitas.value = true;
     loadSearch.value = false;
@@ -691,7 +691,7 @@ const getSkalaCredit = async (e) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataPayment.value = true;
     checkedRowCredit.value = [];
@@ -733,7 +733,7 @@ const handleExpand = () => {
 };
 
 const handleBack = () => {
-  router.replace({ name: "pembayaran" });
+  router.push({ name: "pembayaran" });
 };
 </script>
 

@@ -1592,7 +1592,7 @@ const handlePrint = () => {
     api: `pk`,
     token: userToken,
   }).then(() => {
-    router.replace({ name: "Pengajuan Kredit" });
+    router.push({ name: "Pengajuan Kredit" });
     // if (!res.ok) {
     //     message.warning('gagal proses print!');
     // } else {

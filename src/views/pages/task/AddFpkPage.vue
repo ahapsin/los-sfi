@@ -7,7 +7,6 @@
       :rules="rules"
       :label-placement="width <= 920 ? 'top' : 'top'"
       require-mark-placement="right-hanging"
-      :size="size"
       label-width="auto"
     >
       <n-space vertical class="bg-white  border rounded-2xl p-4">
@@ -1000,16 +999,16 @@
   </n-spin>
 </template>
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted,toRef } from "vue";
 import { lyla } from "@lylajs/web";
 import { useRoute } from "vue-router";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
 import router from "../../../router";
 import { useMessage } from "naive-ui";
-
+import { useWindowSize } from "@vueuse/core";
 import {
-
+  Warning as WarningIcon,
   ChevronBack as ArrowBack,
   ChevronForward as ArrowForward,
   Send as SendIcon,
@@ -1054,6 +1053,10 @@ const calcCredit = reactive({
 const dataPelanggan = ref({
   tipe_identitas: "KTP",
 });
+
+
+
+const { width } = useWindowSize();
 const alamatIdentitas = ref({});
 const alamatTagih = ref({});
 const dataPekerjaan = ref({});
@@ -1210,7 +1213,7 @@ const getData = async () => {
     Object.assign(dataSurat.value, pageData.value.surat);
     Object.assign(dataBank.value, pageData.value.info_bank);
     Object.assign(dataAttachment.value, pageData.value.attachment);
-    // let tgllahir = toRef(pageData.value.pelanggan);
+    let tgllahir = toRef(pageData.value.pelanggan);
     var myDate = tgllahir.value.tgl_lahir;
     myDate = myDate.split("-");
     var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
@@ -1231,7 +1234,7 @@ const refAdmin = async (body) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loading.value = false;
     skemaAngsuran.value = response.data;
@@ -1279,7 +1282,7 @@ const handleChange = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loading.value = false;
     Object.assign(calcCredit, response.data);
@@ -1346,7 +1349,7 @@ const handleSave = async (e) => {
   } else {
     message.success("data berhasil disimpan");
     loading.value = false;
-    router.replace("/task/apply-credit");
+    router.push("/task/apply-credit");
   }
 };
 const handleSend = async (e) => {
@@ -1366,7 +1369,7 @@ const handleSend = async (e) => {
   } else {
     message.success("data berhasil dikirim");
     loadingSend.value = false;
-    router.replace("/task/apply-credit");
+    router.push("/task/apply-credit");
   }
 };
 const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {

@@ -114,7 +114,7 @@ const rules = {
     }
 }
 
-const handleCancel = () => router.replace('/master/branch');
+const handleCancel = () => router.push('/master/branch');
 
 const response = () => useApi({
     method: 'get',
@@ -155,7 +155,7 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.replace({ name: 'cabang' });
+        router.push({ name: 'cabang' });
     }
 }
 onMounted(() => {

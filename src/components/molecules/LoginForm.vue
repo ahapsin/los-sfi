@@ -88,7 +88,7 @@ onMounted(() => {
             if (!res.ok) {
                 localStorage.removeItem("token");
                 message.warning("sesi anda sudah berakhir");
-                router.replace('/');
+                router.push('/');
             } else {
 
                 message.loading("memulihkan sesi...");

@@ -232,7 +232,7 @@ const baseRoute = useRoute();
 const param = baseRoute.params.idemployee;
 const dataBranch = ref();
 const userToken = localStorage.getItem("token");
-const handleCancel = () => router.replace('/master/branch');
+const handleCancel = () => router.push('/master/branch');
 
 const response = () => useApi({
     method: 'get',
@@ -268,7 +268,7 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.replace({ name: 'karyawan' });
+        router.push({ name: 'karyawan' });
     }
 }
 const getBranch = useApi({
