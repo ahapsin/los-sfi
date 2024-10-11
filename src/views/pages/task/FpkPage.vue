@@ -364,7 +364,7 @@ const handleAction = (e, data) => {
     }).then((res) => {
       if (res.ok) {
         message.success("FPK berhsil dibuat");
-        router.replace({
+        router.push({
           name: "Form Pengajuan Kredit",
           params: { idapplication: data.id },
         });
@@ -373,19 +373,19 @@ const handleAction = (e, data) => {
       }
     });
   } else if (status === "2") {
-    router.replace({
+    router.push({
       name: "Form Pengajuan Kredit",
       params: { idapplication: data.id },
     });
   } else {
-    router.replace({
+    router.push({
       name: "Detail Kredit",
       params: { idapplication: data.id, action: "view" },
     });
   }
 };
 const handlePrePrint = (row) => {
-  router.replace({ name: "pre print pk", params: { idapplication: row.id } });
+  router.push({ name: "pre print pk", params: { idapplication: row.id } });
 };
 const getData = async () => {
   loadData.value = true;
@@ -397,7 +397,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadData.value = false;
     dataTable.value = response.data.response;

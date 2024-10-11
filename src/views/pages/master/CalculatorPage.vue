@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import {  onMounted, ref,h ,reactive} from "vue";
 import { NInputNumber, NInput, NButton } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
@@ -333,7 +333,7 @@ const createMainColumns = () => [
     {
         title: "Plafon",
         key: "plafond",
-        render(row, index) {
+        render(row) {
             // return `${row.range_start} -${row.range_end}`;
             return `${formatLocal(row.range_start * 1000000)} - ${formatLocal(row.range_end * 1000000)}`;
         }
@@ -341,7 +341,7 @@ const createMainColumns = () => [
     {
         title: "6 Bulan",
         key: "6",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_6);
             return formatLocal(row.tenor_6.total);
         }
@@ -349,7 +349,7 @@ const createMainColumns = () => [
     {
         title: "12 Bulan",
         key: "12",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_12);
             return formatLocal(row.tenor_12.total);
         }
@@ -357,7 +357,7 @@ const createMainColumns = () => [
     {
         title: "18 Bulan",
         key: "18",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_18);
             return formatLocal(row.tenor_18.total);
         }
@@ -365,7 +365,7 @@ const createMainColumns = () => [
     {
         title: "24 Bulan",
         key: "24",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_24);
             return formatLocal(row.tenor_24.total);
         }
@@ -373,14 +373,14 @@ const createMainColumns = () => [
     {
         title: "Action",
         key: "18",
-        render(row, index) {
+        render() {
             return h(
                 NButton,
                 {
                     type: "primary",
                     size: "tiny",
-                    onClick: (e) => {
-                        handleAction(e)
+                    onClick: () => {
+                        
                     },
                 },
                 {
@@ -404,7 +404,7 @@ const createMainColumnsMusiman = () => [
     {
         title: "Plafon",
         key: "plafond",
-        render(row, index) {
+        render(row, ) {
             // return `${row.range_start} -${row.range_end}`;
             return `${formatLocal(row.range_start * 1000000)} - ${formatLocal(row.range_end * 1000000)}`;
         }
@@ -412,7 +412,7 @@ const createMainColumnsMusiman = () => [
     {
         title: "1 x 3 Bulan",
         key: "6",
-        render(row, index) {
+        render(row ) {
             //console.log(row.tenor_6);
             return formatLocal(row.tenor_6.total);
         }
@@ -420,7 +420,7 @@ const createMainColumnsMusiman = () => [
     {
         title: "1 x 6 Bulan",
         key: "12",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_12);
             return formatLocal(row.tenor_12.total);
         }
@@ -428,7 +428,7 @@ const createMainColumnsMusiman = () => [
     {
         title: "2 x 12 Bulan",
         key: "18",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_18);
             return formatLocal(row.tenor_18.total);
         }
@@ -436,7 +436,7 @@ const createMainColumnsMusiman = () => [
     {
         title: "3 x 18 Bulan",
         key: "24",
-        render(row, index) {
+        render(row) {
             //console.log(row.tenor_24);
             return formatLocal(row.tenor_24.total);
         }
@@ -444,14 +444,14 @@ const createMainColumnsMusiman = () => [
     {
         title: "Action",
         key: "18",
-        render(row, index) {
+        render() {
             return h(
                 NButton,
                 {
                     type: "primary",
                     size: "tiny",
-                    onClick: (e) => {
-                        handleAction(row.status, row)
+                    onClick: () => {
+                        
                     },
                 },
                 {
@@ -497,7 +497,7 @@ const getData = async () => {
     if (!response.ok) {
         message.error("sesi berakhir");
         localStorage.removeItem("token");
-        router.replace('/');
+        router.push('/');
     } else {
         dataTable.value = response.data;
         let filterDataBulanan = _.filter(dataTable.value, ['tipe', 'bulanan']);

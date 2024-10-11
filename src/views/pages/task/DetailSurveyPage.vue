@@ -6,7 +6,7 @@
     description="halaman yang anda minta tidak ada !"
   >
     <template #footer>
-      <n-button @click="router.replace('/dashboard')">Kembali ke Awal</n-button>
+      <n-button @click="router.push('/dashboard')">Kembali ke Awal</n-button>
     </template>
   </n-result>
   <n-tabs
@@ -199,7 +199,7 @@
       </n-card>
     </n-tab-pane>
     <template #prefix>
-      <n-button tertiary type="success" @click="router.replace('/task/survey')">
+      <n-button tertiary type="success" @click="router.push('/task/survey')">
         <template #icon>
           <n-icon><back-icon /></n-icon>
         </template>

@@ -430,7 +430,7 @@ const createColumns = () => {
 };
 const handleDone = () => {
   dialogProses.value = false;
-  router.replace({ name: "pembayaran" });
+  router.push({ name: "pembayaran" });
   searchField.value = false;
   valOptSearch.value = null;
 };
@@ -475,7 +475,7 @@ const handleProses = async () => {
     negativeText: "cek kembali",
     onPositiveClick: () => {
       postDynamic();
-      router.replace({ name: "pembayaran" });
+      router.push({ name: "pembayaran" });
     },
   });
   const postDynamic = async () => {
@@ -488,12 +488,12 @@ const handleProses = async () => {
     if (!response.ok) {
       message.error("sesi berakhir");
       localStorage.removeItem("token");
-      router.replace("/");
+      router.push("/");
     } else {
       loadProses.value = false;
       paymentData.value = response.data;
       dialogProses.value = true;
-      router.replace({ name: "pembayaran" });
+      router.push({ name: "pembayaran" });
     }
   };
 };
@@ -513,7 +513,7 @@ const handleSearch = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     displayFasilitas.value = true;
     loadSearch.value = false;
@@ -638,7 +638,7 @@ const getDataPelunasan = async (e) => {
   });
   if (!response.ok) {
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataPelunasan.value = response.data;
     Object.assign(pelunasan, response.data[0]);
@@ -654,7 +654,7 @@ const handleExpand = () => {
   window.open(fullPage.href, "_blank");
 };
 const handleBack = () => {
-  router.replace({ name: "pelunasan" });
+  router.push({ name: "pelunasan" });
 };
 </script>
   

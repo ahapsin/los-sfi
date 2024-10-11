@@ -76,7 +76,7 @@ const rules = {
         message: "nama wajib diisi"
     }
 }
-const handleCancel = () => router.replace('/master/taksasi');
+const handleCancel = () => router.push('/master/taksasi');
 
 const response = () => useApi({
     method: 'get',
@@ -117,7 +117,7 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.replace({ name: 'taksasi' });
+        router.push({ name: 'taksasi' });
     }
 }
 onMounted(() => {

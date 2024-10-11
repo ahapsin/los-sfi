@@ -246,6 +246,12 @@ const routes = [
         component: () =>
           import("../views/pages/master/customer/CustomerPage.vue"),
       },
+      {
+        path: "myaccount",
+        name: "myaccount",
+        component: () =>
+          import("../views/pages/user/MyAccountPage.vue"),
+      },
     ],
   },
   {
@@ -274,22 +280,22 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = () => {
-    if (localStorage.getItem("token")) {
-      return true;
-    }
-    return false;
-  };
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next("/login");
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = () => {
+//     if (localStorage.getItem("token")) {
+//       return true;
+//     }
+//     return false;
+//   };
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!isAuthenticated) {
+//       next("/login");
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

@@ -98,7 +98,7 @@ const LogOut = async () => {
         } else {
                 localStorage.removeItem("token");
                 message.success("logout berhasil");
-                router.replace('/');
+                router.push('/');
         }
 }
 onMounted(() => GetMe());

@@ -218,7 +218,7 @@ const getData = async () => {
   if (!response.ok) {
       message.error("sesi berakhir");
       localStorage.removeItem("token");
-      router.replace('/');
+      router.push('/');
   } else {
       loadData.value = false;
       dataTable.value = response.data.response;
@@ -234,11 +234,11 @@ const renderIcon = (icon) => {
 
 const handelAction = (e) => {
   if (e.status.at(0) == 2) {
-      router.replace({ name: 'Konfirmasi HO Pengajuan Kredit', params: { idapplication: e.id } });
+      router.push({ name: 'Konfirmasi HO Pengajuan Kredit', params: { idapplication: e.id } });
   } else if (e.status.at(0) == 7) {
-      router.replace({ name: 'Konfirmasi HO Pengajuan Kredit', params: { idapplication: e.id } });
+      router.push({ name: 'Konfirmasi HO Pengajuan Kredit', params: { idapplication: e.id } });
   } else {
-      router.replace({ name: 'Detail Pengajuan Kredit', params: { idapplication: e.id } });
+      router.push({ name: 'Detail Pengajuan Kredit', params: { idapplication: e.id } });
   }
   // let status = e.at(0);
   // const dynamicBody = {
@@ -254,13 +254,13 @@ const handelAction = (e) => {
   //     }).then((res) => {
   //         if (res.ok) {
   //             message.success('FPK berhsil dibuat');
-  //             router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+  //             router.push({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
   //         } else {
   //             message.error('FPK gagal dibuat!')
   //         }
   //     });
   // } else {
-  // router.replace({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
+  // router.push({ name: 'Form Pengajuan Kredit', params: { idapplication: data.id } });
   // }
 };
 const pagination = {

@@ -448,7 +448,7 @@ const getDataPayment = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadDataPayment.value = false;
     dataPayment.value = response.data;
@@ -761,7 +761,7 @@ const getSkalaCredit = async (e) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
@@ -777,7 +777,7 @@ const handleAddPay = () => {
   router.push({ name: "tambah penerimaan" });
 };
 const handleBug = () => {
-  router.replace({ name: "pembayaran" });
+  router.push({ name: "pembayaran" });
 };
 const showData = computed(() => {
   return useSearch(dataPayment.value, searchBox.value);

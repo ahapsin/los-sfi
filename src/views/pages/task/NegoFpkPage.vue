@@ -1063,7 +1063,7 @@ const handleSave = async (e) => {
   } else {
     message.success("data berhasil disimpan");
     loading.value = false;
-    router.replace("/task/approval");
+    router.push("/task/approval");
   }
 };
 </script>

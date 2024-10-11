@@ -214,7 +214,7 @@ const getDataCustomer = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataCustomer.value = response.data;
   }
@@ -244,7 +244,7 @@ const getCreditCustomer = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     creditCustomer.value = response.data;
   }

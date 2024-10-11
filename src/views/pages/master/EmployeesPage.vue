@@ -147,13 +147,13 @@ const handleConfirm = (evt) => {
     });
 }
 const handleDetail = (evt) => {
-    router.replace(`/master/employee-action/${evt.employee_id}/detail`);
+    router.push(`/master/employee-action/${evt.employee_id}/detail`);
 }
 const handleUpdate = (evt) => {
-    router.replace(`/master/employee-action/${evt.employee_id}`);
+    router.push(`/master/employee-action/${evt.employee_id}`);
 }
 const handleAdd = () => {
-    router.replace('/master/employee-action');
+    router.push('/master/employee-action');
 }
 const getData = async () => {
     let userToken = localStorage.getItem("token");
@@ -165,7 +165,7 @@ const getData = async () => {
     if (!response.ok) {
         message.error("sesi berakhir");
         localStorage.removeItem("token");
-        router.replace('/');
+        router.push('/');
     } else {
         dataTable.value = response.data.response;
     }

@@ -237,10 +237,10 @@ const handleConfirm = (row, index) => {
   });
 };
 const handleDetail = (evt) => {
-  router.replace({ name: "Detail Kredit", params: { idapplication: evt.id } });
+  router.push({ name: "Detail Kredit", params: { idapplication: evt.id } });
 };
 const handleEdit = (evt) => {
-  router.replace({ name: "edit survey", params: { idsurvey: evt.id } });
+  router.push({ name: "edit survey", params: { idsurvey: evt.id } });
 };
 const handleAdd = () => {
   router.push("/task/new-survey");
@@ -256,7 +256,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadData.value = false;
     dataTable.value = response.data.response;

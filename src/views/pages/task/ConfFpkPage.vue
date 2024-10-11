@@ -951,7 +951,7 @@ const refAdmin = async (body) => {
   if (!response.ok) {
       message.error("sesi berakhir");
       localStorage.removeItem("token");
-      router.replace('/');
+      router.push('/');
   } else {
       loading.value = false;
       skemaAngsuran.value = response.data;
@@ -998,7 +998,7 @@ const handleChange = async (e) => {
   if (!response.ok) {
       message.error("sesi berakhir");
       localStorage.removeItem("token");
-      router.replace('/');
+      router.push('/');
   } else {
       loading.value = false;
       Object.assign(calcCredit, response.data);
@@ -1069,7 +1069,7 @@ const handleSave = async (e) => {
   } else {
       message.success("data berhasil disimpan");
       loading.value = false;
-      router.replace('/task/apply-credit');
+      router.push('/task/apply-credit');
   }
 }
 const handleSend = async (e) => {
@@ -1089,7 +1089,7 @@ const handleSend = async (e) => {
   } else {
       message.success("data berhasil dikirim");
       loadingSend.value = false;
-      router.replace('/task/apply-credit');
+      router.push('/task/apply-credit');
   }
 }
 
@@ -1147,7 +1147,7 @@ const handlePositiveClick = async (e) => {
   } else {
       message.success("konfirmasi berhasil");
       loading.value = false;
-      router.replace('/task/approval');
+      router.push('/task/approval');
   }
 }
 const handleNegativeClick = async (e) => {
@@ -1170,10 +1170,10 @@ const handleNegativeClick = async (e) => {
   } else {
       message.success("konfirmasi berhasil");
       loading.value = false;
-      router.replace('/task/approval');
+      router.push('/task/approval');
   }
 }
 const handleClose = () => {
-  router.replace({ name: 'Approval' });
+  router.push({ name: 'Approval' });
 }
 </script>

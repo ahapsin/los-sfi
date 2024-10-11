@@ -957,7 +957,7 @@ const refAdmin = async (body) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loading.value = false;
     skemaAngsuran.value = response.data;
@@ -1004,7 +1004,7 @@ const handleChange = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loading.value = false;
     Object.assign(calcCredit, response.data);

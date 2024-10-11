@@ -69,7 +69,7 @@ const baseRoute = useRoute();
 
 const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
-const handleCancel = () => router.replace('/master/users');
+const handleCancel = () => router.push('/master/users');
 
 
 const rules = {
@@ -149,7 +149,7 @@ const handleSave = async () => {
       message.error("data gagal disimpan");
       loading.value = false;
   } else {
-      router.replace({ name: 'bpkb' })
+      router.push({ name: 'bpkb' })
       message.success("data berhasil disimpan");
       loading.value = false;
   }

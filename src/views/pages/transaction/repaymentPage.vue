@@ -379,7 +379,7 @@ const getDataPayment = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadDataPayment.value = false;
     dataPayment.value = response.data;
@@ -548,7 +548,7 @@ const getSkalaCredit = async (e) => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;
@@ -561,7 +561,7 @@ const handleExpand = () => {
   window.open(fullPage.href, "_blank");
 };
 const handleAddPay = () => {
-  router.replace({ name: "tambah pelunasan" });
+  router.push({ name: "tambah pelunasan" });
 };
 const showData = computed(() => {
   return useSearch(dataPayment.value, searchBox.value);

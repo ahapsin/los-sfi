@@ -154,7 +154,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     loadData.value = false;
     dataTable.value = response.data.response;
@@ -162,17 +162,17 @@ const getData = async () => {
 };
 const handelAction = (e) => {
   if (e.status.at(0) == 1) {
-    router.replace({
+    router.push({
       name: "Konfirmasi Pengajuan Kredit",
       params: { idapplication: e.id, action: "view" },
     });
   } else if (e.status.at(0) == 4) {
-    router.replace({
+    router.push({
       name: "Nego Pengajuan Kredit",
       params: { idapplication: e.id },
     });
   } else {
-    router.replace({
+    router.push({
       name: "Detail Pengajuan Kredit",
       params: { idapplication: e.id },
     });

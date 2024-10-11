@@ -70,7 +70,7 @@
   </div>
 </template>
   <script setup>
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h,computed} from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
@@ -79,9 +79,7 @@ import {
   useMessage,
   NDropdown,
   NIcon,
-  NTag,
   NButton,
-  NEllipsis,
 } from "naive-ui";
 import {
   AddCircleOutlineRound as AddIcon,
@@ -89,7 +87,6 @@ import {
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 import {
-  EditOutlined as EditIcon,
   DeleteOutlined as DeleteIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
@@ -153,13 +150,6 @@ const columns = [
     },
   },
 ];
-const statusTag = (e) => {
-  if (e === "Active") {
-    return "success";
-  } else if (e === "Non-Active") {
-    return "warning";
-  }
-};
 const handleConfirm = (row, index) => {
   dialog.warning({
     title: "Confirm",
@@ -186,13 +176,13 @@ const handleConfirm = (row, index) => {
   });
 };
 const handleDetail = (evt) => {
-  router.replace(`/master/branch-action/${evt.id}/detail`);
+  router.push(`/master/branch-action/${evt.id}/detail`);
 };
 const handleUpdate = (evt) => {
-  router.replace(`/master/branch-action/${evt.id}`);
+  router.push(`/master/branch-action/${evt.id}`);
 };
 const handleAdd = () => {
-  router.replace("/master/branch-action");
+  router.push("/master/branch-action");
 };
 const getData = async () => {
   let userToken = localStorage.getItem("token");
@@ -204,7 +194,7 @@ const getData = async () => {
   if (!response.ok) {
     message.error("sesi berakhir");
     localStorage.removeItem("token");
-    router.replace("/");
+    router.push("/");
   } else {
     dataTable.value = response.data;
   }

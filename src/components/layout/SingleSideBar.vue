@@ -3,7 +3,7 @@
 
     <n-layout-header style="height: 64px" bordered>
       <n-page-header
-        class="sticky bg-white border-b top-0 z-50 backdrop-blur p-2"
+        class="sticky bg-white border-b top-0 z-50 backdrop-blur p-4"
       >
         <template #title>
           <n-space align="center">
