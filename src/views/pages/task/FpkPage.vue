@@ -157,6 +157,8 @@ import { lyla } from "@lylajs/web";
 import router from "../../../router";
 import { useMessage, NIcon, NTag, NButton } from "naive-ui";
 import { useSearch } from "../../../helpers/searchObject";
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
 import {
   SearchOutlined as SearchIcon,
   ImageFilled as UploadIcon,
@@ -399,6 +401,7 @@ const getData = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadData.value = false;
     dataTable.value = response.data.response;
   }

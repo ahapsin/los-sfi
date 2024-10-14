@@ -1,15 +1,20 @@
 <template>
   <n-layout class="h-screen">
-
     <n-layout-header style="height: 64px" bordered>
+
       <n-page-header
         class="sticky bg-white border-b top-0 z-50 backdrop-blur p-4"
       >
         <template #title>
           <n-space align="center">
-            <n-button circle quaternary @click="collapse = !collapse" color="#424242">
+            <n-button
+              circle
+              quaternary
+              @click="sideMenu.sideEffect = !sideMenu.sideEffect"
+              color="#424242"
+            >
               <template #icon>
-                <n-icon v-if="collapse"><burger-icon /></n-icon>
+                <n-icon v-if="sideMenu.sideEffect"><burger-icon /></n-icon>
                 <n-icon v-else><close-icon /></n-icon>
               </template>
             </n-button>
@@ -41,7 +46,7 @@
         :width="180"
         :collapsed-width="0"
         :show-collapsed-content="false"
-        :collapsed="collapse"
+        :collapsed="sideMenu.sideEffect"
         content-style="padding: 10px;"
         bordered
       >
@@ -65,20 +70,25 @@ import {
   LayoutSidebarLeftCollapse as CloseIcon,
   LayoutSidebarRightCollapse as BurgerIcon,
 } from "@vicons/tabler";
+import { useSidebar } from "../../stores/sidebar";
 import { useWindowSize } from "@vueuse/core";
 
 const { width } = useWindowSize();
+
+const sideMenu = useSidebar();
 const active = ref(false);
 
 const collapse = ref(false);
-const ukuran=ref(0);
+const ukuran = ref(0);
 const widthScreen = () => {
   ukuran.value = width.value;
-    if(ukuran.value < 620){
-      collapse.value = true;
-    }else{
-      collapse.value = false;
-    }
+  if (ukuran.value < 620) {
+    sideMenu.sideEffect = true;
+    collapse.value = true;
+  } else {
+    sideMenu.sideEffect = false;
+    collapse.value = false;
+  }
 };
 onMounted(() => widthScreen());
 </script>

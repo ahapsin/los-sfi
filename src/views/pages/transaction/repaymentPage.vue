@@ -357,6 +357,8 @@ const handleAction = (e) => {
     ]);
   });
 };
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
 const columns = createColumns();
 const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
@@ -381,6 +383,7 @@ const getDataPayment = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
   }

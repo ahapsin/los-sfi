@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 grid grid-rows-5 grid-flow-col gap-4">
+  <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
     <n-form-item path="old" label="Nama">
       <n-input readonly :value="meData.me.nama" />
     </n-form-item>
