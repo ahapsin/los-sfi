@@ -1,6 +1,5 @@
 <template>
     <div class="pt-4">
-
         <n-space vertical>
             <n-card :title="`Tabel ${$route.name}`">
                 <template #header-extra>
@@ -201,7 +200,7 @@ const getData = async () => {
         router.push('/');
     } else {
         loading.value = false;
-        dataTable.value = response.data.data;
+        dataTable.value = response.data;
     }
 }
 const renderIcon = (icon) => {
