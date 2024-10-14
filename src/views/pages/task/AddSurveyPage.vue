@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <n-scrollbar x-scrollable>
-    <n-space class="bg-white  border rounded-2xl p-4">
+    <n-space class="bg-white border rounded-2xl p-4">
       <n-steps
         :current="current"
         :status="currentStatus"
@@ -182,7 +182,7 @@
           footer: 'soft',
         }"
       >
-        <div class="flex gap-2">
+        <div class="md:flex gap-2">
           <n-form-item label="No KTP" path="no_ktp" class="w-full">
             <n-input
               :show-button="false"
@@ -213,30 +213,28 @@
             />
           </n-form-item>
         </div>
-        <div class="flex gap-2">
+        <div class="md:flex gap-2">
           <n-form-item label="Nama" path="nama" class="w-full">
             <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
-            <div>
-              <n-alert
-                title="Informasi"
-                type="warning"
-                :bordered="bordered"
-                v-if="notifUsia"
-              >
-                {{ noteUsia }}</n-alert
-              >
-              <n-date-picker
-                placeholder="Tanggal Lahir"
-                class="w-full"
-                v-model:formatted-value="pelanggan.tgl_lahir"
-                value-format="yyyy-MM-dd"
-                format="dd-MM-yyyy"
-                type="date"
-                @update:value="handleTanggalLahir"
-              />
-            </div>
+            <n-alert
+              title="Informasi"
+              type="warning"
+              :bordered="bordered"
+              v-if="notifUsia"
+            >
+              {{ noteUsia }}</n-alert
+            >
+            <n-date-picker
+              placeholder="Tanggal Lahir"
+              class="w-full"
+              v-model:formatted-value="pelanggan.tgl_lahir"
+              value-format="yyyy-MM-dd"
+              format="dd-MM-yyyy"
+              type="date"
+              @update:value="handleTanggalLahir"
+            />
           </n-form-item>
           <n-form-item label="No Handphone" path="HP" class="w-full">
             <n-input
@@ -245,13 +243,21 @@
             />
           </n-form-item>
         </div>
-        <n-form-item label="Alamat" path="alamat">
-          <n-input-group>
-            <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" />
-            <n-input placeholder="RT" v-model:value="pelanggan.rt" />
-            <n-input placeholder="RW" v-model:value="pelanggan.rw" />
-          </n-input-group>
-        </n-form-item>
+        <div class="flex flex-col md:flex-row gap-2 gap-x-2">
+          <n-form-item label="Alamat" path="alamat" class="w-full">
+            <n-input
+              placeholder="Alamat"
+              v-model:value="pelanggan.alamat"
+              class="w-full"
+            />
+          </n-form-item>
+          <n-form-item path="alamat" class="w-full">
+            <n-input-group>
+              <n-input placeholder="RT" v-model:value="pelanggan.rt" />
+              <n-input placeholder="RW" v-model:value="pelanggan.rw" />
+            </n-input-group>
+          </n-form-item>
+        </div>
         <n-divider title-placement="left"> Dokumen Identitas </n-divider>
         <n-space>
           <n-upload
@@ -303,7 +309,7 @@
             v-model:pasar="jaminan.nilai"
           />
         </div>
-        <div class="flex gap-2">
+        <div class="md:flex gap-2">
           <n-form-item label="NO Polisi" path="no_polisi" class="w-full">
             <n-input
               placeholder="No Polisi"
@@ -410,7 +416,7 @@
             </n-input>
           </n-form-item>
         </div>
-        <div class="flex gap-4">
+        <div class="md:flex gap-4">
           <n-form-item
             label="Pendapatan pelanggan "
             path="pendapatan"
