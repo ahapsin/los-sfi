@@ -716,13 +716,11 @@ const alamatTagih = ref({});
 const dataPekerjaan = ref({});
 const dataOrder = ref({});
 const dataTaksasi = ref({});
-const dataJaminan = reactive({});
 const dataTambahan = ref({});
 const dataKerabat = ref({});
 const dataPenjamin = ref({});
 const dataSurat = ref({});
 const dataAttachment = ref({});
-const dataEkstra = ref({});
 
 const dataBank = ref([]);
 const onCreate = () => {
@@ -742,21 +740,12 @@ const suspense = ref(false);
 const current = ref(1);
 const userToken = localStorage.getItem("token");
 
-const currentStatus = ref("process");
 
 const skemaAngsuran = ref([]);
-const nilaiAngsuran = reactive({
-  tenor6: null,
-  tenor12: null,
-  tenor18: null,
-  tenor24: null
-});
 const tenor6 = ref([]);
 const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
-const next = () => current.value += 1;
-const prev = () => current.value -= 1;
 
 
 const handleTipe = (e) => {
@@ -768,21 +757,6 @@ const handleTipe = (e) => {
   }
   refAdmin(body);
 }
-const tujuanKredit = ["konsumsi", "investasi"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const tenorKredit = ["12", "24", "36"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const kategoriKredit = ["biaya kuliah", "investasi"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
 const optJenisKelamin = ["Laki-laki", "perempuan"].map(
   (v) => ({
       label: v,
@@ -815,57 +789,17 @@ const optJenisIdentitas = ["KTP", "SIM", 'PASPOR'].map(
       value: v
   }));
 
-const optTipeAngsuran = ["Tetap"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
 const jenisAngsuran = ["Bulanan", "Musiman"].map(
   (v) => ({
       label: v,
       value: v.toLowerCase(),
-  }));
-const optCaraBayar = ["Advance", "Arrear"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const optStatusOrder = ["Approve"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const optTipeOrder = ["RETAIL"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const optKategori = ["BUKAN KARYAWAN", "KARYAWAN", "KARYAWAN PERUSAHAAN AFILIASI"].map(
-  (v) => ({
-      label: v,
-      value: v
   }));
 const optStatusKawin = ["Kawin", "Belum Kawin", "Janda", "Duda"].map(
   (v) => ({
       label: v,
       value: v
   }));
-const optAgama = ["ISLAM", "PROTESTAN", "KATHOLIK", "HINDU", "BUDHA", "KONG HU CU", "OTHERS"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
 const optPendidikan = ["SEKOLAH DASAR", "SEKOLAH MENENGAH PERTAMA", "SEKOLAH MENENGAH ATAS", "DIPLOMA 1", "DIPLOMA 2", "DIPLOMA 3", "SARJANA S1"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const optPeriode = ["Bulanan", "Musiman"].map(
-  (v) => ({
-      label: v,
-      value: v
-  }));
-const optCaraBayarPay = ["KE KASIR", "DITAGIH KOLEKTOR", "ATM", "TRANSFER BANK", "PDC"].map(
   (v) => ({
       label: v,
       value: v
@@ -877,10 +811,8 @@ const optHubCust = ["PASANGAN", "SAUDARA", "ORANG TUA"].map(
   }));
 
 const idApp = baseRoute.params.idapplication;
-const actionPage = baseRoute.params.action;
 const approval = ref({});
 const bl_pesan = ref();
-const copyAddress = () => Object.assign(alamatTagih.value, alamatIdentitas.value);
 const sum = (num1, num2) => {
   if (isNaN(num1) || isNaN(num2)) {
       return undefined;
@@ -983,7 +915,7 @@ const handleEkstra = () => {
   handleChange();
 }
 const selectSkema = ref([]);
-const handleChange = async (e) => {
+const handleChange = async () => {
   selectSkema.value = [];
   const body = {
       plafond: calcCredit.nilai_yang_diterima,
@@ -1054,72 +986,8 @@ const handleTanggalLahir = (e) => {
       }
   }
 }
-const handleSave = async (e) => {
-  e.preventDefault(e);
-  formAssign.flag_pengajuan = "no";
-  let idApp = pageData.value.id_application;
-  loading.value = true;
-  const response = await useApi({
-      method: 'PUT',
-      api: `cr_application/${idApp}`,
-      data: formAssign,
-      token: userToken
-  });
-  if (!response.ok) {
-      message.error("data gagal disimpan");
-      loading.value = false;
-  } else {
-      message.success("data berhasil disimpan");
-      loading.value = false;
-      router.push('/task/apply-credit');
-  }
-}
-const handleSend = async (e) => {
-  e.preventDefault(e);
-  formAssign.flag_pengajuan = "yes";
-  let idApp = pageData.value.id_application;
-  loadingSend.value = true;
-  const response = await useApi({
-      method: 'PUT',
-      api: `cr_application/${idApp}`,
-      data: formAssign,
-      token: userToken
-  });
-  if (!response.ok) {
-      message.error("data gagal dikirm");
-      loadingSend.value = false;
-  } else {
-      message.success("data berhasil dikirim");
-      loadingSend.value = false;
-      router.push('/task/apply-credit');
-  }
-}
 
 
-const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
-  let idApp = pageData.value.order.cr_prospect_id;
-  const form = new FormData();
-  form.append('image', file.file);
-  form.append('type', 'KK');
-  form.append('cr_prospect_id', idApp);
-  const headers = {
-      Authorization: `Bearer ${userToken}`,
-  }
-
-  lyla.post('https://api.kspdjaya.id/image_upload_prospect', {
-      headers,
-      body: form,
-      onUploadProgress: ({ percent }) => {
-          onProgress({ percent: Math.ceil(percent) });
-      }
-  }).then(({ json }) => {
-      message.success("upload image berhasil");
-      onFinish();
-  }).catch((error) => {
-      message.success("upload image gagal !");
-      onError();
-  });
-};
 
 const dataPasangan = ref({
   nama_pasangan: null,

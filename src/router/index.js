@@ -254,6 +254,26 @@ const routes = [
         component: () =>
           import("../views/pages/user/MyAccountPage.vue"),
       },
+      {
+        path: "menu",
+        name: "menu",
+        component: () => import("../views/pages/master/menus/MenuPage.vue"),
+      },
+      {
+        path: "menu-action",
+        name: "menu action",
+        component: () => import("../views/pages/master/menus/ActionMenuPage.vue"),
+      },
+      {
+        path: "position",
+        name: "position",
+        component: () => import("../views/pages/master/position/PositionPage.vue"),
+      },
+      {
+        path: "position-action",
+        name: "position action",
+        component: () => import("../views/pages/master/position/ActionPositionPage.vue"),
+      },
     ],
   },
   {

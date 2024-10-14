@@ -75,7 +75,7 @@ const getUserMenuData = ref();
 const baseRoute = useRoute();
 const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
-const handleCancel = () => router.push('/master/users');
+const handleCancel = () => router.replace('/master/users');
 
 const response = () => useApi({
     method: 'get',
@@ -113,7 +113,7 @@ const handleSave = async (e) => {
     } else {
         message.success("data berhasil disimpan");
         loading.value = false;
-        router.push({ name: 'pengguna' });
+        router.replace({ name: 'pengguna' });
     }
 }
 const getBranch = useApi({

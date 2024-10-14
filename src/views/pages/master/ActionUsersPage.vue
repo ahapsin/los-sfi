@@ -53,8 +53,10 @@
       <n-form-item label="Jabatan" path="jabatan">
         <n-select
           filterable
+          label-field="name"
+          value-field="name"
           placeholder="Pilih Jabatan"
-          :options="optJabatan"
+          :options="dataPosition"
           v-model:value="dynamicForm.jabatan"
         />
       </n-form-item>
@@ -115,7 +117,7 @@ const dynamicForm = reactive({
   no_ktp: null,
   cabang_id: null,
   cabang_nama: null,
-  jabatan: "",
+  jabatan: null,
   gender: "",
   status: "",
 });
@@ -176,12 +178,38 @@ const handleSave = async (e) => {
     loading.value = false;
     router.push({ name: "pengguna" });
   }
-};
+}
+
+const getBranch = useApi({
+    method: 'GET',
+    api: `cabang`,
+    token: userToken
+}).then(res => {
+    if (!res.ok) {
+        message.error("error koneksi api");
+    } else {
+        dataBranch.value = res.data.response;
+    }
+});
+
+const dataPosition=ref([]);
+const getPosition = useApi({
+    method: 'GET',
+    api: `position`,
+    token: userToken
+}).then(res => {
+    if (!res.ok) {
+        message.error("error koneksi api");
+    } else {
+        dataPosition.value = res.data;
+    }
+});
 
 const optJabatan = ["MCF", "ADMIN", "KAPOS", "HO", "SUPERADMIN"].map((v) => ({
   label: v,
   value: v,
 }));
+
 const optJenisKelamin = ["Laki-laki", "Perempuan"].map((v) => ({
   label: v,
   value: v,
