@@ -57,14 +57,13 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, h } from "vue";
+import { ref, onMounted, h, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
 import {
   useDialog,
   useMessage,
-  NDropdown,
   NIcon,
   NTag,
   NButton,
@@ -84,7 +83,6 @@ import { useLoadingBar } from "naive-ui";
 const loadingBar = useLoadingBar();
 
 const message = useMessage();
-const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 
@@ -142,7 +140,7 @@ const columns = [
         NButton,
         {
           size: "small",
-          onClick: (e) => {
+          onClick: () => {
             handelAction(row);
           },
         },
@@ -164,24 +162,6 @@ const statusTag = (e) => {
     return "success";
   }
 };
-const statusLabel = (e) => {
-  let status = e.at(0);
-  if (status === "0") {
-    return "DRAFT";
-  } else if (status === "1") {
-    return "waiting KAPOS";
-  } else if (status === "2") {
-    return "waiting HO";
-  } else if (status === "3") {
-    return "APPROVED HO";
-  } else if (status === "4") {
-    return "REJECT HO";
-  } else if (status === "5") {
-    return "CLOSED HO";
-  } else if (status === "6") {
-    return "CLOSED KAPOS";
-  }
-};
 const statusHandle = (e) => {
   if (e.status.at(0) == 2) {
     return "periksa";
@@ -190,38 +170,6 @@ const statusHandle = (e) => {
   } else {
     return "lihat";
   }
-};
-const handleConfirm = (evt) => {
-  dialog.warning({
-    title: "Confirm",
-    content: "Apakah anda yakin ingin menghapus data ?",
-    positiveText: "Ya",
-    negativeText: "Batal",
-    onPositiveClick: async () => {
-      let userToken = localStorage.getItem("token");
-      const response = await useApi({
-        method: "DELETE",
-        api: `kunjungan/${evt.id}`,
-        token: userToken,
-      });
-      if (!response.ok) {
-        message.error("api transaction error");
-      } else {
-        dataTable.value.splice(evt, 1);
-        message.success("Data berhasil dihapus");
-      }
-    },
-    onNegativeClick: () => {
-      message.error("Batal hapus data !");
-    },
-  });
-};
-const handleDetail = (evt) => {
-  console.log(evt);
-  console.log("mau cek detail");
-};
-const handleAdd = () => {
-  router.push("/task/new-survey");
 };
 
 const loadData = ref(false);
@@ -242,13 +190,6 @@ const getData = async () => {
     loadData.value = false;
     dataTable.value = response.data.response;
   }
-};
-const renderIcon = (icon) => {
-  return () => {
-    return h(NIcon, null, {
-      default: () => h(icon),
-    });
-  };
 };
 
 const handelAction = (e) => {
