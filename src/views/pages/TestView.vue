@@ -1,32 +1,20 @@
 <template>
-  <div class="popup">
-    <div class="content">
-      <p>Loaded API: {{ article }}</p>
-      <h4>Login to your account</h4>
-      <input type="text" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <button>Log in</button>
-    </div>
-  </div>
+  <n-space>
+    <n-button @click="handleStart"> start </n-button>
+    <n-button :disabled="disabled" @click="handleFinish"> finish </n-button>
+    <n-button @click="handleError"> error </n-button>
+  </n-space>
 </template>
 
-<script>
-const getArticleInfo = async () => {
-  // wait 3 seconds to mimic API call
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  const article = {
-    title: 'My Vue 3 Article',
-    author: 'Matt Maribojoc',
-  }
-  return article
-}
-export default {
-  async setup() {
-    const article = await getArticleInfo()
-    console.log(article)
-    return {
-      article,
-    }
-  },
-}
+<script setup>
+import { ref } from "vue";
+import { useLoadingBar } from "naive-ui";
+
+const loadingBar = useLoadingBar();
+const disabledRef = ref(true);
+
+const handleStart = () => {
+  loadingBar.start();
+  disabledRef.value = false;
+};
 </script>

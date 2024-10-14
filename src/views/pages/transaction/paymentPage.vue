@@ -9,12 +9,12 @@
   <!-- <pre>{{ bodyModal }}</pre> -->
     <template #header
       >Penerimaan Uang
-      <n-icon v-if="width <=620">
+      <!-- <n-icon v-if="width <=620">
         <phone-icon />
       </n-icon>
       <n-icon v-else>
         <desktop-icon />
-      </n-icon>
+      </n-icon> -->
     </template>
     <template #header-extra>
       <n-space>
@@ -290,6 +290,8 @@ import {
   DesktopOutline as DesktopIcon,
   PhonePortraitOutline as PhoneIcon,
 } from "@vicons/ionicons5";
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
 import { useMessage, NIcon, NTag, NButton, NInput } from "naive-ui";
 import { computed, onMounted, reactive, ref, h } from "vue";
 const searchField = ref(false);
@@ -450,6 +452,7 @@ const getDataPayment = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
   }

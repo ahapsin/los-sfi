@@ -56,6 +56,9 @@ import {
   SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
+
 const message = useMessage();
 const dataTable = ref([]);
 const searchBox = ref();
@@ -156,6 +159,7 @@ const getData = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadData.value = false;
     dataTable.value = response.data.response;
   }

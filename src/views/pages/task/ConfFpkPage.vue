@@ -887,7 +887,8 @@ const sum = (num1, num2) => {
   }
   return num1 + num2;
 };
-
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
 const getData = async () => {
   const response = await useApi({
       method: "get",
@@ -898,6 +899,7 @@ const getData = async () => {
       message.error("halam tidak ditemukan !");
       suspense.value = true;
   } else {
+    loadingBar.finish();
       message.loading("memuat fpk");
       suspense.value = false;
       pageData.value = response.data.response;

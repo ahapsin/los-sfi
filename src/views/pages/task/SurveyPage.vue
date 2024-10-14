@@ -105,6 +105,8 @@ import {
   DeleteOutlined as DeleteIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
+import { useLoadingBar } from "naive-ui";
+const loadingBar = useLoadingBar();
 const message = useMessage();
 const dialog = useDialog();
 const loadData = ref(false);
@@ -258,6 +260,7 @@ const getData = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadData.value = false;
     dataTable.value = response.data.response;
   }

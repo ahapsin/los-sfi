@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+ 
     <n-form
       ref="formRef"
       :model="dynamicForm"
@@ -7,7 +7,7 @@
       :label-placement="top"
       require-mark-placement="right-hanging"
     >
-      <n-space>
+    <div class="grid grid-cols-1 md:grid-cols-4 p-2 gap-2">
         <n-form-item path="old" label="Password Lama" required>
           <n-input
             type="password"
@@ -31,11 +31,11 @@
           />
         </n-form-item>
         <n-form-item>
-          <n-button type="primary" @click="handleUpdate">update</n-button>
+          <n-button class="flex w-full md:w-fit" type="primary" @click="handleUpdate" :disabled="dynamicForm.conf != dynamicForm.new">update</n-button>
         </n-form-item>
-      </n-space>
+      </div>
     </n-form>
-  </div>
+
 </template>
 <script setup>
 import { computed, reactive } from "vue";
