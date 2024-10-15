@@ -258,29 +258,11 @@
             </n-input-group>
           </n-form-item>
         </div>
-        <n-divider title-placement="left"> Dokumen Identitas </n-divider>
+        <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
         <n-space>
-          <n-upload
-            :data="{ type: 'ktp' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload KTP
-          </n-upload>
-          <n-upload
-            :data="{ type: 'ktp pasangan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload KTP Pasangan
-          </n-upload>
-          <n-upload
-            :data="{ type: 'kartu keluarga' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload Kartu Keluarga
-          </n-upload>
+          <file-upload title="KTP" endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id"/>
+          <file-upload title="KK" endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id"/>
+          <file-upload title="KTP Pasangan" endpoint="image_upload_prospect" type="ktp_pasangan" :idapp="dynamicForm.id"/>
         </n-space>
       </n-card>
       <n-card
@@ -330,60 +312,18 @@
             />
           </n-form-item>
         </div>
-        <n-divider title-placement="left"> Dokumen Jaminan </n-divider>
+        <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
         <n-space>
-          <n-upload
-            :data="{ type: 'no rangka' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload No Rangka
-          </n-upload>
-          <n-upload
-            :data="{ type: 'no mesin' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload No Mesin
-          </n-upload>
-          <n-upload
-            :data="{ type: 'stnk' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload STNK
-          </n-upload>
+          <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka" :idapp="dynamicForm.id"/>
+          <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin" :idapp="dynamicForm.id"/>
+          <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="dynamicForm.id"/>
         </n-space>
-        <n-divider />
+        <n-divider title-placement="left"> Upload Jaminan </n-divider>
         <n-space>
-          <n-upload
-            :data="{ type: 'tampak depan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak depan
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak belakang' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak belakang
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kanan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak kanan
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kiri' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak kiri
-          </n-upload>
+          <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="dynamicForm.id"/>
+          <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang" :idapp="dynamicForm.id"/>
+          <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="dynamicForm.id"/>
+          <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="dynamicForm.id"/>
         </n-space>
       </n-card>
       <n-card
@@ -498,12 +438,7 @@
           />
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
-        <n-upload
-          :data="{ type: 'dokumen pendukung' }"
-          list-type="image-card"
-          :custom-request="handleImagePost"
-        >
-        </n-upload>
+        <file-upload title="+" endpoint="image_upload_prospect" type="other" :idapp="dynamicForm.id"/>
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -779,7 +714,7 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
     Authorization: `Bearer ${userToken}`,
   };
   lyla
-    .post("https://api.kspdjaya.id/image_upload_prospect", {
+    .post("https://dev.kspdjaya.id/image_upload_prospect", {
       headers,
       body: form,
       onUploadProgress: ({ percent }) => {

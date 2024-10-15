@@ -1,20 +1,6 @@
 <template>
-  <n-space>
-    <n-button @click="handleStart"> start </n-button>
-    <n-button :disabled="disabled" @click="handleFinish"> finish </n-button>
-    <n-button @click="handleError"> error </n-button>
-  </n-space>
+  <file-upload title="upload" endpoint="image_upload_prospect" type="ktp" idapp="'12312312'"/>
 </template>
-
 <script setup>
-import { ref } from "vue";
-import { useLoadingBar } from "naive-ui";
-
-const loadingBar = useLoadingBar();
-const disabledRef = ref(true);
-
-const handleStart = () => {
-  loadingBar.start();
-  disabledRef.value = false;
-};
+import FileUpload from '../../components/atoms/FileUpload.vue';
 </script>
