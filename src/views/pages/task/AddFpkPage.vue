@@ -250,6 +250,7 @@
           <n-divider title-placement="left"> Dokumen </n-divider>
           <n-space v-show="actionPage != 'view'" justify="space-between">
             <n-space>
+              <file-upload title="test" endpoint="image_upload_prospect" type="other" :idapp="idApp"/>
               <n-upload
                 :data="{ type: 'no rangka' }"
                 list-type="image-card"
