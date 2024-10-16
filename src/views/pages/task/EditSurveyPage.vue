@@ -1,5 +1,5 @@
 <template>
-  <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert>
+  <!-- <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert> -->
   <n-scrollbar x-scrollable>
     <n-space class="p-4">
       <n-steps
@@ -65,7 +65,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -76,7 +78,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -87,7 +91,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -98,7 +104,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -115,7 +123,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -126,7 +136,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -137,7 +149,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -148,7 +162,9 @@
                   {{
                     skemaAngsuran.length == null
                       ? ` /
-                                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString(
+                                      "US"
+                                    )}`
                       : ""
                   }}
                 </n-text>
@@ -234,40 +250,30 @@
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Identitas </n-divider>
         <n-space vertical>
-          <n-space>
-            <div
-              v-for="file_id in dok_identitas"
-              class="flex items-center gap-2"
-            >
-              <n-image
-                :src="file_id.PATH"
-                class="!w-10 border !h-10 rounded-md"
-              />
-              <span class="uppercase text-pr">{{ file_id.TYPE }}</span>
-            </div>
-          </n-space>
           <n-space v-show="actionPage != 'view'">
-            <n-upload
-              :data="{ type: 'ktp' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload KTP
-            </n-upload>
-            <n-upload
-              :data="{ type: 'ktp pasangan' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload KTP Pasangan
-            </n-upload>
-            <n-upload
-              :data="{ type: 'kartu keluarga' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload Kartu Keluarga
-            </n-upload>
+            <n-space>
+              <file-upload
+                title="KTP"
+                endpoint="image_upload_prospect"
+                type="ktp"
+                :def_value="findDocByType(dok_identitas,'ktp')"
+                :idapp="pageData.id"
+              />
+              <file-upload
+                title="KK"
+                endpoint="image_upload_prospect"
+                type="kk"
+               :def_value="findDocByType(dok_identitas,'kk')"
+                :idapp="pageData.id"
+              />
+              <file-upload
+                title="KTP Pasangan"
+                endpoint="image_upload_prospect"
+                type="ktp_pasangan"
+                :def_value="findDocByType(dok_identitas,'ktp_pasangan')"
+                :idapp="pageData.id"
+              />
+            </n-space>
           </n-space>
         </n-space>
       </n-card>
@@ -278,7 +284,7 @@
         :segmented="{
           content: true,
           footer: 'soft',
-        }"
+        }" :key="jaminan.id"
       >
         <div
           v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai"
@@ -299,71 +305,60 @@
           <n-input placeholder="warna" v-model:value="jaminan.warna" />
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Jaminan </n-divider>
-        <n-space>
-          <n-space>
-            <div v-for="file_id in dok_jaminan" class="flex items-center gap-2">
-              <n-image
-                :src="file_id.PATH"
-                class="!w-10 border !h-10 rounded-md"
-              />
-              <span class="uppercase text-pr">{{ file_id.TYPE }}</span>
-            </div>
-          </n-space>
-        </n-space>
         <n-divider />
         <n-space v-show="actionPage != 'view'">
-          <n-upload
-            :data="{ type: 'no rangka' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload No Rangka
-          </n-upload>
-          <n-upload
-            :data="{ type: 'no mesin' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload No Mesin
-          </n-upload>
-          <n-upload
-            :data="{ type: 'stnk' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload STNK
-          </n-upload>
+          <file-upload
+            title="No Rangka"
+            :def_value="findDocByType(dok_jaminan,'no_rangka')"
+            endpoint="image_upload_prospect"
+            type="no_rangka"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="No Mesin"
+            endpoint="image_upload_prospect"
+            type="no_mesin"
+             :def_value="findDocByType(dok_jaminan,'no_mesin')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="STNK"
+            endpoint="image_upload_prospect"
+             :def_value="findDocByType(dok_jaminan,'stnk')"
+            type="stnk"
+            :idapp="pageData.id"
+          />
         </n-space>
         <n-divider v-show="actionPage != 'view'" />
         <n-space v-show="actionPage != 'view'">
-          <n-upload
-            :data="{ type: 'tampak depan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak depan
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak belakang' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak belakang
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kanan' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak kanan
-          </n-upload>
-          <n-upload
-            :data="{ type: 'tampak kiri' }"
-            list-type="image-card"
-            :custom-request="handleImagePost"
-          >
-            Upload tampak kiri
-          </n-upload>
+          <file-upload
+            title="Depan"
+            endpoint="image_upload_prospect"
+            type="depan"
+             :def_value="findDocByType(dok_jaminan,'depan')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Belakang"
+            endpoint="image_upload_prospect"
+            type="belakang"
+             :def_value="findDocByType(dok_jaminan,'belakang')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Kanan"
+            endpoint="image_upload_prospect"
+             :def_value="findDocByType(dok_jaminan,'kanan')"
+            type="kanan"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Kiri"
+             :def_value="findDocByType(dok_jaminan,'kiri')"
+            endpoint="image_upload_prospect"
+            type="kiri"
+            :idapp="pageData.id"
+          />
         </n-space>
       </n-card>
       <n-card
@@ -470,13 +465,12 @@
           </div>
         </n-space>
         <n-divider v-show="actionPage != 'view'" />
-        <n-upload
-          v-show="actionPage != 'view'"
-          :data="{ type: 'dokumen pendukung' }"
-          list-type="image-card"
-          :custom-request="handleImagePost"
-        >
-        </n-upload>
+        <file-upload
+          title="upload dokumen"
+          endpoint="image_upload_prospect"
+          type="other"
+          :idapp="pageData.id"
+        />
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -511,6 +505,7 @@
 <script setup>
 import { ref, reactive, onMounted, toRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 import {
   ArrowBackOutlined as ArrowBack,
   ArrowForwardOutlined as ArrowForward,
@@ -528,7 +523,6 @@ const suspense = ref({});
 const baseRoute = useRoute();
 const paramPage = baseRoute.params.idsurvey;
 const actionPage = baseRoute.params.action;
-const uuid = uuidv4();
 const current = ref(1);
 const loading = ref(false);
 const userToken = localStorage.getItem("token");
@@ -763,6 +757,12 @@ const format = (value) => {
   if (value === null) return "";
   return value.toLocaleString("en-US");
 };
+
+const findDocByType = (c,e) => {
+  const docPath = ref(_.find(c, { TYPE: e }));
+  if (docPath.value) return docPath.value.PATH;
+};
+
 onMounted(() => {
   getData();
 });

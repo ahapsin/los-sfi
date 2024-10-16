@@ -9,7 +9,7 @@
       require-mark-placement="right-hanging"
       label-width="auto"
     >
-      <n-space vertical class="bg-white  border rounded-2xl p-4">
+      <n-space vertical class="bg-white border rounded-2xl p-4">
         <n-steps
           :current="current"
           :status="currentStatus"
@@ -247,113 +247,94 @@
               v-model:value="alamatTagih.kode_pos"
             />
           </n-form-item>
-          <n-divider title-placement="left"> Dokumen </n-divider>
+          <n-divider title-placement="left"> Dokumen Identitas </n-divider>
           <n-space v-show="actionPage != 'view'" justify="space-between">
             <n-space>
-              <file-upload title="test" endpoint="image_upload_prospect" type="other" :idapp="idApp"/>
-              <n-upload
-                :data="{ type: 'no rangka' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                No RANGKA
-              </n-upload>
-              <n-upload
-                :data="{ type: 'no mesin' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                Upload No Mesin
-              </n-upload>
-              <n-upload
-                :data="{ type: 'stnk' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                Upload BPKB
-              </n-upload>
-              <n-upload
-                :data="{ type: 'ktp' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                Upload KTP Pelanggan
-              </n-upload>
-              <n-upload
-                :data="{ type: 'ktp pasangan' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                Upload KTP Pasangan
-              </n-upload>
-              <n-upload
-                :data="{ type: 'kartu keluarga' }"
-                list-type="image-card"
-                :custom-request="handleImagePost"
-              >
-                Upload KK
-              </n-upload>
+              <file-upload
+                title="KTP"
+                :def_value="findDocByType(dok_identitas, 'ktp')"
+                endpoint="image_upload_prospect"
+                type="no_rangka"
+                :idapp="pageData.survey_id"
+              />
+              <file-upload
+                title="KK"
+                :def_value="findDocByType(dok_identitas, 'kk')"
+                endpoint="image_upload_prospect"
+                type="no_rangka"
+                :idapp="pageData.survey_id"
+              />
+              <file-upload
+                title="KTP Pasangan"
+                :def_value="findDocByType(dok_identitas, 'ktp_pasangan')"
+                endpoint="image_upload_prospect"
+                type="no_rangka"
+                :idapp="pageData.survey_id"
+              />
             </n-space>
-            <n-upload
-              :data="{ type: 'dokumen lain' }"
-              multiple
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-            </n-upload>
           </n-space>
-          <n-divider v-show="actionPage != 'view'" />
+          <n-divider v-show="actionPage != 'view'" title-placement="left"
+            >Dokumen Jaminan</n-divider
+          >
           <n-space v-show="actionPage != 'view'">
-            <n-upload
-              :data="{ type: 'tampak depan' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload tampak depan
-            </n-upload>
-            <n-upload
-              :data="{ type: 'tampak belakang' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload tampak belakang
-            </n-upload>
-            <n-upload
-              :data="{ type: 'tampak kanan' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload tampak kanan
-            </n-upload>
-            <n-upload
-              :data="{ type: 'tampak kiri' }"
-              list-type="image-card"
-              :custom-request="handleImagePost"
-            >
-              Upload tampak kiri
-            </n-upload>
+            <file-upload
+              title="No Rangka"
+              :def_value="findDocByType(dok_jaminan, 'no_rangka')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="No Mesin"
+              :def_value="findDocByType(dok_jaminan, 'no_mesin')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="STNK"
+              :def_value="findDocByType(dok_jaminan, 'stnk')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="Depan"
+              :def_value="findDocByType(dok_jaminan, 'depan')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="Belakang"
+              :def_value="findDocByType(dok_jaminan, 'belakang')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="Kanan"
+              :def_value="findDocByType(dok_jaminan, 'kanan')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
+            <file-upload
+              title="Kiri"
+              :def_value="findDocByType(dok_jaminan, 'kiri')"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="pageData.survey_id"
+            />
           </n-space>
+          <n-divider v-show="actionPage != 'view'" title-placement="left"
+            >Dokumen Pendukung</n-divider
+          >
+          <n-image v-for="dok in dok_pendukung" :key="dok.id"
+            :src="dok.PATH"
+            class="h-20 w-20 bg-pr min-w-20 rounded-xl"
+          />
           <n-divider v-show="actionPage != 'view'" />
-          <n-space>
-            <div
-              v-for="attachment in dataAttachment"
-              :key="attachment"
-              class="bg-slate-50 !p-0"
-            >
-              <n-space>
-                <n-tooltip placement="top" trigger="hover">
-                  <template #trigger>
-                    <n-image
-                      class="w-20 h-20 border-b border-2 rounded-md"
-                      :src="attachment.PATH"
-                    >
-                    </n-image>
-                  </template>
-                  <span class="uppercase">{{ attachment.TYPE }}</span>
-                </n-tooltip>
-              </n-space>
-            </div>
-          </n-space>
         </n-card>
         <n-card
           v-if="current == 2"
@@ -650,7 +631,7 @@
                 placeholder="Tanggal lahir"
                 v-model:formatted-value="dataPenjamin.tgl_lahir"
                 value-format="yyyy-MM-dd"
-                format="dd-MM-YYYY"
+                format="dd-MM-yyyy"
                 type="date"
                 class="w-full"
               />
@@ -1000,20 +981,19 @@
   </n-spin>
 </template>
 <script setup>
-import { ref, reactive, computed, onMounted,toRef } from "vue";
-import { lyla } from "@lylajs/web";
+import { ref, reactive, computed, onMounted, toRef } from "vue";
 import { useRoute } from "vue-router";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
 import router from "../../../router";
 import { useMessage } from "naive-ui";
 import { useWindowSize } from "@vueuse/core";
+import _ from "lodash";
 import {
   Warning as WarningIcon,
   ChevronBack as ArrowBack,
   ChevronForward as ArrowForward,
   Send as SendIcon,
-
 } from "@vicons/ionicons5";
 
 const message = useMessage();
@@ -1055,8 +1035,6 @@ const dataPelanggan = ref({
   tipe_identitas: "KTP",
 });
 
-
-
 const { width } = useWindowSize();
 const alamatIdentitas = ref({});
 const alamatTagih = ref({});
@@ -1086,7 +1064,7 @@ const onCreate = () => {
     status: null,
   };
 };
-const pageData = ref();
+const pageData = ref([]);
 const suspense = ref(false);
 const current = ref(1);
 const userToken = localStorage.getItem("token");
@@ -1107,6 +1085,11 @@ const optJenisKelamin = ["Laki-laki", "perempuan"].map((v) => ({
   label: v,
   value: v,
 }));
+
+const findDocByType = (c, e) => {
+  const docPath = ref(_.find(c, { TYPE: e }));
+  if (docPath.value) return docPath.value.PATH;
+};
 const optReff = [
   "Temen / Saudara",
   "Mediator",
@@ -1186,6 +1169,9 @@ const rules = {
   },
 };
 const bl_pesan = ref();
+const dok_identitas = ref([]);
+const dok_pendukung = ref([]);
+const dok_jaminan = ref([]);
 const getData = async () => {
   const response = await useApi({
     method: "get",
@@ -1213,6 +1199,9 @@ const getData = async () => {
     Object.assign(dataKerabat.value, pageData.value.kerabat_darurat);
     Object.assign(dataSurat.value, pageData.value.surat);
     Object.assign(dataBank.value, pageData.value.info_bank);
+    Object.assign(dok_identitas.value, pageData.value.dokumen_indentitas);
+    Object.assign(dok_jaminan.value, pageData.value.dokumen_jaminan);
+    Object.assign(dok_pendukung.value, pageData.value.dokumen_pendukung);
     Object.assign(dataAttachment.value, pageData.value.attachment);
     let tgllahir = toRef(pageData.value.pelanggan);
     var myDate = tgllahir.value.tgl_lahir;
@@ -1373,32 +1362,6 @@ const handleSend = async (e) => {
     router.push("/task/apply-credit");
   }
 };
-const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
-  const form = new FormData();
-  form.append("image", file.file);
-  form.append("type", data.type);
-  console.log(pageData.value);
-  form.append("cr_prospect_id", idApp);
-  const headers = {
-    Authorization: `Bearer ${userToken}`,
-  };
-  console.log(form);
-  lyla
-    .post("https://api.kspdjaya.id/image_upload_prospect", {
-      headers,
-      body: form,
-      onUploadProgress: ({ percent }) => {
-        onProgress({ percent: Math.ceil(percent) });
-      },
-    })
-    .then(() => {
-      message.success("upload image berhasil");
-      onFinish();
-    })
-    .catch(() => {
-      message.error("upload image gagal !");
-      onError();
-    });
-};
+
 onMounted(getData);
 </script>
