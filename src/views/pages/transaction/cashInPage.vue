@@ -379,7 +379,7 @@ const getDataPelunasan = async (e) => {
     router.push("/");
   } else {
     dataRepayment.value = response.data;
-    pageData.tunggakan_denda = dataRepayment.value[0].DENDA;
+    pageData.tunggakan_denda = dataRepayment.value[0].TUNGGAKAN_DENDA;
   }
 };
 const rowProps = (row) => {

@@ -1,5 +1,4 @@
 <template>
-  
   <!-- <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert> -->
   <n-scrollbar x-scrollable>
     <n-space class="p-4">
@@ -251,40 +250,30 @@
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Identitas </n-divider>
         <n-space vertical>
-          <n-space>
-            <div
-              v-for="file_id in dok_identitas"
-              class="flex items-center gap-2"
-            >
-              <n-image
-                :src="file_id.PATH"
-                class="!w-10 border !h-10 rounded-md"
-              />
-              <span class="uppercase text-pr">{{ file_id.TYPE }}</span>
-            </div>
-          </n-space>
           <n-space v-show="actionPage != 'view'">
             <n-space>
               <file-upload
                 title="KTP"
                 endpoint="image_upload_prospect"
                 type="ktp"
+                :def_value="findDocByType(dok_identitas,'ktp')"
                 :idapp="pageData.id"
               />
               <file-upload
                 title="KK"
                 endpoint="image_upload_prospect"
                 type="kk"
+               :def_value="findDocByType(dok_identitas,'kk')"
                 :idapp="pageData.id"
               />
               <file-upload
                 title="KTP Pasangan"
                 endpoint="image_upload_prospect"
                 type="ktp_pasangan"
+                :def_value="findDocByType(dok_identitas,'ktp_pasangan')"
                 :idapp="pageData.id"
               />
             </n-space>
-
           </n-space>
         </n-space>
       </n-card>
@@ -295,7 +284,7 @@
         :segmented="{
           content: true,
           footer: 'soft',
-        }"
+        }" :key="jaminan.id"
       >
         <div
           v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai"
@@ -316,33 +305,60 @@
           <n-input placeholder="warna" v-model:value="jaminan.warna" />
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Jaminan </n-divider>
-        <n-space>
-          <n-space>
-            <div v-for="file_id in dok_jaminan" class="flex items-center gap-2">
-              <n-image
-                :src="file_id.PATH"
-                class="!w-10 border !h-10 rounded-md"
-              />
-              <span class="uppercase text-pr">{{ file_id.TYPE }}</span>
-            </div>
-          </n-space>
-        </n-space>
         <n-divider />
         <n-space v-show="actionPage != 'view'">
- 
-          <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka" :idapp="pageData.id"/>
-          <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin" :idapp="pageData.id"/>
-          <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="pageData.id"/>
-
+          <file-upload
+            title="No Rangka"
+            :def_value="findDocByType(dok_jaminan,'no_rangka')"
+            endpoint="image_upload_prospect"
+            type="no_rangka"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="No Mesin"
+            endpoint="image_upload_prospect"
+            type="no_mesin"
+             :def_value="findDocByType(dok_jaminan,'no_mesin')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="STNK"
+            endpoint="image_upload_prospect"
+             :def_value="findDocByType(dok_jaminan,'stnk')"
+            type="stnk"
+            :idapp="pageData.id"
+          />
         </n-space>
         <n-divider v-show="actionPage != 'view'" />
         <n-space v-show="actionPage != 'view'">
-
-          <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="pageData.id"/>
-          <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang" :idapp="pageData.id"/>
-          <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="pageData.id"/>
-          <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="pageData.id"/>
-
+          <file-upload
+            title="Depan"
+            endpoint="image_upload_prospect"
+            type="depan"
+             :def_value="findDocByType(dok_jaminan,'depan')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Belakang"
+            endpoint="image_upload_prospect"
+            type="belakang"
+             :def_value="findDocByType(dok_jaminan,'belakang')"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Kanan"
+            endpoint="image_upload_prospect"
+             :def_value="findDocByType(dok_jaminan,'kanan')"
+            type="kanan"
+            :idapp="pageData.id"
+          />
+          <file-upload
+            title="Kiri"
+             :def_value="findDocByType(dok_jaminan,'kiri')"
+            endpoint="image_upload_prospect"
+            type="kiri"
+            :idapp="pageData.id"
+          />
         </n-space>
       </n-card>
       <n-card
@@ -449,8 +465,12 @@
           </div>
         </n-space>
         <n-divider v-show="actionPage != 'view'" />
-        <file-upload title="upload dokumen" endpoint="image_upload_prospect" type="other" :idapp="pageData.id"/>
-     
+        <file-upload
+          title="upload dokumen"
+          endpoint="image_upload_prospect"
+          type="other"
+          :idapp="pageData.id"
+        />
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -485,6 +505,7 @@
 <script setup>
 import { ref, reactive, onMounted, toRef } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 import {
   ArrowBackOutlined as ArrowBack,
   ArrowForwardOutlined as ArrowForward,
@@ -736,6 +757,12 @@ const format = (value) => {
   if (value === null) return "";
   return value.toLocaleString("en-US");
 };
+
+const findDocByType = (c,e) => {
+  const docPath = ref(_.find(c, { TYPE: e }));
+  if (docPath.value) return docPath.value.PATH;
+};
+
 onMounted(() => {
   getData();
 });

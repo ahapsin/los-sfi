@@ -180,35 +180,11 @@ const handleSave = async (e) => {
   }
 }
 
-const getBranch = useApi({
-    method: 'GET',
-    api: `cabang`,
-    token: userToken
-}).then(res => {
-    if (!res.ok) {
-        message.error("error koneksi api");
-    } else {
-        dataBranch.value = res.data.response;
-    }
-});
+
 
 const dataPosition=ref([]);
-const getPosition = useApi({
-    method: 'GET',
-    api: `position`,
-    token: userToken
-}).then(res => {
-    if (!res.ok) {
-        message.error("error koneksi api");
-    } else {
-        dataPosition.value = res.data;
-    }
-});
 
-const optJabatan = ["MCF", "ADMIN", "KAPOS", "HO", "SUPERADMIN"].map((v) => ({
-  label: v,
-  value: v,
-}));
+
 
 const optJenisKelamin = ["Laki-laki", "Perempuan"].map((v) => ({
   label: v,

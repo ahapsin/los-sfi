@@ -1,36 +1,26 @@
 <template>
   <canvas ref="canvas" style="display: none"></canvas>
   <div class="border rounded-xl p-2 flex items-center gap-2">
-    <n-image
-      v-if="state.resizedImage"
-      :src="state.resizedImage"
-      class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-    />
-    <n-image
-     v-else-if="props.def_value"
-      :src="props.def_value"
-      class="border h-20 w-20  min-w-20 rounded-xl"
-    />
-    <n-image
-      src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
-      v-else
-      class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-    />
-    <n-upload @change="beforeUpload" :show-file-list="false">
-      <div class="flex flex-col">
-        <n-button tertiary type="success">
-          <div class="flex gap-2">
-            <n-icon> <upload-icon /> </n-icon>
-            {{ props.title }}
-          </div></n-button
-        >
-      </div>
-    </n-upload>
+      <n-image
+        v-if="state.resizedImage"
+        :src="state.resizedImage"
+        class="h-20 w-20 bg-pr"
+      />
+      <n-image
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8bikI-KUuM1IWosgqDRS5jyv2U_PPYlG6Tg&s"
+        v-else
+        class="h-20 w-20 bg-pr"
+      />
+      <n-upload @change="beforeUpload" :show-file-list="false">
+        <div class="flex flex-col">
+            <!-- <n-gradient-text :size="24"> {{ props.title }}</n-gradient-text> -->
+            <n-button tertiary type="success"> {{ props.title }}</n-button>
+        </div>
+      </n-upload>
   </div>
 </template>
-    
-    <script setup>
-import { CloudUploadFilled as UploadIcon } from "@vicons/material";
+  
+  <script setup>
 import { lyla } from "@lylajs/web";
 import { useMessage } from "naive-ui";
 
@@ -125,7 +115,6 @@ const props = defineProps({
   endpoint: String,
   type: String,
   idapp: String,
-  def_value:String,
 });
 // onMounted(()=>resizeImage());
 </script>

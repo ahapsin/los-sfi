@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <n-scrollbar x-scrollable>
-    <n-space class="bg-white border rounded-2xl p-4">
+    <n-space class="bg-white border  rounded-xl p-4 mb-2">
       <n-steps
         :current="current"
         :status="currentStatus"
@@ -14,7 +14,7 @@
       </n-steps>
     </n-space>
   </n-scrollbar>
-  <n-space vertical class="pt-4">
+  <n-space vertical class="">
     <n-form
       ref="formRef"
       :model="pelanggan"
@@ -260,9 +260,25 @@
         </div>
         <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
         <n-space>
-          <file-upload title="KTP" endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id"/>
-          <file-upload title="KK" endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id"/>
-          <file-upload title="KTP Pasangan" endpoint="image_upload_prospect" type="ktp_pasangan" :idapp="dynamicForm.id"/>
+          <file-upload
+            title="KTP"
+         
+            endpoint="image_upload_prospect"
+            type="ktp"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="KK"
+            endpoint="image_upload_prospect"
+            type="kk"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="KTP Pasangan"
+            endpoint="image_upload_prospect"
+            type="ktp_pasangan"
+            :idapp="dynamicForm.id"
+          />
         </n-space>
       </n-card>
       <n-card
@@ -314,16 +330,51 @@
         </div>
         <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
         <n-space>
-          <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka" :idapp="dynamicForm.id"/>
-          <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin" :idapp="dynamicForm.id"/>
-          <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="dynamicForm.id"/>
+          <file-upload
+            title="No Rangka"
+            endpoint="image_upload_prospect"
+            type="no_rangka"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="No Mesin"
+            endpoint="image_upload_prospect"
+            type="no_mesin"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="STNK"
+            endpoint="image_upload_prospect"
+            type="stnk"
+            :idapp="dynamicForm.id"
+          />
         </n-space>
         <n-divider title-placement="left"> Upload Jaminan </n-divider>
         <n-space>
-          <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="dynamicForm.id"/>
-          <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang" :idapp="dynamicForm.id"/>
-          <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="dynamicForm.id"/>
-          <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="dynamicForm.id"/>
+          <file-upload
+            title="Depan"
+            endpoint="image_upload_prospect"
+            type="depan"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="Belakang"
+            endpoint="image_upload_prospect"
+            type="belakang"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="Kanan"
+            endpoint="image_upload_prospect"
+            type="kanan"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="Kiri"
+            endpoint="image_upload_prospect"
+            type="kiri"
+            :idapp="dynamicForm.id"
+          />
         </n-space>
       </n-card>
       <n-card
@@ -438,7 +489,12 @@
           />
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
-        <file-upload title="+" endpoint="image_upload_prospect" type="other" :idapp="dynamicForm.id"/>
+        <file-upload
+          title="dokumen pendukung"
+          endpoint="image_upload_prospect"
+          type="other"
+          :idapp="dynamicForm.id"
+        />
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -482,7 +538,6 @@ import router from "../../../router";
 import { useWindowSize } from "@vueuse/core";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
-import { lyla } from "@lylajs/web";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
@@ -703,33 +758,7 @@ const handleSave = async (e) => {
     router.push("/task/survey");
   }
 };
-const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
-  let idApp = uuid;
-  console.log(data);
-  const form = new FormData();
-  form.append("image", file.file);
-  form.append("type", data.type);
-  form.append("cr_prospect_id", idApp);
-  const headers = {
-    Authorization: `Bearer ${userToken}`,
-  };
-  lyla
-    .post("https://dev.kspdjaya.id/image_upload_prospect", {
-      headers,
-      body: form,
-      onUploadProgress: ({ percent }) => {
-        onProgress({ percent: Math.ceil(percent) });
-      },
-    })
-    .then(() => {
-      message.success("upload gambar berhasil");
-      onFinish();
-    })
-    .catch(() => {
-      message.success("upload gambar gagal");
-      onError();
-    });
-};
+
 const tahunJaminanValidate = () => {
   let tahun = new Date().getFullYear();
   let diff = tahun - jaminan.value.tahun;

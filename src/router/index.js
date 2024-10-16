@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // slice
 
-
 const routes = [
   {
     path: "/",
