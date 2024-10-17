@@ -1,5 +1,27 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
+  <!-- <n-collapse>
+    <n-collapse-item title="identitas" name="1">
+      <div>
+        <pre>{{ dok_identitas }}</pre>
+      </div>
+    </n-collapse-item>
+    <n-collapse-item title="jaminan" name="2">
+      <div>
+        <pre>{{ dok_jaminan }}</pre>
+      </div>
+    </n-collapse-item>
+    <n-collapse-item title="order" name="3">
+      <div>
+        <pre>{{ dataOrder }}</pre>
+      </div>
+    </n-collapse-item>
+    <n-collapse-item title="taksasi" name="4">
+      <div>
+        <pre>{{ dataTaksasi }}</pre>
+      </div>
+    </n-collapse-item>
+  </n-collapse> -->
   <n-spin :show="suspense">
     <n-form
       ref="formRef"
@@ -254,21 +276,21 @@
                 title="KTP"
                 :def_value="findDocByType(dok_identitas, 'ktp')"
                 endpoint="image_upload_prospect"
-                type="no_rangka"
+                type="ktp"
                 :idapp="pageData.survey_id"
               />
               <file-upload
                 title="KK"
                 :def_value="findDocByType(dok_identitas, 'kk')"
                 endpoint="image_upload_prospect"
-                type="no_rangka"
+                type="kk"
                 :idapp="pageData.survey_id"
               />
               <file-upload
                 title="KTP Pasangan"
                 :def_value="findDocByType(dok_identitas, 'ktp_pasangan')"
                 endpoint="image_upload_prospect"
-                type="no_rangka"
+                type="ktp_pasangan"
                 :idapp="pageData.survey_id"
               />
             </n-space>
@@ -288,52 +310,66 @@
               title="No Mesin"
               :def_value="findDocByType(dok_jaminan, 'no_mesin')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="no_mesin"
               :idapp="pageData.survey_id"
             />
             <file-upload
               title="STNK"
               :def_value="findDocByType(dok_jaminan, 'stnk')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="stnk"
               :idapp="pageData.survey_id"
             />
             <file-upload
               title="Depan"
               :def_value="findDocByType(dok_jaminan, 'depan')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="depan"
               :idapp="pageData.survey_id"
             />
             <file-upload
               title="Belakang"
               :def_value="findDocByType(dok_jaminan, 'belakang')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="belakang"
               :idapp="pageData.survey_id"
             />
             <file-upload
               title="Kanan"
               :def_value="findDocByType(dok_jaminan, 'kanan')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="kanan"
               :idapp="pageData.survey_id"
             />
             <file-upload
               title="Kiri"
               :def_value="findDocByType(dok_jaminan, 'kiri')"
               endpoint="image_upload_prospect"
-              type="no_rangka"
+              type="kiri"
               :idapp="pageData.survey_id"
             />
           </n-space>
           <n-divider v-show="actionPage != 'view'" title-placement="left"
             >Dokumen Pendukung</n-divider
           >
-          <n-image v-for="dok in dok_pendukung" :key="dok.id"
-            :src="dok.PATH"
-            class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-          />
+          <div>
+            <file-upload
+              :def_preview="true"
+              title="pendukung"
+              :def_value="findDocByType(dok_pendukung, 'other')"
+              endpoint="image_upload_prospect"
+              type="other"
+              :idapp="pageData.survey_id"
+            />
+            <div class="grid grid-cols-10 grid-flow-row gap-2 pt-2" v-if="dok_pendukung.length > 0">
+              <n-image
+                v-for="dok in dok_pendukung"
+                :key="dok.id"
+                :src="dok.PATH"
+                class="min-w-20 rounded-xl hover:shadow-md hover:border-2"
+              />
+            </div>
+          </div>
           <n-divider v-show="actionPage != 'view'" />
         </n-card>
         <n-card
