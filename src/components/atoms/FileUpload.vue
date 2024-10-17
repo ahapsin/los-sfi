@@ -1,29 +1,30 @@
 <template>
   <canvas ref="canvas" style="display: none"></canvas>
   <div class="border rounded-xl p-2 flex items-center gap-2">
-    <n-image
-      v-if="state.resizedImage"
-      :src="state.resizedImage"
-      class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-    />
-    <n-image
-     v-else-if="props.def_value"
-      :src="props.def_value"
-      class="border h-20 w-20  min-w-20 rounded-xl"
-    />
-    <n-image
-      src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
-      v-else
-      class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-    />
-    <n-upload @change="beforeUpload" :show-file-list="false">
+    <div v-show="!props.def_preview">
+      <n-image
+        v-if="state.resizedImage"
+        :src="state.resizedImage"
+        class="h-20 w-20 bg-pr min-w-20 rounded-xl"
+      />
+      <n-image
+       v-else-if="props.def_value"
+        :src="props.def_value"
+        class="border h-20 w-20  min-w-20 rounded-xl"
+      />
+      <n-image
+        src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
+        v-else
+        class="h-20 w-20 bg-pr min-w-20 rounded-xl"
+      />
+    </div>
+    <n-upload @change="beforeUpload" :show-file-list="props.def_preview" list-type="image" multiple :show-cancel-button="false">
       <div class="flex flex-col">
         <n-button tertiary type="success">
           <div class="flex gap-2">
             <n-icon> <upload-icon /> </n-icon>
             {{ props.title }}
-          </div></n-button
-        >
+          </div></n-button>
       </div>
     </n-upload>
   </div>
@@ -113,10 +114,10 @@ const handleImagePost = () => {
       json: bodyForm,
     })
     .then(() => {
-      message.success("upload gambar berhasil");
+      message.success(`upload ${props.title} berhasil`);
     })
     .catch(() => {
-      message.error("upload gambar gagal");
+      message.error(`upload ${props.title}  gagal`);
     });
 };
 
@@ -126,6 +127,7 @@ const props = defineProps({
   type: String,
   idapp: String,
   def_value:String,
+  def_preview: Boolean,
 });
 // onMounted(()=>resizeImage());
 </script>

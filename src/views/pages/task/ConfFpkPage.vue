@@ -193,11 +193,42 @@
               </n-form-item>
 
               <n-divider title-placement="left">
-                  Dokumen
+                  Dokumen Identitas
               </n-divider>
-
               <n-space>
-                  <div v-for="attachment in dataAttachment" :key="attachment" class="bg-slate-50 !p-0">
+                  <div v-for="attachment in dok_identitas" :key="attachment" class="bg-slate-50 !p-0">
+                      <n-space>
+                          <n-tooltip placement="top" trigger="hover">
+                              <template #trigger>
+                                  <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
+                                  </n-image>
+                              </template>
+                              <span class="uppercase">{{ attachment.TYPE }}</span>
+                          </n-tooltip>
+                      </n-space>
+                  </div>
+              </n-space>
+              <n-divider title-placement="left">
+                  Dokumen Jaminan
+              </n-divider>
+              <n-space>
+                  <div v-for="attachment in dok_jaminan" :key="attachment" class="bg-slate-50 !p-0">
+                      <n-space>
+                          <n-tooltip placement="top" trigger="hover">
+                              <template #trigger>
+                                  <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
+                                  </n-image>
+                              </template>
+                              <span class="uppercase">{{ attachment.TYPE }}</span>
+                          </n-tooltip>
+                      </n-space>
+                  </div>
+              </n-space>
+              <n-divider title-placement="left">
+                  Dokumen Pendukung
+              </n-divider>
+              <n-space>
+                  <div v-for="attachment in dok_pendukung" :key="attachment" class="bg-slate-50 !p-0">
                       <n-space>
                           <n-tooltip placement="top" trigger="hover">
                               <template #trigger>
@@ -821,6 +852,9 @@ const sum = (num1, num2) => {
 };
 import { useLoadingBar } from "naive-ui";
 const loadingBar = useLoadingBar();
+const dok_identitas = ref([]);
+const dok_pendukung = ref([]);
+const dok_jaminan = ref([]);
 const getData = async () => {
   const response = await useApi({
       method: "get",
@@ -858,6 +892,9 @@ const getData = async () => {
       Object.assign(dataSurat.value, pageData.value.surat);
       Object.assign(dataBank.value, pageData.value.info_bank);
       Object.assign(dataAttachment.value, pageData.value.attachment);
+      Object.assign(dok_identitas.value, pageData.value.dokumen_indentitas);
+      Object.assign(dok_jaminan.value, pageData.value.dokumen_jaminan);
+      Object.assign(dok_pendukung.value, pageData.value.dokumen_pendukung);
       let tgllahir = toRef(pageData.value.pelanggan);
       var myDate = tgllahir.value.tgl_lahir;
       myDate = myDate.split("-");

@@ -1465,7 +1465,7 @@ pdfmake.createPdf({
         {
           text: `Pasal 1`,
           alignment: "center",
-          margin: [0, 20, 0, 0],
+          margin: [0, 0, 0, 0],
         },
         {
           text: `Pihak pertama memberikan pinjaman pada pihak kedua meliputi pokok hutang dan margin atas pinjaman menjadi sebesar ${pkData.value.pokok_margin}`,
@@ -1474,7 +1474,7 @@ pdfmake.createPdf({
         {
           text: `Pasal 2`,
           alignment: "center",
-          margin: [0, 20, 0, 0],
+          margin: [0, 0, 0, 0],
         },
         {
           text: `Pengembalian pinjaman tersebut akan dibayarkan untuk jangka ${pkData.value.tenor} BULAN lamanya, dimulai tanggal ${pkData.value.tgl_awal_cicilan} berakhir pada tanggal ${pkData.value.tgl_akhir_cicilan} dengan jumlah angsuran sebesar ${pkData.value.angsuran}`,
@@ -1483,7 +1483,7 @@ pdfmake.createPdf({
         {
           text: `Pasal 3`,
           alignment: "center",
-          margin: [0, 20, 0, 0],
+          margin: [0, 0, 0, 0],
         },
         {
           text: `Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak Kedua dengan ini menyerahkan jaminan barang miliknya sendiri berupa , dengan dibuktikan diserahkannya Bukti Kepemilikan dengan spesifikasi sebagai berikut`,

@@ -1,7 +1,7 @@
 <template>
-  <!-- <n-alert title="Informasi" type="warning"> keterangan informasi </n-alert> -->
+<blacklist-alert :pesan="bl_pesan" />
   <n-scrollbar x-scrollable>
-    <n-space class="p-4">
+    <n-space class="bg-white border rounded-xl p-4 mb-2">
       <n-steps
         :current="current"
         :status="currentStatus"
@@ -14,7 +14,7 @@
       </n-steps>
     </n-space>
   </n-scrollbar>
-  <n-space vertical class="pt-4">
+  <n-space vertical>
     <n-form
       ref="formRef"
       :model="model"

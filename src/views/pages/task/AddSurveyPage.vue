@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <n-scrollbar x-scrollable>
-    <n-space class="bg-white border  rounded-xl p-4 mb-2">
+    <n-space class="bg-white border rounded-xl p-4 mb-2">
       <n-steps
         :current="current"
         :status="currentStatus"
@@ -218,23 +218,26 @@
             <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
-            <n-alert
-              title="Informasi"
-              type="warning"
-              :bordered="bordered"
-              v-if="notifUsia"
-            >
-              {{ noteUsia }}</n-alert
-            >
-            <n-date-picker
-              placeholder="Tanggal Lahir"
-              class="w-full"
-              v-model:formatted-value="pelanggan.tgl_lahir"
-              value-format="yyyy-MM-dd"
-              format="dd-MM-yyyy"
-              type="date"
-              @update:value="handleTanggalLahir"
-            />
+            <div class="w-full">
+              <n-alert
+                title="Informasi"
+                type="warning"
+                closable
+                :bordered="bordered"
+                v-if="notifUsia"
+              >
+                {{ noteUsia }}</n-alert
+              >
+              <n-date-picker
+                placeholder="Tanggal Lahir"
+                class="w-full"
+                v-model:formatted-value="pelanggan.tgl_lahir"
+                value-format="yyyy-MM-dd"
+                format="dd-MM-yyyy"
+                type="date"
+                @update:value="handleTanggalLahir"
+              />
+            </div>
           </n-form-item>
           <n-form-item label="No Handphone" path="HP" class="w-full">
             <n-input
@@ -262,7 +265,6 @@
         <n-space>
           <file-upload
             title="KTP"
-         
             endpoint="image_upload_prospect"
             type="ktp"
             :idapp="dynamicForm.id"
@@ -490,11 +492,12 @@
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
         <file-upload
-          title="dokumen pendukung"
-          endpoint="image_upload_prospect"
-          type="other"
-          :idapp="dynamicForm.id"
-        />
+              :def_preview="true"
+              title="dokumen pendukung"
+              endpoint="image_upload_prospect"
+              type="other"
+              :idapp="dynamicForm.id"
+            />
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -580,7 +583,7 @@ const tujuanKredit = ["konsumsi", "investasi"].map((v) => ({
   label: v,
   value: v,
 }));
-const jenisAngsuran = ["Bulanan"].map((v) => ({
+const jenisAngsuran = ["Bulanan","Musiman"].map((v) => ({
   label: v,
   value: v.toLowerCase(),
 }));
