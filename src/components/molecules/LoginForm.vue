@@ -17,6 +17,9 @@
                     @click="handleLogin">
                     Login
                 </n-button>
+                <div class="flex justify-center mt-4 text-sm">
+                    <n-text>v. 0.0.1</n-text>
+                </div>
             </div>
         </n-form>
     </div>
