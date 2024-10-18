@@ -1,30 +1,44 @@
 <template>
   <canvas ref="canvas" style="display: none"></canvas>
-  <div class="border rounded-xl p-2 flex items-center gap-2">
+  <div
+    class="border rounded-xl pt-2 pl-2 pr-2 flex items-center gap-2"
+    :class="errorCapture ? 'border-red-200 bg-red-50' : 'border'"
+  >
     <div v-show="!props.def_preview">
-      <n-image
-        v-if="state.resizedImage"
-        :src="state.resizedImage"
-        class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-      />
-      <n-image
-       v-else-if="props.def_value"
-        :src="props.def_value"
-        class="border h-20 w-20  min-w-20 rounded-xl"
-      />
-      <n-image
-        src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
-        v-else
-        class="h-20 w-20 bg-pr min-w-20 rounded-xl"
-      />
+      <div v-if="state.resizedImage">
+        <n-image
+          :src="state.resizedImage"
+          class="h-20 w-20 min-w-20 rounded-xl"
+        />
+      </div>
+      <div v-else-if="props.def_value">
+        <n-image
+          :src="props.def_value"
+          class="h-20 w-20 bg-pr min-w-20 rounded-xl border-red-500"
+        />
+      </div>
+      <div v-else>
+        <n-image
+          src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
+          class="h-20 w-20 min-w-20 rounded-xl border-red-500"
+        />
+      </div>
     </div>
-    <n-upload @change="beforeUpload" :show-file-list="props.def_preview" list-type="image" multiple :show-cancel-button="false">
+    <n-upload
+      accept="image/png, image/jpeg,image/jpg"
+      @change="beforeUpload"
+      :show-file-list="props.def_preview"
+      list-type="image"
+      multiple
+      :show-cancel-button="false"
+    >
       <div class="flex flex-col">
-        <n-button tertiary type="success">
+        <n-button tertiary :type="errorCapture ? 'error' : 'success'">
           <div class="flex gap-2">
             <n-icon> <upload-icon /> </n-icon>
             {{ props.title }}
-          </div></n-button>
+          </div></n-button
+        >
       </div>
     </n-upload>
   </div>
@@ -95,6 +109,7 @@ const resizeImage = (file) => {
 const beforeUpload = (data) => {
   resizeImage(data.file.file);
 };
+const errorCapture = ref(false);
 const handleImagePost = () => {
   const bodyForm = {
     image: state.resizedImage,
@@ -109,7 +124,7 @@ const handleImagePost = () => {
     Authorization: `Bearer ${userToken}`,
   };
   lyla
-    .post(`https://dev.kspdjaya.id/${props.endpoint}`, {
+    .post(`${import.meta.env.VITE_APP_API_BASE}${props.endpoint}`, {
       headers,
       json: bodyForm,
     })
@@ -118,6 +133,7 @@ const handleImagePost = () => {
     })
     .catch(() => {
       message.error(`upload ${props.title}  gagal`);
+      errorCapture.value = true;
     });
 };
 
@@ -126,7 +142,7 @@ const props = defineProps({
   endpoint: String,
   type: String,
   idapp: String,
-  def_value:String,
+  def_value: String,
   def_preview: Boolean,
 });
 // onMounted(()=>resizeImage());
