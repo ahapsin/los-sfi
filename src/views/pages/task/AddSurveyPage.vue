@@ -262,26 +262,28 @@
           </n-form-item>
         </div>
         <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
-        <n-space>
-          <file-upload
-            title="KTP"
-            endpoint="image_upload_prospect"
-            type="ktp"
-            :idapp="dynamicForm.id"
-          />
-          <file-upload
-            title="KK"
-            endpoint="image_upload_prospect"
-            type="kk"
-            :idapp="dynamicForm.id"
-          />
-          <file-upload
-            title="KTP Pasangan"
-            endpoint="image_upload_prospect"
-            type="ktp_pasangan"
-            :idapp="dynamicForm.id"
-          />
-        </n-space>
+
+          <div class="flex flex-col md:flex-row gap-2">
+            <file-upload
+              title="KTP"
+              endpoint="image_upload_prospect"
+              type="ktp"
+              :idapp="dynamicForm.id"
+            />
+            <file-upload
+              title="KK"
+              endpoint="image_upload_prospect"
+              type="kk"
+              :idapp="dynamicForm.id"
+            />
+            <file-upload
+              title="KTP Pasangan"
+              endpoint="image_upload_prospect"
+              type="ktp_pasangan"
+              :idapp="dynamicForm.id"
+            />
+          </div>
+
       </n-card>
       <n-card
         v-show="current == 3"
@@ -331,26 +333,27 @@
           </n-form-item>
         </div>
         <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
-        <n-space>
-          <file-upload
-            title="No Rangka"
-            endpoint="image_upload_prospect"
-            type="no_rangka"
-            :idapp="dynamicForm.id"
-          />
-          <file-upload
-            title="No Mesin"
-            endpoint="image_upload_prospect"
-            type="no_mesin"
-            :idapp="dynamicForm.id"
-          />
-          <file-upload
-            title="STNK"
-            endpoint="image_upload_prospect"
-            type="stnk"
-            :idapp="dynamicForm.id"
-          />
-        </n-space>
+   
+        <div class="flex flex-col md:flex-row gap-2">
+            <file-upload
+              title="No Rangka"
+              endpoint="image_upload_prospect"
+              type="no_rangka"
+              :idapp="dynamicForm.id"
+            />
+            <file-upload
+              title="No Mesin"
+              endpoint="image_upload_prospect"
+              type="no_mesin"
+              :idapp="dynamicForm.id"
+            />
+            <file-upload
+              title="STNK"
+              endpoint="image_upload_prospect"
+              type="stnk"
+              :idapp="dynamicForm.id"
+            />
+          </div>
         <n-divider title-placement="left"> Upload Jaminan </n-divider>
         <n-space>
           <file-upload
