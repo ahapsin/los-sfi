@@ -14,7 +14,7 @@
       <div v-else-if="props.def_value">
         <n-image
           :src="props.def_value"
-          class="h-20 w-20 bg-pr min-w-20 rounded-xl border-red-500"
+          class="h-20 w-20 border min-w-20 rounded-xl "
         />
       </div>
       <div v-else>

@@ -6,10 +6,11 @@
       footer: 'soft',
     }"
   >
+  <pre>{{ pelunasan }}</pre>
     <template #header>Pelunasan Angsuran</template>
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
-      <n-space>
+      <n-space v-if="!props.embed">
         <n-button
           round
           v-show="!searchField"
@@ -54,8 +55,13 @@
           </template>
         </n-button>
       </n-space>
+      <n-space v-show="props.embed ? true : displayFasilitas">
+        <n-tag type="warning"
+          >No Kontrak <b>{{ props.atr }}</b></n-tag
+        >
+      </n-space>
     </template>
-    <div class="flex flex-col md:flex-row gap-2">
+    <div class="flex flex-col md:flex-row gap-2" v-show="!props.embed">
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input
           v-model:value="dynamicSearch.nama"
@@ -90,15 +96,19 @@
         :scroll-x="1200"
         size="small"
         :row-key="(row) => row.loan_number"
-        :columns="columns"
+        :columns="props.embed ? columnsEmbed : columns"
         :data="dataSearch"
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
         :loading="loadSearch"
         class="pb-2"
-        v-show="displayFasilitas"
+        v-show="props.embed ? true : displayFasilitas"
       />
-      <n-table size="small" v-show="displayDetail" class="mb-2">
+      <n-table
+        size="small"
+        v-show="props.embed ? true : displayFasilitas"
+        class="mb-2"
+      >
         <thead>
           <tr>
             <th>#</th>
@@ -142,7 +152,7 @@
       </n-table>
       <div
         class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
-        v-show="displayPayment"
+        v-show="props.embed ? true : displayFasilitas"
       >
         <n-form-item
           path="nestedValue.path2"
@@ -362,7 +372,7 @@ import {
   useMessage,
   useDialog,
 } from "naive-ui";
-import { computed, reactive, ref, h } from "vue";
+import { computed, reactive, ref, h, onMounted } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
@@ -428,6 +438,38 @@ const createColumns = () => {
     },
   ];
 };
+const createColumnsEmbed = () => {
+  return [
+    {
+      title: "No Kontrak",
+      key: "loan_number",
+      sorter: "default",
+    },
+    {
+      title: "Nama",
+      key: "nama",
+      sorter: "default",
+      fixed: "left",
+    },
+    {
+      title: "No Polisi",
+      key: "no_polisi",
+      sorter: "default",
+    },
+    {
+      title: "Alamat",
+      key: "alamat",
+      sorter: "default",
+    },
+    {
+      title: "Angsuran",
+      key: "angsuran",
+      render(row) {
+        return h("div", row.angsuran.toLocaleString("US"));
+      },
+    },
+  ];
+};
 const handleDone = () => {
   dialogProses.value = false;
   router.push({ name: "pembayaran" });
@@ -444,6 +486,7 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const columns = createColumns();
+const columnsEmbed = createColumnsEmbed();
 const loadingAngsuran = ref(false);
 const displayDetail = ref(false);
 const displayPayment = ref(false);
@@ -653,6 +696,17 @@ const handleExpand = () => {
   const fullPage = router.resolve({ name: "expand transaction" });
   window.open(fullPage.href, "_blank");
 };
+const props = defineProps({
+  embed: Boolean,
+  atr: String,
+});
+onMounted(() => {
+  if (props.embed) {
+    dynamicSearch.no_kontrak = props.atr;
+    handleSearch();
+    getDataPelunasan([props.atr]);
+  }
+});
 const handleBack = () => {
   router.push({ name: "pelunasan" });
 };
