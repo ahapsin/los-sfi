@@ -73,7 +73,7 @@ const props = defineProps({
 });
 
 const getBrand = async () => {
-    loadingBrand.value = true;
+    loadingBrand.value = false;
 
     let userToken = localStorage.getItem("token");
     const response = await useApi({
@@ -93,7 +93,7 @@ const getBrand = async () => {
     }
 }
 const getTipe = async () => {
-    loadingTipe.value = true;
+    loadingTipe.value = false;
     const bodyData = {
         merk: props.brand,
     }
@@ -116,7 +116,7 @@ const getTipe = async () => {
     }
 }
 const getTahun = async () => {
-    loadingTahun.value = true;
+    loadingTahun.value = false;
     const bodyData = {
         merk: props.brand,
         tipe: props.tipe,

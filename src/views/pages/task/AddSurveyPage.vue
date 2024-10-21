@@ -41,138 +41,142 @@
             <b>{{ (jaminan.nilai * 0.5).toLocaleString("US") }}</b></n-alert
           >
         </div>
-        <n-form-item label="Plafond" path="plafond">
-          <n-input-number
-            :parse="parse"
-            :format="format"
-            v-model:value="order.plafond"
-            placeholder="plafond"
-            :show-button="false"
-            class="flex !w-full"
-            :on-update:value="handlePlafond"
-            :loading="loading"
-          />
-        </n-form-item>
-        <n-form-item label="Jenis Angsuran" path="jenis">
-          <n-select
-            filterable
-            placeholder="Jenis Angsuran"
-            :options="jenisAngsuran"
-            v-model:value="order.jenis_angsuran"
-            :on-update:value="handleTipe"
-            :disabled="order.plafond != 0 ? false : true"
-          />
-        </n-form-item>
-        <n-form-item label="Tenor / Angsuran" path="tenor">
-          <div
-            class="flex flex-col md:flex-row"
-            v-show="tipeAngsuran == 'bulanan'"
-          >
-            <n-radio-group v-model:value="order.tenor" name="radiogroup">
-              <n-radio @change="handleChange" name="tenor" value="6">
-                6 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="12">
-                12 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="18">
-                18 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="24">
-                24 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-            </n-radio-group>
-          </div>
-          <div
-            class="flex flex-col md:flex-row"
-            v-show="tipeAngsuran == 'musiman'"
-          >
-            <n-radio-group v-model:value="order.tenor" name="radiogroup">
-              <n-radio @change="handleChange" name="tenor" value="3">
-                1x 3 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="6">
-                1 x 6 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="12">
-                2 x 12 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-              <n-divider vertical />
-              <n-radio name="tenor" @change="handleChange" value="18">
-                3 x 18 bulan<n-text code>
-                  {{
-                    skemaAngsuran.length == null
-                      ? ` /
-                  ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                      : ""
-                  }}
-                </n-text>
-              </n-radio>
-            </n-radio-group>
-          </div>
-        </n-form-item>
-        <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
-          <n-select
-            filterable
-            placeholder="Tujuan Kredit"
-            :options="tujuanKredit"
-            v-model:value="order.tujuan_kredit"
-          />
-        </n-form-item>
+        <n-space>
+          <n-form-item label="Plafond" path="plafond">
+            <n-input-number
+              :parse="parse"
+              :format="format"
+              v-model:value="order.plafond"
+              placeholder="plafond"
+              :show-button="false"
+              class="flex !w-full"
+              :on-update:value="handlePlafond"
+              :loading="loading"
+            />
+          </n-form-item>
+          <n-form-item label="Jenis Angsuran" path="jenis">
+            <n-select
+              filterable
+              placeholder="Jenis Angsuran"
+              :options="jenisAngsuran"
+              v-model:value="order.jenis_angsuran"
+              :on-update:value="handleTipe"
+              :disabled="order.plafond != 0 ? false : true"
+            />
+          </n-form-item>
+        </n-space>
+        <n-space>
+          <n-form-item label="Tenor / Angsuran" path="tenor">
+            <div
+              class="flex flex-col md:flex-row"
+              v-show="tipeAngsuran == 'bulanan'"
+            >
+              <n-radio-group v-model:value="order.tenor" name="radiogroup">
+                <n-radio @change="handleChange" name="tenor" value="6">
+                  6 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="12">
+                  12 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="18">
+                  18 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="24">
+                  24 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+              </n-radio-group>
+            </div>
+            <div
+              class="flex flex-col md:flex-row"
+              v-show="tipeAngsuran == 'musiman'"
+            >
+              <n-radio-group v-model:value="order.tenor" name="radiogroup">
+                <n-radio @change="handleChange" name="tenor" value="3">
+                  1x 3 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="6">
+                  1 x 6 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="12">
+                  2 x 12 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" @change="handleChange" value="18">
+                  3 x 18 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+              </n-radio-group>
+            </div>
+          </n-form-item>
+          <n-form-item label="Tujuan Kredit" path="tujuan_kredit">
+            <n-select
+              filterable
+              placeholder="Tujuan Kredit"
+              :options="tujuanKredit"
+              v-model:value="order.tujuan_kredit"
+            />
+          </n-form-item>
+        </n-space>
       </n-card>
       <n-card
         v-show="current == 2"
@@ -215,7 +219,11 @@
         </div>
         <div class="md:flex gap-2">
           <n-form-item label="Nama" path="nama" class="w-full">
-            <n-input placeholder="Nama" v-model:value="pelanggan.nama" />
+            <n-input
+              placeholder="Nama"
+              v-model:value="pelanggan.nama"
+              @input="upCase"
+            />
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
             <div class="w-full">
@@ -239,7 +247,7 @@
               />
             </div>
           </n-form-item>
-          <n-form-item label="No Handphone" path="HP" class="w-full">
+          <n-form-item label="No Handphone" path="hp" class="w-full">
             <n-input
               placeholder="No Handphone"
               v-model:value="pelanggan.no_hp"
@@ -247,7 +255,12 @@
           </n-form-item>
         </div>
         <div class="flex flex-col md:flex-row gap-2 gap-x-2">
-          <n-form-item label="Alamat" path="alamat" class="w-full">
+          <n-form-item
+            label="Alamat"
+            path="alamat"
+            class="w-full"
+            @input="upCase"
+          >
             <n-input
               placeholder="Alamat"
               v-model:value="pelanggan.alamat"
@@ -263,27 +276,26 @@
         </div>
         <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
 
-          <div class="flex flex-col md:flex-row gap-2">
-            <file-upload
-              title="KTP"
-              endpoint="image_upload_prospect"
-              type="ktp"
-              :idapp="dynamicForm.id"
-            />
-            <file-upload
-              title="KK"
-              endpoint="image_upload_prospect"
-              type="kk"
-              :idapp="dynamicForm.id"
-            />
-            <file-upload
-              title="KTP Pasangan"
-              endpoint="image_upload_prospect"
-              type="ktp_pasangan"
-              :idapp="dynamicForm.id"
-            />
-          </div>
-
+        <div class="flex flex-col md:flex-row gap-2">
+          <file-upload
+            title="KTP"
+            endpoint="image_upload_prospect"
+            type="ktp"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="KK"
+            endpoint="image_upload_prospect"
+            type="kk"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="KTP Pasangan"
+            endpoint="image_upload_prospect"
+            type="ktp_pasangan"
+            :idapp="dynamicForm.id"
+          />
+        </div>
       </n-card>
       <n-card
         v-show="current == 3"
@@ -318,9 +330,9 @@
               v-model:value="jaminan.no_polisi"
             />
           </n-form-item>
-          <n-form-item label="Warna" path="warna" class="w-full">
+          <!-- <n-form-item label="Warna" path="warna" class="w-full">
             <n-input placeholder="warna" v-model:value="jaminan.warna" />
-          </n-form-item>
+          </n-form-item> -->
           <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
             <n-date-picker
               placeholder="Tanggal Berlaku STNK"
@@ -332,28 +344,28 @@
             />
           </n-form-item>
         </div>
-        <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
-   
+        <!-- <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
+
         <div class="flex flex-col md:flex-row gap-2">
-            <file-upload
-              title="No Rangka"
-              endpoint="image_upload_prospect"
-              type="no_rangka"
-              :idapp="dynamicForm.id"
-            />
-            <file-upload
-              title="No Mesin"
-              endpoint="image_upload_prospect"
-              type="no_mesin"
-              :idapp="dynamicForm.id"
-            />
-            <file-upload
-              title="STNK"
-              endpoint="image_upload_prospect"
-              type="stnk"
-              :idapp="dynamicForm.id"
-            />
-          </div>
+          <file-upload
+            title="No Rangka"
+            endpoint="image_upload_prospect"
+            type="no_rangka"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="No Mesin"
+            endpoint="image_upload_prospect"
+            type="no_mesin"
+            :idapp="dynamicForm.id"
+          />
+          <file-upload
+            title="STNK"
+            endpoint="image_upload_prospect"
+            type="stnk"
+            :idapp="dynamicForm.id"
+          />
+        </div> -->
         <n-divider title-placement="left"> Upload Jaminan </n-divider>
         <n-space>
           <file-upload
@@ -488,6 +500,7 @@
         <n-form-item label="Catatan Survey" path="cat_survey">
           <n-input
             v-model:value="survey.catatan_survey"
+            @input="upCase"
             type="textarea"
             placeholder="catatan survey"
             autosize
@@ -495,12 +508,12 @@
         </n-form-item>
         <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
         <file-upload
-              :def_preview="true"
-              title="dokumen pendukung"
-              endpoint="image_upload_prospect"
-              type="other"
-              :idapp="dynamicForm.id"
-            />
+          :def_preview="true"
+          title="dokumen pendukung"
+          endpoint="image_upload_prospect"
+          type="other"
+          :idapp="dynamicForm.id"
+        />
       </n-card>
     </n-form>
     <n-flex justify="between">
@@ -586,7 +599,7 @@ const tujuanKredit = ["konsumsi", "investasi"].map((v) => ({
   label: v,
   value: v,
 }));
-const jenisAngsuran = ["Bulanan","Musiman"].map((v) => ({
+const jenisAngsuran = ["Bulanan", "Musiman"].map((v) => ({
   label: v,
   value: v.toLowerCase(),
 }));
@@ -789,5 +802,46 @@ const rules = {
     min: 16,
     message: "No Kartu Keluarga minimal 16 karakter",
   },
+  plafond: {
+    trigger: "blur",
+    required: true,
+    message: "plafond harus diisi",
+  },
+  tenor: {
+    trigger: "blur",
+    required: true,
+    min: 16,
+    message: "No Kartu Keluarga minimal 16 karakter",
+  },
+  tujuan_kredit: {
+    trigger: "blur",
+    required: true,
+    min: 16,
+    message: "No Kartu Keluarga minimal 16 karakter",
+  },
+  nama: {
+    trigger: "blur",
+    required: true,
+    min: 16,
+    message: "No Kartu Keluarga minimal 16 karakter",
+  },
+  tgl_lahir: {
+    trigger: "blur",
+    required: true,
+    min: 16,
+    message: "No Kartu Keluarga minimal 16 karakter",
+  },
+  hp: {
+    trigger: "blur",
+    required: true,
+    min: 16,
+    message: "No Kartu Keluarga minimal 16 karakter",
+  },
+};
+
+const upCase = () => {
+  pelanggan.nama = pelanggan.nama.toUpperCase();
+  pelanggan.alamat = pelanggan.alamat.toUpperCase();
+  survey.catatan_survey = survey.catatan_survey.toUpperCase();
 };
 </script>
