@@ -6,8 +6,9 @@
       footer: 'soft',
     }"
   >
-  
+
     <template #header>Pelunasan Angsuran</template>
+    <!-- <pre>{{ pelunasan }}</pre> -->
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
       <n-space v-if="!props.embed">
@@ -536,7 +537,7 @@ const handleProses = async () => {
       loadProses.value = false;
       paymentData.value = response.data;
       dialogProses.value = true;
-      router.push({ name: "pembayaran" });
+      router.push({ name: "pelunasan" });
     }
   };
 };
@@ -581,14 +582,14 @@ const pelunasan = reactive({
   TUNGGAKAN_BUNGA: 0,
   DENDA: 0,
   PINALTI: 0,
-  TOTAL_BAYAR: computed(
-    () =>
-      pelunasan.SISA_POKOK +
-      pelunasan.BUNGA_BERJALAN +
-      pelunasan.TUNGGAKAN_BUNGA +
-      pelunasan.DENDA +
-      pelunasan.PINALTI
-  ),
+  // TOTAL_BAYAR: computed(
+  //   () =>
+  //     pelunasan.SISA_POKOK +
+  //     pelunasan.BUNGA_BERJALAN +
+  //     pelunasan.TUNGGAKAN_BUNGA +
+  //     pelunasan.DENDA +
+  //     pelunasan.PINALTI
+  // ),
   UANG_PELANGGAN: 0,
   DISKON: computed(() => {
     let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
@@ -638,6 +639,13 @@ const pelunasan = reactive({
   DISKON_BUNGA: 0,
   DISKON_DENDA: 0,
   JUMLAH_TAGIHAN: computed(
+    () =>
+      pelunasan.SISA_POKOK +
+      pelunasan.BUNGA_BERJALAN +
+      pelunasan.PINALTI +
+      pelunasan.DENDA
+  ),
+  TOTAL_BAYAR: computed(
     () =>
       pelunasan.SISA_POKOK +
       pelunasan.BUNGA_BERJALAN +
