@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex border-orange-100 bg-orange-50 p-4 text-orange-500 justify-between w-full"
+    class="flex border-orange-100 bg-red-50 p-4 text-red-500 justify-between w-full"
     v-show="getCheck.status == 'A'"
   >
     <div class="flex items-center gap-2">
@@ -12,8 +12,9 @@
     </div>
     <n-button type="error"  @click="showModal = true">Periksa Fasilitas</n-button>
   </div>
-  <n-modal v-model:show="showModal">
-    <div class="w-2/3"><repay-page :embed="true" :atr="getCheck.loan_number"/></div>
+  <n-modal v-model:show="showModal" preset="card" :mask-closable="false"
+  class="w-2/3">
+    <div><repay-page :embed="true" :atr="getCheck.loan_number"/></div>
   </n-modal>
 </template>
 <script setup>

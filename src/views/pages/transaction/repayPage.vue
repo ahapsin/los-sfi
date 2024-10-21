@@ -6,7 +6,7 @@
       footer: 'soft',
     }"
   >
-  <pre>{{ pelunasan }}</pre>
+  
     <template #header>Pelunasan Angsuran</template>
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
@@ -55,11 +55,11 @@
           </template>
         </n-button>
       </n-space>
-      <n-space v-show="props.embed ? true : displayFasilitas">
+      <!-- <n-space v-show="props.embed ? true : displayFasilitas">
         <n-tag type="warning"
           >No Kontrak <b>{{ props.atr }}</b></n-tag
         >
-      </n-space>
+      </n-space> -->
     </template>
     <div class="flex flex-col md:flex-row gap-2" v-show="!props.embed">
       <n-form-item label="Nama Pelanggan" class="w-full">
@@ -182,7 +182,7 @@
         >
           <n-input-number
             placeholder="Jumlah Pembayaran"
-            v-model:value="pelunasan.TOTAL_BAYAR"
+            v-model:value="pelunasan.JUMLAH_TAGIHAN"
             :show-button="false"
             :parse="parse"
             :format="format"
@@ -388,7 +388,7 @@ const pageData = reactive({
   diskon: 0,
   kembalian: computed(() =>
     pageData.jumlah_uang
-      ? pageData.jumlah_uang - pageData.total_bayar - pageData.pembulatan
+      ? pelunasan.jumlah_uang - pageData.total_bayar - pageData.pembulatan
       : 0
   ),
   struktur: checkedRowCredit,

@@ -70,7 +70,7 @@ import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis, useLoadingBar } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -133,7 +133,7 @@ const columns = [
                     }
                 },
                 {
-                    default: h(NButton, {
+                    default:()=> h(NButton, {
                         size: "small",
                     }, { default: () => 'Action' })
                 }
@@ -186,6 +186,7 @@ const handleAdd = () => {
     router.push('/master/taksasi-action');
 }
 const loading = ref(false);
+const loadingBar=useLoadingBar();
 const getData = async () => {
     loading.value = true;
     let userToken = localStorage.getItem("token");
@@ -199,6 +200,7 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.push('/');
     } else {
+        loadingBar.finish();
         loading.value = false;
         dataTable.value = response.data;
     }

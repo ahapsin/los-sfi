@@ -121,7 +121,7 @@ const columns = [
                     }
                 },
                 {
-                    default: h(NButton, {
+                    default:()=> h(NButton, {
                         size: "small",
                     }, { default: () => 'Action' })
                 }

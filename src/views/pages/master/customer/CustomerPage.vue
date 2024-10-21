@@ -83,6 +83,7 @@ import {
   NIcon,
 
   NButton,
+  useLoadingBar,
 } from "naive-ui";
 import {
   AddCircleOutlineRound as AddIcon,
@@ -143,7 +144,7 @@ const columns = [
           },
         },
         {
-          default: h(
+          default:()=> h(
             NButton,
             {
               size: "small",
@@ -190,6 +191,7 @@ const handleUpdate = (evt) => {
 const handleAdd = () => {
   router.push("/master/branch-action");
 };
+const loadingBar=useLoadingBar();
 const getData = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -202,6 +204,7 @@ const getData = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     dataTable.value = response.data;
   }
 };
