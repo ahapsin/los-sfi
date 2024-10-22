@@ -176,7 +176,7 @@ const columns = [
           },
         },
         {
-          default: h(
+          default:()=> h(
             NButton,
             {
               round: true,

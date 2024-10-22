@@ -67,7 +67,7 @@
 import { useMessage } from 'naive-ui';
 import { ref, reactive, onMounted } from 'vue';
 import { useWindowSize } from '@vueuse/core';
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 import { useApi } from '../../../helpers/axios';
 import router from '../../../router';
 import { useRoute } from 'vue-router';
