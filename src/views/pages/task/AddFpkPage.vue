@@ -59,7 +59,11 @@
           </template>
           <div class="flex w-full gap-2">
             <n-form-item label="Nama" path="nama" class="w-full">
-              <n-input placeholder="nama" v-model:value="dataPelanggan.nama" />
+              <n-input
+                placeholder="nama"
+                v-model:value="dataPelanggan.nama"
+                @input="upCase"
+              />
             </n-form-item>
             <n-form-item
               label="Nama Panggilan"
@@ -69,6 +73,7 @@
               <n-input
                 placeholder="nama panggilan"
                 v-model:value="dataPelanggan.nama_panggilan"
+                @input="upCase"
               />
             </n-form-item>
           </div>
@@ -87,10 +92,10 @@
             </n-form-item>
             <n-form-item label="Tempat Lahir" path="gol_darah" class="w-full">
               <n-input
-                placeholder="Tempat Lahir"
+                placeholder="tempat lahir"
                 v-model:value="dataPelanggan.tempat_lahir"
-              >
-              </n-input>
+                @input="upCase"
+              />
             </n-form-item>
             <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
               <n-date-picker
@@ -207,6 +212,7 @@
               <n-input
                 placeholder="Alamat"
                 v-model:value="alamatIdentitas.alamat"
+                @input="upCase"
               />
             </n-form-item>
             <n-form-item label="RT">
@@ -246,6 +252,7 @@
               <n-input
                 placeholder="Alamat"
                 v-model:value="alamatTagih.alamat"
+                @input="upCase"
               />
             </n-form-item>
             <n-form-item label="RT">
@@ -361,7 +368,10 @@
               type="other"
               :idapp="pageData.survey_id"
             />
-            <div class="grid grid-cols-10 grid-flow-row gap-2 pt-2" v-if="dok_pendukung.length > 0">
+            <div
+              class="grid grid-cols-10 grid-flow-row gap-2 pt-2"
+              v-if="dok_pendukung.length > 0"
+            >
               <n-image
                 v-for="dok in dok_pendukung"
                 :key="dok.id"
@@ -429,9 +439,9 @@
               type="textarea"
               autosize
               show-count
+              @input="upCase"
               placeholder="catatan surveyor"
               v-model:value="dataOrder.catatan_survey"
-              readonly
             />
           </n-form-item>
           <div class="flex gap-2">
@@ -442,6 +452,7 @@
             >
               <n-input
                 placeholder="Nama Ibu Kandung"
+                @input="upCase"
                 v-model:value="dataOrder.nama_ibu"
               />
             </n-form-item>
@@ -560,12 +571,14 @@
                 <n-input
                   placeholder="No Rangka"
                   v-model:value="dataTaksasi.no_rangka"
+                  @input="upCase"
                 />
               </n-form-item>
               <n-form-item label="No Mesin" path="no_mesin" class="w-full">
                 <n-input
                   placeholder="No Mesin"
                   v-model:value="dataTaksasi.no_mesin"
+                  @input="upCase"
                 />
               </n-form-item>
               <n-form-item
@@ -603,6 +616,7 @@
               <n-input
                 placeholder="Nama Pasangan"
                 v-model:value="dataPasangan.nama_pasangan"
+                @input="upCase"
               />
             </n-form-item>
             <n-form-item
@@ -625,14 +639,19 @@
                 />
               </n-input-group>
             </n-form-item>
-            <n-form-item label="Pekerjaan" path="nama_kerabat" class="w-full">
+            <n-form-item
+              label="Pekerjaan"
+              path="pekerjaan_pasangan"
+              class="w-full"
+            >
               <n-input
                 placeholder="pekerjaan"
                 v-model:value="dataPasangan.pekerjaan_pasangan"
+                @input="upCase"
               />
             </n-form-item>
           </div>
-          <n-form-item label="Alamat" path="nama_kerabat" class="w-full">
+          <n-form-item label="Alamat" path="alamat_pasangan" class="w-full">
             <n-input
               type="textarea"
               :autosize="{
@@ -640,6 +659,7 @@
               }"
               placeholder="Alamat"
               v-model:value="dataPasangan.alamat_pasangan"
+              @input="upCase"
             />
           </n-form-item>
           <n-divider title-placement="left"> Penjamin </n-divider>
@@ -660,6 +680,7 @@
               <n-input
                 placeholder="Nama penjamin"
                 v-model:value="dataPenjamin.nama"
+                @input="upCase"
               />
             </n-form-item>
             <n-form-item label="Tanggal Lahir" path="order" class="w-full">
@@ -691,6 +712,7 @@
               <n-input
                 placeholder="Pekerjaan Penjamin"
                 v-model:value="dataPenjamin.pekerjaan"
+                @input="upCase"
               >
               </n-input>
             </n-form-item>
@@ -703,6 +725,7 @@
               type="textarea"
               placeholder="Alamat"
               v-model:value="dataPenjamin.alamat"
+              @input="upCase"
             />
           </n-form-item>
           <n-divider title-placement="left">
@@ -712,6 +735,7 @@
             <n-input
               placeholder="Nama Kerabat"
               v-model:value="dataKerabat.nama"
+              @input="upCase"
             />
           </n-form-item>
           <n-form-item label="Alamat" path="alamat">
@@ -719,6 +743,7 @@
               <n-input
                 placeholder="Alamat"
                 v-model:value="dataKerabat.alamat"
+                @input="upCase"
               />
               <n-input placeholder="RT" v-model:value="dataKerabat.rt" />
               <n-input placeholder="RW" v-model:value="dataKerabat.rw" />
@@ -1398,6 +1423,27 @@ const handleSend = async (e) => {
     router.push("/task/apply-credit");
   }
 };
-
+const upCase = () => {
+  dataPelanggan.value.nama = dataPelanggan.value.nama.toUpperCase();
+  dataPelanggan.value.nama_panggilan =
+    dataPelanggan.value.nama_panggilan.toUpperCase();
+  dataPelanggan.value.tempat_lahir =
+    dataPelanggan.value.tempat_lahir.toUpperCase();
+  alamatIdentitas.value.alamat = alamatIdentitas.value.alamat.toUpperCase();
+  alamatTagih.value.alamat = alamatTagih.value.alamat.toUpperCase();
+  dataOrder.value.catatan_survey = dataOrder.value.catatan_survey.toUpperCase();
+  dataOrder.value.nama_ibu = dataOrder.value.nama_ibu.toUpperCase();
+  dataTaksasi.value.no_rangka = dataTaksasi.value.no_rangka.toUpperCase();
+  dataTaksasi.value.no_mesin = dataTaksasi.value.no_mesin.toUpperCase();
+  dataPasangan.value.nama_pasangan =
+    dataPasangan.value.nama_pasangan.toUpperCase();
+  dataPasangan.value.alamat_pasangan =
+    dataPasangan.value.alamat_pasangan.toUpperCase();
+  dataPenjamin.value.nama = dataPenjamin.value.nama.toUpperCase();
+  dataPenjamin.value.pekerjaan = dataPenjamin.value.pekerjaan.toUpperCase();
+  dataPenjamin.value.alamat = dataPenjamin.value.alamat.toUpperCase();
+  dataKerabat.value.nama = dataKerabat.value.nama.toUpperCase();
+  dataKerabat.value.alamat = dataKerabat.value.alamat.toUpperCase();
+};
 onMounted(getData);
 </script>

@@ -1,7 +1,6 @@
 <template>
   <n-layout class="h-screen">
     <n-layout-header style="height: 64px" bordered>
-
       <n-page-header
         class="sticky bg-white border-b top-0 z-50 backdrop-blur p-4"
       >
@@ -46,7 +45,7 @@
         :width="180"
         :collapsed-width="0"
         :show-collapsed-content="false"
-        :collapsed="sideMenu.sideEffect"
+        :collapsed="sideMenu.sideEffect ? true : false"
         content-style="padding: 10px;"
         bordered
       >

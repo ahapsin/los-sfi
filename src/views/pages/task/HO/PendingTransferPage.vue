@@ -1,7 +1,7 @@
 <template>
   <n-card>
     <template #header>Pending Transfer</template>
-    <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
+    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
       <n-collapse-item
         title="post payment"
         name="1"
@@ -9,7 +9,7 @@
       >
         <pre> {{ bodyPost }}</pre>
       </n-collapse-item>
-    </n-collapse>
+    </n-collapse> -->
     <template #header-extra>
       <n-space>
         <n-badge :value="dataPending.length" :max="99" type="warning">
@@ -17,7 +17,7 @@
             v-show="!searchField"
             strong
             secondary
-            type="success"
+            type="warning"
             @click="dataPayment = dataPending"
           >
             <template #icon>
@@ -201,7 +201,15 @@ import {
   AccessTimeRound as pendingIcon,
   OpenInFullRound as fullIcon,
 } from "@vicons/material";
-import { useMessage, NIcon, NTag, NButton, NBadge, NInput } from "naive-ui";
+import {
+  useMessage,
+  NIcon,
+  NTag,
+  NButton,
+  NBadge,
+  NInput,
+  useLoadingBar,
+} from "naive-ui";
 import { computed, onMounted, reactive, h, ref } from "vue";
 const searchField = ref(false);
 const checkedRowCredit = ref([]);
@@ -390,6 +398,7 @@ const dataPayment = ref([]);
 const loadDataPayment = ref(false);
 const dataPending = ref([]);
 const message = useMessage();
+const loadingBar = useLoadingBar();
 const getDataPayment = async () => {
   loadDataPayment.value = true;
   let userToken = localStorage.getItem("token");
@@ -403,6 +412,7 @@ const getDataPayment = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
     dataPending.value = _.filter(dataPayment.value, { STATUS: "PENDING" });

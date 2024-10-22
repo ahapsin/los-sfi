@@ -71,7 +71,7 @@ import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../../helpers/axios";
 import { useSearch } from "../../../../helpers/searchObject";
 import router from '../../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis, useLoadingBar } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -186,6 +186,7 @@ const handleUpdate = (evt) => {
 const handleAdd = () => {
     router.push('/master/branch-action');
 }
+const loadingBar=useLoadingBar();
 const getData = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
@@ -198,6 +199,7 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.push('/');
     } else {
+        loadingBar.finish();
         dataTable.value = response.data;
     }
 }

@@ -230,6 +230,7 @@ const handleAdd = () => {
 const handleSettingMenu = (e) => {
   router.push(`/master/users-menu/${e.id}`);
 };
+const loadingBar=useLoadingBar();
 const getData = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -242,6 +243,7 @@ const getData = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     // console.log(response.data.response)
     dataTable.value = response.data.response;
   }

@@ -20,8 +20,8 @@ import LoadingScreen from "../src/components/organism/LoadingScreen.vue";
 
 const themeOverrides = {
   common: {
-    // primaryColor: '#FF0000',
-    // primaryColorHover: "#4deee4",
+    // primaryColor: '#213B94',
+    // primaryColorHover: "#213B94",
     borderRadius: "20px"
   },
 }

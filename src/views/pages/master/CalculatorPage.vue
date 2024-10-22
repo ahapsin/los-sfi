@@ -69,7 +69,7 @@
 
 <script setup>
 import {  onMounted, ref,h ,reactive} from "vue";
-import { NInputNumber, NInput, NButton } from "naive-ui";
+import { NInputNumber, NInput, NButton, useLoadingBar } from "naive-ui";
 import { useApi } from "../../../helpers/axios";
 import router from '../../../router';
 import { useMessage } from "naive-ui";
@@ -499,6 +499,7 @@ const getData = async () => {
         localStorage.removeItem("token");
         router.push('/');
     } else {
+        loadingBar.finish();
         dataTable.value = response.data;
         let filterDataBulanan = _.filter(dataTable.value, ['tipe', 'bulanan']);
         let filterDataMusiman = _.filter(dataTable.value, ['tipe', 'musiman']);
@@ -507,6 +508,7 @@ const getData = async () => {
     }
 }
 
+const loadingBar = useLoadingBar();
 const handleSave = async (e) => {
     loading.value = true;
     displayForm.value = false;
@@ -521,6 +523,7 @@ const handleSave = async (e) => {
         message.error("data gagal disimpan");
         loading.value = false;
     } else {
+      
         message.success("data berhasil disimpan");
         loading.value = false;
         getData();

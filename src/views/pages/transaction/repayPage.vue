@@ -6,10 +6,12 @@
       footer: 'soft',
     }"
   >
+
     <template #header>Pelunasan Angsuran</template>
+    <!-- <pre>{{ pelunasan }}</pre> -->
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
-      <n-space>
+      <n-space v-if="!props.embed">
         <n-button
           round
           v-show="!searchField"
@@ -54,8 +56,13 @@
           </template>
         </n-button>
       </n-space>
+      <!-- <n-space v-show="props.embed ? true : displayFasilitas">
+        <n-tag type="warning"
+          >No Kontrak <b>{{ props.atr }}</b></n-tag
+        >
+      </n-space> -->
     </template>
-    <div class="flex flex-col md:flex-row gap-2">
+    <div class="flex flex-col md:flex-row gap-2" v-show="!props.embed">
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input
           v-model:value="dynamicSearch.nama"
@@ -90,15 +97,19 @@
         :scroll-x="1200"
         size="small"
         :row-key="(row) => row.loan_number"
-        :columns="columns"
+        :columns="props.embed ? columnsEmbed : columns"
         :data="dataSearch"
         :max-height="300"
         :on-update:checked-row-keys="handleFasilitas"
         :loading="loadSearch"
         class="pb-2"
-        v-show="displayFasilitas"
+        v-show="props.embed ? true : displayFasilitas"
       />
-      <n-table size="small" v-show="displayDetail" class="mb-2">
+      <n-table
+        size="small"
+        v-show="props.embed ? true : displayFasilitas"
+        class="mb-2"
+      >
         <thead>
           <tr>
             <th>#</th>
@@ -142,7 +153,7 @@
       </n-table>
       <div
         class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
-        v-show="displayPayment"
+        v-show="props.embed ? true : displayFasilitas"
       >
         <n-form-item
           path="nestedValue.path2"
@@ -172,7 +183,7 @@
         >
           <n-input-number
             placeholder="Jumlah Pembayaran"
-            v-model:value="pelunasan.TOTAL_BAYAR"
+            v-model:value="pelunasan.JUMLAH_TAGIHAN"
             :show-button="false"
             :parse="parse"
             :format="format"
@@ -362,7 +373,7 @@ import {
   useMessage,
   useDialog,
 } from "naive-ui";
-import { computed, reactive, ref, h } from "vue";
+import { computed, reactive, ref, h, onMounted } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
@@ -378,7 +389,7 @@ const pageData = reactive({
   diskon: 0,
   kembalian: computed(() =>
     pageData.jumlah_uang
-      ? pageData.jumlah_uang - pageData.total_bayar - pageData.pembulatan
+      ? pelunasan.jumlah_uang - pageData.total_bayar - pageData.pembulatan
       : 0
   ),
   struktur: checkedRowCredit,
@@ -428,6 +439,38 @@ const createColumns = () => {
     },
   ];
 };
+const createColumnsEmbed = () => {
+  return [
+    {
+      title: "No Kontrak",
+      key: "loan_number",
+      sorter: "default",
+    },
+    {
+      title: "Nama",
+      key: "nama",
+      sorter: "default",
+      fixed: "left",
+    },
+    {
+      title: "No Polisi",
+      key: "no_polisi",
+      sorter: "default",
+    },
+    {
+      title: "Alamat",
+      key: "alamat",
+      sorter: "default",
+    },
+    {
+      title: "Angsuran",
+      key: "angsuran",
+      render(row) {
+        return h("div", row.angsuran.toLocaleString("US"));
+      },
+    },
+  ];
+};
 const handleDone = () => {
   dialogProses.value = false;
   router.push({ name: "pembayaran" });
@@ -444,6 +487,7 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const columns = createColumns();
+const columnsEmbed = createColumnsEmbed();
 const loadingAngsuran = ref(false);
 const displayDetail = ref(false);
 const displayPayment = ref(false);
@@ -493,7 +537,7 @@ const handleProses = async () => {
       loadProses.value = false;
       paymentData.value = response.data;
       dialogProses.value = true;
-      router.push({ name: "pembayaran" });
+      router.push({ name: "pelunasan" });
     }
   };
 };
@@ -538,14 +582,14 @@ const pelunasan = reactive({
   TUNGGAKAN_BUNGA: 0,
   DENDA: 0,
   PINALTI: 0,
-  TOTAL_BAYAR: computed(
-    () =>
-      pelunasan.SISA_POKOK +
-      pelunasan.BUNGA_BERJALAN +
-      pelunasan.TUNGGAKAN_BUNGA +
-      pelunasan.DENDA +
-      pelunasan.PINALTI
-  ),
+  // TOTAL_BAYAR: computed(
+  //   () =>
+  //     pelunasan.SISA_POKOK +
+  //     pelunasan.BUNGA_BERJALAN +
+  //     pelunasan.TUNGGAKAN_BUNGA +
+  //     pelunasan.DENDA +
+  //     pelunasan.PINALTI
+  // ),
   UANG_PELANGGAN: 0,
   DISKON: computed(() => {
     let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
@@ -595,6 +639,13 @@ const pelunasan = reactive({
   DISKON_BUNGA: 0,
   DISKON_DENDA: 0,
   JUMLAH_TAGIHAN: computed(
+    () =>
+      pelunasan.SISA_POKOK +
+      pelunasan.BUNGA_BERJALAN +
+      pelunasan.PINALTI +
+      pelunasan.DENDA
+  ),
+  TOTAL_BAYAR: computed(
     () =>
       pelunasan.SISA_POKOK +
       pelunasan.BUNGA_BERJALAN +
@@ -653,6 +704,17 @@ const handleExpand = () => {
   const fullPage = router.resolve({ name: "expand transaction" });
   window.open(fullPage.href, "_blank");
 };
+const props = defineProps({
+  embed: Boolean,
+  atr: String,
+});
+onMounted(() => {
+  if (props.embed) {
+    dynamicSearch.no_kontrak = props.atr;
+    handleSearch();
+    getDataPelunasan([props.atr]);
+  }
+});
 const handleBack = () => {
   router.push({ name: "pelunasan" });
 };
