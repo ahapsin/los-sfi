@@ -1,11 +1,11 @@
 <template>
-  <n-card class="mt-2" title="Pengajuan Kredit" closable @close="handleClose">
+  <n-card class="mt-2" title="Pengajuan Kredit" @close="handleClose" :segmented="true">
     <template #header-extra>
-      <black-list />
+      <black-list v-if="!approval.ho"/>
     </template>
     <div class="p-2 flex gap-2">
       <div
-        class="border p-2 rounded-lg bg-green-50 border-green-200 w-full"
+        class="border p-2 rounded-lg w-full"
         v-show="approval.kapos"
       >
         <div class="flex gap-2">
@@ -14,7 +14,7 @@
         {{ approval.kapos }}
       </div>
       <div
-        class="border p-2 rounded-lg bg-green-50 border-green-200 w-full"
+        class="border p-2 rounded-lg w-full"
         v-show="approval.ho"
       >
         <div class="flex gap-2">

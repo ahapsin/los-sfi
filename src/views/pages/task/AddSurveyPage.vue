@@ -330,9 +330,9 @@
               v-model:value="jaminan.no_polisi"
             />
           </n-form-item>
-          <!-- <n-form-item label="Warna" path="warna" class="w-full">
+          <n-form-item label="Warna" path="warna" class="w-full">
             <n-input placeholder="warna" v-model:value="jaminan.warna" />
-          </n-form-item> -->
+          </n-form-item>
           <n-form-item label="Tanggal Berlaku STNK" path="order" class="w-full">
             <n-date-picker
               placeholder="Tanggal Berlaku STNK"
@@ -344,7 +344,7 @@
             />
           </n-form-item>
         </div>
-        <!-- <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
+        <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
 
         <div class="flex flex-col md:flex-row gap-2">
           <file-upload
@@ -365,7 +365,7 @@
             type="stnk"
             :idapp="dynamicForm.id"
           />
-        </div> -->
+        </div>
         <n-divider title-placement="left"> Upload Jaminan </n-divider>
         <n-space>
           <file-upload
@@ -758,7 +758,7 @@ const handleTanggalLahir = (e) => {
       noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
     }
   }
-};
+};7
 const handleSave = async (e) => {
   e.preventDefault(e);
   loading.value = true;
@@ -806,12 +806,6 @@ const rules = {
     trigger: "blur",
     required: true,
     message: "plafond harus diisi",
-  },
-  tenor: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
   },
   tujuan_kredit: {
     trigger: "blur",

@@ -18,7 +18,7 @@
                     Login
                 </n-button>
                 <div class="flex justify-center mt-4 text-sm">
-                    <n-text>v. 0.0.1</n-text>
+                    <n-text>v. {{ appVersion }}</n-text>
                 </div>
             </div>
         </n-form>
@@ -29,6 +29,9 @@ import { ref, reactive, onMounted } from "vue";
 import { useMessage } from "naive-ui";
 import router from '../../router';
 import { useApi } from "../../helpers/axios";
+import pjson from '../../../package.json';
+
+const appVersion = pjson.version;
 const dynamicForm = reactive({
     username: "",
     password: "",
