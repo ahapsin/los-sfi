@@ -301,8 +301,8 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to)=>{
-});
+// router.beforeEach((to)=>{
+// });
 // router.beforeEach((to, from, next) => {
 //   const isAuthenticated = () => {
 //     if (localStorage.getItem("token")) {

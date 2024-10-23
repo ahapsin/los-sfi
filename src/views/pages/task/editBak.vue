@@ -637,8 +637,7 @@
     }));
     const order = reactive({});
     const pelanggan = reactive({});
-    const 
-     = ref([]);
+ 
     const dok_jaminan = ref({});
     const dok_identitas = ref({});
     const dok_pendukung = ref({});
