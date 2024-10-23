@@ -155,10 +155,10 @@
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
             <div class="w-full">
-              <n-alert title="Informasi" type="warning" closable :bordered="bordered" v-if="notifUsia">
-                {{ noteUsia }}</n-alert>
+              
               <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
                 value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
+                <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse">{{ noteUsia }}</span>
             </div>
           </n-form-item>
           <n-form-item label="No Handphone" path="no_hp" class="w-full">
