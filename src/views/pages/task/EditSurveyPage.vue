@@ -176,10 +176,11 @@
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
             <div class="w-full">
-              <n-alert title="Informasi" type="warning" closable  v-if="notifUsia">
-                {{ noteUsia }}</n-alert>
+              
+               
               <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
                 value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
+                <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse">{{ noteUsia }}</span>
             </div>
           </n-form-item>
           <n-form-item label="No Handphone" path="no_hp" class="w-full">
@@ -209,7 +210,7 @@
         </div>
       </n-form>
     </div>
-    <div v-show="current === 3" v-for="jaminan in jaminan" :key="jaminan">
+    <div v-show="current === 3">
       <div v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai * 0.5" class="pb-4">
         <n-alert title="Info" type="info">
           Plafon > Harga Taksasi
@@ -332,7 +333,6 @@ import router from "../../../router";
 import { useRoute } from "vue-router";
 import { useWindowSize } from "@vueuse/core";
 import { useApi } from "../../../helpers/axios";
-import { lyla } from "@lylajs/web";
 const { width } = useWindowSize();
 const message = useMessage();
 const pageData = ref({});
@@ -515,7 +515,7 @@ const getData = () =>
       Object.assign(dok_jaminan.value, res.data.response.dokumen_jaminan);
       Object.assign(pelanggan, res.data.response.data_nasabah);
       Object.assign(order, res.data.response.data_order);
-      Object.assign(jaminan.value, res.data.response.jaminan_kendaraan);
+      Object.assign(jaminan.value, res.data.response.jaminan_kendaraan[0]);
       Object.assign(dok_identitas.value, res.data.response.dokumen_indentitas);
       Object.assign(dok_pendukung.value, res.data.response.dokumen_pendukung);
       let tgllahir = toRef(pelanggan.tgl_lahir);
@@ -581,31 +581,7 @@ const handleTanggalLahir = (e) => {
     }
   }
 };
-const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
-  const form = new FormData();
-  form.append("image", file.file);
-  form.append("type", data.type);
-  form.append("cr_prospect_id", paramPage);
-  const headers = {
-    Authorization: `Bearer ${userToken}`,
-  };
-  lyla
-    .post("https://api.kspdjaya.id/image_upload_prospect", {
-      headers,
-      body: form,
-      onUploadProgress: ({ percent }) => {
-        onProgress({ percent: Math.ceil(percent) });
-      },
-    })
-    .then(() => {
-      message.success("upload gambar berhasil");
-      onFinish();
-    })
-    .catch(() => {
-      message.success("upload gambar gagal");
-      onError();
-    });
-};
+
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);

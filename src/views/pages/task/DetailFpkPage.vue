@@ -1069,7 +1069,7 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const notifUsia = ref(false);
-const noteUsia = ref(false);
+const noteUsia = ref();
 const handleTanggalLahir = (e) => {
   var month_diff = Date.now() - e;
   var age_dt = new Date(month_diff);
