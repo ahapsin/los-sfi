@@ -321,7 +321,7 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted, toRef } from "vue";
-import { v4 as uuidv4 } from "uuid";
+
 import _ from "lodash";
 import {
   ArrowBackOutlined as ArrowBack,
@@ -338,6 +338,7 @@ const message = useMessage();
 const pageData = ref({});
 const suspense = ref({});
 const baseRoute = useRoute();
+import { useBlacklist } from "../../../helpers/blacklist";
 const paramPage = baseRoute.params.idsurvey;
 // const actionPage = baseRoute.params.action;
 const current = ref(1);
