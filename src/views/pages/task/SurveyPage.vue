@@ -265,7 +265,7 @@ const getData = async () => {
     dataTable.value = response.data.response;
   }
 };
-onMounted(() => getData());
+
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
 });
@@ -304,4 +304,5 @@ const options = (e) => {
 const pagination = {
   pageSize: 10,
 };
+onMounted(() => getData());
 </script>
