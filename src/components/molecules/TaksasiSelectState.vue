@@ -152,6 +152,7 @@ const getTipe = async () => {
   } else {
     loadingTipe.value = false;
     col_tipe.value = response.data;
+    console.log(col_tipe);
     filter_tipe.value = col_tipe.value.map((v) => ({
       label: `${v.code} - ${v.model}`,
       value: `${v.code} - ${v.model}`,

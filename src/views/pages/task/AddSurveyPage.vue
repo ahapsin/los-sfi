@@ -155,10 +155,11 @@
           </n-form-item>
           <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
             <div class="w-full">
-              
+
               <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
                 value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
-                <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse">{{ noteUsia }}</span>
+              <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
+                v-show="noteUsia">{{ noteUsia }}</span>
             </div>
           </n-form-item>
           <n-form-item label="No Handphone" path="no_hp" class="w-full">
@@ -169,12 +170,15 @@
           <n-form-item label="Alamat" path="alamat" class="w-full" @input="upCase">
             <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" class="w-full" />
           </n-form-item>
-          <n-form-item path="rt" class="w-full">
+
+          <n-form-item path="rt">
             <n-input-group>
               <n-input placeholder="RT" v-model:value="pelanggan.rt" />
               <n-input placeholder="RW" v-model:value="pelanggan.rw" />
             </n-input-group>
           </n-form-item>
+          <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
+            v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" />
         </div>
         <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
 
@@ -187,43 +191,104 @@
       </n-form>
     </div>
     <div v-show="current === 3">
-      <div v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai * 0.5" class="pb-4">
-        <n-alert title="Info" type="info">
-          Plafon > Harga Taksasi
-          <b>{{ (jaminan.nilai * 0.5).toLocaleString("US") }}</b></n-alert>
-      </div>
-      <div>
-        <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe" v-model:tahun="jaminan.tahun"
-          v-model:pasar="jaminan.nilai" />
-      </div>
-      <n-form ref="formJaminan" :model="jaminan" :rules="rulesJaminan" require-mark-placement="right-hanging">
-        <div class="md:flex gap-2">
-          <n-form-item label="No Polisi" path="no_polisi" class="w-full">
-            <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" />
-          </n-form-item>
-          <n-form-item label="Warna" path="warna" class="w-full">
-            <n-input placeholder="warna" v-model:value="jaminan.warna" />
-          </n-form-item>
-          <n-form-item label="Tanggal Berlaku STNK" path="tgl_stnk" class="w-full">
-            <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk"
-              value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
-          </n-form-item>
-        </div>
-        <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
+      <n-card embedded :segmented="true" :title="`Jumlah Jaminan : ${anyJaminan.length}`">
+        <template #header-extra>
+          <div class=" flex w-60 gap-2">
+            <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
+            <n-button circle type="success" @click="pushJaminan">
+              <n-icon>
+                <add-icon />
+              </n-icon>
 
-        <div class="flex flex-col md:flex-row gap-2">
-          <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka" :idapp="dynamicForm.id" />
-          <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin" :idapp="dynamicForm.id" />
-          <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="dynamicForm.id" />
+            </n-button>
+          </div>
+        </template>
+        <div class="flex justify-between bg-white p-4 rounded-xl border hover:bg-pr-50/10" v-for="(coll,i) in anyJaminan" :key="coll">
+          <div class="md:flex gap-2">
+            <n-tag secondary type="success">
+              Jenis Jaminan: <b>{{ coll.type }}</b>
+            </n-tag>
+            <n-tag secondary type="success">
+              sertifikat no: <b>123123123123</b>
+            </n-tag>
+            <n-tag secondary type="info">
+              nilai taksasi no: <b>125.000.000</b>
+            </n-tag>
+          </div>
+          <div class="flex gap-2">
+            <n-button type="warning" secondary>detail</n-button>
+            <n-button type="error" secondary circle @click="removeJaminan(i)" v-show="i>0">
+              <n-icon>
+                <delete-icon />
+              </n-icon>
+            </n-button>
+          </div>
         </div>
-        <n-divider title-placement="left"> Upload Jaminan </n-divider>
-        <n-space>
-          <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="dynamicForm.id" />
-          <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang" :idapp="dynamicForm.id" />
-          <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="dynamicForm.id" />
-          <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="dynamicForm.id" />
-        </n-space>
-      </n-form>
+        <!-- <div class="bg-white p-4 rounded-xl border">
+          <div class="flex border-b  pb-2 justify-between">
+            <div class="md:flex gap-2 ">
+              <n-tag secondary type="success">
+                Jenis Jaminan: <b>Kendaraan</b>
+              </n-tag>
+              <n-tag secondary type="success">
+                BPKB no: <b>123123123123</b>
+              </n-tag>
+              <n-tag secondary type="info">
+                nilai taksasi no: <b>80.000.000</b>
+              </n-tag>
+            </div>
+            <div class="flex gap-2">
+              <n-button type="warning" secondary>detail</n-button>
+              <n-button type="error" secondary circle>
+                <n-icon>
+                  <delete-icon />
+                </n-icon>
+              </n-button>
+            </div>
+          </div>
+          <div v-show="true" class="p-2">
+            <div v-show="jaminan.nilai != '' && order.plafond > jaminan.nilai * 0.5" class="pb-4">
+              <n-alert title="Info" type="info">
+                Plafon > Harga Taksasi
+                <b>{{ (jaminan.nilai * 0.5).toLocaleString("US") }}</b></n-alert>
+            </div>
+            <div>
+              <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe"
+                v-model:tahun="jaminan.tahun" v-model:pasar="jaminan.nilai" />
+            </div>
+            <n-form ref="formJaminan" :model="jaminan" :rules="rulesJaminan" require-mark-placement="right-hanging">
+              <div class="md:flex gap-2">
+                <n-form-item label="No Polisi" path="no_polisi" class="w-full">
+                  <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" />
+                </n-form-item>
+                <n-form-item label="Warna" path="warna" class="w-full">
+                  <n-input placeholder="warna" v-model:value="jaminan.warna" />
+                </n-form-item>
+                <n-form-item label="Tanggal Berlaku STNK" path="tgl_stnk" class="w-full">
+                  <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk"
+                    value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
+                </n-form-item>
+              </div>
+              <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
+              <div class="flex flex-col md:flex-row gap-2">
+                <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka"
+                  :idapp="dynamicForm.id" />
+                <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin"
+                  :idapp="dynamicForm.id" />
+                <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="dynamicForm.id" />
+              </div>
+              <n-divider title-placement="left"> Upload Jaminan </n-divider>
+              <n-space>
+                <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="dynamicForm.id" />
+                <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang"
+                  :idapp="dynamicForm.id" />
+                <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="dynamicForm.id" />
+                <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="dynamicForm.id" />
+              </n-space>
+            </n-form>
+          </div>
+        </div> -->
+      </n-card>
     </div>
     <div v-show="current === 4">
       <n-form ref="formSurvey" :model="survey" :rules="rulesSurvey" require-mark-placement="right-hanging">
@@ -311,7 +376,10 @@ import { ref, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import {
   ArrowBackOutlined as ArrowBack,
+  AddFilled as AddIcon,
+  DeleteOutlineFilled as DeleteIcon,
   ArrowForwardOutlined as ArrowForward,
+
 } from "@vicons/material";
 import { useMessage } from "naive-ui";
 import router from "../../../router";
@@ -321,7 +389,7 @@ import { useBlacklist } from "../../../helpers/blacklist";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
-const current = ref(1);
+const current = ref(3);
 const loading = ref(false);
 const tipeAngsuran = ref("bulanan");
 const skemaAngsuran = ref([]);
@@ -356,6 +424,75 @@ const userToken = localStorage.getItem("token");
 const formOrder = ref(null);
 const formPelanggan = ref(null);
 const formJaminan = ref(null);
+
+// init jaminan
+const billyet = {
+  status_jaminan: null,
+  no_bilyet: null,
+  tgl_valuta: null,
+  jangka_waktu: null,
+  nominal: null,
+  atas_nama: null,
+};
+const kendaraan = {
+  status_jaminan: null,
+  merk: null,
+  tipe: null,
+  tahun: null,
+  warna: null,
+  atas_nama: null,
+  no_polisi: null,
+  no_rangka: null,
+  no_mesin: null,
+  no_bpkb: null,
+  nilai: null,
+};
+const sertifikat = {
+  status_jaminan: null,
+  no_sertifikat: null,
+  status_kepemilikan: null,
+  imb: null,
+  luas_tanah: null,
+  luas_bangunan: null,
+  lokasi: null,
+  provinsi: null,
+  kab_kota: null,
+  kec: null,
+  desa: null,
+  atas_nama: null,
+  nilai: null,
+};
+const emas = {
+  kode_emas: null,
+  berat: null,
+  unit: null,
+  nominal: null,
+  atas_nama: null,
+};
+const anyJaminan = ref([{type:'kendaraan',atr:kendaraan}]);
+const jenisJaminan = ref('kendaraan');
+const removeJaminan=(e)=>{
+  anyJaminan.value.splice(e,1);
+}
+const pushJaminan = () => {
+const draftJaminan=ref({});
+  if(jenisJaminan.value == 'kendaraan'){
+draftJaminan.value=kendaraan;
+  }else if(jenisJaminan.value == 'emas'){
+    draftJaminan.value=emas;
+  }else if(jenisJaminan.value == 'billyet'){
+    draftJaminan.value=billyet;
+  }else if(jenisJaminan.value == 'sertifikat'){
+    draftJaminan.value=sertifikat;
+  }
+
+  const newJaminan = {
+    type: jenisJaminan.value,
+    atr: draftJaminan.value,
+  }
+
+  anyJaminan.value.push(newJaminan);
+}
 const next = () => {
   if (current.value === 1) {
     formOrder.value?.validate((errors) => {
@@ -395,6 +532,10 @@ const jenisAngsuran = ["Bulanan", "Musiman"].map((v) => ({
 const optKategori = ["Baru", "RO"].map((v) => ({
   label: v,
   value: v,
+}));
+const optJaminan = ["Kendaraan", "Sertifikat", "Billyet", "Emas"].map((v) => ({
+  label: v,
+  value: v.toLowerCase(),
 }));
 const optSektor = [
   "BURUH HARIAN LEPAS",
@@ -536,7 +677,7 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const notifUsia = ref(false);
-const noteUsia = ref(false);
+const noteUsia = ref();
 const handleTanggalLahir = (e) => {
   var month_diff = Date.now() - e;
   var age_dt = new Date(month_diff);
@@ -556,32 +697,32 @@ const handleTanggalLahir = (e) => {
 };
 const formSurvey = ref(null);
 
-const handleValid = ()=>{
+const handleValid = () => {
   formSurvey.value?.validate((errors) => {
-      if (errors) {
-        message.error("periksa kembali isian anda");
-      } else {
-        handleSave();
-      }
-    });
+    if (errors) {
+      message.error("periksa kembali isian anda");
+    } else {
+      handleSave();
+    }
+  });
 }
 const handleSave = async () => {
-    loading.value = true;
-    const response = await useApi({
-      method: "POST",
-      api: `kunjungan`,
-      data: dynamicForm,
-      token: userToken,
-    });
-    if (!response.ok) {
-      message.error("data gagal diubah");
-      loading.value = false;
-    } else {
-      message.success("data berhasil disimpan");
-      loading.value = false;
-      router.push({name:'survey'});
-    }
-  };
+  loading.value = true;
+  const response = await useApi({
+    method: "POST",
+    api: `kunjungan`,
+    data: dynamicForm,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("data gagal diubah");
+    loading.value = false;
+  } else {
+    message.success("data berhasil disimpan");
+    loading.value = false;
+    router.push({ name: 'survey' });
+  }
+};
 
 
 const tahunJaminanValidate = () => {
@@ -598,7 +739,7 @@ const rules = {
   },
   no_ktp: {
     trigger: "blur",
-    required: true,
+    required: true, required: true,
     min: 16,
     message: "No identitas minimal 16 karakter",
   },
