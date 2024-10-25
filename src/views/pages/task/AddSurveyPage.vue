@@ -199,31 +199,33 @@
               <n-icon>
                 <add-icon />
               </n-icon>
-
             </n-button>
           </div>
         </template>
-        <div class="flex justify-between bg-white p-4 rounded-xl border hover:bg-pr-50/10" v-for="(coll,i) in anyJaminan" :key="coll">
-          <div class="md:flex gap-2">
-            <n-tag secondary type="success">
-              Jenis Jaminan: <b>{{ coll.type }}</b>
-            </n-tag>
-            <n-tag secondary type="success">
-              sertifikat no: <b>123123123123</b>
-            </n-tag>
-            <n-tag secondary type="info">
-              nilai taksasi no: <b>125.000.000</b>
-            </n-tag>
-          </div>
-          <div class="flex gap-2">
-            <n-button type="warning" secondary>detail</n-button>
-            <n-button type="error" secondary circle @click="removeJaminan(i)" v-show="i>0">
-              <n-icon>
-                <delete-icon />
-              </n-icon>
-            </n-button>
+        <div class="my-2 bg-white p-4 rounded-xl border hover:bg-pr-50/10" v-for="(coll) in orderJaminan" :key="coll">
+          <div class="flex justify-between">
+            <div class="md:flex gap-2">
+              <n-tag secondary type="success">
+                Jenis Jaminan: <b>{{ coll.type }}</b>
+              </n-tag>
+              <n-tag secondary type="success">
+                sertifikat no: <b>123123123123</b>
+              </n-tag>
+              <n-tag secondary type="info">
+                nilai taksasi no: <b>125.000.000</b>
+              </n-tag>
+            </div>
+            <div class="flex gap-2">
+              <n-button type="warning" @click="viewModal(coll.type)" secondary>detail</n-button>
+              <n-button type="error" secondary circle @click="removeJaminan(coll.id)" v-show="coll.id > 1">
+                <n-icon>
+                  <delete-icon />
+                </n-icon>
+              </n-button>
+            </div>
           </div>
         </div>
+
         <!-- <div class="bg-white p-4 rounded-xl border">
           <div class="flex border-b  pb-2 justify-between">
             <div class="md:flex gap-2 ">
@@ -290,6 +292,14 @@
         </div> -->
       </n-card>
     </div>
+    <n-modal v-model:show="showModal" >
+      <n-card class="md:w-1/2" closable @close="showModal = false">
+        <component :is="JaminanKendaraan" v-if="typeModal == 'kendaraan'" />
+        <component :is="JaminanSertifikat" v-if="typeModal == 'sertifikat'" />
+        <component :is="JaminanBillyet" v-if="typeModal == 'billyet'" />
+        <component :is="JaminanEmas" v-if="typeModal == 'emas'" />
+      </n-card>
+    </n-modal>
     <div v-show="current === 4">
       <n-form ref="formSurvey" :model="survey" :rules="rulesSurvey" require-mark-placement="right-hanging">
         <div class="flex gap-4">
@@ -372,7 +382,7 @@
   </n-card>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, defineAsyncComponent } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import {
   ArrowBackOutlined as ArrowBack,
@@ -386,6 +396,13 @@ import router from "../../../router";
 import { useWindowSize } from "@vueuse/core";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
+import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
+import _ from "lodash";
+import { computed } from "vue";
+import { defineComponent } from "vue";
+import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
+import JaminanBillyet from "./survey/JaminanBillyet.vue";
+import JaminanEmas from "./survey/JaminanEmas.vue";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
@@ -424,7 +441,12 @@ const userToken = localStorage.getItem("token");
 const formOrder = ref(null);
 const formPelanggan = ref(null);
 const formJaminan = ref(null);
-
+const showModal = ref(false);
+const typeModal = ref();
+const viewModal = (e) => {
+  typeModal.value = e;
+  showModal.value = !showModal.value;
+}
 // init jaminan
 const billyet = {
   status_jaminan: null,
@@ -469,30 +491,36 @@ const emas = {
   nominal: null,
   atas_nama: null,
 };
-const anyJaminan = ref([{type:'kendaraan',atr:kendaraan}]);
+
+const anyJaminan = ref([{ id: 1, type: 'kendaraan', atr: kendaraan }]);
+const orderJaminan = computed(() => _.orderBy(anyJaminan.value, 'id', 'desc'));
 const jenisJaminan = ref('kendaraan');
-const removeJaminan=(e)=>{
-  anyJaminan.value.splice(e,1);
+const removeJaminan = (e) => {
+  let index = _.findIndex(anyJaminan.value, { 'id': e });
+  anyJaminan.value.splice(index, 1);
 }
 const pushJaminan = () => {
-const draftJaminan=ref({});
-  if(jenisJaminan.value == 'kendaraan'){
-draftJaminan.value=kendaraan;
-  }else if(jenisJaminan.value == 'emas'){
-    draftJaminan.value=emas;
-  }else if(jenisJaminan.value == 'billyet'){
-    draftJaminan.value=billyet;
-  }else if(jenisJaminan.value == 'sertifikat'){
-    draftJaminan.value=sertifikat;
+  const draftJaminan = ref({});
+  if (jenisJaminan.value == 'kendaraan') {
+    draftJaminan.value = kendaraan;
+  } else if (jenisJaminan.value == 'emas') {
+    draftJaminan.value = emas;
+  } else if (jenisJaminan.value == 'billyet') {
+    draftJaminan.value = billyet;
+  } else if (jenisJaminan.value == 'sertifikat') {
+    draftJaminan.value = sertifikat;
   }
 
   const newJaminan = {
+    id: anyJaminan.value.length + 1,
     type: jenisJaminan.value,
     atr: draftJaminan.value,
   }
 
   anyJaminan.value.push(newJaminan);
 }
+
+const currentComponent = ref('JaminanKendaraan');
 const next = () => {
   if (current.value === 1) {
     formOrder.value?.validate((errors) => {
