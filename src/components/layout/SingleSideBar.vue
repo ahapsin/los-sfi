@@ -2,7 +2,7 @@
   <n-layout class="h-screen">
     <n-layout-header style="height: 64px" bordered>
       <n-page-header
-        class="sticky bg-white border-b top-0 z-50 backdrop-blur p-4"
+        class="sticky bg-sc-50 border-b top-0 z-50 backdrop-blur p-4"
       >
         <template #title>
           <n-space align="center">
@@ -47,11 +47,12 @@
         :show-collapsed-content="false"
         :collapsed="sideMenu.sideEffect ? true : false"
         content-style="padding: 10px;"
+        class="bg-white/80 backdrop-blur absolute md:relative h-full z-20"
         bordered
       >
         <SideMenu />
       </n-layout-sider>
-      <n-layout class="p-2" :native-scrollbar="false">
+      <n-layout class="p-2 md:p-4" :native-scrollbar="false">
         <RouterView />
       </n-layout>
     </n-layout>
