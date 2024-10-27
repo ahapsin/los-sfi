@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe" v-model:tahun="jaminan.tahun"
             v-model:pasar="jaminan.nilai" />
     </div>
@@ -32,8 +33,24 @@
     </n-form>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
-const jaminan =ref([]);
+
+
+const jaminan = reactive({
+    status_jaminan: null,
+    merk: null,
+    tipe: null,
+    tahun: null,
+    warna: null,
+    atas_nama: null,
+    no_polisi: null,
+    no_rangka: null,
+    no_mesin: null,
+    no_bpkb: null,
+    nilai: null,
+});
+const emit = defineEmits();
+emit('childData', jaminan);
 const dynamicForm=ref({id:"1"});
 </script>

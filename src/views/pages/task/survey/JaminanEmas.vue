@@ -2,32 +2,40 @@
     <n-form ref="formJaminan" :model="jaminan" :rules="rulesJaminan" require-mark-placement="right-hanging">
         <div class="md:grid md:grid-cols-2 gap-2">
             <n-form-item label="Status Jaminan" path="status" class="w-full">
-                <n-select filterable placeholder="Pilih Status"  
+                <n-select filterable placeholder="Pilih Status"
                     />
             </n-form-item>
             <n-form-item label="Kode Emas" path="no_billyet" class="w-full">
-                <n-input placeholder="Kode Emas" @input="upCase" v-model:value="jaminan.no_polisi" />
+                <n-input placeholder="Kode Emas" @input="upCase" v-model:value="jaminan.kode_emas" />
             </n-form-item>
             <n-form-item label="Berat" path="no_billyet" class="w-full">
-                <n-input placeholder="Kode Emas" @input="upCase" v-model:value="jaminan.no_polisi">
+                <n-input placeholder="berat" @input="upCase" v-model:value="jaminan.berat">
                     <template #suffix> gram</template>
                 </n-input>
             </n-form-item>
-            <n-form-item label="Nominal" path="lokasi" class="w-full">
-                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.no_polisi" >
+            <n-form-item label="Nominal" path="nominal" class="w-full">
+                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.nominal" >
                 </n-input>
             </n-form-item>
-            <n-form-item label="Atas Nama" path="lokasi" class="w-full">
-                <n-input placeholder="atas nama" @input="upCase" v-model:value="jaminan.no_polisi" />
+            <n-form-item label="Atas Nama" path="atas_nama" class="w-full">
+                <n-input placeholder="atas nama" @input="upCase" v-model:value="jaminan.atas_nama" />
             </n-form-item>
-            
+
         </div>
-       
+
     </n-form>
 </template>
 <script setup>
-import { ref } from 'vue';
-import SelectStateRegion from '../../../../components/molecules/SelectStateRegion.vue';
-const jaminan = ref([]);
-const dynamicForm = ref({ id: "1" });
+import { reactive } from 'vue';
+const emas = {
+    kode_emas: null,
+    berat: null,
+    unit: null,
+    nominal: null,
+    atas_nama: null,
+};
+
+const jaminan = reactive(emas);
+const emit = defineEmits();
+emit('childData', jaminan);
 </script>
