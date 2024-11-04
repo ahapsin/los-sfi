@@ -1,337 +1,368 @@
 <template>
-    <n-scrollbar x-scrollable v-if="width > 502">
-        <n-space class="bg-white border rounded-xl p-4 mb-2">
-            <n-steps :current="current">
-                <n-step v-for="step in steps" :key="step" :title="step" />
-            </n-steps>
-        </n-space>
-    </n-scrollbar>
-
-    <!-- card -->
-    <n-card :title="`${current}. ${steps[current - 1]}`" :segmented="{
+  <n-scrollbar x-scrollable v-if="width > 502">
+    <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
+      <n-steps :current="current">
+        <n-step v-for="step in steps" :key="step" :title="step" />
+      </n-steps>
+    </n-space>
+  </n-scrollbar>
+  <!-- <pre>{{ dynamicForm }}</pre> -->
+  <!-- card -->
+  <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
     content: true,
-    footer: 'soft',
   }">
-
-        <!-- container 1 -->
-        <div v-show="current == 1">
-            <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
-                <div class="md:flex gap-2">
-                    <n-form-item label="Plafond" path="plafond" class="w-full">
-                        <n-input-number :parse="parse" :format="format" :min="1000000" v-model:value="order.plafond"
-                            placeholder="plafond" :loading="loading" :show-button="false" class="flex !w-full" clearable
-                            :on-update:value="handlePlafond" />
-                    </n-form-item>
-                    <n-form-item label="Jenis Angsuran" path="jenis_angsuran" class="w-full">
-                        <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
-                            v-model:value="order.jenis_angsuran" :on-update:value="handleTipe"
-                            :disabled="order.plafond != 0 ? false : true" />
-                    </n-form-item>
-                </div>
-                <div class="md:flex gap-2">
-                    <n-form-item label="Tenor / Angsuran" path="tenor" class="w-full">
-                        <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
-                            <n-radio-group v-model:value="order.tenor" name="radiogroup">
-                                <n-radio name="tenor" value="6">
-                                    6 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="12">
-                                    12 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="18">
-                                    18 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="24">
-                                    24 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                            </n-radio-group>
-                        </div>
-                        <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
-                            <n-radio-group v-model:value="order.tenor" name="radiogroup">
-                                <n-radio name="tenor" value="3">
-                                    1x 3 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="6">
-                                    1 x 6 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="12">
-                                    2 x 12 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                                <n-divider vertical />
-                                <n-radio name="tenor" value="18">
-                                    3 x 18 bulan<n-text code>
-                                        {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
-                                        ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                        : ""
-                                        }}
-                                    </n-text>
-                                </n-radio>
-                            </n-radio-group>
-                        </div>
-                    </n-form-item>
-                    <n-form-item label="Tujuan Kredit" path="tujuan_kredit" class="w-full">
-                        <n-select filterable placeholder="Tujuan Kredit" :options="tujuanKredit"
-                            v-model:value="order.tujuan_kredit" />
-                    </n-form-item>
-                </div>
-            </n-form>
+    <!-- container 1 -->
+    <div v-show="current == 1">
+      <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
+        <div class="md:flex gap-2">
+          <n-form-item label="Plafond" path="plafond" class="w-full">
+            <n-input-number :parse="parse" :format="format" :min="1000000" v-model:value="order.plafond"
+              placeholder="plafond" :loading="loading" :show-button="false" class="flex !w-full" clearable
+              :on-update:value="handlePlafond" />
+          </n-form-item>
+          <n-form-item label="Jenis Angsuran" path="jenis_angsuran" class="w-full">
+            <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
+              v-model:value="order.jenis_angsuran" :on-update:value="handleTipe"
+              :disabled="order.plafond != 0 ? false : true" />
+          </n-form-item>
         </div>
-        <div v-show="current === 2">
-            <n-form ref="formPelanggan" :model="pelanggan" :rules="rulesPelanggan"
-                require-mark-placement="right-hanging">
-                <div class="md:flex gap-2">
-                    <n-form-item label="No KTP" path="no_ktp" class="w-full">
-                        <n-input :show-button="false" :allow-input="onlyAllowNumber" placeholder="NO KTP"
-                            v-model:value="pelanggan.no_ktp" :loading="loadingKTP" @change="handleKtp" class="w-full"
-                            maxlength="16" clearable />
-                    </n-form-item>
-                    <n-form-item label="Kategori Kredit" path="kategori_kredit" class="w-full">
-                        <n-select filterable placeholder="Kategori Kredit" :options="optKategori" default-value="Baru"
-                            v-model:value="order.category" disabled />
-                    </n-form-item>
-                    <n-form-item label="No KK" path="no_kk" class="w-full">
-                        <n-input :allow-input="onlyAllowNumber" placeholder="No Kartu Keluarga"
-                            v-model:value="pelanggan.no_kk" maxlength="16" />
-                    </n-form-item>
-                </div>
-                <div class="md:flex gap-2">
-                    <n-form-item label="Nama" path="nama" class="w-full">
-                        <n-input placeholder="Nama" v-model:value="pelanggan.nama" @input="upCase" />
-                    </n-form-item>
-                    <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
-                        <div class="w-full">
-
-                            <n-date-picker placeholder="Tanggal Lahir" class="w-full"
-                                v-model:formatted-value="pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
-                                format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
-                            <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
-                                v-show="noteUsia">{{ noteUsia }}</span>
-                        </div>
-                    </n-form-item>
-                    <n-form-item label="No Handphone" path="no_hp" class="w-full">
-                        <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
-                    </n-form-item>
-                </div>
-                <div class="flex flex-col md:flex-row gap-2 gap-x-2">
-                    <n-form-item label="Alamat" path="alamat" class="w-full" @input="upCase">
-                        <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" class="w-full" />
-                    </n-form-item>
-
-                    <n-form-item path="rt">
-                        <n-input-group>
-                            <n-input placeholder="RT" v-model:value="pelanggan.rt" />
-                            <n-input placeholder="RW" v-model:value="pelanggan.rw" />
-                        </n-input-group>
-                    </n-form-item>
-                    <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
-                        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" />
-                </div>
-                <n-divider title-placement="left"> Upload Dokumen Identitas </n-divider>
-
-                <div class="flex flex-col md:flex-row gap-2">
-                    <file-upload title="KTP" endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id" />
-                    <file-upload title="KK" endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id" />
-                    <file-upload title="KTP Pasangan" endpoint="image_upload_prospect" type="ktp_pasangan"
-                        :idapp="dynamicForm.id" />
-                </div>
-            </n-form>
+        <div class="md:flex gap-2">
+          <n-form-item label="Tenor / Angsuran" path="tenor" class="w-full">
+            <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
+              <n-radio-group v-model:value="order.tenor" name="radiogroup">
+                <n-radio name="tenor" value="6">
+                  6 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="12">
+                  12 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="18">
+                  18 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="24">
+                  24 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+              </n-radio-group>
+            </div>
+            <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
+              <n-radio-group v-model:value="order.tenor" name="radiogroup">
+                <n-radio name="tenor" value="3">
+                  1x 3 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="6">
+                  1 x 6 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="12">
+                  2 x 12 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+                <n-divider vertical />
+                <n-radio name="tenor" value="18">
+                  3 x 18 bulan<n-text code>
+                    {{
+                      skemaAngsuran.length == null
+                        ? ` /
+                    ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
+                        : ""
+                    }}
+                  </n-text>
+                </n-radio>
+              </n-radio-group>
+            </div>
+          </n-form-item>
+          <n-form-item label="Tujuan Kredit" path="tujuan_kredit" class="w-full">
+            <n-select filterable placeholder="Tujuan Kredit" :options="tujuanKredit"
+              v-model:value="order.tujuan_kredit" />
+          </n-form-item>
         </div>
-        <div v-show="current === 3">
-            <n-card embedded :segmented="true" :title="`Jumlah Jaminan : ${anyJaminan.length}`">
-                <template #header-extra>
-                    <div class=" flex w-60 gap-2">
-                        <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
-                        <n-button circle type="success" @click="addJaminan">
-                            <n-icon>
-                                <add-icon />
-                            </n-icon>
-                        </n-button>
-                    </div>
+      </n-form>
+    </div>
+    <div v-show="current === 2">
+      <n-form ref="formPelanggan" :model="pelanggan" :rules="rulesPelanggan" require-mark-placement="right-hanging">
+        <div class="md:flex gap-2">
+          <n-form-item label="No KTP" path="no_ktp" class="w-full">
+            <n-input :show-button="false" :allow-input="onlyAllowNumber" placeholder="NO KTP"
+              v-model:value="pelanggan.no_ktp" :loading="loadingKTP" @change="handleKtp" class="w-full" maxlength="16"
+              clearable />
+          </n-form-item>
+          <n-form-item label="Kategori Kredit" path="kategori_kredit" class="w-full">
+            <n-select filterable placeholder="Kategori Kredit" :options="optKategori" default-value="Baru"
+              v-model:value="order.category" disabled />
+          </n-form-item>
+          <n-form-item label="No KK" path="no_kk" class="w-full">
+            <n-input :allow-input="onlyAllowNumber" placeholder="No Kartu Keluarga" v-model:value="pelanggan.no_kk"
+              maxlength="16" />
+          </n-form-item>
+        </div>
+        <div class="md:flex gap-2">
+          <n-form-item label="Nama" path="nama" class="w-full">
+            <n-input placeholder="Nama" v-model:value="pelanggan.nama" @input="upCase" />
+          </n-form-item>
+          <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
+            <div class="w-full">
+
+              <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
+                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
+              <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
+                v-show="noteUsia">{{ noteUsia }}</span>
+            </div>
+          </n-form-item>
+          <n-form-item label="No Handphone" path="no_hp" class="w-full">
+            <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
+          </n-form-item>
+        </div>
+        <div class="flex flex-col md:flex-row gap-2 gap-x-2">
+          <n-form-item label="Alamat" path="alamat" class="w-full" @input="upCase">
+            <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" class="w-full" />
+          </n-form-item>
+
+          <n-form-item path="rt">
+            <n-input-group>
+              <n-input placeholder="RT" v-model:value="pelanggan.rt" />
+              <n-input placeholder="RW" v-model:value="pelanggan.rw" />
+            </n-input-group>
+          </n-form-item>
+          <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
+            v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" />
+        </div>
+        <n-divider title-placement="left"> UPLOAD DOKUMEN IDENTITAS</n-divider>
+
+        <div class="flex flex-col md:flex-row gap-2">
+          <file-upload title="KTP" endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id" />
+          <file-upload title="KK" endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id" />
+          <file-upload title="KTP Pasangan" endpoint="image_upload_prospect" type="ktp_pasangan"
+            :idapp="dynamicForm.id" />
+        </div>
+      </n-form>
+    </div>
+    <div v-show="current === 3">
+      <n-card embedded :segmented="true"
+        :title="`Jumlah Jaminan : ${jaminanStore.listJaminan.length}, Total Nilai Jaminan : ${sumJaminan.toLocaleString('US')}`">
+        <template #header-extra>
+          <div class=" flex w-60 gap-2">
+            <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
+            <n-button circle type="success" @click="addJaminan">
+              <n-icon>
+                <add-icon />
+              </n-icon>
+            </n-button>
+          </div>
+        </template>
+        <n-card class="my-2 bg-white rounded-xl border hover:shadow" v-for="(coll) in orderJaminan" :key="coll">
+          <div class="flex justify-between">
+            <div>
+              <b class="uppercase">{{ coll.type }} {{ coll.id }}</b>
+              <n-space class="pt-2">
+                <n-tag secondary type="success" v-for="item in Object.keys(coll.atr)" :key="item">{{
+                  item }}
+                  : <b>{{ item === 'nilai' ? coll.atr[item].toLocaleString('US'): coll.atr[item]}}</b></n-tag>
+              </n-space>
+              <div>
+                <div v-if="coll.type == 'kendaraan'">
+                  <n-divider title-placement="left"> UPLOAD DOKUMEN JAMINAN </n-divider>
+                  <div class="flex flex-col md:flex-row gap-2">
+                    <file-upload title="No Rangka" endpoint="image_upload_prospect" :type="`no_rangka_${coll.id}`"
+                      :idapp="dynamicForm.id" />
+                    <file-upload title="No Mesin" endpoint="image_upload_prospect" :type="`no_mesin_${coll.id}`"
+                      :idapp="dynamicForm.id" />
+                    <file-upload title="STNK" endpoint="image_upload_prospect" :type="`stnk_${coll.id}`" :idapp="dynamicForm.id" />
+                  </div>
+                </div>
+                <n-divider title-placement="left" class="uppercase"> Upload Dokumen {{ coll.type }} </n-divider>
+                <n-space v-if="coll.type == 'kendaraan'">
+                  <file-upload title="Depan" endpoint="image_upload_prospect" :type="`depan_${coll.id}`" :idapp="dynamicForm.id"
+                    :getsrc="handleDoc" />
+                  <file-upload title="Belakang" endpoint="image_upload_prospect" :type="`belakang_${coll.id}`"
+                    :idapp="dynamicForm.id" />
+                  <file-upload title="Kanan" endpoint="image_upload_prospect" :type="`kanan_${coll.id}`" :idapp="dynamicForm.id" />
+                  <file-upload title="Kiri" endpoint="image_upload_prospect" :type="`kiri_${coll.id}`" :idapp="dynamicForm.id" />
+                </n-space>
+                <file-upload v-else class="flex w-full" :def_preview="true" :title="`dokumen ${coll.type}`"
+                  endpoint="image_upload_prospect" :type="`sertifikat_${coll.id}`" :idapp="dynamicForm.id" />
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <n-button type="warning" @click="viewModal(coll)" secondary>
+                <n-icon>
+                  <edit-icon />
+                </n-icon>
+                ubah</n-button>
+              <n-popconfirm @positive-click="removeJaminan(coll.id)" @negative-click="handleNegativeClick"
+                positive-text="ya" negative-text="tidak">
+                <template #trigger>
+                  <n-button type="error" secondary>
+                    <n-icon>
+                      <delete-icon />
+                    </n-icon>
+                    hapus
+                  </n-button>
                 </template>
-                <div class="my-2 bg-white p-4 rounded-xl border hover:bg-pr-50/10" v-for="(coll) in orderJaminan"
-                    :key="coll">
-                    <div class="flex justify-between">
-                        <div class="md:flex gap-2">
-                            <n-tag secondary type="success">
-                                Jenis Jaminan: <b>{{ coll.type }}</b>
-                            </n-tag>
-                            {{ coll }}
-                        </div>
-                        <div class="flex gap-2">
-                            <n-button type="warning" @click="viewModal(coll.type)" secondary>lihat</n-button>
-                            <n-button type="error" secondary @click="removeJaminan(coll.id)">
-                                <n-icon>
-                                    <delete-icon />
-                                </n-icon>
-                                hapus
-                            </n-button>
-                        </div>
-                    </div>
-                </div>
-            </n-card>
+                Apakah yakin ingin menghapus ?
+              </n-popconfirm>
+
+            </div>
+          </div>
+        </n-card>
+      </n-card>
+    </div>
+    <n-modal v-model:show="showModal">
+      <n-card class="md:w-1/2" closable @close="showModal = false" :segmented="true" :title="`form ${jenisJaminan}`">
+        <component :is="JaminanKendaraan" v-if="jenisJaminan == 'kendaraan'" @childData="handleChildData"
+          :def_data="dataProp" />
+        <component :is="JaminanSertifikat" v-if="jenisJaminan == 'sertifikat'" @childData="handleChildData"
+          :def_data="dataProp" />
+        <!-- <component :is="JaminanBillyet" v-if="jenisJaminan == 'billyet'" @childData="handleChildData" />
+        <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" /> -->
+        <template #footer>
+          <n-space>
+            <n-button type="success" @click="ubahJaminan(jenisJaminan)" v-if="dataProp">ubah</n-button>
+            <n-button type="success" @click="pushJaminan(jenisJaminan)" v-else>tambah</n-button>
+            <n-button type="warning" @click="showModal = false">batal</n-button>
+          </n-space>
+        </template>
+      </n-card>
+    </n-modal>
+    <div v-show="current === 4">
+      <n-form ref="formSurvey" :model="survey" :rules="rulesSurvey" require-mark-placement="right-hanging">
+        <div class="flex gap-4">
+          <n-form-item label="Tanggal survey" path="tgl_survey" class="w-full">
+            <n-date-picker placeholder="Tanggal Survey" class="w-full" v-model:formatted-value="survey.tgl_survey"
+              disabled value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" />
+          </n-form-item>
+          <n-form-item label="Lama Bekerja" path="lama_berkerja" class="w-full">
+            <n-input :allow-input="onlyAllowNumber" placeholder="lama bekerja" v-model:value="survey.lama_bekerja"
+              class="w-full">
+              <template #suffix> bulan </template>
+            </n-input>
+          </n-form-item>
         </div>
-        <n-modal v-model:show="showModal">
-            <n-card class="md:w-1/2" closable @close="showModal = false" :segmented="true">
-                <component :is="JaminanKendaraan" v-if="jenisJaminan == 'kendaraan'" @childData="handleChildData" />
-                <component :is="JaminanSertifikat" v-if="jenisJaminan == 'sertifikat'" />
-                <component :is="JaminanBillyet" v-if="jenisJaminan == 'billyet'" />
-                <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" />
-                <template #footer>
-                    <n-space>
-                        <n-button type="success" @click="pushJaminan(jenisJaminan)">tambah</n-button>
-                        <n-button type="warning" @click="showModal = false">batal</n-button>
-                    </n-space>
-                </template>
-            </n-card>
-        </n-modal>
-        <div v-show="current === 4">
-            <n-form ref="formSurvey" :model="survey" :rules="rulesSurvey" require-mark-placement="right-hanging">
-                <div class="flex gap-4">
-                    <n-form-item label="Tanggal survey" path="tgl_survey" class="w-full">
-                        <n-date-picker placeholder="Tanggal Survey" class="w-full"
-                            v-model:formatted-value="survey.tgl_survey" disabled value-format="yyyy-MM-dd"
-                            format="dd-MM-yyyy" type="date" />
-                    </n-form-item>
-                    <n-form-item label="Lama Bekerja" path="lama_berkerja" class="w-full">
-                        <n-input :allow-input="onlyAllowNumber" placeholder="lama bekerja"
-                            v-model:value="survey.lama_bekerja" class="w-full">
-                            <template #suffix> bulan </template>
-                        </n-input>
-                    </n-form-item>
-                </div>
-                <div class="md:flex gap-4">
-                    <n-form-item label="Pendapatan pelanggan " path="pribadi" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pribadi" placeholder="pendapatan pelanggan"
-                            :show-button="false">
-                            <template #suffix> perbulan </template>
-                        </n-input-number>
-                    </n-form-item>
-                    <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pasangan" placeholder="pendapatan pasangan"
-                            :show-button="false">
-                            <template #suffix> perbulan </template>
-                        </n-input-number>
-                    </n-form-item>
-                    <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.lainnya" placeholder="pendapatan lain-lain"
-                            :show-button="false">
-                            <template #suffix> perbulan </template>
-                        </n-input-number>
-                    </n-form-item>
-                    <n-form-item label="Pengeluaran" path="pengeluaran" class="w-full">
-                        <n-input-number :parse="parse" :format="format" class="w-full"
-                            v-model:value="survey.pengeluaran" placeholder="pengeluaran" :show-button="false">
-                            <template #suffix> perbulan </template>
-                        </n-input-number>
-                    </n-form-item>
-                </div>
-                <div class="flex gap-4">
-                    <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
-                        <n-select filterable placeholder="pekerjaan" counter :options="optSektor"
-                            v-model:value="survey.sektor" />
-                    </n-form-item>
-                </div>
-                <n-form-item label="Catatan Survey" path="catatan_survey">
-                    <n-input v-model:value="survey.catatan_survey" @input="upCase" :autosize="{
+        <div class="md:flex gap-4">
+          <n-form-item label="Pendapatan pelanggan " path="pribadi" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.pribadi" placeholder="pendapatan pelanggan" :show-button="false">
+              <template #suffix> perbulan </template>
+            </n-input-number>
+          </n-form-item>
+          <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.pasangan" placeholder="pendapatan pasangan" :show-button="false">
+              <template #suffix> perbulan </template>
+            </n-input-number>
+          </n-form-item>
+          <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
+            <n-input-number class="flex w-full" :parse="parse" :format="format"
+              v-model:value="survey.penghasilan.lainnya" placeholder="pendapatan lain-lain" :show-button="false">
+              <template #suffix> perbulan </template>
+            </n-input-number>
+          </n-form-item>
+          <n-form-item label="Pengeluaran" path="pengeluaran" class="w-full">
+            <n-input-number :parse="parse" :format="format" class="w-full" v-model:value="survey.pengeluaran"
+              placeholder="pengeluaran" :show-button="false">
+              <template #suffix> perbulan </template>
+            </n-input-number>
+          </n-form-item>
+        </div>
+        <div class="flex gap-4">
+          <n-form-item label="Pekerjaan" path="pekerjaan" class="w-full">
+            <n-select filterable placeholder="pekerjaan" counter :options="optSektor" v-model:value="survey.sektor" />
+          </n-form-item>
+        </div>
+        <n-form-item label="Catatan Survey" path="catatan_survey">
+          <n-input v-model:value="survey.catatan_survey" @input="upCase" :autosize="{
             minRows: 3,
             maxRows: 5,
           }" type="textarea" placeholder="catatan survey" />
-                </n-form-item>
-                <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
-                <file-upload :def_preview="true" title="dokumen pendukung" endpoint="image_upload_prospect" type="other"
-                    :idapp="dynamicForm.id" />
-            </n-form>
-        </div>
-        <template #action>
-            <n-flex justify="between">
-                <n-button @click="prev" type="secondary" v-if="current > 1">
-                    <template #icon>
-                        <n-icon>
-                            <arrow-back />
-                        </n-icon>
-                    </template>
-                    kembali
-                </n-button>
-                <n-button @click="next" type="primary" v-if="current < 4">
-                    <template #icon>
-                        <n-icon>
-                            <arrow-forward />
-                        </n-icon>
-                    </template>
-                    Selanjutnya
-                </n-button>
-                <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid" v-else>
-                    simpan
-                </n-button>
-            </n-flex>
-        </template>
-    </n-card>
+        </n-form-item>
+        <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
+        <file-upload :def_preview="true" title="dokumen pendukung" endpoint="image_upload_prospect" type="other"
+          :idapp="dynamicForm.id" />
+      </n-form>
+    </div>
+    <template #action>
+      <n-flex justify="between">
+        <n-button @click="prev" type="secondary" v-if="current > 1">
+          <template #icon>
+            <n-icon>
+              <arrow-back />
+            </n-icon>
+          </template>
+          kembali
+        </n-button>
+        <n-button @click="next" type="primary" v-if="current < 4">
+          <template #icon>
+            <n-icon>
+              <arrow-forward />
+            </n-icon>
+          </template>
+          Selanjutnya
+        </n-button>
+        <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid" v-else>
+          simpan
+        </n-button>
+      </n-flex>
+    </template>
+  </n-card>
 </template>
 <script setup>
-import { ref, reactive, defineAsyncComponent } from "vue";
+import { ref, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import {
   ArrowBackOutlined as ArrowBack,
   AddFilled as AddIcon,
+  EditOutlined as EditIcon,
   DeleteOutlineFilled as DeleteIcon,
   ArrowForwardOutlined as ArrowForward,
 
@@ -344,10 +375,10 @@ import { useBlacklist } from "../../../helpers/blacklist";
 import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
 import _ from "lodash";
 import { computed } from "vue";
-import { defineComponent } from "vue";
 import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
-import JaminanBillyet from "./survey/JaminanBillyet.vue";
-import JaminanEmas from "./survey/JaminanEmas.vue";
+// import JaminanBillyet from "./survey/JaminanBillyet.vue";
+// import JaminanEmas from "./survey/JaminanEmas.vue";
+import { useJaminanStore } from "../../../stores/jaminan";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
@@ -382,89 +413,106 @@ const refAdmin = async (body) => {
     tenor24.value = response.data.tenor_24;
   }
 };
+
+const jaminanStore = useJaminanStore();
 const userToken = localStorage.getItem("token");
 const formOrder = ref(null);
 const formPelanggan = ref(null);
-const formJaminan = ref(null);
+// const formJaminan = ref(null);
 const showModal = ref(false);
-const typeModal = ref();
-const viewModal = (e) => {
-  typeModal.value = e;
-  showModal.value = !showModal.value;
-}
+// const typeModal = ref();
+
 // init jaminan
-const billyet = {
-  status_jaminan: null,
-  no_bilyet: null,
-  tgl_valuta: null,
-  jangka_waktu: null,
-  nominal: null,
-  atas_nama: null,
-};
-const kendaraan = {
-  status_jaminan: null,
-  merk: null,
-  tipe: null,
-  tahun: null,
-  warna: null,
-  atas_nama: null,
-  no_polisi: null,
-  no_rangka: null,
-  no_mesin: null,
-  no_bpkb: null,
-  nilai: null,
-};
-const sertifikat = {
-  status_jaminan: null,
-  no_sertifikat: null,
-  status_kepemilikan: null,
-  imb: null,
-  luas_tanah: null,
-  luas_bangunan: null,
-  lokasi: null,
-  provinsi: null,
-  kab_kota: null,
-  kec: null,
-  desa: null,
-  atas_nama: null,
-  nilai: null,
-};
-const emas = {
-  kode_emas: null,
-  berat: null,
-  unit: null,
-  nominal: null,
-  atas_nama: null,
-};
+// const billyet = {
+//   status_jaminan: null,
+//   no_bilyet: null,
+//   tgl_valuta: null,
+//   jangka_waktu: null,
+//   nominal: null,
+//   atas_nama: null,
+// };
+// const kendaraan = {
+//   status_jaminan: null,
+//   merk: null,
+//   tipe: null,
+//   tahun: null,
+//   warna: null,
+//   atas_nama: null,
+//   no_polisi: null,
+//   no_rangka: null,
+//   no_mesin: null,
+//   no_bpkb: null,
+//   nilai: null,
+// };
+// const sertifikat = {
+//   status_jaminan: null,
+//   no_sertifikat: null,
+//   status_kepemilikan: null,
+//   imb: null,
+//   luas_tanah: null,
+//   luas_bangunan: null,
+//   lokasi: null,
+//   provinsi: null,
+//   kab_kota: null,
+//   kec: null,
+//   desa: null,
+//   atas_nama: null,
+//   nilai: null,
+// };
+// const emas = {
+//   kode_emas: null,
+//   berat: null,
+//   unit: null,
+//   nominal: null,
+//   atas_nama: null,
+// };
 
 const anyJaminan = ref([]);
 const receivedData = ref(null);
 
+const dataProp = ref();
+
 const handleChildData = (data) => {
-    receivedData.value = data;
+  receivedData.value = data;
+
 };
-const orderJaminan = computed(() => _.orderBy(anyJaminan.value, 'id', 'desc'));
+const sumJaminan = computed(() => {
+  return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
+});
+const orderJaminan = computed(() => _.orderBy(jaminanStore.listJaminan, 'id', 'desc'));
 const jenisJaminan = ref('kendaraan');
+const viewModal = (e) => {
+  let findData = _.findIndex(jaminanStore.listJaminan, { 'id': e.id });
+  let selectedData = jaminanStore.listJaminan[findData];
+  jenisJaminan.value = e.type;
+  dataProp.value = selectedData;
+  showModal.value = !showModal.value;
+}
 const removeJaminan = (e) => {
   let index = _.findIndex(anyJaminan.value, { 'id': e });
   anyJaminan.value.splice(index, 1);
+  jaminanStore.removeJaminan(e);
 }
-const addJaminan = ()=>{
-    showModal.value = true;
+const addJaminan = () => {
+  dataProp.value = null;
+  showModal.value = true;
 }
 const pushJaminan = (e) => {
   const newJaminan = {
-    id: anyJaminan.value.length + 1,
+    id: jaminanStore.listJaminan.length + 1,
     type: e,
     atr: receivedData.value,
   }
-
-  anyJaminan.value.push(newJaminan);
+  jaminanStore.storeJaminan(newJaminan);
   showModal.value = false;
   message.success(`jaminan ${e} ditambahkan`);
 }
+const ubahJaminan = () => {
+  showModal.value = false;
+  message.success(`jaminan diubah`);
+}
 
-const currentComponent = ref('JaminanKendaraan');
+// const currentComponent = ref('JaminanKendaraan');
 const next = () => {
   if (current.value === 1) {
     formOrder.value?.validate((errors) => {
@@ -483,13 +531,13 @@ const next = () => {
       }
     });
   } else if (current.value === 3) {
-    formJaminan.value?.validate((errors) => {
-      if (errors) {
-        message.error("periksa kembali isian anda");
-      } else {
-        current.value += 1;
-      }
-    });
+    current.value += 1;
+    // formJaminan.value?.validate((errors) => {
+    //   if (errors) {
+    //     message.error("periksa kembali isian anda");
+    //   } else {
+    // }
+    // });
   }
 };
 const prev = () => (current.value -= 1);
@@ -505,7 +553,7 @@ const optKategori = ["Baru", "RO"].map((v) => ({
   label: v,
   value: v,
 }));
-const optJaminan = ["Kendaraan", "Sertifikat", "Billyet", "Emas"].map((v) => ({
+const optJaminan = ["Kendaraan", "Sertifikat"].map((v) => ({
   label: v,
   value: v.toLowerCase(),
 }));
@@ -585,7 +633,7 @@ const dynamicForm = reactive({
   order: order.value,
   data_nasabah: pelanggan,
   data_survey: survey,
-  jaminan_kendaraan: [jaminan.value],
+  jaminan: jaminanStore.listJaminan,
 });
 const handlePlafond = (e) => {
   order.value.plafond = e;
@@ -682,7 +730,7 @@ const handleSave = async () => {
   loading.value = true;
   const response = await useApi({
     method: "POST",
-    api: `kunjungan`,
+    api: "kunjungan",
     data: dynamicForm,
     token: userToken,
   });
@@ -696,61 +744,54 @@ const handleSave = async () => {
   }
 };
 
-
-const tahunJaminanValidate = () => {
-  let tahun = new Date().getFullYear();
-  let diff = tahun - jaminan.value.tahun;
-  diffState.value = 2;
-  return diff <= 10;
-};
-const rules = {
-  tahun_jaminan: {
-    message: `jumlah tahun lebih dari 10 Tahun`,
-    validator: tahunJaminanValidate,
-    trigger: ["blur"],
-  },
-  no_ktp: {
-    trigger: "blur",
-    required: true, required: true,
-    min: 16,
-    message: "No identitas minimal 16 karakter",
-  },
-  no_kk: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-  plafond: {
-    trigger: "blur",
-    required: true,
-    message: "plafond harus diisi",
-  },
-  tujuan_kredit: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-  nama: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-  tgl_lahir: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-  hp: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-};
+// const rules = {
+//   tahun_jaminan: {
+//     message: `jumlah tahun lebih dari 10 Tahun`,
+//     validator: tahunJaminanValidate,
+//     trigger: ["blur"],
+//   },
+//   no_ktp: {
+//     trigger: "blur",
+//     required: true, required: true,
+//     min: 16,
+//     message: "No identitas minimal 16 karakter",
+//   },
+//   no_kk: {
+//     trigger: "blur",
+//     required: true,
+//     min: 16,
+//     message: "No Kartu Keluarga minimal 16 karakter",
+//   },
+//   plafond: {
+//     trigger: "blur",
+//     required: true,
+//     message: "plafond harus diisi",
+//   },
+//   tujuan_kredit: {
+//     trigger: "blur",
+//     required: true,
+//     min: 16,
+//     message: "No Kartu Keluarga minimal 16 karakter",
+//   },
+//   nama: {
+//     trigger: "blur",
+//     required: true,
+//     min: 16,
+//     message: "No Kartu Keluarga minimal 16 karakter",
+//   },
+//   tgl_lahir: {
+//     trigger: "blur",
+//     required: true,
+//     min: 16,
+//     message: "No Kartu Keluarga minimal 16 karakter",
+//   },
+//   hp: {
+//     trigger: "blur",
+//     required: true,
+//     min: 16,
+//     message: "No Kartu Keluarga minimal 16 karakter",
+//   },
+// };
 const plafondValidator = (rule, value) => {
   return value > 1000000;
 };

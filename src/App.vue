@@ -22,7 +22,7 @@ const themeOverrides = {
   common: {
     // primaryColor: '#213B94',
     // primaryColorHover: "#213B94",
-    borderRadius: "20px"
+    borderRadius: "10px"
   },
 }
 const isLoading = ref(true);

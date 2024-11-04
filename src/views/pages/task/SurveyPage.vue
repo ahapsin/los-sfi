@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-4">
+  <div>
     <n-space vertical>
       <n-card
   
@@ -14,10 +14,11 @@
             <div class="me-1">
               <n-popover trigger="click" placement="bottom-end">
                 <template #trigger>
-                  <n-button circle>
+                  <n-button :circle="width <= 520 ? true:false">
                     <n-icon>
                       <search-icon />
                     </n-icon>
+                    <span v-if="width >= 520">Cari</span>
                   </n-button>
                 </template>
                 <n-space vertical>
@@ -37,31 +38,23 @@
               </n-popover>
             </div>
             <div>
-              <n-button type="success" secondary circle @click="downloadCsv">
+              <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true:false">
                 <template #icon>
                   <n-icon>
                     <download-icon />
                   </n-icon>
                 </template>
+                <span v-if="width >= 520">Download</span>
               </n-button>
             </div>
-            <div class="hidden md:flex">
-              <n-button type="primary" strong @click="handleAdd">
+            <div >
+              <n-button type="primary" strong @click="handleAdd" :circle="width <= 520 ? true:false">
                 <template #icon>
                   <n-icon>
                     <add-icon />
                   </n-icon>
                 </template>
-                tambah
-              </n-button>
-            </div>
-            <div class="md:hidden">
-              <n-button type="primary" @click="handleAdd">
-                <template #icon>
-                  <n-icon>
-                    <add-icon />
-                  </n-icon>
-                </template>
+                <span v-if="width >= 520">Tambah</span>
               </n-button>
             </div>
           </n-space>
@@ -106,6 +99,7 @@ import {
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
 import { useLoadingBar } from "naive-ui";
+import { useWindowSize } from "@vueuse/core";
 const loadingBar = useLoadingBar();
 const message = useMessage();
 const dialog = useDialog();
@@ -114,6 +108,10 @@ const dataTable = ref([]);
 const tableRef = ref();
 const downloadCsv = () =>
   tableRef.value?.downloadCsv({ fileName: "export-data-survey" });
+
+
+
+const { width } = useWindowSize();
 const columns = [
   {
     title: "Tanggal",

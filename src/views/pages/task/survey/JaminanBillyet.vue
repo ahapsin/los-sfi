@@ -6,7 +6,7 @@
                     />
             </n-form-item>
             <n-form-item label="No Billyet" path="no_billyet" class="w-full">
-                <n-input placeholder="No Billyet" @input="upCase" v-model:value="jaminan.no_polisi" />
+                <n-input placeholder="No Billyet" @input="upCase" v-model:value="jaminan.no_billyet" />
             </n-form-item>
             <n-form-item label="Tanggal Valuta" path="tanggal valuta" class="w-full">
                 <n-date-picker
@@ -19,14 +19,14 @@
               />
             </n-form-item>
             <n-form-item label="jangka Waktu" path="imb" class="w-full">
-                <n-input placeholder="Jangka Waktu" @input="upCase" v-model:value="jaminan.no_polisi" />
+                <n-input placeholder="Jangka Waktu" @input="upCase" v-model:value="jaminan.jangka_waktu" />
             </n-form-item>
             <n-form-item label="Nominal" path="lokasi" class="w-full">
-                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.no_polisi" >
+                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.nilai" >
                 </n-input>
             </n-form-item>
             <n-form-item label="Atas Nama" path="lokasi" class="w-full">
-                <n-input placeholder="atas nama" @input="upCase" v-model:value="jaminan.no_polisi" />
+                <n-input placeholder="atas nama" @input="upCase" v-model:value="jaminan.atas_nama" />
             </n-form-item>
             
         </div>
@@ -35,7 +35,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import SelectStateRegion from '../../../../components/molecules/SelectStateRegion.vue';
 const jaminan = ref([]);
-const dynamicForm = ref({ id: "1" });
+const emit = defineEmits();
+emit('childData', jaminan);
 </script>

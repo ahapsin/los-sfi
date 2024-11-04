@@ -1,10 +1,12 @@
 <template>
+    <div class="pb-2" v-if="tahunJaminanValidate >=10">
+        <n-alert type="warning">usia kendaraan {{ tahunJaminanValidate }} tahun</n-alert>
+    </div>
     <div>
-
         <taksasi-select-state v-model:brand="jaminan.merk" v-model:tipe="jaminan.tipe" v-model:tahun="jaminan.tahun"
             v-model:pasar="jaminan.nilai" />
     </div>
-    <n-form ref="formJaminan" :model="jaminan" :rules="rulesJaminan" require-mark-placement="right-hanging">
+    <n-form ref="formJaminan" :model="jaminan" require-mark-placement="right-hanging">
         <div class="md:flex gap-2">
             <n-form-item label="No Polisi" path="no_polisi" class="w-full">
                 <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" />
@@ -17,40 +19,25 @@
                     value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
             </n-form-item>
         </div>
-        <n-divider title-placement="left"> Upload Dokumen Jaminan </n-divider>
-        <div class="flex flex-col md:flex-row gap-2">
-            <file-upload title="No Rangka" endpoint="image_upload_prospect" type="no_rangka" :idapp="dynamicForm.id" />
-            <file-upload title="No Mesin" endpoint="image_upload_prospect" type="no_mesin" :idapp="dynamicForm.id" />
-            <file-upload title="STNK" endpoint="image_upload_prospect" type="stnk" :idapp="dynamicForm.id" />
-        </div>
-        <n-divider title-placement="left"> Upload Jaminan </n-divider>
-        <n-space>
-            <file-upload title="Depan" endpoint="image_upload_prospect" type="depan" :idapp="dynamicForm.id" />
-            <file-upload title="Belakang" endpoint="image_upload_prospect" type="belakang" :idapp="dynamicForm.id" />
-            <file-upload title="Kanan" endpoint="image_upload_prospect" type="kanan" :idapp="dynamicForm.id" />
-            <file-upload title="Kiri" endpoint="image_upload_prospect" type="kiri" :idapp="dynamicForm.id" />
-        </n-space>
     </n-form>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
+const props = defineProps({
+    def_data: Object,
+});
 
-
-const jaminan = reactive({
-    status_jaminan: null,
-    merk: null,
-    tipe: null,
-    tahun: null,
-    warna: null,
-    atas_nama: null,
-    no_polisi: null,
-    no_rangka: null,
-    no_mesin: null,
-    no_bpkb: null,
-    nilai: null,
+const jaminan = reactive(props.def_data ? props.def_data.atr : {});
+const tahunJaminanValidate = computed(() => {
+      let tahun = new Date().getFullYear();
+      let diff = tahun - jaminan.tahun;
+      return diff;
 });
 const emit = defineEmits();
 emit('childData', jaminan);
-const dynamicForm=ref({id:"1"});
+const upCase = () => {
+    jaminan.no_polisi = jaminan.no_polisi.toUpperCase();
+    jaminan.warna = jaminan.warna.toUpperCase();
+};
 </script>

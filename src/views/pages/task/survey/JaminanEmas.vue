@@ -14,7 +14,7 @@
                 </n-input>
             </n-form-item>
             <n-form-item label="Nominal" path="nominal" class="w-full">
-                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.nominal" >
+                <n-input placeholder="Nominal" @input="upCase" v-model:value="jaminan.nilai" >
                 </n-input>
             </n-form-item>
             <n-form-item label="Atas Nama" path="atas_nama" class="w-full">
@@ -27,15 +27,14 @@
 </template>
 <script setup>
 import { reactive } from 'vue';
-const emas = {
-    kode_emas: null,
-    berat: null,
-    unit: null,
-    nominal: null,
-    atas_nama: null,
-};
-
-const jaminan = reactive(emas);
+// const emas = {
+//     kode_emas: null,
+//     berat: null,
+//     unit: null,
+//     nilai: null,
+//     atas_nama: null,
+// };
+const jaminan = reactive({});
 const emit = defineEmits();
 emit('childData', jaminan);
 </script>
