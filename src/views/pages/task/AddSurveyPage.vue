@@ -382,7 +382,7 @@ import { useJaminanStore } from "../../../stores/jaminan";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
-const current = ref(3);
+const current = ref(1);
 const loading = ref(false);
 const tipeAngsuran = ref("bulanan");
 const skemaAngsuran = ref([]);

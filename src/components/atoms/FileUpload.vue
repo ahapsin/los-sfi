@@ -114,6 +114,7 @@ const handleImagePost = () => {
   const bodyForm = {
     image: state.resizedImage,
     type: props.type,
+    reff: props.reff,
     cr_prospect_id: props.idapp,
   };
   // const form = new FormData();
@@ -141,6 +142,7 @@ const props = defineProps({
   title: String,
   endpoint: String,
   type: String,
+  reff: String,
   idapp: String,
   def_value: String,
   def_preview: Boolean,
