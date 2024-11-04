@@ -6,6 +6,9 @@ export const useJaminanStore = defineStore("jaminan", () => {
   const storeJaminan = (jaminanData) => {
     listJaminan.value.push(jaminanData);
   };
+  const filledJaminan = (jaminanData) => {
+    Object.assign(listJaminan.value,jaminanData)
+  };
   const removeJaminan = (e) => {
     let index = _.findIndex(listJaminan.value, { 'id': e });
     listJaminan.value.splice(index, 1);
@@ -14,5 +17,5 @@ export const useJaminanStore = defineStore("jaminan", () => {
     let index = _.findIndex(listJaminan.value, { 'id': e.id });
     Object.assign(listJaminan.value[index],e);
   }
-  return { listJaminan, storeJaminan,removeJaminan, updateJaminan };
+  return { listJaminan, filledJaminan, storeJaminan,removeJaminan, updateJaminan };
 });

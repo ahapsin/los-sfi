@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-2" v-if="tahunJaminanValidate >=10">
+    <div class="pb-2" v-if="jaminan.tahun && tahunJaminanValidate >= 10">
         <n-alert type="warning">usia kendaraan {{ tahunJaminanValidate }} tahun</n-alert>
     </div>
     <div>
