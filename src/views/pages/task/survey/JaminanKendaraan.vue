@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/valid-define-emits -->
+<!-- eslint-disable vue/valid-define-emits -->
 <template>
     <div class="pb-2" v-if="jaminan.tahun && tahunJaminanValidate >= 10">
         <n-alert type="warning">usia kendaraan {{ tahunJaminanValidate }} tahun</n-alert>
@@ -34,6 +36,7 @@ const tahunJaminanValidate = computed(() => {
       let diff = tahun - jaminan.tahun;
       return diff;
 });
+// eslint-disable-next-line vue/valid-define-emits
 const emit = defineEmits();
 emit('childData', jaminan);
 const upCase = () => {

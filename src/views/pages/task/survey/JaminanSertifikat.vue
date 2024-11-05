@@ -36,11 +36,11 @@
                 <n-input placeholder="atas nama" @input="upCase" v-model:value="jaminan.atas_nama" />
             </n-form-item>
             <n-form-item label="Nilai Jaminan" path="lokasi" class="w-full">
-                <n-input placeholder="Nilai Jaminan" @input="upCase" v-model:value="jaminan.nilai" >
-                </n-input>
+                <n-input-number  :parse="parse"
+                :format="format" class="w-full" :show-button="false" placeholder="Nilai Jaminan" v-model:value="jaminan.nilai" default-value="0">
+                </n-input-number>
             </n-form-item>
         </div>
-       
     </n-form>
 </template>
 <script setup>
@@ -53,4 +53,13 @@ const jaminan = reactive(props.def_data ? props.def_data.atr:{});
 
 const emit = defineEmits();
 emit('childData', jaminan);
+const parse = (input) => {
+  const nums = input.replace(/,/g, "").trim();
+  if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
+  return nums === "" ? null : Number.NaN;
+};
+const format = (value) => {
+  if (value === null) return "";
+  return value.toLocaleString("en-US");
+};
 </script>
