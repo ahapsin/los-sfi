@@ -1,8 +1,20 @@
 <template>
   <canvas ref="canvas" style="display: none"></canvas>
   <div v-if="props.multi && props.data_multi" class="flex gap-4">
-    <div v-for="prev_multi in dataPreview" :key="prev_multi" class="relative">
-      <n-button class="absolute -right-4 -top-4" circle type="error" @click="removePreview(prev_multi.ID)">x</n-button>
+    <div v-for="prev_multi in dataPreview" :key="prev_multi" class="relative group">
+      <n-popconfirm
+    @positive-click="removePreview(prev_multi.ID)" positive-text="ya" negative-text="tidak"
+  >
+    <template #trigger>
+      <n-button class="absolute -right-4 -top-4  ring-4 ring-white" size="small" circle type="error">
+        <n-icon>
+          <remove-icon />
+        </n-icon>
+      </n-button>
+    </template>
+    hapus dokumen ?
+  </n-popconfirm>
+     
       <n-image :src="prev_multi.PATH" class="h-20 w-20 border min-w-20 rounded-xl " />
     </div>
   </div>
@@ -13,7 +25,6 @@
         <n-image :src="state.resizedImage" class="h-20 w-20 min-w-20 rounded-xl" />
       </div>
       <div v-else-if="props.def_value">
-
         <n-image :src="props.def_value" class="h-20 w-20 border min-w-20 rounded-xl " />
       </div>
       <div v-else>
@@ -23,7 +34,7 @@
 
     </div>
     <n-upload accept="image/png, image/jpeg,image/jpg" @change="beforeUpload" :show-file-list="props.def_preview"
-      list-type="image" multiple :show-cancel-button="false">
+      list-type="image" multiple :show-cancel-button="false" v-show="!props.viewMode">
       <div class="flex flex-col">
         <n-button tertiary :type="errorCapture ? 'error' : 'success'">
           <div class="flex gap-2">
@@ -37,7 +48,7 @@
 </template>
 
 <script setup>
-import { CloudUploadFilled as UploadIcon } from "@vicons/material";
+import { CloudUploadFilled as UploadIcon, RemoveRound as RemoveIcon } from "@vicons/material";
 import { lyla } from "@lylajs/web";
 import { useMessage } from "naive-ui";
 
@@ -138,6 +149,10 @@ const props = defineProps({
   def_preview: Boolean,
   multi: Boolean,
   data_multi: Object,
+  viewMode:{
+    type:Boolean,
+    default:false,
+  }
 });
 const dataPreview = toRef(props, 'data_multi');
 

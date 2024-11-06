@@ -9,7 +9,7 @@
                 <n-input placeholder="no_sertifikat" @input="upCase" v-model:value="jaminan.no_sertifikat" />
             </n-form-item>
             <n-form-item label="Status Kepemilikan" path="Kepemilikan" class="w-full">
-                <n-input placeholder="Kepemilikan" @input="upCase" v-model:value="jaminan.kepemilikan" />
+                <n-input placeholder="Kepemilikan" @input="upCase" v-model:value="jaminan.status_kepemilikan" />
             </n-form-item>
             <n-form-item label="IMB" path="imb" class="w-full">
                 <n-input placeholder="IMB" @input="upCase" v-model:value="jaminan.imb" />

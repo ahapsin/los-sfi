@@ -6,8 +6,9 @@
       </n-steps>
     </n-space>
   </n-scrollbar>
-  <pre>{{ dynamicForm }}</pre>
+  <!-- <pre>{{ dynamicForm }}</pre> -->
   <!-- card -->
+   <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ sumJaminan.toLocaleString() }}</n-alert>
   <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
     content: true,
   }">

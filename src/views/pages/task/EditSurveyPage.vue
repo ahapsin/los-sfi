@@ -7,6 +7,7 @@
             </n-steps>
         </n-space>
     </n-scrollbar>
+    <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ sumJaminan.toLocaleString() }}</n-alert>
     <!-- card -->
     <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
         content: true,
@@ -332,23 +333,24 @@
                     </n-form-item>
                 </div>
                 <div class="md:flex gap-4">
+                    <!-- {{ survey }} -->
                     <n-form-item label="Pendapatan pelanggan " path="pribadi" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pribadi" placeholder="pendapatan pelanggan"
+                            v-model:value="survey.penghasilan_pribadi" placeholder="pendapatan pelanggan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pasangan" placeholder="pendapatan pasangan"
+                            v-model:value="survey.penghasilan_pasangan" placeholder="pendapatan pasangan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.lainnya" placeholder="pendapatan lain-lain"
+                            v-model:value="survey.penghasilan_lainnya" placeholder="pendapatan lain-lain"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
@@ -422,10 +424,11 @@ import { useWindowSize } from "@vueuse/core";
 import { useApi } from "../../../helpers/axios";
 import { useBlacklist } from "../../../helpers/blacklist";
 import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
+import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
 import _ from "lodash";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
+
 // import JaminanBillyet from "./survey/JaminanBillyet.vue";
 // import JaminanEmas from "./survey/JaminanEmas.vue";
 import { useJaminanStore } from "../../../stores/jaminan";
@@ -446,7 +449,7 @@ const tenor18 = ref([]);
 const tenor24 = ref([]);
 
 const modelKendaraan = ['merk', 'tipe', 'tahun', 'no_polisi', 'nilai', 'warna', 'tgl_stnk'];
-const modelSertifikat = ['no_sertifikat', 'imb', 'kepemilikan', 'luas_tanah', 'luas_bangunan', 'nilai', 'atas_nama'];
+const modelSertifikat = ['no_sertifikat', 'imb', 'status_kepemilikan', 'luas_tanah', 'luas_bangunan', 'nilai', 'atas_nama'];
 
 
 const refAdmin = async (body) => {
@@ -478,14 +481,12 @@ const formOrder = ref(null);
 const formPelanggan = ref(null);
 const showModal = ref(false);
 
-const anyJaminan = ref([]);
 const receivedData = ref(null);
 
 const dataProp = ref();
 
 const handleChildData = (data) => {
     receivedData.value = data;
-
 };
 const sumJaminan = computed(() => {
     return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
