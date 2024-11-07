@@ -7,7 +7,7 @@
             </n-steps>
         </n-space>
     </n-scrollbar>
-    <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ sumJaminan.toLocaleString() }}</n-alert>
+    <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan/2">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan/2).toLocaleString() }} (50%)</n-alert>
     <!-- card -->
     <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
         content: true,
@@ -435,7 +435,7 @@ import { useJaminanStore } from "../../../stores/jaminan";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
-const current = ref(3);
+const current = ref(2);
 const pageData = ref({});
 const suspense = ref({});
 const baseRoute = useRoute();
@@ -722,19 +722,19 @@ const format = (value) => {
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
-    var month_diff = Date.now() - e;
+    var month_diff = Date.now();
     var age_dt = new Date(month_diff);
     var year = age_dt.getUTCFullYear();
-    var age = Math.abs(year - 1970);
+    var age = Math.abs(year);
     if (age > 19 && age < 60) {
         notifUsia.value = false;
     } else {
         if (age < 19) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${age} tahun, usia < dari 19 Tahun`;
+            noteUsia.value = `usia ${e} tahun, usia < dari 19 Tahun`;
         } else if (age > 60) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
+            noteUsia.value = `usia ${e} tahun, usia > dari 60 Tahun`;
         }
     }
 };
@@ -887,6 +887,7 @@ const findDocByType = (c, e) => {
     if (docPath.value) return docPath.value.PATH;
 };
 onMounted(() => {
+    jaminanStore.initJaminan();
     getData();
 });
 </script>

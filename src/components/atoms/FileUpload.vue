@@ -3,7 +3,7 @@
   <div v-if="props.multi && props.data_multi" class="flex gap-4">
     <div v-for="prev_multi in dataPreview" :key="prev_multi" class="relative group">
       <n-popconfirm
-    @positive-click="removePreview(prev_multi.ID)" positive-text="ya" negative-text="tidak"
+    @positive-click="removePreview(prev_multi.ID)" positive-text="ya" negative-text="tidak"  v-if="!props.viewMode"
   >
     <template #trigger>
       <n-button class="absolute -right-4 -top-4  ring-4 ring-white" size="small" circle type="error">

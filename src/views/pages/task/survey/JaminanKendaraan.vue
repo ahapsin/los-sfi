@@ -1,5 +1,4 @@
-<!-- eslint-disable vue/valid-define-emits -->
-<!-- eslint-disable vue/valid-define-emits -->
+
 <template>
     <div class="pb-2" v-if="jaminan.tahun && tahunJaminanValidate >= 10">
         <n-alert type="warning">usia kendaraan {{ tahunJaminanValidate }} tahun</n-alert>
@@ -11,23 +10,45 @@
     <n-form ref="formJaminan" :model="jaminan" require-mark-placement="right-hanging">
         <div class="md:flex gap-2">
             <n-form-item label="No Polisi" path="no_polisi" class="w-full">
-                <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" />
+                <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" :disabled="props.viewMode"/>
             </n-form-item>
             <n-form-item label="Warna" path="warna" class="w-full">
-                <n-input placeholder="warna" v-model:value="jaminan.warna" />
+                <n-input placeholder="warna" v-model:value="jaminan.warna":disabled="props.viewMode" />
             </n-form-item>
             <n-form-item label="Tanggal Berlaku STNK" path="tgl_stnk" class="w-full">
-                <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk"
+                <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk" :disabled="props.viewMode"
                     value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" class="w-full" />
             </n-form-item>
+        </div>
+        <div class="grid grid-cols-3 gap-2" v-if="me.me.jabatan != 'MCF' || props.viewMode">
+            <n-form-item label="No BPKB" path="no_bpkb" class="w-full">
+                <n-input placeholder="No BPKB" v-model:value="jaminan.no_bpkb" :disabled="props.viewMode"/>
+              </n-form-item>
+            <n-form-item label="Alamat BPKB" path="no_bpkb" class="w-full">
+                <n-input placeholder="No BPKB" v-model:value="jaminan.alamat_bpkb" :disabled="props.viewMode" />
+              </n-form-item>
+              <n-form-item label="Atas Nama BPKB" path="atas_nama" class="w-full">
+                <n-input placeholder="Atas Nama" v-model:value="jaminan.atas_nama" :disabled="props.viewMode"/>
+              </n-form-item>
+              <n-form-item label="No Rangka" path="no_rangka" class="w-full">
+                <n-input placeholder="No Rangka" v-model:value="jaminan.no_rangka" :disabled="props.viewMode" />
+              </n-form-item>
+              <n-form-item label="No Mesin" path="no_mesin" class="w-full">
+                <n-input placeholder="No Mesin" v-model:value="jaminan.no_mesin" :disabled="props.viewMode"/>
+              </n-form-item>
+              <n-form-item label="No Faktur" path="no_faktur" class="w-full">
+                <n-input placeholder="No Mesin" v-model:value="jaminan.no_faktur" :disabled="props.viewMode"/>
+              </n-form-item>
         </div>
     </n-form>
 </template>
 <script setup>
 import { computed, reactive } from 'vue';
+import { useMeStore } from '../../../../stores/me';
 
 const props = defineProps({
     def_data: Object,
+    viewMode:Boolean,
 });
 
 const jaminan = reactive(props.def_data ? props.def_data.atr : {});
@@ -36,6 +57,7 @@ const tahunJaminanValidate = computed(() => {
       let diff = tahun - jaminan.tahun;
       return diff;
 });
+const me=useMeStore();
 // eslint-disable-next-line vue/valid-define-emits
 const emit = defineEmits();
 emit('childData', jaminan);

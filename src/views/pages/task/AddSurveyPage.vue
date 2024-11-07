@@ -8,7 +8,7 @@
   </n-scrollbar>
   <!-- <pre>{{ dynamicForm }}</pre> -->
   <!-- card -->
-   <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ sumJaminan.toLocaleString() }}</n-alert>
+  <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan/2">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan/2).toLocaleString() }} (50%)</n-alert>
   <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
     content: true,
   }">
@@ -156,7 +156,7 @@
             <div class="w-full">
 
               <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
-                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
+                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir(pelanggan.tgl_lahir)" />
               <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
                 v-show="noteUsia">{{ noteUsia }}</span>
             </div>
@@ -730,13 +730,13 @@ const handleTanggalLahir = (e) => {
   var month_diff = Date.now() - e;
   var age_dt = new Date(month_diff);
   var year = age_dt.getUTCFullYear();
-  var age = Math.abs(year - 1970);
+  var age = Math.abs(year - age_dt);
   if (age > 19 && age < 60) {
     notifUsia.value = false;
   } else {
     if (age < 19) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${age} tahun, usia < dari 19 Tahun`;
+      noteUsia.value = `usia ${age_dt} tahun, usia < dari 19 Tahun`;
     } else if (age > 60) {
       notifUsia.value = true;
       noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
