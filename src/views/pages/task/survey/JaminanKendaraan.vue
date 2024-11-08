@@ -13,7 +13,7 @@
                 <n-input placeholder="No Polisi" @input="upCase" v-model:value="jaminan.no_polisi" :disabled="props.viewMode"/>
             </n-form-item>
             <n-form-item label="Warna" path="warna" class="w-full">
-                <n-input placeholder="warna" v-model:value="jaminan.warna":disabled="props.viewMode" />
+                <n-input placeholder="warna" v-model:value="jaminan.warna" :disabled="props.viewMode" />
             </n-form-item>
             <n-form-item label="Tanggal Berlaku STNK" path="tgl_stnk" class="w-full">
                 <n-date-picker placeholder="Tanggal Berlaku STNK" v-model:formatted-value="jaminan.tgl_stnk" :disabled="props.viewMode"

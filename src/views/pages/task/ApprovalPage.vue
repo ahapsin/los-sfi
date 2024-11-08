@@ -1,6 +1,7 @@
 <template>
   <div>
     <n-space vertical>
+{{ showData }}
       <n-card :title="`Tabel ${$route.name}`" class="bg-white">
         <template #header-extra>
           <n-space class="!gap-1">
@@ -99,7 +100,7 @@ const columns = [
         NTag,
         {
           bordered: false,
-          type: statusTag(row.status),
+          type: statusTag(row.status_code),
           size: "small",
         },
         { default: () => row.status }
@@ -119,7 +120,7 @@ const columns = [
             handelAction(row);
           },
         },
-        { default: () => statusHandle(row) }
+        { default: () => statusHandle(row.status_code) }
       );
     },
   },
@@ -129,7 +130,7 @@ const format = (e) => {
   return toNum.toLocaleString("en-US");
 };
 const statusTag = (e) => {
-  let status = e.at(0);
+  let status = e;
   if (status === "1" || status === "2") {
     return "warning";
   } else if (status === "3") {
@@ -137,11 +138,9 @@ const statusTag = (e) => {
   }
 };
 const statusHandle = (e) => {
-  if (e.status.at(0) == 1) {
+  if (e == "WAKPS") {
     return "periksa";
-  } else if (e.status.at(0) == 4) {
-    return "nego";
-  } else {
+  } else{
     return "lihat";
   }
 };
@@ -165,17 +164,12 @@ const getData = async () => {
   }
 };
 const handelAction = (e) => {
-  if (e.status.at(0) == 1) {
+  if (e.status_code === 'WAKPS') {
     router.push({
       name: "Konfirmasi Pengajuan Kredit",
       params: { idapplication: e.id, action: "view" },
     });
-  } else if (e.status.at(0) == 4) {
-    router.push({
-      name: "Nego Pengajuan Kredit",
-      params: { idapplication: e.id },
-    });
-  } else {
+  }  else {
     router.push({
       name: "Detail Pengajuan Kredit",
       params: { idapplication: e.id },

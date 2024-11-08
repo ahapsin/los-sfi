@@ -1,5 +1,6 @@
 <template>
   <div class="pt-4">
+    {{ showData }}
     <n-space vertical>
       <n-card :title="`Tabel ${$route.name}`" class="bg-white">
         <template #header-extra>
@@ -163,11 +164,9 @@ const statusTag = (e) => {
   }
 };
 const statusHandle = (e) => {
-  if (e.status.at(0) == 2) {
+  if (e.status_code === "APKPS") {
     return "periksa";
-  } else if (e.status.at(0) == 7) {
-    return "periksa";
-  } else {
+  }  else {
     return "lihat";
   }
 };
@@ -193,12 +192,7 @@ const getData = async () => {
 };
 
 const handelAction = (e) => {
-  if (e.status.at(0) == 2) {
-    router.push({
-      name: "Konfirmasi HO Pengajuan Kredit",
-      params: { idapplication: e.id },
-    });
-  } else if (e.status.at(0) == 7) {
+  if (e.status_code == "APKPS") {
     router.push({
       name: "Konfirmasi HO Pengajuan Kredit",
       params: { idapplication: e.id },

@@ -7,6 +7,7 @@ export const useJaminanStore = defineStore("jaminan", () => {
     listJaminan.value.push(jaminanData);
   };
   const filledJaminan = (jaminanData) => {
+    listJaminan.value=[];
     Object.assign(listJaminan.value,jaminanData)
   };
   const removeJaminan = (e) => {

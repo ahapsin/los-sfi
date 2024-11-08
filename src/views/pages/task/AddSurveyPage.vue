@@ -1,17 +1,19 @@
 <template>
   <n-scrollbar x-scrollable v-if="width > 502">
     <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
-      <n-steps :current="current">
+      <n-steps :current="current" v-model:current="current" :status="currentStatus" >
         <n-step v-for="step in steps" :key="step" :title="step" />
       </n-steps>
     </n-space>
   </n-scrollbar>
-  <!-- <pre>{{ dynamicForm }}</pre> -->
   <!-- card -->
-  <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan/2">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan/2).toLocaleString() }} (50%)</n-alert>
-  <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
+   
+  <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
+    order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }} (50%)</n-alert>
+  <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
     content: true,
   }">
+ 
     <!-- container 1 -->
     <div v-show="current == 1">
       <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
@@ -156,7 +158,7 @@
             <div class="w-full">
 
               <n-date-picker placeholder="Tanggal Lahir" class="w-full" v-model:formatted-value="pelanggan.tgl_lahir"
-                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir(pelanggan.tgl_lahir)" />
+                value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
               <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
                 v-show="noteUsia">{{ noteUsia }}</span>
             </div>
@@ -232,15 +234,15 @@
           <div>
             <div>
               <div class="pt-2">
-                <n-descriptions v-if="coll.type === 'kendaraan'" :label-placement="width < 720 ? 'left' : 'top'" bordered
-                  :column="width < 720 ? 1 : 8">
+                <n-descriptions v-if="coll.type === 'kendaraan'" :label-placement="width < 720 ? 'left' : 'top'"
+                  bordered :column="width < 720 ? 1 : 8">
                   <n-descriptions-item v-for="item in modelKendaraan" :key="item" :label="item.toUpperCase()">
                     <b>{{ item === 'nilai' ? coll.atr[item].toLocaleString('US') :
                       coll.atr[item] ? coll.atr[item] : '--' }}</b>
                   </n-descriptions-item>
                 </n-descriptions>
-                <n-descriptions v-if="coll.type === 'sertifikat'" :label-placement="width < 720 ? 'left' : 'top'" bordered
-                  :column="width < 720 ? 1 : 8">
+                <n-descriptions v-if="coll.type === 'sertifikat'" :label-placement="width < 720 ? 'left' : 'top'"
+                  bordered :column="width < 720 ? 1 : 8">
                   <n-descriptions-item v-for="item in modelSertifikat" :key="item" :label="item.toUpperCase()">
                     <b>{{ item === 'nilai' ? coll.atr[item].toLocaleString('US') :
                       coll.atr[item] ? coll.atr[item] : '--' }}</b>
@@ -251,10 +253,10 @@
                 <div v-if="coll.type == 'kendaraan'">
                   <n-divider title-placement="left"> UPLOAD DOKUMEN JAMINAN </n-divider>
                   <div class="flex flex-col md:flex-row gap-2">
-                    <file-upload :reff="coll.counter_id" title="No Rangka" endpoint="image_upload_prospect" :type="`no_rangka`"
-                      :idapp="dynamicForm.id" />
-                    <file-upload :reff="coll.counter_id" title="No Mesin" endpoint="image_upload_prospect" :type="`no_mesin`"
-                      :idapp="dynamicForm.id" />
+                    <file-upload :reff="coll.counter_id" title="No Rangka" endpoint="image_upload_prospect"
+                      :type="`no_rangka`" :idapp="dynamicForm.id" />
+                    <file-upload :reff="coll.counter_id" title="No Mesin" endpoint="image_upload_prospect"
+                      :type="`no_mesin`" :idapp="dynamicForm.id" />
                     <file-upload :reff="coll.counter_id" title="STNK" endpoint="image_upload_prospect" :type="`stnk`"
                       :idapp="dynamicForm.id" />
                   </div>
@@ -262,19 +264,19 @@
                 <n-divider title-placement="left" class="uppercase"> Upload Dokumen {{ coll.type }}
                 </n-divider>
                 <div v-if="coll.type == 'kendaraan'" class="flex flex-col md:flex-row gap-2">
-                  <file-upload title="Depan" endpoint="image_upload_prospect" :type="`depan`"
-                    :idapp="dynamicForm.id" :reff="coll.counter_id" />
+                  <file-upload title="Depan" endpoint="image_upload_prospect" :type="`depan`" :idapp="dynamicForm.id"
+                    :reff="coll.counter_id" />
                   <file-upload title="Belakang" endpoint="image_upload_prospect" :type="`belakang`"
                     :idapp="dynamicForm.id" :reff="coll.counter_id" />
-                  <file-upload title="Kanan" endpoint="image_upload_prospect" :type="`kanan`"
-                    :idapp="dynamicForm.id" :reff="coll.counter_id" />
-                  <file-upload title="Kiri" endpoint="image_upload_prospect" :type="`kiri`"
-                    :idapp="dynamicForm.id" :reff="coll.counter_id" />
+                  <file-upload title="Kanan" endpoint="image_upload_prospect" :type="`kanan`" :idapp="dynamicForm.id"
+                    :reff="coll.counter_id" />
+                  <file-upload title="Kiri" endpoint="image_upload_prospect" :type="`kiri`" :idapp="dynamicForm.id"
+                    :reff="coll.counter_id" />
                 </div>
                 <div v-else class="flex flex-col w-full">
-                  <file-upload :title="`dokumen`" :def_preview="true" :multi="true"
-                                    :data_multi="coll.atr.document" endpoint="image_upload_prospect"
-                                    :type="`sertifikat`" :reff="coll.counter_id" :idapp="dynamicForm.id" />
+                  <file-upload :title="`dokumen`" :def_preview="true" :multi="true" :data_multi="coll.atr.document"
+                    endpoint="image_upload_prospect" :type="`sertifikat`" :reff="coll.counter_id"
+                    :idapp="dynamicForm.id" />
                 </div>
               </div>
             </div>
@@ -376,7 +378,10 @@
           </template>
           Selanjutnya
         </n-button>
-        <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid" v-else>
+        <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid('send')" v-else>
+          kirim
+        </n-button>
+        <n-button type="info" @click="handleSave()">
           simpan
         </n-button>
       </n-flex>
@@ -540,34 +545,36 @@ const ubahJaminan = () => {
 }
 
 // const currentComponent = ref('JaminanKendaraan');
-const next = () => {
-  if (current.value === 1) {
-    formOrder.value?.validate((errors) => {
-      if (errors) {
-        message.error("periksa kembali isian anda");
-      } else {
-        current.value += 1;
-      }
-    });
-  } else if (current.value === 2) {
-    formPelanggan.value?.validate((errors) => {
-      if (errors) {
-        message.error("periksa kembali isian anda");
-      } else {
-  
-        current.value += 1;
-      }
-    });
-  } else if (current.value === 3) {
-    current.value += 1;
-    // formJaminan.value?.validate((errors) => {
-    //   if (errors) {
-    //     message.error("periksa kembali isian anda");
-    //   } else {
-    // }
-    // });
-  }
-};
+// const next = () => {
+//   current.value += 1;
+//   if (current.value === 1) {
+//     formOrder.value?.validate((errors) => {
+//       if (errors) {
+//         message.error("periksa kembali isian anda");
+//       } else {
+//         current.value += 1;
+//       }
+//     });
+//   } else if (current.value === 2) {
+//     formPelanggan.value?.validate((errors) => {
+//       if (errors) {
+//         message.error("periksa kembali isian anda");
+//       } else {
+
+//         current.value += 1;
+//       }
+//     });
+//   } else if (current.value === 3) {
+//     current.value += 1;
+//     // formJaminan.value?.validate((errors) => {
+//     //   if (errors) {
+//     //     message.error("periksa kembali isian anda");
+//     //   } else {
+//     // }
+//     // });
+//   }
+// };
+const next = () => (current.value += 1);
 const prev = () => (current.value -= 1);
 const tujuanKredit = ["konsumsi", "investasi"].map((v) => ({
   label: v,
@@ -658,10 +665,11 @@ const survey = reactive({
 });
 const dynamicForm = reactive({
   id: uuid,
+  flag: false,
   order: order.value,
   data_nasabah: pelanggan,
   data_survey: survey,
-  jaminan: computed(()=>jaminanStore.listJaminan),
+  jaminan: computed(() => jaminanStore.listJaminan),
 });
 const handlePlafond = (e) => {
   order.value.plafond = e;
@@ -677,6 +685,7 @@ const steps = [
   "Data Jaminan",
   "Data Survey",
 ];
+const currentStatus = ref("process");
 const loadingKTP = ref(false);
 const bl_pesan = ref();
 const handleKtp = async (e) => {
@@ -727,34 +736,35 @@ const format = (value) => {
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
-  var month_diff = Date.now() - e;
-  var age_dt = new Date(month_diff);
-  var year = age_dt.getUTCFullYear();
-  var age = Math.abs(year - age_dt);
-  if (age > 19 && age < 60) {
+  var month_diff = new Date().getTime() - e;
+  var currentAge = Math.floor(month_diff / 31557600000);
+  if (currentAge > 19 && currentAge < 60) {
     notifUsia.value = false;
   } else {
-    if (age < 19) {
+    if (currentAge < 19) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${age_dt} tahun, usia < dari 19 Tahun`;
-    } else if (age > 60) {
+      noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
+    } else if (currentAge > 60) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${age} tahun, usia > dari 60 Tahun`;
+      noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
     }
   }
 };
 const formSurvey = ref(null);
 
-const handleValid = () => {
+const handleValid = (type) => {
   formSurvey.value?.validate((errors) => {
     if (errors) {
       message.error("periksa kembali isian anda");
     } else {
-      handleSave();
+      handleSave(type);
     }
   });
 }
-const handleSave = async () => {
+const handleSave = async (type) => {
+  if (type === 'send') {
+    dynamicForm.flag = true
+  }
   loading.value = true;
   const response = await useApi({
     method: "POST",
@@ -771,55 +781,6 @@ const handleSave = async () => {
     router.push({ name: 'survey' });
   }
 };
-
-// const rules = {
-//   tahun_jaminan: {
-//     message: `jumlah tahun lebih dari 10 Tahun`,
-//     validator: tahunJaminanValidate,
-//     trigger: ["blur"],
-//   },
-//   no_ktp: {
-//     trigger: "blur",
-//     required: true, required: true,
-//     min: 16,
-//     message: "No identitas minimal 16 karakter",
-//   },
-//   no_kk: {
-//     trigger: "blur",
-//     required: true,
-//     min: 16,
-//     message: "No Kartu Keluarga minimal 16 karakter",
-//   },
-//   plafond: {
-//     trigger: "blur",
-//     required: true,
-//     message: "plafond harus diisi",
-//   },
-//   tujuan_kredit: {
-//     trigger: "blur",
-//     required: true,
-//     min: 16,
-//     message: "No Kartu Keluarga minimal 16 karakter",
-//   },
-//   nama: {
-//     trigger: "blur",
-//     required: true,
-//     min: 16,
-//     message: "No Kartu Keluarga minimal 16 karakter",
-//   },
-//   tgl_lahir: {
-//     trigger: "blur",
-//     required: true,
-//     min: 16,
-//     message: "No Kartu Keluarga minimal 16 karakter",
-//   },
-//   hp: {
-//     trigger: "blur",
-//     required: true,
-//     min: 16,
-//     message: "No Kartu Keluarga minimal 16 karakter",
-//   },
-// };
 const plafondValidator = (rule, value) => {
   return value > 1000000;
 };
@@ -897,6 +858,6 @@ const upCase = () => {
   jaminan.value.no_polisi = jaminan.value.no_polisi.toUpperCase();
 };
 onMounted(() => {
-    jaminanStore.initJaminan();
+  jaminanStore.initJaminan();
 });
 </script>

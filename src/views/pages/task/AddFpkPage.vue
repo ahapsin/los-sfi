@@ -46,7 +46,7 @@
     </n-collapse-item> -->
   </n-collapse>
   <n-spin :show="suspense">
-
+    <slot name="addition"></slot>
     <n-space vertical class="bg-sc-50 border rounded-2xl p-4">
       <n-steps :current="current" :status="currentStatus" v-model:current="current">
         <n-step title="Pelanggan" />
@@ -89,9 +89,8 @@
               <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
                 value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir"
                 class="w-full" />
-              <div class="absolute top-9 flex bg-yellow-50 gap-2 text-xs px-2" v-show="noteUsia">
-                <n-icon color="#FF9100"> <warning-icon /> </n-icon>{{ noteUsia }}
-              </div>
+              <span class="absolute text-xs text-orange-500 top-6 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
+                v-show="notifUsia">{{ noteUsia }}</span>
             </n-form-item>
             <n-form-item label="Status Kawin" path="status_kawin" class="w-full">
               <n-input-group>
@@ -147,11 +146,13 @@
               <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat" @input="upCase" />
             </n-form-item>
             <n-form-item label="RT" path="rt">
-              <n-input placeholder="RT" v-model:value="alamatIdentitas.rt">
+              <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
+                :maxlength="3">
               </n-input>
             </n-form-item>
             <n-form-item label="RW" path="rw">
-              <n-input placeholder="RW" v-model:value="alamatIdentitas.rw">
+              <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
+                :maxlength="3">
               </n-input>
             </n-form-item>
           </div>
@@ -173,11 +174,11 @@
               <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat" @input="upCase" />
             </n-form-item>
             <n-form-item label="RT" path="rt">
-              <n-input placeholder="RT" v-model:value="alamatTagih.rt">
+              <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber" :maxlength="3">
               </n-input>
             </n-form-item>
             <n-form-item label="RW" path="rw">
-              <n-input placeholder="RW" v-model:value="alamatTagih.rw">
+              <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber" :maxlength="3">
               </n-input>
             </n-form-item>
           </div>
@@ -276,9 +277,8 @@
           require-mark-placement="right-hanging" label-width="auto" :disabled="viewMode">
           <div class="flex gap-2">
             <n-form-item label="Tanggal Order" path="order_tanggal" class="w-full">
-              <n-date-picker placeholder="Tanggal order" :default-value="Date.now()"
-                v-model:value-formatted="dataOrder.order_tanggal" value-format="yyyy-MM-dd" type="date"
-                format="dd-MM-yyyy" class="w-full" disabled />
+
+              <n-input :value="dataOrder.order_tanggal" disabled></n-input>
             </n-form-item>
             <!-- <pre>{{ formAssign }}</pre> -->
             <n-form-item label="Reff Pelanggan" path="ref_pelanggan" class="w-full">
@@ -382,8 +382,10 @@
               </template>
 
               <div>
-                <div class="pb-2" v-if="coll.type == 'kendaraan' && coll.atr.tahun && tahunJaminanValidate(coll.atr.tahun) > 10">
-                  <n-alert type="warning">usia kendaraan <b>{{ tahunJaminanValidate(coll.atr.tahun) }}</b> tahun</n-alert>
+                <div class="pb-2"
+                  v-if="coll.type == 'kendaraan' && coll.atr.tahun && tahunJaminanValidate(coll.atr.tahun) > 10">
+                  <n-alert type="warning">usia kendaraan <b>{{ tahunJaminanValidate(coll.atr.tahun) }}</b>
+                    tahun</n-alert>
                 </div>
                 <div class="pt-2">
                   <n-descriptions v-if="coll.type === 'kendaraan'" :label-placement="width < 720 ? 'left' : 'top'"
@@ -454,7 +456,7 @@
                   <n-button type="success" @click="ubahJaminan(jenisJaminan)" v-if="dataProp">ubah</n-button>
                   <n-button type="success" @click="pushJaminan(jenisJaminan)" v-else
                     :disabled="!receivedData.nilai">tambah</n-button>
-                
+
                 </n-space>
               </template>
             </n-card>
@@ -1092,7 +1094,7 @@ const sum = (num1, num2) => {
   }
   return num1 + num2;
 };
-
+const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 const rulesPelanggan = {
   nama: {
     required: true,
@@ -1270,9 +1272,9 @@ const refAdmin = async (body) => {
   }
 };
 const tahunJaminanValidate = (e) => {
-      let tahun = new Date().getFullYear();
-      let diff = tahun - e;
-      return diff;
+  let tahun = new Date().getFullYear();
+  let diff = tahun - e;
+  return diff;
 };
 const handlePlafond = (e) => {
   calcCredit.nilai_yang_diterima = e;
@@ -1334,7 +1336,7 @@ const formAssign = reactive({
   surat: dataSurat.value,
   deleted_kendaraan: deletedKendaraan.value,
   deleted_sertifikat: deletedSertifikat.value,
-  jaminan: jaminanStore.listJaminan,
+  jaminan: computed(()=>jaminanStore.listJaminan),
   penjamin: dataPenjamin.value,
   deleted_penjamin: []
 });
@@ -1350,19 +1352,17 @@ const format = (value) => {
 const notifUsia = ref();
 const noteUsia = ref(false);
 const handleTanggalLahir = (e) => {
-  var month_diff = Date.now() - e;
-  var age_dt = new Date(month_diff);
-  var year = age_dt.getUTCFullYear();
-  var age = Math.abs(year - 1970);
-  if (age > 19 && age < 60) {
+  var month_diff = new Date().getTime() - e;
+  var currentAge = Math.floor(month_diff / 31557600000);
+  if (currentAge > 19 && currentAge < 60) {
     notifUsia.value = false;
   } else {
-    if (age < 19) {
+    if (currentAge < 19) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${year} tahun, usia < dari 19 Tahun`;
-    } else if (age > 60) {
+      noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
+    } else if (currentAge > 60) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${year} tahun, usia > dari 60 Tahun`;
+      noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
     }
   }
 };
@@ -1431,5 +1431,5 @@ const upCase = () => {
 const sumJaminan = computed(() => {
   return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
 });
-onMounted(getData);
+onMounted(()=>getData());
 </script>

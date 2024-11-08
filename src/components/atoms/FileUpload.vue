@@ -157,7 +157,7 @@ const props = defineProps({
 const dataPreview = toRef(props, 'data_multi');
 
 const removePreview = async (e) => {
-  let index = _.findIndex(dataPreview.value, e);
+  let index = _.findIndex(dataPreview.value, {ID:e});
   dataPreview.value.splice(index, 1);
   const response = await useApi({
     method: 'DELETE',

@@ -2,14 +2,19 @@
     <blacklist-alert :pesan="bl_pesan" />
     <n-scrollbar x-scrollable v-if="width > 502">
         <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
-            <n-steps :current="current">
-                <n-step v-for="step in steps" :key="step" :title="step" />
+            <n-steps :current="current" v-model:current="current" :status="currentStatus">
+                <n-step title="Informasi Order" :status="statusInformasiOrder"/>
+                <n-step title="Data Pelanggan" />
+                <n-step title="Data Jaminan" />
+                <n-step title="Data Survey" />
             </n-steps>
         </n-space>
     </n-scrollbar>
-    <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan/2">Nilai Plafon <b>{{ order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan/2).toLocaleString() }} (50%)</n-alert>
+    <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
+        order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
+        (50%)</n-alert>
     <!-- card -->
-    <n-card :bordered="false" :title="`${current}. ${steps[current - 1]}`" :segmented="{
+    <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
         content: true,
     }">
         <!-- container 1 -->
@@ -155,12 +160,11 @@
                     </n-form-item>
                     <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
                         <div class="w-full">
-
                             <n-date-picker placeholder="Tanggal Lahir" class="w-full"
                                 v-model:formatted-value="pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
                                 format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
                             <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
-                                v-show="noteUsia">{{ noteUsia }}</span>
+                                v-show="notifUsia">{{ noteUsia }}</span>
                         </div>
                     </n-form-item>
                     <n-form-item label="No Handphone" path="no_hp" class="w-full">
@@ -236,8 +240,8 @@
 
                     <div>
                         <div class="pt-2">
-                            <n-descriptions v-if="coll.type === 'kendaraan'" :label-placement="width < 720 ? 'left' : 'top'"
-                                bordered :column="width < 720 ? 1 : 8">
+                            <n-descriptions v-if="coll.type === 'kendaraan'"
+                                :label-placement="width < 720 ? 'left' : 'top'" bordered :column="width < 720 ? 1 : 8">
                                 <n-descriptions-item v-for="item in modelKendaraan" :key="item"
                                     :label="item.toUpperCase()">
                                     <b>{{ item === 'nilai' ? coll.atr[item].toLocaleString('US') :
@@ -286,7 +290,7 @@
                                     :idapp="idApp" />
                             </div>
                             <div v-else class="flex flex-col w-full">
-                      
+
                                 <file-upload :title="`dokumen`" :def_preview="true" :multi="true"
                                     :data_multi="coll.atr.document" endpoint="image_upload_prospect"
                                     :type="`sertifikat`" :reff="coll.counter_id" :idapp="idApp" />
@@ -397,10 +401,13 @@
                     </template>
                     Selanjutnya
                 </n-button>
-                <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid" v-else>
+                <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid('send')" v-else>
+                    kirim ke admin
+                </n-button>
+                <n-button type="info" secondary @click="handleSave()">
                     simpan
                 </n-button>
-                <n-button icon-placement="left" type="warning" @click="router.go(-1)">
+                <n-button icon-placement="left" type="warning" secondary @click="router.go(-1)">
                     batal
                 </n-button>
             </n-flex>
@@ -435,7 +442,7 @@ import { useJaminanStore } from "../../../stores/jaminan";
 const { width } = useWindowSize();
 const message = useMessage();
 const uuid = uuidv4();
-const current = ref(2);
+const current = ref(1);
 const pageData = ref({});
 const suspense = ref({});
 const baseRoute = useRoute();
@@ -503,21 +510,22 @@ const viewModal = (e) => {
 const deletedKendaraan = ref([]);
 const deletedSertifikat = ref([]);
 const removeJaminan = (e) => {
-    if(e.atr.id){
-    if (e.type === 'kendaraan') {
-        deletedKendaraan.value.push({ 'id': e.atr.id });
-    } else {
-        deletedSertifikat.value.push({ 'id': e.atr.id });
-    }}
+    if (e.atr.id) {
+        if (e.type === 'kendaraan') {
+            deletedKendaraan.value.push({ 'id': e.atr.id });
+        } else {
+            deletedSertifikat.value.push({ 'id': e.atr.id });
+        }
+    }
 
-    jaminanStore.removeJaminan({'counter_id': e.counter_id});
+    jaminanStore.removeJaminan({ 'counter_id': e.counter_id });
 }
 const addJaminan = () => {
     dataProp.value = null;
     showModal.value = true;
 }
 const pushJaminan = (e) => {
-    const randNumbTime=new Date().getTime();
+    const randNumbTime = new Date().getTime();
     const newJaminan = {
         counter_id: randNumbTime,
         type: e,
@@ -531,35 +539,42 @@ const ubahJaminan = () => {
     showModal.value = false;
     message.success(`jaminan diubah`);
 }
-
-// const currentComponent = ref('JaminanKendaraan');
+const statusInformasiOrder = ref(null);
+const statusDataPelanggan = ref(null);
+const statusDataJaminan = ref(null);
+const statusDataSurvey = ref(null);
 const next = () => {
+    
     if (current.value === 1) {
         formOrder.value?.validate((errors) => {
             if (errors) {
                 message.error("periksa kembali isian anda");
-            } else {
-                current.value += 1;
+                statusInformasiOrder.value="error";
+            }else{
+                statusInformasiOrder.value="finish";
             }
         });
     } else if (current.value === 2) {
         formPelanggan.value?.validate((errors) => {
             if (errors) {
                 message.error("periksa kembali isian anda");
-            } else {
-                current.value += 1;
-            }
+                statusDataPelanggan.value="error";
+            } 
         });
-    } else if (current.value === 3) {
-        current.value += 1;
-        // formJaminan.value?.validate((errors) => {
-        //   if (errors) {
-        //     message.error("periksa kembali isian anda");
-        //   } else {
-        // }
-        // });
-    }
+    } 
+    // else if (current.value === 3) {
+    //     current.value += 1;
+    //     // formJaminan.value?.validate((errors) => {
+    //     //   if (errors) {
+    //     //     message.error("periksa kembali isian anda");
+    //     //   } else {
+    //     // }
+    //     // });
+    // }
+    current.value += 1;
 };
+const currentStatus = ref("process");
+// const next = () => (current.value += 1);
 const prev = () => (current.value -= 1);
 const tujuanKredit = ["konsumsi", "investasi"].map((v) => ({
     label: v,
@@ -651,12 +666,13 @@ const survey = reactive({
 });
 const dynamicForm = reactive({
     id: uuid,
+    flag: false,
     order: order.value,
     data_nasabah: pelanggan,
     data_survey: survey,
     deleted_kendaraan: deletedKendaraan.value,
     deleted_sertifikat: deletedSertifikat.value,
-    jaminan: jaminanStore.listJaminan,
+    jaminan: computed(()=>jaminanStore.listJaminan),
 });
 const handlePlafond = (e) => {
     order.value.plafond = e;
@@ -722,34 +738,38 @@ const format = (value) => {
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
-    var month_diff = Date.now();
-    var age_dt = new Date(month_diff);
-    var year = age_dt.getUTCFullYear();
-    var age = Math.abs(year);
-    if (age > 19 && age < 60) {
+    var month_diff = new Date().getTime() - e;
+    var currentAge = Math.floor(month_diff / 31557600000);
+    noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+    if (currentAge > 19 && currentAge < 60) {
         notifUsia.value = false;
     } else {
-        if (age < 19) {
+        if (currentAge < 19) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${e} tahun, usia < dari 19 Tahun`;
-        } else if (age > 60) {
+            noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
+        } else if (currentAge > 60) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${e} tahun, usia > dari 60 Tahun`;
+            noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
         }
     }
 };
 const formSurvey = ref(null);
 
-const handleValid = () => {
+const handleValid = (type) => {
     formSurvey.value?.validate((errors) => {
         if (errors) {
             message.error("periksa kembali isian anda");
         } else {
-            handleSave();
+            handleSave(type);
         }
     });
 }
-const handleSave = async () => {
+const handleSave = async (type) => {
+    console.log(type)
+    if (type === 'send') {
+        dynamicForm.flag = true
+    }
+    console.log(dynamicForm);
     loading.value = true;
     const response = await useApi({
         method: "PUT",
@@ -837,10 +857,10 @@ const rulesSurvey = {
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 const upCase = () => {
-    pelanggan.nama = pelanggan.nama.toUpperCase();
-    pelanggan.alamat = pelanggan.alamat.toUpperCase();
-    survey.catatan_survey = survey.catatan_survey.toUpperCase();
-    jaminan.value.no_polisi = jaminan.value.no_polisi.toUpperCase();
+    // pelanggan.nama = pelanggan.nama.toUpperCase();
+    // pelanggan.alamat = pelanggan.alamat.toUpperCase();
+    // survey.catatan_survey = survey.catatan_survey.toUpperCase();
+    // jaminan.value.no_polisi = jaminan.value.no_polisi.toUpperCase();
 };
 
 const idApp = baseRoute.params.idsurvey;
@@ -866,10 +886,9 @@ const getData = () =>
             Object.assign(dok_identitas.value, res.data.response.dokumen_indentitas);
             // Object.assign(dok_pendukung.value, res.data.response.dokumen_pendukung);
             let tgllahir = toRef(pelanggan.tgl_lahir);
-            var myDate = tgllahir.value;
+            var myDate = tgllahir.value ? tgllahir.value : "-";
             myDate = myDate.split("-");
-            var newDate = new Date(myDate[0], myDate[1] - 1, myDate[2]);
-            console.log(newDate.getTime());
+            var newDate = new Date(myDate[0], myDate[1], myDate[2]);
             handleTanggalLahir(newDate.getTime());
             getPlafond();
         }
@@ -887,7 +906,7 @@ const findDocByType = (c, e) => {
     if (docPath.value) return docPath.value.PATH;
 };
 onMounted(() => {
-    jaminanStore.initJaminan();
+
     getData();
 });
 </script>

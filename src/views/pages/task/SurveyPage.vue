@@ -143,7 +143,7 @@ const columns = [
       return h(
         NTag,
         {
-          type: statusTag(row.status),
+          type: statusTag(row.status_code ? row.status_code:row.status),
           size: "small",
         },
         { default: () => statusLabel(row.status) }
@@ -189,23 +189,16 @@ const columns = [
 ];
 const searchBox = ref();
 const statusTag = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
-    return "warning";
-  } else if (status === "2") {
-    return "info";
-  }
-  return "info";
+  console.log(e);
+  // let status = e.status_code;
+  // if (status === "WADM") {
+  //   return "warning";
+  // } else if (status === "2") {
+  //   return "info";
+  // }
 };
 const statusLabel = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
-    return "menunggu PFK";
-  } else if (status === "2") {
-    return "pembuatan PFK";
-  } else {
-    return e.substring(2);
-  }
+    return e;
 };
 const format = (e) => {
   const toNum = parseInt(e);
@@ -275,8 +268,8 @@ const renderIcon = (icon) => {
   };
 };
 const options = (e) => {
-  let status = e.status.at(0);
-  if (status === "1") {
+  let status = e.status_code;
+  if (status === "DRSVY") {
     return [
       {
         label: "Edit",

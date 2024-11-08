@@ -8,6 +8,7 @@
           footer: 'soft',
         }"
       >
+      <!-- {{ showData }} -->
         <template #header-extra>
           <n-space>
             <n-popover trigger="click" placement="bottom-end">
@@ -305,11 +306,11 @@ const columns = [
           round: true,
           type: typeAction(row.status),
           onClick: () => {
-            handleAction(row.status, row);
+            handleAction(row.status_code, row);
           },
         },
         {
-          default: () => actionLabel(row.status),
+          default: () => actionLabel(row.status_code),
         }
       );
     },
@@ -325,7 +326,7 @@ const statusTag = (e) => {
   return "warning";
 };
 const statusLabel = (e) => {
-  return e.substring(2);
+  return e;
 };
 const typeAction = (e) => {
   let status = e.at(0);
@@ -338,25 +339,25 @@ const typeAction = (e) => {
   }
 };
 const actionLabel = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
-    return "Buat PFK";
-  } else if (status === "2") {
-    return "Update PFK";
+  let status = e;
+  if (status === "WADM") {
+    return "Buat Order";
+  } else if (status === "CROR") {
+    return "Update Order";
   }
-  return "lihat FPK";
+  return "lihat Order";
 };
 const format = (e) => {
   const toNum = parseInt(e);
   return toNum.toLocaleString("en-US");
 };
 const handleAction = (e, data) => {
-  let status = e.at(0);
+  let status = e;
   const userToken = localStorage.getItem("token");
   const dynamicBody = {
     cr_prospect_id: data.id,
   };
-  if (status === "1") {
+  if (status === "WADM") {
     message.create("membuat FPK, silakan tunggu !", { type: loadingRef.type });
     useApi({
       method: "POST",
@@ -374,7 +375,7 @@ const handleAction = (e, data) => {
         message.error("FPK gagal dibuat!");
       }
     });
-  } else if (status === "2") {
+  } else if (status === "CROR") {
     router.push({
       name: "Form Pengajuan Kredit",
       params: { idapplication: data.id },
