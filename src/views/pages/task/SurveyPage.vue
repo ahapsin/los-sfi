@@ -2,7 +2,7 @@
   <div>
     <n-space vertical>
       <n-card
-  
+
         title="Data Pelanggan"
         :segmented="{
           content: true,
@@ -143,7 +143,7 @@ const columns = [
       return h(
         NTag,
         {
-          type: statusTag(row.status_code ? row.status_code:row.status),
+          type: statusTag(row.status_code),
           size: "small",
         },
         { default: () => statusLabel(row.status) }
@@ -160,6 +160,7 @@ const columns = [
         NDropdown,
         {
           options: options(row),
+
           size: "small",
           onSelect: (e) => {
             if (e === "hapus") {
@@ -178,6 +179,7 @@ const columns = [
             NButton,
             {
               round: true,
+              type: statusTag(row.status_code),
               size: "small",
             },
             { default: () => "Action" }
@@ -189,16 +191,25 @@ const columns = [
 ];
 const searchBox = ref();
 const statusTag = (e) => {
-  console.log(e);
-  // let status = e.status_code;
-  // if (status === "WADM") {
-  //   return "warning";
-  // } else if (status === "2") {
-  //   return "info";
-  // }
+  if (e === "DRSVY") {
+    return "warning";
+  }
+  if (e === "CROR") {
+    return "success";
+  }
+  if (e === "APKPS") {
+    return "success";
+  }
+  if (e === "APHO") {
+    return "success";
+  }
+  if (e === "REORKPS") {
+    return "error";
+  }
 };
 const statusLabel = (e) => {
-    return e;
+    let upLabel=e;
+    return upLabel.toUpperCase();
 };
 const format = (e) => {
   const toNum = parseInt(e);

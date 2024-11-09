@@ -1,155 +1,124 @@
 <template>
-  <div id="drawer-target">
-    <n-space vertical>
-      <n-card
-        :title="`Tabel ${$route.name}`"
-        :segmented="{
+    <div id="drawer-target">
+        <n-space vertical>
+            <n-card :title="`Tabel ${$route.name}`" :segmented="{
           content: true,
           footer: 'soft',
-        }"
-      >
-      <!-- {{ showData }} -->
-        <template #header-extra>
-          <n-space>
-            <n-popover trigger="click" placement="bottom-end">
-              <template #trigger>
-                <n-button circle>
-                  <n-icon>
-                    <search-icon />
-                  </n-icon>
-                </n-button>
-              </template>
-              <n-space vertical>
-                <n-input
-                  autofocus="true"
-                  clearable
-                  placeholder="cari disini.."
-                  v-model:value="searchBox"
-                />
-                <n-date-picker
-                  :default-value="[Date.now(), Date.now()]"
-                  :update-value-on-close="updateValueOnClose"
-                  type="daterange"
-                  @update:value="onConfirmDate"
-                />
-              </n-space>
-            </n-popover>
-            <n-button type="success" secondary circle @click="downloadCsv">
-              <template #icon>
-                <n-icon>
-                  <download-file />
-                </n-icon>
-              </template>
-            </n-button>
-          </n-space>
-        </template>
-        <n-space vertical :size="12" class="pt-4">
-          <!-- <pre>{{ showData }}</pre> -->
-          <n-data-table
-            size="small"
-            ref="tableRef"
-            triped
-            :scroll-x="1200"
-            :columns="columns"
-            :data="showData"
-            :pagination="pagination"
-            :loading="loadData"
-          />
+        }">
+                <!-- {{ showData }} -->
+                <template #header-extra>
+                    <n-space>
+                        <n-popover trigger="click" placement="bottom-end">
+                            <template #trigger>
+                                <n-button :circle="width <= 520 ? true : false">
+                                    <n-icon>
+                                        <search-icon />
+                                    </n-icon>
+                                    <span v-if="width >= 520">Cari</span>
+                                </n-button>
+                            </template>
+                            <n-space vertical>
+                                <n-input autofocus="true" clearable placeholder="cari disini.."
+                                    v-model:value="searchBox" />
+                                <n-date-picker :default-value="[Date.now(), Date.now()]"
+                                    :update-value-on-close="updateValueOnClose" type="daterange"
+                                    @update:value="onConfirmDate" />
+                            </n-space>
+                        </n-popover>
+
+                        <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
+                            <template #icon>
+                                <n-icon>
+                                    <download-file />
+                                </n-icon>
+                            </template>
+                            <span v-if="width >= 520">Download</span>
+                        </n-button>
+                        <n-dropdown trigger="click" :options="optFilter" @select="handleSelect">
+                            <n-button>
+                                <template #icon>
+                                    <n-icon>
+                                        <filter-icon />
+                                    </n-icon>
+                                </template>
+                                <div class="flex items-center gap-2">
+                                    <span>Filter Status</span>
+                                    <n-tag size="small" type="info" v-if="filterData" @close="handleClose" closable
+                                        :bordered="false">{{ filterData }}</n-tag>
+                                </div>
+                            </n-button>
+                        </n-dropdown>
+                    </n-space>
+                </template>
+                <n-space vertical :size="12" class="pt-4">
+                    <!-- <pre>{{ showData }}</pre> -->
+                    <n-data-table size="small" ref="tableRef" triped :scroll-x="1200" :columns="columns"
+                        :data="showData" :pagination="pagination" :loading="loadData" />
+                </n-space>
+            </n-card>
         </n-space>
-      </n-card>
-    </n-space>
-  </div>
-  <n-modal
-    class="w-1/2"
-    title="Upload Berkas Pencairan"
-    v-model:show="showModal"
-    :mask-closable="false"
-  >
-    <n-card :bordered="false" aria-modal="true">
-      <n-grid :cols="2">
-        <n-gi>
-          <div class="flex">
-            <label class="w-24">No Order</label
-            ><span>
-              <n-text strong> {{ selectedData.order_number }}</n-text></span
-            >
-          </div>
-          <div class="flex">
-            <label class="w-24">Nama </label
-            ><span>
-              <n-text strong> {{ selectedData.nama_debitur }}</n-text></span
-            >
-          </div>
-          <div class="flex">
-            <label class="w-24">Plafond</label
-            ><span>
-              <n-text strong>
-                {{ selectedData.plafond.toLocaleString("US") }}</n-text
-              ></span
-            >
-          </div>
-        </n-gi>
-        <n-gi>
-          <div class="flex">
-            <label class="w-24">Alamat</label
-            ><span>
-              <n-text strong> {{ selectedData.alamat }}</n-text></span
-            >
-          </div>
-          <div class="flex">
-            <label class="w-24">No Hp</label
-            ><span>
-              <n-text strong> {{ selectedData.hp }}</n-text></span
-            >
-          </div>
-        </n-gi>
-      </n-grid>
-      <n-divider />
-      <n-upload
-        list-type="image"
-        multiple
-        :data="{ type: 'berkas pencairan' }"
-        :custom-request="handleImagePost"
-        :max="5"
-      >
-        <n-upload-dragger>
-          <div style="margin-bottom: 12px">
-            <n-icon size="48" :depth="3">
-              <file-upload />
-            </n-icon>
-          </div>
-          <n-text style="font-size: 16px">
-            Klik atau seret file ke area ini untuk diunggah
-          </n-text>
-        </n-upload-dragger>
-      </n-upload>
-      <n-space>
-        <div
-          v-for="attachment in selectedData.attachment"
-          :key="attachment"
-          class="bg-slate-50 !p-0"
-        >
-          <n-space>
-            <n-tooltip placement="top" trigger="hover">
-              <template #trigger>
-                <n-image
-                  class="w-20 h-20 border-b border-2 rounded-md"
-                  :src="attachment.PATH"
-                >
-                </n-image>
-              </template>
-              <span class="uppercase">{{ attachment.TYPE }}</span>
-            </n-tooltip>
-          </n-space>
-        </div>
-      </n-space>
-      <div class="pt-4 flex justify-end">
-        <n-button @click="handleSelesai" secondary type="success" round
-          >Selesai</n-button
-        >
-      </div>
-    </n-card>
-  </n-modal>
+    </div>
+    <n-modal class="w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal" :mask-closable="false">
+        <n-card :bordered="false" aria-modal="true">
+            <n-grid :cols="2">
+                <n-gi>
+                    <div class="flex">
+                        <label class="w-24">No Order</label><span>
+                            <n-text strong> {{ selectedData.order_number }}</n-text></span>
+                    </div>
+                    <div class="flex">
+                        <label class="w-24">Nama </label><span>
+                            <n-text strong> {{ selectedData.nama_debitur }}</n-text></span>
+                    </div>
+                    <div class="flex">
+                        <label class="w-24">Plafond</label><span>
+                            <n-text strong>
+                                {{ selectedData.plafond.toLocaleString("US") }}</n-text></span>
+                    </div>
+                </n-gi>
+                <n-gi>
+                    <div class="flex">
+                        <label class="w-24">Alamat</label><span>
+                            <n-text strong> {{ selectedData.alamat }}</n-text></span>
+                    </div>
+                    <div class="flex">
+                        <label class="w-24">No Hp</label><span>
+                            <n-text strong> {{ selectedData.hp }}</n-text></span>
+                    </div>
+                </n-gi>
+            </n-grid>
+            <n-divider />
+            <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
+                :max="5">
+                <n-upload-dragger>
+                    <div style="margin-bottom: 12px">
+                        <n-icon size="48" :depth="3">
+                            <file-upload />
+                        </n-icon>
+                    </div>
+                    <n-text style="font-size: 16px">
+                        Klik atau seret file ke area ini untuk diunggah
+                    </n-text>
+                </n-upload-dragger>
+            </n-upload>
+            <n-space>
+                <div v-for="attachment in selectedData.attachment" :key="attachment" class="bg-slate-50 !p-0">
+                    <n-space>
+                        <n-tooltip placement="top" trigger="hover">
+                            <template #trigger>
+                                <n-image class="w-20 h-20 border-b border-2 rounded-md" :src="attachment.PATH">
+                                </n-image>
+                            </template>
+                            <span class="uppercase">{{ attachment.TYPE }}</span>
+                        </n-tooltip>
+                    </n-space>
+                </div>
+            </n-space>
+            <div class="pt-4 flex justify-end">
+                <n-button @click="handleSelesai" secondary type="success" round>Selesai</n-button>
+            </div>
+        </n-card>
+    </n-modal>
 </template>
 <script setup>
 import { ref, reactive, onMounted, h, computed } from "vue";
@@ -165,7 +134,9 @@ import {
   ImageFilled as UploadIcon,
   FileDownloadOutlined as DownloadFile,
   DriveFolderUploadRound as FileUpload,
+    FilterAltOutlined as FilterIcon,
 } from "@vicons/material";
+import { useWindowSize } from "@vueuse/core";
 const message = useMessage();
 const tableRef = ref();
 const downloadCsv = () =>
@@ -179,6 +150,7 @@ const loadingRef = reactive({
   type: "loading",
   messagePost: null,
 });
+const { width } = useWindowSize();
 const userToken = localStorage.getItem("token");
 const handleSelesai = () => {
   getData();
@@ -189,7 +161,7 @@ const columns = [
     title: "Tanggal",
     sorter: "default",
     key: "visit_date",
-    width: 110,
+    width: 100,
     render(row) {
       return h("div", row.visit_date);
     },
@@ -198,18 +170,18 @@ const columns = [
     title: "Order",
     sorter: "default",
     key: "order_number",
-    width: 180,
+    width: 100,
   },
   {
     title: "Nama",
     sorter: "default",
     key: "nama_debitur",
-    width: 180,
+    width: 100,
   },
   {
+      width: 100,
     title: "Plafond",
     sorter: "default",
-    width: 180,
     key: "plafond",
     render(row) {
       return h("div", format(row.plafond));
@@ -218,20 +190,22 @@ const columns = [
   {
     title: "Status",
     sorter: "default",
+      width: 100,
     key: "status",
     render(row) {
       return h(
         NTag,
         {
-          type: statusTag(row.status),
+            size: "small",
+          type: statusTag(row.status_code),
         },
         { default: () => statusLabel(row.status) }
       );
     },
   },
   {
-    width: 150,
     key: "status",
+      width: 50,
     render(row) {
       let status = row.status.at(0);
       if (row.flag == 0) {
@@ -261,6 +235,7 @@ const columns = [
   },
   {
     key: "status",
+      width: 50,
     render(row) {
       if (row.flag != 0) {
         const iconUpload = h(NIcon, null, {
@@ -297,14 +272,16 @@ const columns = [
   {
     title: "Action",
     align: "right",
+      width: 50,
     key: "more",
     render(row) {
       return h(
         NButton,
         {
-          secondary:true,
-          round: true,
-          type: typeAction(row.status),
+          secondary:false,
+
+          size:"small",
+            type: statusTag(row.status_code),
           onClick: () => {
             handleAction(row.status_code, row);
           },
@@ -317,33 +294,48 @@ const columns = [
   },
 ];
 const statusTag = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
+
+  if (e === "REORKPS") {
+    return "error";
+  }
+  if (e === "CROR") {
     return "warning";
-  } else if (status === "2") {
+  }
+  if (e === "WAKPS") {
     return "info";
   }
-  return "warning";
-};
-const statusLabel = (e) => {
-  return e;
-};
-const typeAction = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
-    return "warning";
-  } else if (status === "2") {
-    return "info";
-  } else {
+  if (e === "APKPS") {
     return "success";
   }
+  if (e === "APHO") {
+    return "success";
+  }
+
+};
+const statusLabel = (e) => {
+  return e.toUpperCase();
+};
+const typeAction = (e) => {
+    if (e === "REORKPS") {
+        return "error";
+    }
+    if (e === "CROR") {
+        return "warning";
+    }
+    if (e === "WAKPS") {
+        return "info";
+    }
 };
 const actionLabel = (e) => {
   let status = e;
   if (status === "WADM") {
     return "Buat Order";
-  } else if (status === "CROR") {
+  }
+if (status === "CROR") {
     return "Update Order";
+  }
+if (status === "REORKPS") {
+    return "Revisi Order";
   }
   return "lihat Order";
 };
@@ -380,7 +372,11 @@ const handleAction = (e, data) => {
       name: "Form Pengajuan Kredit",
       params: { idapplication: data.id },
     });
-  } else {
+  } else if (status === "REORKPS") {
+      router.push({
+          name: "Form Pengajuan Kredit",
+          params: { idapplication: data.id },
+      }); }else {
     router.push({
       name: "Detail Kredit",
       params: { idapplication: data.id, action: "view" },
@@ -411,9 +407,34 @@ const pagination = {
   pageSize: 10,
 };
 onMounted(() => getData());
+
+
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
 });
+
+const optFilter = [
+    {label: 'REVISI',
+    key: 'revisi'},
+    {label: 'DISETUJUI',
+    key: 'disetujui'},
+    {label: 'MENUNGGU',
+    key: 'menunggu'},
+    {label: 'DIPROSES',
+    key: 'diproses'},
+]
+const filterData = ref();
+
+const handleSelect = (key,opt)=>{
+    filterData.value=opt.label;
+    searchBox.value=key;
+}
+const handleClose = ()=>{
+    filterData.value="";
+     searchBox.value="";
+}
+
+
 const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
   const idSurvey = selectedData.value.id;
   const form = new FormData();

@@ -14,13 +14,13 @@
           </div>
         </div>
       </n-alert>
-      <div class="flex gap-2 mb-2">
+      <!-- <div class="flex gap-2 mb-2">
         <n-alert type="warning" title="kapos" class="w-full">salah no ktp</n-alert>
         <n-alert type="warning" title="ho" class="w-full">
           hello
           <div class="bg-white p-2">asdasd</div>
         </n-alert>
-      </div>
+      </div> -->
     </template>
   </fpk-form>
 </template>
