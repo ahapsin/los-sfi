@@ -3,15 +3,15 @@
     <n-scrollbar x-scrollable v-if="width > 502">
         <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
-                <n-step title="Informasi Order" :status="statusInformasiOrder"/>
-                <n-step title="Data Pelanggan" />
-                <n-step title="Data Jaminan" />
-                <n-step title="Data Survey" />
+                <n-step title="Informasi Order" :status="statusInformasiOrder" />
+                <n-step title="Data Pelanggan" :status="statusDataPelanggan"/>
+                <n-step title="Data Jaminan" :status="statusDataJaminan" />
+                <n-step title="Data Survey" :status="statusDataSurvey"/>
             </n-steps>
         </n-space>
     </n-scrollbar>
     <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
-        order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
+            order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
         (50%)</n-alert>
     <!-- card -->
     <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
@@ -39,10 +39,10 @@
                                 <n-radio name="tenor" value="6">
                                     6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -50,10 +50,10 @@
                                 <n-radio name="tenor" value="12">
                                     12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -61,10 +61,10 @@
                                 <n-radio name="tenor" value="18">
                                     18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -72,10 +72,10 @@
                                 <n-radio name="tenor" value="24">
                                     24 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -86,10 +86,10 @@
                                 <n-radio name="tenor" value="3">
                                     1x 3 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -97,10 +97,10 @@
                                 <n-radio name="tenor" value="6">
                                     1 x 6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -108,10 +108,10 @@
                                 <n-radio name="tenor" value="12">
                                     2 x 12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -119,10 +119,10 @@
                                 <n-radio name="tenor" value="18">
                                     3 x 18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -156,7 +156,8 @@
                 </div>
                 <div class="md:flex gap-2">
                     <n-form-item label="Nama" path="nama" class="w-full">
-                        <n-input placeholder="Nama" v-model:value="pelanggan.nama" @input="upCase" />
+                        <n-input placeholder="Nama" v-model:value="pelanggan.nama"
+                            @input="$event => (pelanggan.nama = $event.toUpperCase())" />
                     </n-form-item>
                     <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
                         <div class="w-full">
@@ -168,18 +169,22 @@
                         </div>
                     </n-form-item>
                     <n-form-item label="No Handphone" path="no_hp" class="w-full">
-                        <n-input placeholder="No Handphone" v-model:value="pelanggan.no_hp" />
+                        <n-input placeholder="No Handphone" :allow-input="onlyAllowNumber"
+                            v-model:value="pelanggan.no_hp" maxlength="13" />
                     </n-form-item>
                 </div>
                 <div class="flex flex-col md:flex-row gap-2 gap-x-2">
-                    <n-form-item label="Alamat" path="alamat" class="w-full" @input="upCase">
-                        <n-input placeholder="Alamat" v-model:value="pelanggan.alamat" class="w-full" />
+                    <n-form-item label="Alamat" path="alamat" class="w-full">
+                        <n-input placeholder="Alamat" v-model:value="pelanggan.alamat"
+                            @input="$event => (pelanggan.alamat = $event.toUpperCase())" class="w-full" />
                     </n-form-item>
 
                     <n-form-item path="rt">
                         <n-input-group>
-                            <n-input placeholder="RT" v-model:value="pelanggan.rt" />
-                            <n-input placeholder="RW" v-model:value="pelanggan.rw" />
+                            <n-input placeholder="RT" v-model:value="pelanggan.rt" :allow-input="onlyAllowNumber"
+                                maxlength="3" />
+                            <n-input placeholder="RW" v-model:value="pelanggan.rw" :allow-input="onlyAllowNumber"
+                                maxlength="3" />
                         </n-input-group>
                     </n-form-item>
 
@@ -201,6 +206,7 @@
             </n-form>
         </div>
         <div v-show="current === 3">
+            <n-alert type="error" v-if="statusDataJaminan === 'error'">minimal memiliki 1 jaminan</n-alert>
             <n-card embedded :segmented="true"
                 :title="`Jumlah Jaminan : ${jaminanStore.listJaminan.length}, Total Nilai Jaminan : ${sumJaminan.toLocaleString('US')}`">
                 <template #header-extra>
@@ -213,6 +219,7 @@
                         </n-button>
                     </div>
                 </template>
+
                 <n-card :segmented="true" class="my-2 bg-white rounded-xl hover:ring-4 hover:ring-pr"
                     v-for="(coll) in orderJaminan" :key="coll" :title="`${coll.type}`">
                     <template #header-extra>
@@ -373,10 +380,11 @@
                     </n-form-item>
                 </div>
                 <n-form-item label="Catatan Survey" path="catatan_survey">
-                    <n-input v-model:value="survey.catatan_survey" @input="upCase" :autosize="{
-                        minRows: 3,
-                        maxRows: 5,
-                    }" type="textarea" placeholder="catatan survey" />
+                    <n-input @blur="endForm" v-model:value="survey.catatan_survey"
+                        @input="$event => (survey.catatan_survey = $event.toUpperCase())" :autosize="{
+                            minRows: 3,
+                            maxRows: 5,
+                        }" type="textarea" placeholder="catatan survey" />
                 </n-form-item>
                 <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
                 <file-upload :def_preview="true" :multi="true" :data_multi="pageData.dokumen_pendukung"
@@ -401,7 +409,7 @@
                     </template>
                     Selanjutnya
                 </n-button>
-                <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid('send')" v-else>
+                <n-button :disabled="handleSendButton" :loading="loading" icon-placement="left" type="primary" @click="handleValid('send')" v-else>
                     kirim ke admin
                 </n-button>
                 <n-button type="info" secondary @click="handleSave()">
@@ -544,7 +552,7 @@ const statusDataPelanggan = ref(null);
 const statusDataJaminan = ref(null);
 const statusDataSurvey = ref(null);
 const next = () => {
-    
+
     if (current.value === 1) {
         formOrder.value?.validate((errors) => {
             if (errors) {
@@ -559,36 +567,45 @@ const next = () => {
             if (errors) {
                 message.error("periksa kembali isian anda");
                 statusDataPelanggan.value="error";
-            } 
+            }
+            else {
+                statusDataPelanggan.value = "finish";
+            }
         });
-    } 
-    // else if (current.value === 3) {
-    //     current.value += 1;
-    //     // formJaminan.value?.validate((errors) => {
-    //     //   if (errors) {
-    //     //     message.error("periksa kembali isian anda");
-    //     //   } else {
-    //     // }
-    //     // });
-    // }
+    }
+    else if (current.value === 3) {
+        if (jaminanStore.listJaminan.length <1){
+            message.error("minimal memiliki satu jaminan");
+            statusDataJaminan.value = "error";
+        } else {
+            statusDataJaminan.value = "finish";
+        }
+        // current.value += 1;
+        // // formJaminan.value?.validate((errors) => {
+        // //   if (errors) {
+        // //     message.error("periksa kembali isian anda");
+        // //   } else {
+        // // }
+        // // });
+    }
     current.value += 1;
 };
 const currentStatus = ref("process");
 // const next = () => (current.value += 1);
 const prev = () => (current.value -= 1);
-const tujuanKredit = ["konsumsi", "investasi"].map((v) => ({
+const tujuanKredit = ["KONSUMSI", "INVESTASI"].map((v) => ({
     label: v,
     value: v,
 }));
-const jenisAngsuran = ["Bulanan", "Musiman"].map((v) => ({
+const jenisAngsuran = ["BULANAN", "MUSIMAN"].map((v) => ({
     label: v,
     value: v.toLowerCase(),
 }));
-const optKategori = ["Baru", "RO"].map((v) => ({
+const optKategori = ["BARU", "RO"].map((v) => ({
     label: v,
     value: v,
 }));
-const optJaminan = ["Kendaraan", "Sertifikat"].map((v) => ({
+const optJaminan = ["KENDARAAN", "SERTIFIKAT"].map((v) => ({
     label: v,
     value: v.toLowerCase(),
 }));
@@ -754,16 +771,29 @@ const handleTanggalLahir = (e) => {
     }
 };
 const formSurvey = ref(null);
-
+const handleSendButton=ref(true);
 const handleValid = (type) => {
     formSurvey.value?.validate((errors) => {
         if (errors) {
             message.error("periksa kembali isian anda");
+            statusDataSurvey.value="error";
         } else {
+            statusDataSurvey.value = "finish";
             handleSave(type);
         }
     });
 }
+const endForm = () => {
+    formSurvey.value?.validate((errors) => {
+        if (errors) {
+            message.error("periksa kembali isian anda");
+            statusDataSurvey.value="error";
+        } else {
+            handleSendButton.value=false;
+        }
+    });
+}
+
 const handleSave = async (type) => {
     console.log(type)
     if (type === 'send') {
@@ -856,12 +886,7 @@ const rulesSurvey = {
     },
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
-const upCase = () => {
-    // pelanggan.nama = pelanggan.nama.toUpperCase();
-    // pelanggan.alamat = pelanggan.alamat.toUpperCase();
-    // survey.catatan_survey = survey.catatan_survey.toUpperCase();
-    // jaminan.value.no_polisi = jaminan.value.no_polisi.toUpperCase();
-};
+
 
 const idApp = baseRoute.params.idsurvey;
 const getData = () =>
