@@ -19,7 +19,7 @@
         </n-alert>
     </div>
     <n-collapse>
-        <pre>{{ formAssign }}</pre>
+        <!-- <pre>{{ formAssign }}</pre> -->
         <!-- <n-collapse-item title="identitas" name="1">
       <div>
         <pre>{{ dok_identitas }}</pre>
@@ -420,7 +420,7 @@
                                         tahun</n-alert>
                                 </div>
                                 <div class="pt-2">
-                                    <n-descriptions v-if="coll.type === 'KENDARAAN'"
+                                    <n-descriptions v-if="coll.type.toLowerCase() === 'kendaraan'"
                                         :label-placement="width < 720 ? 'left' : 'top'" bordered
                                         :column="width < 720 ? 1 : 8">
                                         <n-descriptions-item v-for="item in modelKendaraan" :key="item"
@@ -429,7 +429,7 @@
                                                 coll.atr[item] ? coll.atr[item] : '--' }}</b>
                                         </n-descriptions-item>
                                     </n-descriptions>
-                                    <n-descriptions v-if="coll.type === 'SERTIFIKAT'"
+                                    <n-descriptions v-if="coll.type.toLowerCase() === 'sertifikat'"
                                         :label-placement="width < 720 ? 'left' : 'top'" bordered
                                         :column="width < 720 ? 1 : 8">
                                         <n-descriptions-item v-for="item in modelSertifikat" :key="item"
@@ -440,7 +440,7 @@
                                     </n-descriptions>
                                 </div>
                                 <div>
-                                    <div v-if="coll.type == 'KENDARAAN'">
+                                    <div v-if="coll.type.toLowerCase() == 'kendaraan'">
                                         <n-divider title-placement="left"> UPLOAD DOKUMEN JAMINAN </n-divider>
                                         <div class="flex flex-col md:flex-row gap-2">
 
@@ -459,7 +459,7 @@
                                     </div>
                                     <n-divider title-placement="left" class="uppercase"> Upload Dokumen {{ coll.type }}
                                     </n-divider>
-                                    <div v-if="coll.type == 'KENDARAAN'" class="flex flex-col md:flex-row gap-2">
+                                    <div v-if="coll.type.toLowerCase() == 'kendaraan'" class="flex flex-col md:flex-row gap-2">
                                         <file-upload title="Depan" endpoint="image_upload_prospect" :type="`depan`"
                                             :idapp="idApp" :view-mode="viewMode" :reff="coll.counter_id"
                                             :def_value="findDocByType(coll.atr.document, 'depan')" />
@@ -488,9 +488,9 @@
                     <n-modal v-model:show="showModal">
                         <n-card class="md:w-1/2" closable @close="showModal = false" :segmented="true"
                             :title="`form ${jenisJaminan}`">
-                            <component :is="JaminanKendaraan" v-if="jenisJaminan == 'KENDARAAN'"
-                                @childData="handleChildData" :def_data="dataProp" :view-mode="viewMode" />
-                            <component :is="JaminanSertifikat" v-if="jenisJaminan == 'SERTIFIKAT'"
+                            <component :is="JaminanKendaraan" v-if="jenisJaminan.toLowerCase() == 'kendaraan'"
+                                @childData="handleChildData" :def_data="dataProp"  />
+                            <component :is="JaminanSertifikat" v-if="jenisJaminan.toLowerCase() == 'sertifikat'"
                                 @childData="handleChildData" :def_data="dataProp" />
                             <!-- <component :is="JaminanBillyet" v-if="jenisJaminan == 'billyet'" @childData="handleChildData" />
         <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" /> -->
@@ -499,7 +499,7 @@
                                     <n-button type="success" @click="ubahJaminan(jenisJaminan)"
                                         v-if="dataProp">ubah</n-button>
                                     <n-button type="success" @click="pushJaminan(jenisJaminan)" v-else
-                                        :disabled="!receivedData.nilai">tambah</n-button>
+                                        >tambah</n-button>
 
                                 </n-space>
                             </template>
@@ -998,7 +998,7 @@ const onCreate = () => {
 };
 const pageData = ref([]);
 const suspense = ref(false);
-const current = ref(2);
+const current = ref(1);
 const userToken = localStorage.getItem("token");
 const currentStatus = ref("process");
 const skemaAngsuran = ref([]);
@@ -1036,7 +1036,7 @@ const deletedKendaraan = ref([]);
 const deletedSertifikat = ref([]);
 const removeJaminan = (e) => {
   if (e.atr.id) {
-    if (e.type === 'KENDARAAN') {
+    if (e.type === 'kendaraan') {
       deletedKendaraan.value.push({ 'id': e.atr.id });
     } else {
       deletedSertifikat.value.push({ 'id': e.atr.id });
@@ -1109,7 +1109,7 @@ const optJenisIdentitas = ["KTP"].map((v) => ({
 }));
 const optJaminan = ["KENDARAAN", "SERTIFIKAT"].map((v) => ({
   label: v.toUpperCase(),
-  value: v.toUpperCase(),
+  value: v.toLowerCase(),
 }));
 const jenisAngsuran = ["Bulanan", "Musiman"].map((v) => ({
     label: v.toUpperCase(),

@@ -140,7 +140,7 @@ const format = (e) => {
   return toNum.toLocaleString("en-US");
 };
 const statusTag = (e) => {
-    if (e === "APKPS") {
+    if (e === "WAHO") {
         return "warning";
     }
     if (e === "APHO") {
@@ -148,7 +148,7 @@ const statusTag = (e) => {
     }
 };
 const statusHandle = (e) => {
-  if (e.status_code === "APKPS") {
+  if (e.status_code === "WAHO") {
     return "Periksa Order";
   }  else {
     return "Lihat Order";
@@ -176,7 +176,7 @@ const getData = async () => {
 };
 
 const handelAction = (e) => {
-  if (e.status_code == "APKPS") {
+  if (e.status_code == "WAHO") {
     router.push({
       name: "Konfirmasi HO Pengajuan Kredit",
       params: { idapplication: e.id },

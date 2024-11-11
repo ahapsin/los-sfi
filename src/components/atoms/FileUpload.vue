@@ -14,24 +14,22 @@
     </template>
     hapus dokumen ?
   </n-popconfirm>
-     
-      <n-image :src="prev_multi.PATH" class="h-20 w-20 border min-w-20 rounded-xl " />
+      <n-image :src="prev_multi.PATH" class="h-20 w-20 border min-w-20 rounded-xl" />
     </div>
   </div>
-  <div class="border rounded-xl pt-2 pl-2 pr-2 flex items-center gap-2"
+  <div class="border rounded-xl pt-2 pl-2 pr-2 flex items-center gap-2 hover:shadow"
     :class="errorCapture ? 'border-red-200 bg-red-50' : 'border'">
     <div v-show="!props.def_preview" class="flex gap-2">
       <div v-if="state.resizedImage">
         <n-image :src="state.resizedImage" class="h-20 w-20 min-w-20 rounded-xl" />
       </div>
       <div v-else-if="props.def_value">
-        <n-image :src="props.def_value" class="h-20 w-20 border min-w-20 rounded-xl " />
+        <n-image :src="props.def_value" class="h-20 w-20 min-w-20 rounded-xl" object-fit="fit"/>
       </div>
       <div v-else>
         <n-image src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
-          class="h-20 w-20 min-w-20 rounded-xl border-red-500" />
+          class="h-20 w-20 min-w-20 rounded-xl border-red-500"/>
       </div>
-
     </div>
     <n-upload accept="image/png, image/jpeg,image/jpg" @change="beforeUpload" :show-file-list="props.def_preview"
       list-type="image" multiple :show-cancel-button="false" v-show="!props.viewMode">

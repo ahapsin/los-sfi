@@ -306,9 +306,9 @@
         <n-modal v-model:show="showModal">
             <n-card class="md:w-1/2" closable @close="showModal = false" :segmented="true"
                 :title="`form ${jenisJaminan}`">
-                <component :is="JaminanKendaraan" v-if="jenisJaminan == 'kendaraan'" @childData="handleChildData"
+                <component :is="JaminanKendaraan" v-if="jenisJaminan.toLowerCase() == 'kendaraan'" @childData="handleChildData"
                     :def_data="dataProp" />
-                <component :is="JaminanSertifikat" v-if="jenisJaminan == 'sertifikat'" @childData="handleChildData"
+                <component :is="JaminanSertifikat" v-if="jenisJaminan.toLowerCase() == 'sertifikat'" @childData="handleChildData"
                     :def_data="dataProp" />
                 <!-- <component :is="JaminanBillyet" v-if="jenisJaminan == 'billyet'" @childData="handleChildData" />
         <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" /> -->

@@ -48,7 +48,7 @@
         v-model:value="props.pasar"
         placeholder="Harga Pasar"
         readonly
-        default-value="0"
+        default-value=0
         :parse="parse"
         :format="format"
         class="w-full"

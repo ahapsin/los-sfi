@@ -37,7 +37,7 @@
             </n-form-item>
             <n-form-item label="Nilai Jaminan" path="lokasi" class="w-full">
                 <n-input-number  :parse="parse"
-                :format="format" class="w-full" :show-button="false" placeholder="Nilai Jaminan" v-model:value="jaminan.nilai" default-value="0">
+                :format="format" class="w-full" :show-button="false" placeholder="Nilai Jaminan" v-model:value="jaminan.nilai" default-value=0>
                 </n-input-number>
             </n-form-item>
         </div>
