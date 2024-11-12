@@ -13,7 +13,7 @@
                 <pre>{{ dataPelanggan }}</pre>
             </n-collapse-item>
             <n-collapse-item title="penjamin" name="2">
-                <pre>{{ dataPenjamin }}</pre>
+                <pre>{{ dataJaminan }}</pre>
             </n-collapse-item>
             <n-collapse-item title="pasangan" name="3">
                 <pre>{{ dataPasangan }}</pre>
@@ -31,32 +31,30 @@
         inline
         :disabled="pageData.flag == 1 ? true : false"
       >
-        <n-form-item label="Order Number" path="nama" class="w-full">
+        <n-form-item label="Order Number" path="nama">
           <n-input
             placeholder="nama"
             v-model:value="dynamicForm.order_number"
             disabled
-            class="w-full"
+      
           />
         </n-form-item>
-        <n-form-item label="Tanggal Awal Angsuran" path="order" class="w-full">
+        <n-form-item label="Tanggal Awal Angsuran" path="order" >
           <n-date-picker
             placeholder="Tanggal order"
             v-model:formatted-value="dynamicForm.awal"
             value-format="yyyy-MM-dd"
             format="dd-MM-yyyy"
             type="date"
-            class="w-full"
+  
             :loading="lodingDateAwal"
             :disabled="pkData.flag == 1"
             @update:formatted-value="getPrePK"
           />
         </n-form-item>
-      </n-form>
-      <n-form-item label="Halaman" path="nama_panggilan" class="w-full">
+      <n-form-item label="Halaman" path="nama_panggilan">
         <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
-        <n-grid cols="2 400:4 600:6" class="bg-slate-100 p-2 rounded">
-          <n-grid-item>
+        <n-grid cols="2 6" class="bg-slate-100 p-2 rounded">          <n-grid-item>
             <n-checkbox value="pk" label="Perjanjian Kredit" checked disabled />
           </n-grid-item>
           <n-grid-item>
@@ -97,6 +95,7 @@
           </n-grid-item>
         </n-grid>
       </n-form-item>
+      </n-form>
       <!-- <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
                 </n-form-item> -->
@@ -106,22 +105,21 @@
       v-show="prosesPK"
       class="flex gap-2 border-t p-4 justify-end"
     ></div>
-    <div class="sticky flex top-0 w-full">
-      <CollateralCheck coll_no="U00085802" />
+    <div class="sticky flex bottom-0 w-full" v-show="false">
+      <CollateralCheck :coll_data="dataJaminan" />
     </div>
-    <n-button
-      v-show="false"
-      disabled
-      secondary
-      :type="pageData.flag == 1 ? 'warning' : 'primary'"
-      class="gap-2"
-      @click="handlePrint"
-    >
-      <n-icon>
-        <print-icon />
-      </n-icon>
-      {{ pageData.flag == 1 ? "Cetak Ulang PK" : "Cetak PK" }}
-    </n-button>
+    <div class="sticky b bg-white flex top-0 w-full justify-end p-2">
+      <n-button
+        :type="pageData.flag == 1 ? 'warning' : 'primary'"
+        class="gap-2"
+        @click="handlePrint"
+      >
+        <n-icon>
+          <print-icon />
+        </n-icon>
+        {{ pageData.flag == 1 ? "Cetak Ulang PK" : "Cetak PK" }}
+      </n-button>
+    </div>
     <div
       class="flex bg-slate-100 justify-center overflow-auto p-2"
       v-show="prosesPK"
@@ -726,35 +724,64 @@
               >,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
               dalam keadaan baik dengan rincian sebagai berikut :
             </div>
-            <div class="mb-4 text-justify">
-              <table>
+            <div class="mb-4 text-justify" v-for="jaminan,i in dataJaminan" :key="jaminan">
+              {{ i+1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
+              <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                 <tr>
                   <td>BPKB No</td>
                   <td width="25">:</td>
-                  <td>{{ pkData.no_bpkb }}</td>
+                  <td>{{ jaminan.no_bpkb }}</td>
                 </tr>
                 <tr>
                   <td>BPKB atas nama</td>
                   <td width="25">:</td>
-                  <td>{{ pkData.atas_nama }}</td>
+                  <td>{{ jaminan.atr.atas_nama }}</td>
                 </tr>
                 <tr>
                   <td>Merk/Type/Tahun</td>
                   <td width="25">:</td>
-                  <td>{{ `${pkData.merk}/${pkData.type}/${pkData.tahun}` }}</td>
+                  <td>{{ `${jaminan.atr.merk}/${jaminan.atr.tipe}/${jaminan.atr.tahun}` }}</td>
                 </tr>
                 <tr>
                   <td>Warna/No.Polisi</td>
                   <td width="25">:</td>
-                  <td>{{ `${pkData.warna}/${pkData.no_polisi}` }}</td>
+                  <td>{{ `${jaminan.atr.warna}/${jaminan.atr.no_polisi}` }}</td>
                 </tr>
                 <tr>
                   <td>No. Rangka/Mesin</td>
                   <td width="25">:</td>
-                  <td>{{ `${pkData.no_rangka}/${pkData.no_mesin}` }}</td>
+                  <td>{{ `${jaminan.atr.no_rangka}/${jaminan.atr.no_mesin}` }}</td>
+                </tr>
+                <tr>
+                  <td>No. Faktur</td>
+                  <td width="25">:</td>
+                  <td>{{ `${jaminan.atr.no_faktur}` }}</td>
+                </tr>
+              </table>
+              <table v-else>
+                <tr >
+                  <td>No Sertifikat</td>
+                  <td width="25">:</td>
+                  <td>{{ jaminan.atr.no_sertifikat }}</td>
+                </tr>
+                <tr >
+                  <td>Status Kepemilikan</td>
+                  <td width="25">:</td>
+                  <td>{{ jaminan.atr.status_kepemilikan }}</td>
+                </tr>
+                <tr >
+                  <td>IMB / Luas Tanah / Luas Bangunan</td>
+                  <td width="25">:</td>
+                  <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 / ${jaminan.atr.luas_bangunan} m2` }}</td>
+                </tr>
+                <tr >
+                  <td>Lokasi</td>
+                  <td width="25">:</td>
+                  <td>{{ `${jaminan.atr.lokasi}` }}</td>
                 </tr>
               </table>
             </div>
+
             <div class="mb-4">
               <!-- Selanjutnya disebut Penjamin<br /> -->
               Dokumen tersebut telah diterima dalam keadaan baik untuk
@@ -866,6 +893,7 @@ let thisMonths = (dt.getMonth() + 1).toString().padStart(2, "0");
 const thisday = `${year}-${thisMonths}-${day}`;
 
 const dataPelanggan = ref([]);
+const dataJaminan = ref([]);
 
 const dynamicForm = reactive({
   awal: `${year}-${months}-${day}`,
@@ -935,6 +963,7 @@ const getPrePK = async () => {
       tgl_cetak.value = res.data.tgl_cetak;
       dataPasangan.value = res.data.pasangan;
       dataPenjamin.value = res.data.penjamin;
+      dataJaminan.value=res.data.jaminan;
       pihak1.value = res.data.pihak_1;
       pihak2.value = res.data.pihak_2;
       struktur.value = [];

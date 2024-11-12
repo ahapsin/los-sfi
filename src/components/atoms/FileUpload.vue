@@ -2,18 +2,17 @@
   <canvas ref="canvas" style="display: none"></canvas>
   <div v-if="props.multi && props.data_multi" class="flex gap-4">
     <div v-for="prev_multi in dataPreview" :key="prev_multi" class="relative group">
-      <n-popconfirm
-    @positive-click="removePreview(prev_multi.ID)" positive-text="ya" negative-text="tidak"  v-if="!props.viewMode"
-  >
-    <template #trigger>
-      <n-button class="absolute -right-4 -top-4  ring-4 ring-white" size="small" circle type="error">
-        <n-icon>
-          <remove-icon />
-        </n-icon>
-      </n-button>
-    </template>
-    hapus dokumen ?
-  </n-popconfirm>
+      <n-popconfirm @positive-click="removePreview(prev_multi.ID)" positive-text="ya" negative-text="tidak"
+        v-if="!props.viewMode">
+        <template #trigger>
+          <n-button class="absolute -right-4 -top-4  ring-4 ring-white" size="small" circle type="error">
+            <n-icon>
+              <remove-icon />
+            </n-icon>
+          </n-button>
+        </template>
+        hapus dokumen ?
+      </n-popconfirm>
       <n-image :src="prev_multi.PATH" class="h-20 w-20 border min-w-20 rounded-xl" />
     </div>
   </div>
@@ -24,11 +23,11 @@
         <n-image :src="state.resizedImage" class="h-20 w-20 min-w-20 rounded-xl" />
       </div>
       <div v-else-if="props.def_value">
-        <n-image :src="props.def_value" class="h-20 w-20 min-w-20 rounded-xl" object-fit="fit"/>
+        <n-image :src="props.def_value" class="h-20 w-20 min-w-20 rounded-xl" object-fit="fit" />
       </div>
       <div v-else>
         <n-image src="https://www.shorekids.co.nz/wp-content/uploads/2014/08/image-placeholder.jpg"
-          class="h-20 w-20 min-w-20 rounded-xl border-red-500"/>
+          class="h-20 w-20 min-w-20 rounded-xl border-red-500" />
       </div>
     </div>
     <n-upload accept="image/png, image/jpeg,image/jpg" @change="beforeUpload" :show-file-list="props.def_preview"
@@ -42,6 +41,13 @@
         </n-button>
       </div>
     </n-upload>
+    <div class="flex flex-col" v-show="props.viewMode">
+      <n-button tertiary :type="errorCapture ? 'error' : 'success'">
+        <div class="flex gap-2">
+          {{ props.title }}
+        </div>
+      </n-button>
+    </div>
   </div>
 </template>
 
@@ -147,15 +153,15 @@ const props = defineProps({
   def_preview: Boolean,
   multi: Boolean,
   data_multi: Object,
-  viewMode:{
-    type:Boolean,
-    default:false,
+  viewMode: {
+    type: Boolean,
+    default: false,
   }
 });
 const dataPreview = toRef(props, 'data_multi');
 
 const removePreview = async (e) => {
-  let index = _.findIndex(dataPreview.value, {ID:e});
+  let index = _.findIndex(dataPreview.value, { ID: e });
   dataPreview.value.splice(index, 1);
   const response = await useApi({
     method: 'DELETE',

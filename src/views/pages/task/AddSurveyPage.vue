@@ -403,7 +403,7 @@
                     </template>
                     Selanjutnya
                 </n-button>
-                <n-button :disabled="handleSendButton" :loading="loading" icon-placement="left" type="primary"
+                <n-button :loading="loading" icon-placement="left" type="primary"
                     @click="handleValid('send')" v-else>
                     kirim ke admin
                 </n-button>
