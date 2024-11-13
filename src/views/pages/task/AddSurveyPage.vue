@@ -12,11 +12,11 @@
     <!-- card -->
 
     <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
-            order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
+        order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
         (50%)</n-alert>
     <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
-    content: true,
-  }">
+        content: true,
+    }">
 
         <!-- container 1 -->
         <div v-show="current == 1">
@@ -40,10 +40,10 @@
                                 <n-radio name="tenor" value="6">
                                     6 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -51,10 +51,10 @@
                                 <n-radio name="tenor" value="12">
                                     12 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -62,10 +62,10 @@
                                 <n-radio name="tenor" value="18">
                                     18 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -73,10 +73,10 @@
                                 <n-radio name="tenor" value="24">
                                     24 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -87,10 +87,10 @@
                                 <n-radio name="tenor" value="3">
                                     1x 3 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -98,10 +98,10 @@
                                 <n-radio name="tenor" value="6">
                                     1 x 6 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -109,10 +109,10 @@
                                 <n-radio name="tenor" value="12">
                                     2 x 12 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -120,10 +120,10 @@
                                 <n-radio name="tenor" value="18">
                                     3 x 18 bulan<n-text code>
                                         {{
-                                        skemaAngsuran.length == null
-                                        ? ` /
+                                            skemaAngsuran.length == null
+                                                ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                        : ""
+                                                : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -306,10 +306,10 @@
         <n-modal v-model:show="showModal">
             <n-card class="md:w-1/2" closable @close="showModal = false" :segmented="true"
                 :title="`form ${jenisJaminan}`">
-                <component :is="JaminanKendaraan" v-if="jenisJaminan.toLowerCase() == 'kendaraan'" @childData="handleChildData"
-                    :def_data="dataProp" />
-                <component :is="JaminanSertifikat" v-if="jenisJaminan.toLowerCase() == 'sertifikat'" @childData="handleChildData"
-                    :def_data="dataProp" />
+                <component :is="JaminanKendaraan" v-if="jenisJaminan.toLowerCase() == 'kendaraan'"
+                    @childData="handleChildData" :def_data="dataProp" />
+                <component :is="JaminanSertifikat" v-if="jenisJaminan.toLowerCase() == 'sertifikat'"
+                    @childData="handleChildData" :def_data="dataProp" />
                 <!-- <component :is="JaminanBillyet" v-if="jenisJaminan == 'billyet'" @childData="handleChildData" />
         <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" /> -->
                 <template #footer>
@@ -375,10 +375,10 @@
                 </div>
                 <n-form-item label="Catatan Survey" path="catatan_survey">
                     <n-input @blur="endForm" v-model:value="survey.catatan_survey"
-                        @input="$event => (survey.catatan_survey  = $event.toUpperCase())" :autosize="{
-            minRows: 3,
-            maxRows: 5,
-          }" type="textarea" placeholder="catatan survey" />
+                        @input="$event => (survey.catatan_survey = $event.toUpperCase())" :autosize="{
+                            minRows: 3,
+                            maxRows: 5,
+                        }" type="textarea" placeholder="catatan survey" />
                 </n-form-item>
                 <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
                 <file-upload :def_preview="true" title="dokumen pendukung" endpoint="image_upload_prospect" type="other"
@@ -403,8 +403,7 @@
                     </template>
                     Selanjutnya
                 </n-button>
-                <n-button :loading="loading" icon-placement="left" type="primary"
-                    @click="handleValid('send')" v-else>
+                <n-button :loading="loading" icon-placement="left" type="primary" @click="handleValid('send')" v-else>
                     kirim ke admin
                 </n-button>
                 <n-button type="info" @click="handleSave()">
@@ -418,11 +417,11 @@
 import { ref, reactive, onMounted } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import {
-  ArrowBackOutlined as ArrowBack,
-  AddFilled as AddIcon,
-  EditOutlined as EditIcon,
-  DeleteOutlineFilled as DeleteIcon,
-  ArrowForwardOutlined as ArrowForward,
+    ArrowBackOutlined as ArrowBack,
+    AddFilled as AddIcon,
+    EditOutlined as EditIcon,
+    DeleteOutlineFilled as DeleteIcon,
+    ArrowForwardOutlined as ArrowForward,
 
 } from "@vicons/material";
 import { useMessage } from "naive-ui";
@@ -449,26 +448,26 @@ const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
 const refAdmin = async (body) => {
-  skemaAngsuran.value = [];
-  loading.value = true;
-  const response = await useApi({
-    method: "post",
-    api: "fee_survey",
-    data: body,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
-  } else {
-    loading.value = false;
-    skemaAngsuran.value = response.data;
-    tenor6.value = response.data.tenor_6;
-    tenor12.value = response.data.tenor_12;
-    tenor18.value = response.data.tenor_18;
-    tenor24.value = response.data.tenor_24;
-  }
+    skemaAngsuran.value = [];
+    loading.value = true;
+    const response = await useApi({
+        method: "post",
+        api: "fee_survey",
+        data: body,
+        token: userToken,
+    });
+    if (!response.ok) {
+        message.error("sesi berakhir");
+        localStorage.removeItem("token");
+        router.push("/");
+    } else {
+        loading.value = false;
+        skemaAngsuran.value = response.data;
+        tenor6.value = response.data.tenor_6;
+        tenor12.value = response.data.tenor_12;
+        tenor18.value = response.data.tenor_18;
+        tenor24.value = response.data.tenor_24;
+    }
 };
 
 const jaminanStore = useJaminanStore();
@@ -530,44 +529,44 @@ const receivedData = ref(null);
 const dataProp = ref({});
 
 const handleChildData = (data) => {
-  receivedData.value = data;
+    receivedData.value = data;
 
 };
 const sumJaminan = computed(() => {
-  return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
+    return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
 });
 const orderJaminan = computed(() => _.orderBy(jaminanStore.listJaminan, 'counter_id', 'desc'));
 const jenisJaminan = ref('kendaraan');
 const viewModal = (e) => {
-  let findData = _.findIndex(jaminanStore.listJaminan, { 'counter_id': e.counter_id });
-  let selectedData = jaminanStore.listJaminan[findData];
-  jenisJaminan.value = e.type;
-  dataProp.value = selectedData;
-  showModal.value = !showModal.value;
+    let findData = _.findIndex(jaminanStore.listJaminan, { 'counter_id': e.counter_id });
+    let selectedData = jaminanStore.listJaminan[findData];
+    jenisJaminan.value = e.type;
+    dataProp.value = selectedData;
+    showModal.value = !showModal.value;
 }
 const removeJaminan = (e) => {
-  let index = _.findIndex(anyJaminan.value, { 'id': e });
-  anyJaminan.value.splice(index, 1);
-  jaminanStore.removeJaminan(e);
+    let index = _.findIndex(anyJaminan.value, { 'id': e });
+    anyJaminan.value.splice(index, 1);
+    jaminanStore.removeJaminan(e);
 }
 const addJaminan = () => {
-  dataProp.value = null;
-  showModal.value = true;
+    dataProp.value = null;
+    showModal.value = true;
 }
 const pushJaminan = (e) => {
-  const randNumbTime = new Date().getTime();
-  const newJaminan = {
-    counter_id: randNumbTime,
-    type: e,
-    atr: receivedData.value,
-  }
-  jaminanStore.storeJaminan(newJaminan);
-  showModal.value = false;
-  message.success(`jaminan ${e} ditambahkan`);
+    const randNumbTime = new Date().getTime();
+    const newJaminan = {
+        counter_id: randNumbTime,
+        type: e,
+        atr: receivedData.value,
+    }
+    jaminanStore.storeJaminan(newJaminan);
+    showModal.value = false;
+    message.success(`jaminan ${e} ditambahkan`);
 }
 const ubahJaminan = () => {
-  showModal.value = false;
-  message.success(`jaminan diubah`);
+    showModal.value = false;
+    message.success(`jaminan diubah`);
 }
 
 // const currentComponent = ref('JaminanKendaraan');
@@ -605,7 +604,6 @@ const statusDataPelanggan = ref(null);
 const statusDataJaminan = ref(null);
 const statusDataSurvey = ref(null);
 const next = () => {
-
     if (current.value === 1) {
         formOrder.value?.validate((errors) => {
             if (errors) {
@@ -654,175 +652,196 @@ const optJaminan = ["KENDARAAN", "SERTIFIKAT"].map((v) => ({
     value: v.toLowerCase(),
 }));
 const optSektor = [
-  "BURUH HARIAN LEPAS",
-  "BURUH PABRIK",
-  "GURU",
-  "MENGURUS RUMAH TANGGA",
-  "NELAYAN",
-  "PEDAGANG",
-  "PEDAGANG KELONTONG",
-  "PEDAGANG MAKANAN",
-  "PEGAWAI SWASTA",
-  "PELAJAR",
-  "PETANI / PEKEBUN",
-  "PNS",
-  "SOPIR",
-  "WIRASWASTA",
+    "BURUH HARIAN LEPAS",
+    "BURUH PABRIK",
+    "GURU",
+    "MENGURUS RUMAH TANGGA",
+    "NELAYAN",
+    "PEDAGANG",
+    "PEDAGANG KELONTONG",
+    "PEDAGANG MAKANAN",
+    "PEGAWAI SWASTA",
+    "PELAJAR",
+    "PETANI / PEKEBUN",
+    "PNS",
+    "SOPIR",
+    "WIRASWASTA",
 ].map((v) => ({
-  label: v,
-  value: v,
+    label: v,
+    value: v,
 }));
 const order = ref({
-  tujuan_kredit: null,
-  plafond: null,
-  tenor: null,
-  category: null,
-  jenis_angsuran: "bulanan",
+    tujuan_kredit: null,
+    plafond: null,
+    tenor: null,
+    category: null,
+    jenis_angsuran: "bulanan",
 });
 const initPelanggan = {
-  no_kk: "",
-  nama: "",
-  no_hp: "",
-  tgl_lahir: null,
-  name: "",
-  alamat: "",
-  rt: "",
-  rw: "",
-  provinsi: "",
-  kota: "",
-  kecamatan: "",
-  kelurahan: "",
+    no_kk: "",
+    nama: "",
+    no_hp: "",
+    tgl_lahir: null,
+    name: "",
+    alamat: "",
+    rt: "",
+    rw: "",
+    provinsi: "",
+    kota: "",
+    kecamatan: "",
+    kelurahan: "",
 };
 const pelanggan = reactive({ ...initPelanggan });
 const jaminan = ref({
-  tipe: null,
-  tahun: null,
-  merk: "",
-  warna: "",
-  atas_nama: "",
-  no_polisi: "",
-  no_rangka: "",
-  no_mesin: "",
-  no_bpkb: "",
-  no_stnk: "",
-  nilai: null,
+    tipe: null,
+    tahun: null,
+    merk: "",
+    warna: "",
+    atas_nama: "",
+    no_polisi: "",
+    no_rangka: "",
+    no_mesin: "",
+    no_bpkb: "",
+    no_stnk: "",
+    nilai: null,
 });
 var dt = new Date();
 let year = dt.getFullYear();
 let month = (dt.getMonth() + 1).toString().padStart(2, "0");
 let day = dt.getDate().toString().padStart(2, "0");
 const survey = reactive({
-  lama_bekerja: "",
-  penghasilan: {
-    pribadi: null,
-    pasangan: null,
-    lainnya: null,
-  },
-  pengeluaran: null,
-  usaha: "",
-  sektor: "",
-  catatan_survey: "",
-  tgl_survey: `${year}-${month}-${day}`,
+    lama_bekerja: "",
+    penghasilan: {
+        pribadi: null,
+        pasangan: null,
+        lainnya: null,
+    },
+    pengeluaran: null,
+    usaha: "",
+    sektor: "",
+    catatan_survey: "",
+    tgl_survey: `${year}-${month}-${day}`,
 });
 const dynamicForm = reactive({
-  id: uuid,
-  flag: false,
-  order: order.value,
-  data_nasabah: pelanggan,
-  data_survey: survey,
-  jaminan: computed(() => jaminanStore.listJaminan),
+    id: uuid,
+    flag: false,
+    order: order.value,
+    data_nasabah: pelanggan,
+    data_survey: survey,
+    jaminan: computed(() => jaminanStore.listJaminan),
 });
 const handlePlafond = (e) => {
-  order.value.plafond = e;
-  const body = {
-    plafond: e,
-    jenis_angsuran: order.value.jenis_angsuran,
-  };
-  refAdmin(body);
+    order.value.plafond = e;
+    const body = {
+        plafond: e,
+        jenis_angsuran: order.value.jenis_angsuran,
+    };
+    refAdmin(body);
 };
 const steps = [
-  "Informasi Order",
-  "Data Pelanggan",
-  "Data Jaminan",
-  "Data Survey",
+    "Informasi Order",
+    "Data Pelanggan",
+    "Data Jaminan",
+    "Data Survey",
 ];
 const currentStatus = ref("process");
 const loadingKTP = ref(false);
 const bl_pesan = ref();
 const handleKtp = async (e) => {
-  loadingKTP.value = true;
-  const bodyForm = {
-    no_ktp: e,
-  };
-  bl_pesan.value = await useBlacklist(e);
-  const response = await useApi({
-    method: "POST",
-    api: "check_ro",
-    data: bodyForm,
-    token: userToken,
-  });
-  if (!response.ok) {
-    loadingKTP.value = false;
-  } else {
-    let data = response.data;
-    if (data.length > 0) {
-      order.value.category = "RO";
-      Object.assign(pelanggan, data[0]);
+    loadingKTP.value = true;
+    const bodyForm = {
+        no_ktp: e,
+    };
+    bl_pesan.value = await useBlacklist(e);
+    const response = await useApi({
+        method: "POST",
+        api: "check_ro",
+        data: bodyForm,
+        token: userToken,
+    });
+    if (!response.ok) {
+        loadingKTP.value = false;
     } else {
-      order.value.category = "Baru";
-      loadingKTP.value = false;
-      // Object.assign(pelanggan, initPelanggan);
+        let data = response.data;
+        if (data.length > 0) {
+            order.value.category = "RO";
+            Object.assign(pelanggan, data[0]);
+        } else {
+            order.value.category = "Baru";
+            loadingKTP.value = false;
+            // Object.assign(pelanggan, initPelanggan);
+        }
+        loadingKTP.value = false;
     }
-    loadingKTP.value = false;
-  }
 };
 const handleTipe = (e) => {
-  tipeAngsuran.value = e;
-  order.value.jenis_angsuran = e;
-  const body = {
-    plafond: order.value.plafond,
-    jenis_angsuran: e,
-  };
-  refAdmin(body);
+    tipeAngsuran.value = e;
+    order.value.jenis_angsuran = e;
+    const body = {
+        plafond: order.value.plafond,
+        jenis_angsuran: e,
+    };
+    refAdmin(body);
 };
 const parse = (input) => {
-  const nums = input.replace(/,/g, "").trim();
-  if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
-  return nums === "" ? null : Number.NaN;
+    const nums = input.replace(/,/g, "").trim();
+    if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
+    return nums === "" ? null : Number.NaN;
 };
 const format = (value) => {
-  if (value === null) return "";
-  return value.toLocaleString("en-US");
+    if (value === null) return "";
+    return value.toLocaleString("en-US");
 };
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
-  var month_diff = new Date().getTime() - e;
-  var currentAge = Math.floor(month_diff / 31557600000);
-  if (currentAge > 19 && currentAge < 60) {
-    notifUsia.value = false;
-  } else {
-    if (currentAge < 19) {
-      notifUsia.value = true;
-      noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
-    } else if (currentAge > 60) {
-      notifUsia.value = true;
-      noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+    var month_diff = new Date().getTime() - e;
+    var currentAge = Math.floor(month_diff / 31557600000);
+    if (currentAge > 19 && currentAge < 60) {
+        notifUsia.value = false;
+    } else {
+        if (currentAge < 19) {
+            notifUsia.value = true;
+            noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
+        } else if (currentAge > 60) {
+            notifUsia.value = true;
+            noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+        }
     }
-  }
 };
 const formSurvey = ref(null);
 const handleSendButton = ref(true);
 const handleValid = (type) => {
+
+    formOrder.value?.validate((errors) => {
+        if (errors) {
+            message.error("periksa kembali isian informasi order");
+            statusInformasiOrder.value = "error";
+        }
+    });
+
+    formPelanggan.value?.validate((errors) => {
+        if (errors) {
+            message.error("periksa kembali isian data pelanggan");
+            statusDataPelanggan.value = "error";
+        }
+    });
+
+    if (jaminanStore.listJaminan.length < 1) {
+        message.error("minimal memiliki satu jaminan");
+        statusDataJaminan.value = "error";
+    }
+
     formSurvey.value?.validate((errors) => {
         if (errors) {
-            message.error("periksa kembali isian anda");
+            message.error("periksa kembali isian data survey");
             statusDataSurvey.value = "error";
         } else {
             statusDataSurvey.value = "finish";
             handleSave(type);
         }
     });
+
 }
 const endForm = () => {
     formSurvey.value?.validate((errors) => {
@@ -835,96 +854,96 @@ const endForm = () => {
     });
 }
 const handleSave = async (type) => {
-  if (type === 'send') {
-    dynamicForm.flag = true
-  }
-  loading.value = true;
-  const response = await useApi({
-    method: "POST",
-    api: "kunjungan",
-    data: dynamicForm,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("data gagal diubah");
-    loading.value = false;
-  } else {
-    message.success("data berhasil disimpan");
-    loading.value = false;
-    router.push({ name: 'survey' });
-  }
+    if (type === 'send') {
+        dynamicForm.flag = true
+    }
+    loading.value = true;
+    const response = await useApi({
+        method: "POST",
+        api: "kunjungan",
+        data: dynamicForm,
+        token: userToken,
+    });
+    if (!response.ok) {
+        message.error("data gagal diubah");
+        loading.value = false;
+    } else {
+        message.success("data berhasil disimpan");
+        loading.value = false;
+        router.push({ name: 'survey' });
+    }
 };
 const plafondValidator = (rule, value) => {
-  return value > 1000000;
+    return value > 1000000;
 };
 const rulesOrder = {
-  plafond: {
-    trigger: "blur",
-    validator: plafondValidator,
-    message: "plafond minimal lebih dari 1.000.000",
-  },
-  jenis_angsuran: {
-    trigger: "blur",
-    required: true,
-    message: "jenis angsuran harus dipilih",
-  },
-  tenor: {
-    trigger: "blur",
-    required: true,
-    message: "tenor / angsuran harus dipilih",
-  },
-  tujuan_kredit: {
-    trigger: "blur",
-    required: true,
-    message: "tujuan kredit harus dipilih",
-  },
+    plafond: {
+        trigger: "blur",
+        validator: plafondValidator,
+        message: "plafond minimal lebih dari 1.000.000",
+    },
+    jenis_angsuran: {
+        trigger: "blur",
+        required: true,
+        message: "jenis angsuran harus dipilih",
+    },
+    tenor: {
+        trigger: "blur",
+        required: true,
+        message: "tenor / angsuran harus dipilih",
+    },
+    tujuan_kredit: {
+        trigger: "blur",
+        required: true,
+        message: "tujuan kredit harus dipilih",
+    },
 };
 const rulesPelanggan = {
-  no_ktp: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No identitas minimal 16 karakter",
-  },
-  no_kk: {
-    trigger: "blur",
-    required: true,
-    min: 16,
-    message: "No Kartu Keluarga minimal 16 karakter",
-  },
-  nama: {
-    trigger: "blur",
-    required: true,
-    message: "Nama harus diisi",
-  },
-  tgl_lahir: {
-    trigger: "blur",
-    required: true,
-    message: "Tanggal lahir harus diisi",
-  },
-  no_hp: {
-    trigger: "blur",
-    required: true,
-    message: "No HP harus diisi",
-  },
-  alamat: {
-    trigger: "blur",
-    required: true,
-    message: "Alamat harus diisi",
-  },
+    no_ktp: {
+        trigger: "blur",
+        required: true,
+        min: 16,
+        message: "No identitas minimal 16 karakter",
+    },
+    no_kk: {
+        trigger: "blur",
+        required: true,
+        min: 16,
+        message: "No Kartu Keluarga minimal 16 karakter",
+    },
+    nama: {
+        trigger: "blur",
+        required: true,
+        message: "Nama harus diisi",
+    },
+    tgl_lahir: {
+        trigger: "blur",
+        required: true,
+        message: "Tanggal lahir harus diisi",
+    },
+    no_hp: {
+        trigger: "blur",
+        required: true,
+        message: "No HP harus diisi",
+    },
+    alamat: {
+        trigger: "blur",
+        required: true,
+        message: "Alamat harus diisi",
+    },
 };
 const modelKendaraan = ['merk', 'tipe', 'tahun', 'no_polisi', 'nilai', 'warna', 'tgl_stnk'];
 const modelSertifikat = ['no_sertifikat', 'imb', 'kepemilikan', 'luas_tanah', 'luas_bangunan', 'nilai', 'atas_nama'];
 
 const rulesSurvey = {
-  catatan_survey: {
-    trigger: "blur",
-    required: true,
-    message: "Catatan survey harus diisi",
-  },
+    catatan_survey: {
+        trigger: "blur",
+        required: true,
+        message: "Catatan survey harus diisi",
+    },
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 onMounted(() => {
-  jaminanStore.initJaminan();
+    jaminanStore.initJaminan();
 });
 </script>

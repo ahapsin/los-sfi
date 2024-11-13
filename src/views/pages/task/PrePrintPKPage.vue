@@ -1,10 +1,9 @@
 <template>
-  <n-card
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-  >
+  <n-card :segmented="{
+    content: true,
+    footer: 'soft',
+  }">
+    <!-- {{ jaminanFetch }} -->
     <!-- <n-collapse class="bg-yellow-100">
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
@@ -26,109 +25,62 @@
             </n-collapse-item>
         </n-collapse> -->
     <div class="flex flex-col md:flex-row w-full gap-2">
-      <n-form
-        ref="formRef"
-        inline
-        :disabled="pageData.flag == 1 ? true : false"
-      >
+      <n-form ref="formRef" inline :disabled="pageData.flag == 1 ? true : false">
         <n-form-item label="Order Number" path="nama">
-          <n-input
-            placeholder="nama"
-            v-model:value="dynamicForm.order_number"
-            disabled
-      
-          />
+          <n-input placeholder="nama" v-model:value="dynamicForm.order_number" disabled />
         </n-form-item>
-        <n-form-item label="Tanggal Awal Angsuran" path="order" >
-          <n-date-picker
-            placeholder="Tanggal order"
-            v-model:formatted-value="dynamicForm.awal"
-            value-format="yyyy-MM-dd"
-            format="dd-MM-yyyy"
-            type="date"
-  
-            :loading="lodingDateAwal"
-            :disabled="pkData.flag == 1"
-            @update:formatted-value="getPrePK"
-          />
+        <n-form-item label="Tanggal Awal Angsuran" path="order">
+          <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
+            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" :loading="lodingDateAwal"
+            :disabled="pkData.flag == 1" @update:formatted-value="getPrePK" />
         </n-form-item>
-      <n-form-item label="Halaman" path="nama_panggilan">
-        <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
-        <n-grid cols="2 6" class="bg-slate-100 p-2 rounded">          <n-grid-item>
-            <n-checkbox value="pk" label="Perjanjian Kredit" checked disabled />
-          </n-grid-item>
-          <n-grid-item>
-            <n-checkbox
-              value="skala"
-              label="Skala Kredit"
-              v-model:checked="optPrint.skalaPage"
-            />
-          </n-grid-item>
+        <n-form-item label="Halaman" path="nama_panggilan">
+          <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
+          <n-grid cols="2 6" class="bg-slate-100 p-2 rounded"> <n-grid-item>
+              <n-checkbox value="pk" label="Perjanjian Kredit" checked disabled />
+            </n-grid-item>
+            <n-grid-item>
+              <n-checkbox value="skala" label="Skala Kredit" v-model:checked="optPrint.skalaPage" />
+            </n-grid-item>
 
-          <n-grid-item>
-            <n-checkbox
-              value=""
-              label="Pasangan"
-              v-model:checked="optPrint.pasanganPage"
-            />
-          </n-grid-item>
-          <n-grid-item>
-            <n-checkbox
-              value=""
-              label="Penjamin"
-              v-model:checked="optPrint.penjaminPage"
-            />
-          </n-grid-item>
-          <n-grid-item>
-            <n-checkbox
-              value=""
-              label="Tanda Terima"
-              v-model:checked="optPrint.tandaTerima"
-            />
-          </n-grid-item>
-          <n-grid-item>
-            <n-checkbox
-              value="ktpa"
-              label="Asuransi"
-              v-model:checked="optPrint.ktpaPage"
-            />
-          </n-grid-item>
-        </n-grid>
-      </n-form-item>
+            <n-grid-item>
+              <n-checkbox value="" label="Pasangan" v-model:checked="optPrint.pasanganPage" />
+            </n-grid-item>
+            <n-grid-item>
+              <n-checkbox value="" label="Penjamin" v-model:checked="optPrint.penjaminPage" />
+            </n-grid-item>
+            <n-grid-item>
+              <n-checkbox value="" label="Tanda Terima" v-model:checked="optPrint.tandaTerima" />
+            </n-grid-item>
+            <n-grid-item>
+              <n-checkbox value="ktpa" label="Asuransi" v-model:checked="optPrint.ktpaPage" />
+            </n-grid-item>
+          </n-grid>
+        </n-form-item>
       </n-form>
       <!-- <n-form-item class="w-full">
                     <n-button type="primary" @click="handleProses">Proses</n-button>
                 </n-form-item> -->
     </div>
-    <div
+    <!-- <div
       title="PK"
       v-show="prosesPK"
       class="flex gap-2 border-t p-4 justify-end"
-    ></div>
-    <div class="sticky flex bottom-0 w-full" v-show="false">
+    ></div> -->
+    <!-- <div class="sticky flex bottom-0 w-full" v-if="false">
       <CollateralCheck :coll_data="dataJaminan" />
-    </div>
+    </div> -->
     <div class="sticky b bg-white flex top-0 w-full justify-end p-2">
-      <n-button
-        :type="pageData.flag == 1 ? 'warning' : 'primary'"
-        class="gap-2"
-        @click="handlePrint"
-      >
+      <n-button :type="pageData.flag == 1 ? 'warning' : 'primary'" class="gap-2" @click="handlePrint">
         <n-icon>
           <print-icon />
         </n-icon>
         {{ pageData.flag == 1 ? "Cetak Ulang PK" : "Cetak PK" }}
       </n-button>
     </div>
-    <div
-      class="flex bg-slate-100 justify-center overflow-auto p-2"
-      v-show="prosesPK"
-    >
+    <div class="flex bg-slate-100 justify-center overflow-auto p-2" v-show="prosesPK">
       <div class="flex flex-col min-w-[900px] p-10" ref="pk">
-        <div
-          class="bg-white max-w-[900px] shadow-lg p-8"
-          v-show="optPrint.pkPage"
-        >
+        <div class="bg-white max-w-[900px] shadow-lg p-8" v-show="optPrint.pkPage">
           <kop-header />
           <table border="1" class="mb-10">
             <tr>
@@ -352,24 +304,20 @@
           <div class="bg-white max-w-[900px] shadow-lg p-8">
             <kop-header />
             <div class="mb-4 text-center text-base">
-              <b
-                >SYARAT DAN KETENTUTAN KHUSUS PROGRAM
-                <b>" KREDIT TANPA PERLINDUNGAN ASURANSI "</b></b
-              >
+              <b>SYARAT DAN KETENTUTAN KHUSUS PROGRAM
+                <b>" KREDIT TANPA PERLINDUNGAN ASURANSI "</b></b>
             </div>
             <div class="mb-4 text-justify text-sm">
               Pada hari ini <b>{{ dayFull.day }}</b> tanggal
               <b>{{ dayFull.date }}</b> bulan <b>{{ dayFull.month }}</b> tahun
-              <b>{{ dayFull.year }}</b
-              >, yang bertanda tangan dibawah ini :
+              <b>{{ dayFull.year }}</b>, yang bertanda tangan dibawah ini :
             </div>
             <div class="mb-4 text-justify text-sm ps-8">
               I. <b>{{ dataPelanggan.nama }}</b> pekerjaan/jabatan
               <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
               <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                 dataPelanggan.tipe_identitas
-              }}</b
-              >) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
               bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
               disebut <b>Penerima Pinjaman.</b>
             </div>
@@ -449,9 +397,7 @@
                   <td>
                     Pemberi Pinjaman / Penerima Jaminan,
                     <br /><br /><br />
-                    <u class="uppercase"
-                      >{{ pihak1.nama }} / {{ pihak2.nama }}</u
-                    >
+                    <u class="uppercase">{{ pihak1.nama }} / {{ pihak2.nama }}</u>
                   </td>
                 </tr>
               </table>
@@ -473,7 +419,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.nama_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -482,7 +428,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.pekerjaan_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -491,7 +437,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.alamat_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
               </table>
@@ -513,10 +459,8 @@
                   <td>Pekerjaan</td>
                   <td width="25">:</td>
                   <td>
-                    <b class="uppercase"
-                      >( {{ dataPelanggan.pekerjaan_id }} )
-                      {{ dataPelanggan.pekerjaan }}</b
-                    >
+                    <b class="uppercase">( {{ dataPelanggan.pekerjaan_id }} )
+                      {{ dataPelanggan.pekerjaan }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -620,8 +564,7 @@
               <b>KSP Djaya</b> berkedudukan di Haurgeulis
               <br />
               ( selanjutnya secara sendiri-sendiri atau bersama disebut<b>
-                Pemberi Pinjaman</b
-              >
+                Pemberi Pinjaman</b>
               dengan :
               <br />
               <br />
@@ -637,10 +580,8 @@
                   <td>Pekerjaan</td>
                   <td width="25">:</td>
                   <td>
-                    <b class="uppercase"
-                      >({{ dataPelanggan.pekerjaan_id }})
-                      {{ dataPelanggan.pekerjaan }}</b
-                    >
+                    <b class="uppercase">({{ dataPelanggan.pekerjaan_id }})
+                      {{ dataPelanggan.pekerjaan }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -679,8 +620,7 @@
               <div class="w-fit text-center bg-white">
                 {{ dayFull.full_date_only }}<br />
                 Penjamin,<br /><br /><br />
-                (<u class="uppercase">{{ upCase(dataPenjamin.nama) }}</u
-                >)
+                (<u class="uppercase">{{ upCase(dataPenjamin.nama) }}</u>)
               </div>
             </div>
           </div>
@@ -720,12 +660,11 @@
             <div class="mb-4 text-justify text-sm">
               Pada hari ini <b>{{ dayFull.day }}</b> tanggal
               <b>{{ dayFull.date }}</b> bulan <b>{{ dayFull.month }}</b> tahun
-              <b>{{ dayFull.year }}</b
-              >,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
+              <b>{{ dayFull.year }}</b>,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
               dalam keadaan baik dengan rincian sebagai berikut :
             </div>
-            <div class="mb-4 text-justify" v-for="jaminan,i in dataJaminan" :key="jaminan">
-              {{ i+1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
+            <div class="mb-4 text-justify" v-for="jaminan, i in dataJaminan" :key="jaminan">
+              {{ i + 1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
               <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                 <tr>
                   <td>BPKB No</td>
@@ -759,22 +698,22 @@
                 </tr>
               </table>
               <table v-else>
-                <tr >
+                <tr>
                   <td>No Sertifikat</td>
                   <td width="25">:</td>
                   <td>{{ jaminan.atr.no_sertifikat }}</td>
                 </tr>
-                <tr >
+                <tr>
                   <td>Status Kepemilikan</td>
                   <td width="25">:</td>
                   <td>{{ jaminan.atr.status_kepemilikan }}</td>
                 </tr>
-                <tr >
+                <tr>
                   <td>IMB / Luas Tanah / Luas Bangunan</td>
                   <td width="25">:</td>
                   <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 / ${jaminan.atr.luas_bangunan} m2` }}</td>
                 </tr>
-                <tr >
+                <tr>
                   <td>Lokasi</td>
                   <td width="25">:</td>
                   <td>{{ `${jaminan.atr.lokasi}` }}</td>
@@ -810,7 +749,7 @@
   </n-card>
 </template>
 <style scoped>
-table.tblprint > tr > th {
+table.tblprint>tr>th {
   padding: 2px 0px 10px 4px;
   border: 1px solid;
 }
@@ -819,7 +758,7 @@ table.tblprint {
   font-size: 10px;
 }
 
-table.tblprint > tr > td {
+table.tblprint>tr>td {
   padding: 2px 0px 10px 4px;
   border: 1px solid;
 }
@@ -963,7 +902,7 @@ const getPrePK = async () => {
       tgl_cetak.value = res.data.tgl_cetak;
       dataPasangan.value = res.data.pasangan;
       dataPenjamin.value = res.data.penjamin;
-      dataJaminan.value=res.data.jaminan;
+      dataJaminan.value = res.data.jaminan;
       pihak1.value = res.data.pihak_1;
       pihak2.value = res.data.pihak_2;
       struktur.value = [];
@@ -988,6 +927,22 @@ const getPrePK = async () => {
     }
   });
 };
+const jaminanFetch = computed(() => {
+  let a =dataJaminan.value.map(item => {
+    if (item.type === 'kendaraan') {
+      return {
+        type: item.type,
+        no_bpkb: item.atr.no_bpkb
+      };
+    } else if (item.type === 'sertifikat') {
+      return {
+        type: item.type,
+        no_sertifikat: item.atr.no_sertifikat
+      };
+    }
+  });
+  return a;
+});
 
 const dayFull = reactive({
   print_date: computed(() => {

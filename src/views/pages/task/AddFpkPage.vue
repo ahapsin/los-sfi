@@ -19,7 +19,7 @@
     </n-alert>
   </div>
   <n-collapse>
-    <!-- <pre>{{ formAssign }}</pre> -->
+    <!-- <pre>{{ validateCheck }}</pre> -->
     <!-- <n-collapse-item title="identitas" name="1">
       <div>
         <pre>{{ dok_identitas }}</pre>
@@ -50,8 +50,8 @@
     <slot name="addition"></slot>
     <n-space vertical class="bg-sc-50 border rounded-2xl p-4">
       <n-steps :current="current" :status="currentStatus" v-model:current="current">
-        <n-step title="Pelanggan" />
-        <n-step title="Order" />
+        <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
+        <n-step title="Order" :status="statusInformasiOrder" />
         <n-step title="Tambahan" />
         <n-step title="Ekstra" />
       </n-steps>
@@ -119,7 +119,7 @@
             </n-form-item>
           </div>
         </n-form>
-        <n-form ref="formPekerjaan" :model="dataPekerjaan" :rules="rulesPekerjaan" :disabled="viewMode"
+        <n-form ref="formPelangganPekerjaan" :model="dataPekerjaan" :rules="rulesPekerjaan" :disabled="viewMode"
           :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging" label-width="auto">
           <div class="flex gap-4">
             <n-form-item label="Sektor" path="pekerjaan_id" class="w-full">
@@ -147,7 +147,7 @@
             Informasi Alamat Identitas
           </n-divider>
         </n-form>
-        <n-form ref="formIdentititas" :model="alamatIdentitas" :rules="rulesIdentitas" :disabled="viewMode"
+        <n-form ref="formPelangganAlamatIdentitas" :model="alamatIdentitas" :rules="rulesIdentitas" :disabled="viewMode"
           :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging" label-width="auto">
           <div class="flex gap-2">
             <n-form-item label="Alamat" class="w-full" path="alamat">
@@ -177,7 +177,7 @@
               salin alamat identitas</n-button>
           </div>
         </n-form>
-        <n-form ref="formAlamatTagih" :model="alamatTagih" :rules="rulesAlamatTagih" :disabled="viewMode"
+        <n-form ref="formPelangganAlamatTagih" :model="alamatTagih" :rules="rulesAlamatTagih" :disabled="viewMode"
           :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging" label-width="auto">
           <div class="flex gap-2">
             <n-form-item label="Alamat" class="w-full" path="alamat">
@@ -985,7 +985,71 @@ const tenor6 = ref([]);
 const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
-const next = () => (current.value += 1);
+
+const formPelanggan = ref(null);
+const formOrder = ref(null);
+const formPelangganPekerjaan = ref(null);
+const formPelangganAlamatIdentitas = ref(null);
+const formPelangganAlamatTagih = ref(null);
+const statusInformasiPelanggan = ref(null);
+const statusInformasiOrder = ref(null);
+const validateCheck = ref(false);
+const validateFormPelanggan = () => {
+  formPelanggan.value?.validate((errors) => {
+    if (errors) {
+      validateCheck.value = true;
+      message.error("periksa kembali isian data pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+      statusInformasiPelanggan.value = "finish";
+      validateCheck.value = false;
+    }
+  });
+  formPelangganPekerjaan.value?.validate((errors) => {
+    if (errors) {
+      validateCheck.value = true;
+      message.error("periksa kembali isian pekerjaan pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+      validateCheck.value = false;
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+  formPelangganAlamatIdentitas.value?.validate((errors) => {
+    if (errors) {
+      validateCheck.value = true;
+      message.error("periksa kembali isian alamat identitas pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+      validateCheck.value = false;
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+  formPelangganAlamatTagih.value?.validate((errors) => {
+    if (errors) {
+      validateCheck.value = true;
+      message.error("periksa kembali isian alamat tagih pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+      validateCheck.value = false;
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+  formOrder.value?.validate((errors) => {
+    if (errors) {
+      validateCheck.value = true;
+      message.error("periksa kembali isian order pelanggan");
+      statusInformasiOrder.value = "error";
+    } else {
+      validateCheck.value = false;
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+}
+const next = () => {
+  validateFormPelanggan();
+  current.value += 1
+};
 const prev = () => (current.value -= 1);
 const handleTipe = (e) => {
   tipeAngsuran.value = e;
@@ -1127,19 +1191,29 @@ const sum = (num1, num2) => {
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 const rulesPelanggan = {
   nama: {
+    trigger: "blur",
     required: true,
+    message: "nama harus diisi",
   },
   jenis_kelamin: {
+    trigger: "blur",
     required: true,
+    message: "jenis kelamin harus dipilih",
   },
   tempat_lahir: {
+    trigger: "blur",
     required: true,
+    message: "tempat lahir harus diisi ",
   },
   tgl_lahir: {
+    trigger: "blur",
     required: true,
+    message: "tanggal lahir harus diisi",
   },
   status_kawin: {
+    trigger: "blur",
     required: true,
+    message: "status kawin harus diisi ",
   },
   no_kk: {
     trigger: "blur",
@@ -1147,7 +1221,6 @@ const rulesPelanggan = {
     min: 16,
     message: "No identitas minimal 16 karakter",
   },
-
   no_identitas: {
     trigger: "blur",
     required: true,
@@ -1155,75 +1228,121 @@ const rulesPelanggan = {
     message: "No identitas minimal 16 karakter",
   },
   tipe_identitas: {
+    trigger: "blur",
     required: true,
+  },
+  sektor: {
+    trigger: "blur",
+    required: true,
+    message: "status kawin harus diisi",
   },
 };
 const rulesPekerjaan = {
   pekerjaan_id: {
+    trigger: "blur",
     required: true,
+    message: "status kawin harus diisi ",
   },
   pendidikan: {
+    trigger: "blur",
     required: true,
+    message: "pendidikan harus diisi",
   },
   telepon_selular: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
 }
 const rulesIdentitas = {
   alamat: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   rt: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   rw: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   kode_pos: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
 }
 const rulesAlamatTagih = {
   alamat: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   rt: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   rw: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   kode_pos: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
 }
 const rulesOrder = {
   order_tanggal: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   ref_pelanggan: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   surveyor_name: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   catatan_survey: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   nama_ibu: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   lama_bekerja: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   tanggungan: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   pendapatan_pribadi: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
   biaya_bulanan: {
+    trigger: "blur",
     required: true,
+    message: "harus diisi",
   },
 }
 const rulesPasangan = {}
@@ -1416,22 +1535,24 @@ const handleSave = async (e) => {
 };
 const handleSend = async (e) => {
   e.preventDefault(e);
-  formAssign.flag_pengajuan = "yes";
-  let idApp = pageData.value.id_application;
-  loadingSend.value = true;
-  const response = await useApi({
-    method: "PUT",
-    api: `cr_application/${idApp}`,
-    data: formAssign,
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error("data gagal dikirm");
-    loadingSend.value = false;
-  } else {
-    message.success("data berhasil dikirim");
-    loadingSend.value = false;
-    router.push("/task/apply-credit");
+  if (!validateCheck.value) {
+    formAssign.flag_pengajuan = "yes";
+    let idApp = pageData.value.id_application;
+    loadingSend.value = true;
+    const response = await useApi({
+      method: "PUT",
+      api: `cr_application/${idApp}`,
+      data: formAssign,
+      token: userToken,
+    });
+    if (!response.ok) {
+      message.error("data gagal dikirm");
+      loadingSend.value = false;
+    } else {
+      message.success("data berhasil dikirim");
+      loadingSend.value = false;
+      router.push("/task/apply-credit");
+    }
   }
 };
 

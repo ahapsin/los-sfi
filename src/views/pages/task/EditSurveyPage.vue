@@ -773,10 +773,29 @@ const handleTanggalLahir = (e) => {
 const formSurvey = ref(null);
 const handleSendButton=ref(true);
 const handleValid = (type) => {
+    formOrder.value?.validate((errors) => {
+        if (errors) {
+            message.error("periksa kembali isian informasi order");
+            statusInformasiOrder.value = "error";
+        }
+    });
+
+    formPelanggan.value?.validate((errors) => {
+        if (errors) {
+            message.error("periksa kembali isian data pelanggan");
+            statusDataPelanggan.value = "error";
+        }
+    });
+
+    if (jaminanStore.listJaminan.length < 1) {
+        message.error("minimal memiliki satu jaminan");
+        statusDataJaminan.value = "error";
+    }
+
     formSurvey.value?.validate((errors) => {
         if (errors) {
-            message.error("periksa kembali isian anda");
-            statusDataSurvey.value="error";
+            message.error("periksa kembali isian data survey");
+            statusDataSurvey.value = "error";
         } else {
             statusDataSurvey.value = "finish";
             handleSave(type);
