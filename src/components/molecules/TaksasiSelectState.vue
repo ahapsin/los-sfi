@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col md:flex-row gap-2">
+  <div class="grid md:grid-cols-2 gap-2">
     <n-form-item
       label="Brand / Merk"
       path="provinsi"
@@ -48,6 +48,7 @@
         v-model:value="props.pasar"
         placeholder="Harga Pasar"
         readonly
+        default-value=0
         :parse="parse"
         :format="format"
         class="w-full"
@@ -137,10 +138,8 @@ const getTipe = async () => {
     merk: props.brand,
   };
   let userToken = localStorage.getItem("token");
-  if (bodyData.merk) {
-    response();
-  }
-  const response = async () =>
+
+  const response =
     await useApi({
       method: "POST",
       api: "taksasi_code_model",
@@ -152,6 +151,7 @@ const getTipe = async () => {
   } else {
     loadingTipe.value = false;
     col_tipe.value = response.data;
+    console.log(col_tipe);
     filter_tipe.value = col_tipe.value.map((v) => ({
       label: `${v.code} - ${v.model}`,
       value: `${v.code} - ${v.model}`,
@@ -165,10 +165,8 @@ const getTahun = async () => {
     tipe: props.tipe,
   };
   let userToken = localStorage.getItem("token");
-  if (bodyData.merk) {
-    response();
-  }
-  const response = async () =>
+
+  const response = 
     await useApi({
       method: "POST",
       api: "taksasi_year",
@@ -218,20 +216,10 @@ const brandChanged = async (value, option) => {
 };
 
 const tipeChanged = async (value, option) => {
-  // let tahunOpt = _.filter(col_tipe.value, {
-  //     'code': option.value,
-  // });
-  // price.value = [];
-  // emit('update:tipe', option.value);
-  // sel_tipe.value = option.value;
-  // let tahunAvailable = tahunOpt[0].tahun;
-  // col_tahun.value = tahunAvailable.map((v, i) => ({
-  //     label: v,
-  //     value: v,
-  // }));
   let userToken = localStorage.getItem("token");
   console.log(option);
   emit("update:tipe", option.value);
+  emit("update:tahun", null);
   emit("update:pasar", 0);
   loadingTahun.value = true;
   const bodyData = {

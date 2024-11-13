@@ -1,8 +1,8 @@
 <template>
-  <div class="pt-4">
+  <div>
     <n-space vertical>
       <n-card
-  
+
         title="Data Pelanggan"
         :segmented="{
           content: true,
@@ -14,10 +14,11 @@
             <div class="me-1">
               <n-popover trigger="click" placement="bottom-end">
                 <template #trigger>
-                  <n-button circle>
+                  <n-button :circle="width <= 520 ? true:false">
                     <n-icon>
                       <search-icon />
                     </n-icon>
+                    <span v-if="width >= 520">Cari</span>
                   </n-button>
                 </template>
                 <n-space vertical>
@@ -37,31 +38,23 @@
               </n-popover>
             </div>
             <div>
-              <n-button type="success" secondary circle @click="downloadCsv">
+              <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true:false">
                 <template #icon>
                   <n-icon>
                     <download-icon />
                   </n-icon>
                 </template>
+                <span v-if="width >= 520">Download</span>
               </n-button>
             </div>
-            <div class="hidden md:flex">
-              <n-button type="primary" strong @click="handleAdd">
+            <div >
+              <n-button type="primary" strong @click="handleAdd" :circle="width <= 520 ? true:false">
                 <template #icon>
                   <n-icon>
                     <add-icon />
                   </n-icon>
                 </template>
-                tambah
-              </n-button>
-            </div>
-            <div class="md:hidden">
-              <n-button type="primary" @click="handleAdd">
-                <template #icon>
-                  <n-icon>
-                    <add-icon />
-                  </n-icon>
-                </template>
+                <span v-if="width >= 520">Tambah</span>
               </n-button>
             </div>
           </n-space>
@@ -106,6 +99,7 @@ import {
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
 import { useLoadingBar } from "naive-ui";
+import { useWindowSize } from "@vueuse/core";
 const loadingBar = useLoadingBar();
 const message = useMessage();
 const dialog = useDialog();
@@ -114,6 +108,10 @@ const dataTable = ref([]);
 const tableRef = ref();
 const downloadCsv = () =>
   tableRef.value?.downloadCsv({ fileName: "export-data-survey" });
+
+
+
+const { width } = useWindowSize();
 const columns = [
   {
     title: "Tanggal",
@@ -145,7 +143,7 @@ const columns = [
       return h(
         NTag,
         {
-          type: statusTag(row.status),
+          type: statusTag(row.status_code),
           size: "small",
         },
         { default: () => statusLabel(row.status) }
@@ -162,6 +160,7 @@ const columns = [
         NDropdown,
         {
           options: options(row),
+
           size: "small",
           onSelect: (e) => {
             if (e === "hapus") {
@@ -180,6 +179,7 @@ const columns = [
             NButton,
             {
               round: true,
+              type: statusTag(row.status_code),
               size: "small",
             },
             { default: () => "Action" }
@@ -191,23 +191,25 @@ const columns = [
 ];
 const searchBox = ref();
 const statusTag = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
+  if (e === "DRSVY") {
     return "warning";
-  } else if (status === "2") {
-    return "info";
   }
-  return "info";
+  if (e === "CROR") {
+    return "success";
+  }
+  if (e === "APKPS") {
+    return "success";
+  }
+  if (e === "APHO") {
+    return "success";
+  }
+  if (e === "REORKPS") {
+    return "error";
+  }
 };
 const statusLabel = (e) => {
-  let status = e.at(0);
-  if (status === "1") {
-    return "menunggu PFK";
-  } else if (status === "2") {
-    return "pembuatan PFK";
-  } else {
-    return e.substring(2);
-  }
+    let upLabel=e;
+    return upLabel.toUpperCase();
 };
 const format = (e) => {
   const toNum = parseInt(e);
@@ -277,8 +279,8 @@ const renderIcon = (icon) => {
   };
 };
 const options = (e) => {
-  let status = e.status.at(0);
-  if (status === "1") {
+  let status = e.status_code;
+  if (status === "DRSVY") {
     return [
       {
         label: "Edit",

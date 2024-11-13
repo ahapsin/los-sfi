@@ -129,7 +129,7 @@ const routes = [
       },
       {
         path: "Approval",
-        name: "Approval",
+        name: "approval",
         component: () => import("../views/pages/task/ApprovalPage.vue"),
       },
       {

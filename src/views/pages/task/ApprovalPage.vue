@@ -1,50 +1,42 @@
 <template>
-  <div>
-    <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`" class="bg-white">
-        <template #header-extra>
-          <n-space class="!gap-1">
-            <div class="me-1">
-              <n-popover trigger="click" placement="bottom-end">
-                <template #trigger>
-                  <n-button>
-                    <n-icon>
-                      <search-icon />
-                    </n-icon>
-                  </n-button>
+    <div>
+        <n-space vertical>
+            <n-card :title="`Tabel ${$route.name}`" class="bg-white" :segmented="true">
+                <template #header-extra>
+                    <n-space class="!gap-1">
+                        <div class="me-1">
+                            <n-popover trigger="click" placement="bottom-end">
+                                <template #trigger>
+                                    <n-button>
+                                        <n-icon>
+                                            <search-icon />
+                                        </n-icon>
+                                        <span v-if="width >= 520">Cari</span>
+                                    </n-button>
+                                </template>
+                                <n-input autofocus="true" clearable placeholder="cari disini.."
+                                    v-model:value="searchBox" />
+                            </n-popover>
+                        </div>
+                        <div class="flex gap-2"  v-if="unReadBadge() > 0">
+                            <n-badge :value="unReadBadge()" :max="15">
+                                <n-button @click="handleUnRead">
+                                    Belum diperiksa
+                                </n-button>
+                            </n-badge>
+                            <n-button @click="handleAll" v-if="cekUnread">
+                                Semua
+                            </n-button>
+                        </div>
+                    </n-space>
                 </template>
-                <n-input
-                  autofocus="true"
-                  clearable
-                  placeholder="cari disini.."
-                  v-model:value="searchBox"
-                />
-              </n-popover>
-            </div>
-            <div class="md:hidden">
-              <n-button circle>
-                <template #icon>
-                  <n-icon>
-                    <download-icon />
-                  </n-icon>
-                </template>
-              </n-button>
-            </div>
-          </n-space>
-        </template>
-        <n-space vertical :size="12">
-          <n-data-table
-            :loading="loadData"
-            size="small"
-            :columns="columns"
-            :data="showData"
-            :pagination="pagination"
-            ellipsis
-          />
+                <n-space vertical :size="12">
+                    <n-data-table :loading="loadData" size="small" :columns="columns" :data="showData"
+                        :pagination="pagination" ellipsis />
+                </n-space>
+            </n-card>
         </n-space>
-      </n-card>
-    </n-space>
-  </div>
+    </div>
 </template>
 <script setup>
 import { ref, onMounted, h, computed } from "vue";
@@ -57,7 +49,10 @@ import {
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 import { useLoadingBar } from "naive-ui";
+import { useWindowSize } from "@vueuse/core";
+import _ from "lodash";
 const loadingBar = useLoadingBar();
+const { width } = useWindowSize();
 
 const message = useMessage();
 const dataTable = ref([]);
@@ -99,10 +94,10 @@ const columns = [
         NTag,
         {
           bordered: false,
-          type: statusTag(row.status),
+          type: statusTag(row.status_code),
           size: "small",
         },
-        { default: () => row.status }
+        { default: () => row.status.toUpperCase() }
       );
     },
   },
@@ -115,11 +110,12 @@ const columns = [
         NButton,
         {
           size: "small",
+            type: statusTag(row.status_code),
           onClick: () => {
             handelAction(row);
           },
         },
-        { default: () => statusHandle(row) }
+        { default: () => statusHandle(row.status_code) }
       );
     },
   },
@@ -129,20 +125,21 @@ const format = (e) => {
   return toNum.toLocaleString("en-US");
 };
 const statusTag = (e) => {
-  let status = e.at(0);
-  if (status === "1" || status === "2") {
-    return "warning";
-  } else if (status === "3") {
-    return "success";
-  }
+    if (e == "WAKPS") {
+        return "warning";
+    }
+    if (e == "APKPS") {
+        return "success";
+    }
+    if (e == "APHO") {
+        return "success";
+    }
 };
 const statusHandle = (e) => {
-  if (e.status.at(0) == 1) {
-    return "periksa";
-  } else if (e.status.at(0) == 4) {
-    return "nego";
-  } else {
-    return "lihat";
+  if (e == "WAKPS") {
+    return "Periksa Order";
+  } else{
+    return "Lihat Order";
   }
 };
 const loadData = ref(false);
@@ -165,17 +162,12 @@ const getData = async () => {
   }
 };
 const handelAction = (e) => {
-  if (e.status.at(0) == 1) {
+  if (e.status_code === 'WAKPS') {
     router.push({
       name: "Konfirmasi Pengajuan Kredit",
       params: { idapplication: e.id, action: "view" },
     });
-  } else if (e.status.at(0) == 4) {
-    router.push({
-      name: "Nego Pengajuan Kredit",
-      params: { idapplication: e.id },
-    });
-  } else {
+  }  else {
     router.push({
       name: "Detail Pengajuan Kredit",
       params: { idapplication: e.id },
@@ -186,7 +178,21 @@ const pagination = {
   pageSize: 10,
 };
 onMounted(() => getData());
+const cekUnread=ref(false);
+const handleUnRead = ()=>{
+    cekUnread.value=true;
+    searchBox.value="menunggu";
+}
+const handleAll = ()=>{
+    cekUnread.value = false;
+    searchBox.value="";
+}
+const unReadBadge = () => {
+    let count = _.filter(dataTable.value, { 'status_code': 'WAKPS' });
+    return count.length;
+}
 const showData = computed(() => {
+
   return useSearch(dataTable.value, searchBox.value);
 });
 </script>
