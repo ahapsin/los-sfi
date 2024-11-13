@@ -49,7 +49,7 @@
   <n-spin :show="suspense">
     <slot name="addition"></slot>
     <n-space vertical class="bg-sc-50 border rounded-2xl p-4">
-      <n-steps :current="current" :status="currentStatus" v-model:current="current">
+      <n-steps :current="current" v-model:current="current" :status="currentStatus">
         <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
         <n-step title="Order" :status="statusInformasiOrder" />
         <n-step title="Tambahan" />
@@ -283,7 +283,7 @@
           </div> -->
         </n-form>
       </n-card>
-      <n-card v-if="current == 2" title="Informasi Order" :segmented="{
+      <n-card v-show="current == 2" title="Informasi Order" :segmented="{
         content: true,
         footer: 'soft',
       }">
@@ -291,7 +291,6 @@
           require-mark-placement="right-hanging" label-width="auto" :disabled="viewMode">
           <div class="flex gap-2">
             <n-form-item label="Tanggal Order" path="order_tanggal" class="w-full">
-
               <n-input :value="dataOrder.order_tanggal" disabled></n-input>
             </n-form-item>
             <!-- <pre>{{ formAssign }}</pre> -->
@@ -509,7 +508,7 @@
           </div> -->
         </n-form>
       </n-card>
-      <n-card v-if="current == 3" title="Informasi Tambahan" :segmented="{
+      <n-card v-show="current == 3" title="Informasi Tambahan" :segmented="{
         content: true,
         footer: 'soft',
       }">
@@ -666,7 +665,7 @@
           </n-dynamic-input>
         </n-form>
       </n-card>
-      <n-card v-if="current == 4" title="Data Ekstra" :segmented="{
+      <n-card v-show="current == 4" title="Data Ekstra" :segmented="{
         content: true,
         footer: 'soft',
       }" :loading="true">
@@ -992,7 +991,7 @@ const formPelangganAlamatIdentitas = ref(null);
 const formPelangganAlamatTagih = ref(null);
 const statusInformasiPelanggan = ref(null);
 const statusInformasiOrder = ref(null);
-const validateCheck = ref(false);
+const validateCheck = ref(true);
 const validateFormPelanggan = () => {
   formPelanggan.value?.validate((errors) => {
     if (errors) {
@@ -1034,6 +1033,8 @@ const validateFormPelanggan = () => {
       statusInformasiPelanggan.value = "finish";
     }
   });
+}
+const validateFormOrder = () => {
   formOrder.value?.validate((errors) => {
     if (errors) {
       validateCheck.value = true;
@@ -1041,12 +1042,12 @@ const validateFormPelanggan = () => {
       statusInformasiOrder.value = "error";
     } else {
       validateCheck.value = false;
-      statusInformasiPelanggan.value = "finish";
+      statusInformasiOrder.value = "finish";
     }
   });
 }
 const next = () => {
-  validateFormPelanggan();
+
   current.value += 1
 };
 const prev = () => (current.value -= 1);
@@ -1297,6 +1298,9 @@ const rulesAlamatTagih = {
     message: "harus diisi",
   },
 }
+const numberValidator = (rule, value) => {
+  return value > 0;
+};
 const rulesOrder = {
   order_tanggal: {
     trigger: "blur",
@@ -1326,21 +1330,25 @@ const rulesOrder = {
   lama_bekerja: {
     trigger: "blur",
     required: true,
+    validator: numberValidator,
     message: "harus diisi",
   },
   tanggungan: {
     trigger: "blur",
     required: true,
+    validator: numberValidator,
     message: "harus diisi",
   },
   pendapatan_pribadi: {
     trigger: "blur",
     required: true,
+    validator: numberValidator,
     message: "harus diisi",
   },
   biaya_bulanan: {
     trigger: "blur",
     required: true,
+    validator: numberValidator,
     message: "harus diisi",
   },
 }
@@ -1498,17 +1506,20 @@ const format = (value) => {
 const notifUsia = ref();
 const noteUsia = ref(false);
 const handleTanggalLahir = (e) => {
+  notifUsia.value = true;
   var month_diff = new Date().getTime() - e;
-  var currentAge = Math.floor(month_diff / 31557600000);
-  if (currentAge > 19 && currentAge < 60) {
+  var currentAge = month_diff / 31557600000;
+  let flor = Math.floor(currentAge);
+  if (flor >= 19 && flor <=  60) {
     notifUsia.value = false;
+    noteUsia.value = flor;
   } else {
-    if (currentAge < 19) {
+    if (flor <= 19) {
       notifUsia.value = true;
-      noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
-    } else if (currentAge > 60) {
+      noteUsia.value = `usia ${flor} tahun, usia < dari 19 Tahun`;
+    } else {
       notifUsia.value = true;
-      noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+      noteUsia.value = `usia ${flor} tahun, usia > dari 60 Tahun`;
     }
   }
 };
@@ -1533,6 +1544,8 @@ const handleSave = async (e) => {
   }
 };
 const handleSend = async (e) => {
+  validateFormPelanggan();
+  validateFormOrder();
   e.preventDefault(e);
   if (!validateCheck.value) {
     formAssign.flag_pengajuan = "yes";

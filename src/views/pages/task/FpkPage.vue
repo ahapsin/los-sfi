@@ -243,10 +243,10 @@ const columns = [
         let typeUpload;
         let classType;
         if (row.attachment.length <= 0) {
-          classType = "animate-bounce";
+          classType = "animate-pulse";
           typeUpload = "error";
         } else {
-          classType = "animate-none";
+          classType = "animate";
           typeUpload = "success";
         }
         return h(
@@ -255,7 +255,6 @@ const columns = [
             class: classType,
             type: typeUpload,
             secondary: true,
-            circle: true,
             onClick: () => {
               selectedData.value = row;
               showModal.value = true;

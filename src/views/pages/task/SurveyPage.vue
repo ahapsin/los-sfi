@@ -200,6 +200,9 @@ const statusTag = (e) => {
   if (e === "APKPS") {
     return "success";
   }
+  if (e === "WAKPS") {
+    return "info";
+  }
   if (e === "APHO") {
     return "success";
   }

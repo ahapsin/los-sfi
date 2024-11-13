@@ -1,5 +1,5 @@
 <template>
-    <n-scrollbar x-scrollable v-if="width > 502">
+    <n-scrollbar x-scrollable>
         <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
                 <n-step title="Informasi Order" :status="statusInformasiOrder" />
@@ -167,7 +167,7 @@
                                 v-model:formatted-value="pelanggan.tgl_lahir" value-format="yyyy-MM-dd"
                                 format="dd-MM-yyyy" type="date" @update:value="handleTanggalLahir" />
                             <span class="absolute text-xs text-orange-500 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
-                                v-show="noteUsia">{{ noteUsia }}</span>
+                                v-show="notifUsia">{{ noteUsia }}</span>
                         </div>
                     </n-form-item>
                     <n-form-item label="No Handphone" path="no_hp" class="w-full">
@@ -331,7 +331,7 @@
                             v-model:formatted-value="survey.tgl_survey" disabled value-format="yyyy-MM-dd"
                             format="dd-MM-yyyy" type="date" />
                     </n-form-item>
-                    <n-form-item label="Lama Bekerja" path="lama_berkerja" class="w-full">
+                    <n-form-item label="Lama Bekerja" path="lama_bekerja" class="w-full">
                         <n-input :allow-input="onlyAllowNumber" placeholder="lama bekerja"
                             v-model:value="survey.lama_bekerja" class="w-full">
                             <template #suffix> bulan </template>
@@ -339,23 +339,23 @@
                     </n-form-item>
                 </div>
                 <div class="md:flex gap-4">
-                    <n-form-item label="Pendapatan pelanggan " path="pribadi" class="w-full">
+                    <n-form-item label="Pendapatan pelanggan " path="pendapatan_pribadi" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pribadi" placeholder="pendapatan pelanggan"
+                            v-model:value="survey.pendapatan_pribadi" placeholder="pendapatan pelanggan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
-                    <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
+                    <n-form-item label="Pendapatan Pasangan" path="penghasilan_pasangan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.pasangan" placeholder="pendapatan pasangan"
+                            v-model:value="survey.pendapatan_pasangan" placeholder="pendapatan pasangan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
-                    <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
+                    <n-form-item label="Pendapatan Lainnya" path="penghasilan_pasangan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan.lainnya" placeholder="pendapatan lain-lain"
+                            v-model:value="survey.pendapatan_lainnya" placeholder="pendapatan lain-lain"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
@@ -604,34 +604,34 @@ const statusDataPelanggan = ref(null);
 const statusDataJaminan = ref(null);
 const statusDataSurvey = ref(null);
 const next = () => {
-    if (current.value === 1) {
-        formOrder.value?.validate((errors) => {
-            if (errors) {
-                message.error("periksa kembali isian anda");
-                statusInformasiOrder.value = "error";
-            } else {
-                statusInformasiOrder.value = "finish";
-            }
-        });
-    } else if (current.value === 2) {
-        formPelanggan.value?.validate((errors) => {
-            if (errors) {
-                message.error("periksa kembali isian anda");
-                statusDataPelanggan.value = "error";
-            }
-            else {
-                statusDataPelanggan.value = "finish";
-            }
-        });
-    }
-    else if (current.value === 3) {
-        if (jaminanStore.listJaminan.length < 1) {
-            message.error("minimal memiliki satu jaminan");
-            statusDataJaminan.value = "error";
-        } else {
-            statusDataJaminan.value = "finish";
-        }
-    }
+    // if (current.value === 1) {
+    //     formOrder.value?.validate((errors) => {
+    //         if (errors) {
+    //             message.error("periksa kembali isian anda");
+    //             statusInformasiOrder.value = "error";
+    //         } else {
+    //             statusInformasiOrder.value = "finish";
+    //         }
+    //     });
+    // } else if (current.value === 2) {
+    //     formPelanggan.value?.validate((errors) => {
+    //         if (errors) {
+    //             message.error("periksa kembali isian anda");
+    //             statusDataPelanggan.value = "error";
+    //         }
+    //         else {
+    //             statusDataPelanggan.value = "finish";
+    //         }
+    //     });
+    // }
+    // else if (current.value === 3) {
+    //     if (jaminanStore.listJaminan.length < 1) {
+    //         message.error("minimal memiliki satu jaminan");
+    //         statusDataJaminan.value = "error";
+    //     } else {
+    //         statusDataJaminan.value = "finish";
+    //     }
+    // }
     current.value += 1;
 };
 const prev = () => (current.value -= 1);
@@ -692,7 +692,7 @@ const initPelanggan = {
     kelurahan: "",
 };
 const pelanggan = reactive({ ...initPelanggan });
-// const jaminan = ref({
+// 'const jaminan = ref({'
 //     tipe: null,
 //     tahun: null,
 //     merk: "",
@@ -711,11 +711,9 @@ let month = (dt.getMonth() + 1).toString().padStart(2, "0");
 let day = dt.getDate().toString().padStart(2, "0");
 const survey = reactive({
     lama_bekerja: "",
-    penghasilan: {
-        pribadi: null,
-        pasangan: null,
-        lainnya: null,
-    },
+    penghasilan_pribadi: null,
+    penghasilan_pasangan: null,
+    penghasilan_lainnya: null,
     pengeluaran: null,
     usaha: "",
     sektor: "",
@@ -795,28 +793,36 @@ const format = (value) => {
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
+    notifUsia.value = true;
     var month_diff = new Date().getTime() - e;
-    var currentAge = Math.floor(month_diff / 31557600000);
-    if (currentAge > 19 && currentAge < 60) {
+    var currentAge = month_diff / 31557600000;
+    let flor = Math.floor(currentAge);
+    if (flor > 19 && flor < 60) {
         notifUsia.value = false;
+        noteUsia.value = flor;
     } else {
-        if (currentAge < 19) {
+        if (flor < 19) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
-        } else if (currentAge > 60) {
+            noteUsia.value = `usia ${flor} tahun, usia < dari 19 Tahun`;
+        } else {
             notifUsia.value = true;
-            noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+            noteUsia.value = `usia ${flor} tahun, usia > dari 60 Tahun`;
         }
     }
 };
 const formSurvey = ref(null);
 const handleSendButton = ref(true);
+const validCheck=ref(true);
 const handleValid = (type) => {
 
     formOrder.value?.validate((errors) => {
         if (errors) {
+            validCheck.value=true;
             message.error("periksa kembali isian informasi order");
             statusInformasiOrder.value = "error";
+        } else {
+            validCheck.value=false;
+            statusInformasiOrder.value = "finish";
         }
     });
 
@@ -824,23 +830,35 @@ const handleValid = (type) => {
         if (errors) {
             message.error("periksa kembali isian data pelanggan");
             statusDataPelanggan.value = "error";
+            validCheck.value=true;
+        } else {
+            statusDataPelanggan.value = "finish";
+            validCheck.value=false;
         }
     });
 
     if (jaminanStore.listJaminan.length < 1) {
         message.error("minimal memiliki satu jaminan");
         statusDataJaminan.value = "error";
+        validCheck.value=true;
+    } else {
+        statusDataJaminan.value = "finish";
+        validCheck.value=false;
+
     }
 
     formSurvey.value?.validate((errors) => {
         if (errors) {
             message.error("periksa kembali isian data survey");
             statusDataSurvey.value = "error";
+            validCheck.value=true;
         } else {
             statusDataSurvey.value = "finish";
-            handleSave(type);
+            validCheck.value=false;
+            
         }
     });
+    if(!validCheck.value){handleSave(type)};
 
 }
 const endForm = () => {
@@ -875,6 +893,9 @@ const handleSave = async (type) => {
 };
 const plafondValidator = (rule, value) => {
     return value > 1000000;
+};
+const numberValidator = (rule, value) => {
+    return value > 0;
 };
 const rulesOrder = {
     plafond: {
@@ -939,8 +960,26 @@ const rulesSurvey = {
     catatan_survey: {
         trigger: "blur",
         required: true,
-        message: "Catatan survey harus diisi",
+        message: " harus diisi",
     },
+    lama_bekerja: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    pendapatan_pribadi: {
+        trigger: "blur",
+        required: true,
+        validator: numberValidator,
+        message: "harus diisi",
+    },
+    pengeluaran: {
+        trigger: "blur",
+        required: true,
+        validator: numberValidator,
+        message: "harus diisi",
+    },
+
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 onMounted(() => {

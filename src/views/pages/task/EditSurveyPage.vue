@@ -1,6 +1,6 @@
 <template>
     <blacklist-alert :pesan="bl_pesan" />
-    <n-scrollbar x-scrollable v-if="width > 502">
+    <n-scrollbar x-scrollable>
         <n-space class="bg-sc-50 border rounded-xl p-4 mb-2">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
                 <n-step title="Informasi Order" :status="statusInformasiOrder" />
@@ -336,7 +336,7 @@
                             v-model:formatted-value="survey.tgl_survey" disabled value-format="yyyy-MM-dd"
                             format="dd-MM-yyyy" type="date" />
                     </n-form-item>
-                    <n-form-item label="Lama Bekerja" path="lama_berkerja" class="w-full">
+                    <n-form-item label="Lama Bekerja" path="lama_bekerja" class="w-full">
                         <n-input :allow-input="onlyAllowNumber" placeholder="lama bekerja"
                             v-model:value="survey.lama_bekerja" class="w-full">
                             <template #suffix> bulan </template>
@@ -344,24 +344,23 @@
                     </n-form-item>
                 </div>
                 <div class="md:flex gap-4">
-                    <!-- {{ survey }} -->
-                    <n-form-item label="Pendapatan pelanggan " path="pribadi" class="w-full">
+                    <n-form-item label="Pendapatan pelanggan " path="pendapatan_pribadi" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan_pribadi" placeholder="pendapatan pelanggan"
+                            v-model:value="survey.pendapatan_pribadi" placeholder="pendapatan pelanggan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
-                    <n-form-item label="Pendapatan Pasangan" path="pendapatan" class="w-full">
+                    <n-form-item label="Pendapatan Pasangan" path="penghasilan_pasangan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan_pasangan" placeholder="pendapatan pasangan"
+                            v-model:value="survey.pendapatan_pasangan" placeholder="pendapatan pasangan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
-                    <n-form-item label="Pendapatan Lainnya" path="pendapatan" class="w-full">
+                    <n-form-item label="Pendapatan Lainnya" path="penghasilan_pasangan" class="w-full">
                         <n-input-number class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.penghasilan_lainnya" placeholder="pendapatan lain-lain"
+                            v-model:value="survey.pendapatan_lainnya" placeholder="pendapatan lain-lain"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
@@ -387,8 +386,8 @@
                         }" type="textarea" placeholder="catatan survey" />
                 </n-form-item>
                 <n-divider title-placement="left"> Dokumen Pendukung </n-divider>
-                <file-upload :def_preview="true" :multi="true" :data_multi="pageData.dokumen_pendukung"
-                    title="dokumen pendukung" endpoint="image_upload_prospect" type="other" :idapp="idApp" />
+                <file-upload :def_preview="true" title="dokumen pendukung" endpoint="image_upload_prospect" type="other"
+                    :idapp="dynamicForm.id" />
             </n-form>
         </div>
         <template #action>
@@ -755,52 +754,64 @@ const format = (value) => {
 const notifUsia = ref(false);
 const noteUsia = ref();
 const handleTanggalLahir = (e) => {
+    notifUsia.value = true;
     var month_diff = new Date().getTime() - e;
-    var currentAge = Math.floor(month_diff / 31557600000);
-    noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
-    if (currentAge > 19 && currentAge < 60) {
+    var currentAge = month_diff / 31557600000;
+    let flor = Math.floor(currentAge);
+    if (flor > 19 && flor < 60) {
         notifUsia.value = false;
-    } else {
-        if (currentAge < 19) {
+        noteUsia.value = flor;
+    } else{
+        if (flor < 19) {
             notifUsia.value = true;
-            noteUsia.value = `usia ${currentAge} tahun, usia < dari 19 Tahun`;
-        } else if (currentAge > 60) {
+            noteUsia.value = `usia ${flor} tahun, usia < dari 19 Tahun`;
+        } else {
             notifUsia.value = true;
-            noteUsia.value = `usia ${currentAge} tahun, usia > dari 60 Tahun`;
+            noteUsia.value = `usia ${flor} tahun, usia > dari 60 Tahun`;
         }
     }
 };
 const formSurvey = ref(null);
 const handleSendButton=ref(true);
 const handleValid = (type) => {
-    formOrder.value?.validate((errors) => {
-        if (errors) {
-            message.error("periksa kembali isian informasi order");
-            statusInformasiOrder.value = "error";
-        }
-    });
 
-    formPelanggan.value?.validate((errors) => {
-        if (errors) {
-            message.error("periksa kembali isian data pelanggan");
-            statusDataPelanggan.value = "error";
-        }
-    });
-
-    if (jaminanStore.listJaminan.length < 1) {
-        message.error("minimal memiliki satu jaminan");
-        statusDataJaminan.value = "error";
+formOrder.value?.validate((errors) => {
+    if (errors) {
+        message.error("periksa kembali isian informasi order");
+        statusInformasiOrder.value = "error";
+    } else {
+        statusInformasiOrder.value = "finish";
     }
+});
 
-    formSurvey.value?.validate((errors) => {
-        if (errors) {
-            message.error("periksa kembali isian data survey");
-            statusDataSurvey.value = "error";
-        } else {
-            statusDataSurvey.value = "finish";
-            handleSave(type);
-        }
-    });
+formPelanggan.value?.validate((errors) => {
+    if (errors) {
+        message.error("periksa kembali isian data pelanggan");
+        statusDataPelanggan.value = "error";
+    } else {
+        statusDataPelanggan.value = "finish";
+
+    }
+});
+
+if (jaminanStore.listJaminan.length < 1) {
+    message.error("minimal memiliki satu jaminan");
+    statusDataJaminan.value = "error";
+} else {
+    statusDataJaminan.value = "finish";
+
+}
+
+formSurvey.value?.validate((errors) => {
+    if (errors) {
+        message.error("periksa kembali isian data survey");
+        statusDataSurvey.value = "error";
+    } else {
+        statusDataSurvey.value = "finish";
+        handleSave(type);
+    }
+});
+
 }
 const endForm = () => {
     formSurvey.value?.validate((errors) => {
@@ -895,14 +906,33 @@ const rulesPelanggan = {
         message: "Alamat harus diisi",
     },
 };
-
-
+const numberValidator = (rule, value) => {
+    return value > 0;
+};
 const rulesSurvey = {
     catatan_survey: {
         trigger: "blur",
         required: true,
-        message: "Catatan survey harus diisi",
+        message: " harus diisi",
     },
+    lama_bekerja: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    pendapatan_pribadi: {
+        trigger: "blur",
+        required: true,
+        validator: numberValidator,
+        message: "harus diisi",
+    },
+    pengeluaran: {
+        trigger: "blur",
+        required: true,
+        validator: numberValidator,
+        message: "harus diisi",
+    },
+
 };
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 
