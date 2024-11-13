@@ -858,7 +858,6 @@ import {
   EditOutlined as EditIcon,
   RemoveRedEyeOutlined as ViewIcon,
   DeleteOutlineFilled as DeleteIcon,
-  WarningRound as WarningIcon,
   ChevronLeftSharp as ArrowBack,
   ChevronRightSharp as ArrowForward,
   AccountCircleRound as AccountIcon,

@@ -692,19 +692,19 @@ const initPelanggan = {
     kelurahan: "",
 };
 const pelanggan = reactive({ ...initPelanggan });
-const jaminan = ref({
-    tipe: null,
-    tahun: null,
-    merk: "",
-    warna: "",
-    atas_nama: "",
-    no_polisi: "",
-    no_rangka: "",
-    no_mesin: "",
-    no_bpkb: "",
-    no_stnk: "",
-    nilai: null,
-});
+// const jaminan = ref({
+//     tipe: null,
+//     tahun: null,
+//     merk: "",
+//     warna: "",
+//     atas_nama: "",
+//     no_polisi: "",
+//     no_rangka: "",
+//     no_mesin: "",
+//     no_bpkb: "",
+//     no_stnk: "",
+//     nilai: null,
+// });
 var dt = new Date();
 let year = dt.getFullYear();
 let month = (dt.getMonth() + 1).toString().padStart(2, "0");

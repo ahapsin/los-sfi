@@ -196,42 +196,70 @@
               <td>
                 Guna menjamin pembayaran pinjaman tersebut diatas maka Pihak
                 Kedua dengan ini menyerahkan jaminan barang miliknya sendiri
-                berupa SEPEDA MOTOR, dengan dibuktikan diserahkannya Bukti
+                berupa KENDARAAN / SERTIFIKAT, dengan dibuktikan diserahkannya Bukti
                 Kepemilikan dengan spesifikasi sebagai berikut
               </td>
             </tr>
             <tr>
               <td>
-                <br />
-                <table>
-                  <tr>
-                    <td>BPKB No</td>
-                    <td width="25">:</td>
-                    <td>{{ pkData.no_bpkb }}</td>
-                  </tr>
-                  <tr>
-                    <td>BPKB atas nama</td>
-                    <td width="25">:</td>
-                    <td>{{ pkData.atas_nama }}</td>
-                  </tr>
-                  <tr>
-                    <td>Merk/Type/Tahun</td>
-                    <td width="25">:</td>
-                    <td>
-                      {{ `${pkData.merk}/${pkData.type}/${pkData.tahun}` }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Warna/No.Polisi</td>
-                    <td width="25">:</td>
-                    <td>{{ `${pkData.warna}/${pkData.no_polisi}` }}</td>
-                  </tr>
-                  <tr>
-                    <td>No. Rangka/Mesin</td>
-                    <td width="25">:</td>
-                    <td>{{ `${pkData.no_rangka}/${pkData.no_mesin}` }}</td>
-                  </tr>
-                </table>
+                <div class="text-justify pt-2" v-for="jaminan, i in dataJaminan" :key="jaminan">
+                  {{ i + 1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
+                  <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
+                    <tr>
+                      <td>BPKB No</td>
+                      <td width="25">:</td>
+                      <td>{{ jaminan.no_bpkb }}</td>
+                    </tr>
+                    <tr>
+                      <td>BPKB atas nama</td>
+                      <td width="25">:</td>
+                      <td>{{ jaminan.atr.atas_nama }}</td>
+                    </tr>
+                    <tr>
+                      <td>Merk/Type/Tahun</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.merk}/${jaminan.atr.tipe}/${jaminan.atr.tahun}` }}</td>
+                    </tr>
+                    <tr>
+                      <td>Warna/No.Polisi</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.warna}/${jaminan.atr.no_polisi}` }}</td>
+                    </tr>
+                    <tr>
+                      <td>No. Rangka/Mesin</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.no_rangka}/${jaminan.atr.no_mesin}` }}</td>
+                    </tr>
+                    <tr>
+                      <td>No. Faktur</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.no_faktur}` }}</td>
+                    </tr>
+                  </table>
+                  <table v-else>
+                    <tr>
+                      <td>No Sertifikat</td>
+                      <td width="25">:</td>
+                      <td>{{ jaminan.atr.no_sertifikat }}</td>
+                    </tr>
+                    <tr>
+                      <td>Status Kepemilikan</td>
+                      <td width="25">:</td>
+                      <td>{{ jaminan.atr.status_kepemilikan }}</td>
+                    </tr>
+                    <tr>
+                      <td>IMB / Luas Tanah / Luas Bangunan</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 / ${jaminan.atr.luas_bangunan} m2` }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Lokasi</td>
+                      <td width="25">:</td>
+                      <td>{{ `${jaminan.atr.lokasi}` }}</td>
+                    </tr>
+                  </table>
+                </div>
               </td>
             </tr>
             <tr>
@@ -317,7 +345,7 @@
               <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
               <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                 dataPelanggan.tipe_identitas
-                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+              }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
               bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
               disebut <b>Penerima Pinjaman.</b>
             </div>
@@ -419,7 +447,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.nama_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -428,7 +456,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.pekerjaan_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -437,7 +465,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.alamat_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
               </table>
@@ -730,7 +758,7 @@
               <table class="!text-sm w-full">
                 <tr>
                   <td class="py-4 pr-4">
-                    Pengirim,
+                    Pemberi,
                     <br /><br /><br />
                     <u class="uppercase">{{ pihak2.nama }}</u>
                   </td>
@@ -775,7 +803,7 @@ import { useRoute } from "vue-router";
 import { usePDF } from "vue3-pdfmake";
 import { useApi } from "../../../helpers/axios";
 import router from "../../../router";
-import CollateralCheck from "../../../components/atoms/CollateralCheck.vue";
+// import CollateralCheck from "../../../components/atoms/CollateralCheck.vue";
 const prosesPK = ref(false);
 const pageData = ref([]);
 const pk = ref();
@@ -927,22 +955,22 @@ const getPrePK = async () => {
     }
   });
 };
-const jaminanFetch = computed(() => {
-  let a =dataJaminan.value.map(item => {
-    if (item.type === 'kendaraan') {
-      return {
-        type: item.type,
-        no_bpkb: item.atr.no_bpkb
-      };
-    } else if (item.type === 'sertifikat') {
-      return {
-        type: item.type,
-        no_sertifikat: item.atr.no_sertifikat
-      };
-    }
-  });
-  return a;
-});
+// const jaminanFetch = computed(() => {
+//   let a =dataJaminan.value.map(item => {
+//     if (item.type === 'kendaraan') {
+//       return {
+//         type: item.type,
+//         no_bpkb: item.atr.no_bpkb
+//       };
+//     } else if (item.type === 'sertifikat') {
+//       return {
+//         type: item.type,
+//         no_sertifikat: item.atr.no_sertifikat
+//       };
+//     }
+//   });
+//   return a;
+// });
 
 const dayFull = reactive({
   print_date: computed(() => {
