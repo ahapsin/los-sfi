@@ -992,16 +992,17 @@ const formPelangganAlamatTagih = ref(null);
 const statusInformasiPelanggan = ref(null);
 const statusInformasiOrder = ref(null);
 const countError = ref(0);
-const validateFormPelanggan = () => {
-  formPelanggan.value?.validate((errors) => {
+const validateFormPelanggan = async () => {
+  await formPelanggan.value?.validate((errors) => {
     if (errors) {
+      console.log(errors);
       message.error("periksa kembali isian data pelanggan");
       statusInformasiPelanggan.value = "error";
     } else {
       statusInformasiPelanggan.value = "finish";
     }
   });
-  formPelangganPekerjaan.value?.validate((errors) => {
+  await formPelangganPekerjaan.value?.validate((errors) => {
     if (errors) {
 
       message.error("periksa kembali isian pekerjaan pelanggan");
@@ -1011,17 +1012,17 @@ const validateFormPelanggan = () => {
       statusInformasiPelanggan.value = "finish";
     }
   });
-  formPelangganAlamatIdentitas.value?.validate((errors) => {
+  await formPelangganAlamatIdentitas.value?.validate((errors) => {
     if (errors) {
 
       message.error("periksa kembali isian alamat identitas pelanggan");
       statusInformasiPelanggan.value = "error";
     } else {
-  
+
       statusInformasiPelanggan.value = "finish";
     }
   });
-  formPelangganAlamatTagih.value?.validate((errors) => {
+  await formPelangganAlamatTagih.value?.validate((errors) => {
     if (errors) {
       message.error("periksa kembali isian alamat tagih pelanggan");
       statusInformasiPelanggan.value = "error";
@@ -1029,9 +1030,7 @@ const validateFormPelanggan = () => {
       statusInformasiPelanggan.value = "finish";
     }
   });
-}
-const validateFormOrder = () => {
-  formOrder.value?.validate((errors) => {
+  await formOrder.value?.validate((errors) => {
     if (errors) {
 
       message.error("periksa kembali isian order pelanggan");
@@ -1541,30 +1540,27 @@ const handleSave = async (e) => {
 };
 
 
-const handleSend = () => {
-  validateFormPelanggan();
-  validateFormOrder();
-
-  console.log(statusInformasiPelanggan.value);
+const handleSend = async () => {
+  await validateFormPelanggan();
   formAssign.flag_pengajuan = "yes";
   if (statusInformasiPelanggan.value && statusInformasiOrder.value) {
-
-    // const response = useApi({
-    //   method: "PUT",
-    //   api: `cr_application/${idApp}`,
-    //   data: formAssign,
-    //   token: userToken,
-    // });
-    // if (!response.ok) {
-    //   loadingSend.value = false;
-    // } else {
-    //   message.success("data berhasil dikirim");
-    //   loadingSend.value = false;
-    //   router.push("/task/apply-credit");
-    // }
-    message.info(`kirim data ke server`);
+    let idApp = pageData.value.id_application;
+    const response = useApi({
+      method: "PUT",
+      api: `cr_application/${idApp}`,
+      data: formAssign,
+      token: userToken,
+    });
+    if (!response.ok) {
+      loadingSend.value = false;
+    } else {
+      message.success("data berhasil dikirim");
+      loadingSend.value = false;
+      router.push("/task/apply-credit");
+    }
+    message.info(`update data berhasil`);
   } else {
-    message.error('gagal kirim data ke server')
+    message.error('gagal kirim data')
   }
 };
 
