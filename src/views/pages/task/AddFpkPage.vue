@@ -21,7 +21,6 @@
   </div>
 
   <n-collapse>
-    <!-- <pre>{{ validateCheck }}</pre> -->
     <!-- <n-collapse-item title="identitas" name="1">
       <div>
         <pre>{{ dok_identitas }}</pre>
@@ -992,57 +991,53 @@ const formPelangganAlamatIdentitas = ref(null);
 const formPelangganAlamatTagih = ref(null);
 const statusInformasiPelanggan = ref(null);
 const statusInformasiOrder = ref(null);
-const validateCheck = ref(false);
+const countError = ref(0);
 const validateFormPelanggan = () => {
   formPelanggan.value?.validate((errors) => {
     if (errors) {
-      validateCheck.value = true;
       message.error("periksa kembali isian data pelanggan");
       statusInformasiPelanggan.value = "error";
     } else {
-      validateCheck.value = false;
       statusInformasiPelanggan.value = "finish";
     }
   });
-  // formPelangganPekerjaan.value?.validate((errors) => {
-  //   if (errors) {
-  //     validateCheck.value = true;
-  //     message.error("periksa kembali isian pekerjaan pelanggan");
-  //     statusInformasiPelanggan.value = "error";
-  //   } else {
-  //     validateCheck.value = false;
-  //     statusInformasiPelanggan.value = "finish";
-  //   }
-  // });
-  // formPelangganAlamatIdentitas.value?.validate((errors) => {
-  //   if (errors) {
-  //     validateCheck.value = true;
-  //     message.error("periksa kembali isian alamat identitas pelanggan");
-  //     statusInformasiPelanggan.value = "error";
-  //   } else {
-  //     validateCheck.value = false;
-  //     statusInformasiPelanggan.value = "finish";
-  //   }
-  // });
-  // formPelangganAlamatTagih.value?.validate((errors) => {
-  //   if (errors) {
-  //     validateCheck.value = true;
-  //     message.error("periksa kembali isian alamat tagih pelanggan");
-  //     statusInformasiPelanggan.value = "error";
-  //   } else {
-  //     validateCheck.value = false;
-  //     statusInformasiPelanggan.value = "finish";
-  //   }
-  // });
+  formPelangganPekerjaan.value?.validate((errors) => {
+    if (errors) {
+
+      message.error("periksa kembali isian pekerjaan pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+  formPelangganAlamatIdentitas.value?.validate((errors) => {
+    if (errors) {
+
+      message.error("periksa kembali isian alamat identitas pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+  
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
+  formPelangganAlamatTagih.value?.validate((errors) => {
+    if (errors) {
+      message.error("periksa kembali isian alamat tagih pelanggan");
+      statusInformasiPelanggan.value = "error";
+    } else {
+      statusInformasiPelanggan.value = "finish";
+    }
+  });
 }
 const validateFormOrder = () => {
   formOrder.value?.validate((errors) => {
     if (errors) {
-      validateCheck.value = true;
+
       message.error("periksa kembali isian order pelanggan");
       statusInformasiOrder.value = "error";
     } else {
-      validateCheck.value = false;
+
       statusInformasiOrder.value = "finish";
     }
   });
@@ -1544,27 +1539,30 @@ const handleSave = async (e) => {
     router.push("/task/apply-credit");
   }
 };
+
+
 const handleSend = () => {
   validateFormPelanggan();
   validateFormOrder();
+
+  console.log(statusInformasiPelanggan.value);
   formAssign.flag_pengajuan = "yes";
-  // const idApp = pageData.value.id_application;
-  if (!validateCheck.value) {
-    const response = useApi({
-      method: "PUT",
-      api: `cr_application/${idApp}`,
-      data: formAssign,
-      token: userToken,
-    });
-    if (!response.ok) {
-      message.error(`${validateCheck.value}`);
-      loadingSend.value = false;
-    } else {
-      message.success("data berhasil dikirim");
-      loadingSend.value = false;
-      router.push("/task/apply-credit");
-    }
-    message.error(`${validateCheck.value}`);
+  if (statusInformasiPelanggan.value && statusInformasiOrder.value) {
+
+    // const response = useApi({
+    //   method: "PUT",
+    //   api: `cr_application/${idApp}`,
+    //   data: formAssign,
+    //   token: userToken,
+    // });
+    // if (!response.ok) {
+    //   loadingSend.value = false;
+    // } else {
+    //   message.success("data berhasil dikirim");
+    //   loadingSend.value = false;
+    //   router.push("/task/apply-credit");
+    // }
+    message.info(`kirim data ke server`);
   } else {
     message.error('gagal kirim data ke server')
   }
