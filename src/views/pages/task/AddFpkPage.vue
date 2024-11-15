@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <div class="flex gap-2 mb-2" v-if="approval.kapos">
- 
+
     <n-alert class="w-full shadow" type="warning" title="KAPOS" v-if="approval.kapos">
       <template #icon>
         <n-icon>
@@ -19,9 +19,7 @@
       {{ approval.ho }}
     </n-alert>
   </div>
-  {{ statusInformasiPelanggan }} &&
-  {{ statusInformasiOrder }} &&
-  {{ statusEkstra }}
+{{ computForm }}
   <n-collapse>
     <!-- <n-collapse-item title="identitas" name="1">
       <div>
@@ -869,6 +867,7 @@ import {
 import { useJaminanStore } from "../../../stores/jaminan";
 import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
 import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
+import { GlobeLocation20Filled } from "@vicons/fluent";
 const message = useMessage();
 const loading = ref(false);
 const loadingSend = ref(false);
@@ -996,30 +995,30 @@ const statusInformasiPelanggan = ref();
 const statusInformasiOrder = ref();
 const statusEkstra = ref();
 const countError = ref(0);
-const globalForm = ref(false);
-const validateFormPelanggan = async () => {
-  await formPelanggan.value?.validate((errors) => {
+const globalForm = ref("error");
+const validateFormPelanggan =  () => {
+   formPelanggan.value?.validate((errors) => {
     if (errors) {
       message.error("periksa kembali isian data pelanggan");
-      statusInformasiPelanggan.value = "error";
+      globalForm.value = "error";
     } else {
       formPelangganPekerjaan.value?.validate((errors) => {
         if (errors) {
           message.error("periksa kembali isian pekerjaan pelanggan");
-          statusInformasiPelanggan.value = "error";
+          globalForm.value = "error";
         } else {
           formPelangganAlamatIdentitas.value?.validate((errors) => {
             if (errors) {
 
               message.error("periksa kembali isian alamat identitas pelanggan");
-              statusInformasiPelanggan.value = "error";
+              globalForm.value = "error";
             } else {
               formPelangganAlamatTagih.value?.validate((errors) => {
                 if (errors) {
                   message.error("periksa kembali isian alamat tagih pelanggan");
-                  statusInformasiPelanggan.value = "error";
+                  globalForm.value = "error";
                 } else {
-                  statusInformasiPelanggan.value = "finish";
+                  globalForm.value = "finish";
                 }
               });
             }
@@ -1027,29 +1026,30 @@ const validateFormPelanggan = async () => {
 
         }
       });
-      
+
     }
   });
 
-  formOrder.value?.validate((errors) => {
-    if (errors) {
-      message.error("periksa kembali isian order pelanggan");
-      statusInformasiOrder.value = "error";
-    } else {
-      globalForm.value = true;
-      statusInformasiOrder.value = "finish";
-    }
-  });
-  formExtra.value?.validate((errors) => {
-    if (errors) {
-      message.error("periksa kembali isian Ekstra");
-      statusEkstra.value = "error";
-    } else {
-      globalForm.value = true;
-      statusEkstra.value = "finish";
-    }
-  });
+  // formOrder.value?.validate((errors) => {
+  //   if (errors) {
+  //     message.error("periksa kembali isian order pelanggan");
+  //     statusInformasiOrder.value = "error";
+  //   } else {
+  //     globalForm.value = true;
+  //     statusInformasiOrder.value = "finish";
+  //   }
+  // });
+  // formExtra.value?.validate((errors) => {
+  //   if (errors) {
+  //     message.error("periksa kembali isian Ekstra");
+  //     statusEkstra.value = "error";
+  //   } else {
+  //     globalForm.value = true;
+  //     statusEkstra.value = "finish";
+  //   }
+  // });
 }
+const computForm=computed(()=>(globalForm.value));
 const next = () => {
   current.value += 1
 };
@@ -1559,15 +1559,16 @@ const handleSave = async (e) => {
   }
 };
 
-const tabPelanggan=computed(()=>statusInformasiPelanggan.value);
+const tabPelanggan = computed(() => statusInformasiPelanggan.value);
 const handleSend = async () => {
-   await validateFormPelanggan();
-  // if(statusInformasiPelanggan.value === "finish" && statusInformasiOrder.value === "finish" && statusEkstra.value === "finish"){
+validateFormPelanggan();
+console.log(computForm);
+  // if (statusInformasiPelanggan.value === "finish" && statusInformasiOrder.value === "finish" && statusEkstra.value === "finish") {
   //   message.success('masih')
-  // }else{
+  // } else {
   //   message.error('salah')
   // }
-  message.error(tabPelanggan.value);
+  // message.error(tabPelanggan.value);
   // formAssign.flag_pengajuan = "yes";
   // console.log(statusInformasiPelanggan.value);
   // if (statusEkstra.value === 'finish') {
@@ -1595,5 +1596,7 @@ const handleSend = async () => {
 const sumJaminan = computed(() => {
   return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
 });
-onMounted(() => getData());
+onMounted(() => {
+  getData()
+});
 </script>
