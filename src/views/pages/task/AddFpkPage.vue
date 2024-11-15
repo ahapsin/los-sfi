@@ -1,7 +1,7 @@
 <template>
   <blacklist-alert :pesan="bl_pesan" />
   <div class="flex gap-2 mb-2" v-if="approval.kapos">
-
+ 
     <n-alert class="w-full shadow" type="warning" title="KAPOS" v-if="approval.kapos">
       <template #icon>
         <n-icon>
@@ -19,7 +19,9 @@
       {{ approval.ho }}
     </n-alert>
   </div>
-
+  {{ statusInformasiPelanggan }} &&
+  {{ statusInformasiOrder }} &&
+  {{ statusEkstra }}
   <n-collapse>
     <!-- <n-collapse-item title="identitas" name="1">
       <div>
@@ -48,13 +50,14 @@
     </n-collapse-item> -->
   </n-collapse>
   <n-spin :show="suspense">
+    <!-- <pre>{{ calcCredit }}</pre> -->
     <slot name="addition"></slot>
     <n-space vertical class="bg-sc-50 border rounded-2xl p-4">
-      <n-steps :current="current" v-model:current="current">
+      <n-steps :current="current" v-model:current="current" :status="currentStatus">
         <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
         <n-step title="Order" :status="statusInformasiOrder" />
         <n-step title="Tambahan" />
-        <n-step title="Ekstra" />
+        <n-step title="Ekstra" :status="statusEkstra" />
       </n-steps>
     </n-space>
     <n-alert class="mt-2" type="warning" v-if="sumJaminan != 0 && calcCredit.nilai_yang_diterima > sumJaminan / 2">Nilai
@@ -670,7 +673,7 @@
         content: true,
         footer: 'soft',
       }" :loading="true">
-        <n-form ref="formEkstra" :model="calcCredit" :rules="rulesExtra" :label-placement="width <= 920 ? 'top' : 'top'"
+        <n-form ref="formExtra" :model="calcCredit" :rules="rulesExtra" :label-placement="width <= 920 ? 'top' : 'top'"
           require-mark-placement="right-hanging" label-width="auto" :disabled="viewMode">
           <div class="w-full flex md:flex-row flex-col gap-4">
             <div class="flex flex-col w-full">
@@ -793,7 +796,7 @@
                   <template #suffix> % </template>
                 </n-input-number>
               </n-form-item>
-              <n-form-item label="Nilai yang diterima" path="plafond">
+              <n-form-item label="Nilai yang diterima" path="nilai_yang_diterima">
                 <n-input-number :parse="parse" :format="format" :placeholder="calcCredit.plafond" :show-button="false"
                   class="flex !w-full" @update:value="handlePlafond" :loading="loading"
                   v-model:value="calcCredit.nilai_yang_diterima" />
@@ -989,55 +992,61 @@ const formOrder = ref(null);
 const formPelangganPekerjaan = ref(null);
 const formPelangganAlamatIdentitas = ref(null);
 const formPelangganAlamatTagih = ref(null);
-const statusInformasiPelanggan = ref(null);
-const statusInformasiOrder = ref(null);
+const statusInformasiPelanggan = ref();
+const statusInformasiOrder = ref();
+const statusEkstra = ref();
 const countError = ref(0);
+const globalForm = ref(false);
 const validateFormPelanggan = async () => {
   await formPelanggan.value?.validate((errors) => {
     if (errors) {
-      console.log(errors);
       message.error("periksa kembali isian data pelanggan");
       statusInformasiPelanggan.value = "error";
     } else {
-      statusInformasiPelanggan.value = "finish";
+      formPelangganPekerjaan.value?.validate((errors) => {
+        if (errors) {
+          message.error("periksa kembali isian pekerjaan pelanggan");
+          statusInformasiPelanggan.value = "error";
+        } else {
+          formPelangganAlamatIdentitas.value?.validate((errors) => {
+            if (errors) {
+
+              message.error("periksa kembali isian alamat identitas pelanggan");
+              statusInformasiPelanggan.value = "error";
+            } else {
+              formPelangganAlamatTagih.value?.validate((errors) => {
+                if (errors) {
+                  message.error("periksa kembali isian alamat tagih pelanggan");
+                  statusInformasiPelanggan.value = "error";
+                } else {
+                  statusInformasiPelanggan.value = "finish";
+                }
+              });
+            }
+          });
+
+        }
+      });
+      
     }
   });
-  await formPelangganPekerjaan.value?.validate((errors) => {
+
+  formOrder.value?.validate((errors) => {
     if (errors) {
-
-      message.error("periksa kembali isian pekerjaan pelanggan");
-      statusInformasiPelanggan.value = "error";
-    } else {
-
-      statusInformasiPelanggan.value = "finish";
-    }
-  });
-  await formPelangganAlamatIdentitas.value?.validate((errors) => {
-    if (errors) {
-
-      message.error("periksa kembali isian alamat identitas pelanggan");
-      statusInformasiPelanggan.value = "error";
-    } else {
-
-      statusInformasiPelanggan.value = "finish";
-    }
-  });
-  await formPelangganAlamatTagih.value?.validate((errors) => {
-    if (errors) {
-      message.error("periksa kembali isian alamat tagih pelanggan");
-      statusInformasiPelanggan.value = "error";
-    } else {
-      statusInformasiPelanggan.value = "finish";
-    }
-  });
-  await formOrder.value?.validate((errors) => {
-    if (errors) {
-
       message.error("periksa kembali isian order pelanggan");
       statusInformasiOrder.value = "error";
     } else {
-
+      globalForm.value = true;
       statusInformasiOrder.value = "finish";
+    }
+  });
+  formExtra.value?.validate((errors) => {
+    if (errors) {
+      message.error("periksa kembali isian Ekstra");
+      statusEkstra.value = "error";
+    } else {
+      globalForm.value = true;
+      statusEkstra.value = "finish";
     }
   });
 }
@@ -1296,6 +1305,9 @@ const rulesAlamatTagih = {
 const numberValidator = (rule, value) => {
   return value > 0;
 };
+const numberNilai = (rule, value) => {
+  return value >= 1000000;
+};
 const rulesOrder = {
   order_tanggal: {
     trigger: "blur",
@@ -1348,7 +1360,15 @@ const rulesOrder = {
   },
 }
 const rulesPasangan = {}
-const rulesExtra = {}
+const formExtra = ref();
+const rulesExtra = {
+  nilai_yang_diterima: {
+    trigger: "blur",
+    required: true,
+    validator: numberNilai,
+    message: "minimal 1.000.000",
+  },
+}
 const bl_pesan = ref();
 const dok_identitas = ref([]);
 const dok_pendukung = ref([]);
@@ -1539,29 +1559,37 @@ const handleSave = async (e) => {
   }
 };
 
-
+const tabPelanggan=computed(()=>statusInformasiPelanggan.value);
 const handleSend = async () => {
-  await validateFormPelanggan();
-  formAssign.flag_pengajuan = "yes";
-  if (statusInformasiPelanggan.value && statusInformasiOrder.value) {
-    let idApp = pageData.value.id_application;
-    const response = useApi({
-      method: "PUT",
-      api: `cr_application/${idApp}`,
-      data: formAssign,
-      token: userToken,
-    });
-    if (!response.ok) {
-      loadingSend.value = false;
-    } else {
-      message.success("data berhasil dikirim");
-      loadingSend.value = false;
-      router.push("/task/apply-credit");
-    }
-    message.info(`update data berhasil`);
-  } else {
-    message.error('gagal kirim data')
-  }
+   await validateFormPelanggan();
+  // if(statusInformasiPelanggan.value === "finish" && statusInformasiOrder.value === "finish" && statusEkstra.value === "finish"){
+  //   message.success('masih')
+  // }else{
+  //   message.error('salah')
+  // }
+  message.error(tabPelanggan.value);
+  // formAssign.flag_pengajuan = "yes";
+  // console.log(statusInformasiPelanggan.value);
+  // if (statusEkstra.value === 'finish') {
+  //   let idApp = pageData.value.id_application;
+  //   const response = useApi({
+  //     method: "PUT",
+  //     api: `cr_application/${idApp}`,
+  //     data: formAssign,
+  //     token: userToken,
+  //   });
+  //   if (!response.ok) {
+  //     loadingSend.value = false;
+  //   } else {
+  //     message.success("data berhasil dikirim");
+  //     loadingSend.value = false;
+  //     router.push("/task/apply-credit");
+  //   }
+  //   router.push("/task/apply-credit");
+  //   message.push(`data berhasil dikirim`);
+  // } else {
+  //   message.error('gagal kirim data')
+  // }
 };
 
 const sumJaminan = computed(() => {
