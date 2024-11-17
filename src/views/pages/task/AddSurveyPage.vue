@@ -813,9 +813,9 @@ const handleTanggalLahir = (e) => {
 const formSurvey = ref(null);
 const handleSendButton = ref(true);
 const validCheck=ref(true);
-const handleValid = (type) => {
+const handleValid = async (type) => {
 
-    formOrder.value?.validate((errors) => {
+   await formOrder.value?.validate((errors) => {
         if (errors) {
             validCheck.value=true;
             message.error("periksa kembali isian informasi order");
@@ -826,7 +826,7 @@ const handleValid = (type) => {
         }
     });
 
-    formPelanggan.value?.validate((errors) => {
+    await formPelanggan.value?.validate((errors) => {
         if (errors) {
             message.error("periksa kembali isian data pelanggan");
             statusDataPelanggan.value = "error";
@@ -847,7 +847,7 @@ const handleValid = (type) => {
 
     }
 
-    formSurvey.value?.validate((errors) => {
+    await formSurvey.value?.validate((errors) => {
         if (errors) {
             message.error("periksa kembali isian data survey");
             statusDataSurvey.value = "error";
@@ -855,10 +855,10 @@ const handleValid = (type) => {
         } else {
             statusDataSurvey.value = "finish";
             validCheck.value=false;
-            
+
         }
     });
-    if(!validCheck.value){handleSave(type)};
+    handleSave(type);
 
 }
 const endForm = () => {
