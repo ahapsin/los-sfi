@@ -19,7 +19,6 @@
             {{ approval.ho }}
         </n-alert>
     </div>
-    {{ computForm }}
     <n-collapse>
         <!-- <n-collapse-item title="identitas" name="1">
       <div>
@@ -1593,22 +1592,22 @@ const handleSave = async (e) => {
 };
 
 
-const handleSend = () => {
+const handleSend = async () => {
     formAssign.flag_pengajuan = "yes";
-      let idApp = pageData.value.id_application;
-      const response = useApi({
+    let idApp = pageData.value.id_application;
+    const response = await useApi({
         method: "PUT",
         api: `cr_application/${idApp}`,
         data: formAssign,
         token: userToken,
-      });
-      if (!response.ok) {
+    });
+    if (!response.ok) {
         loadingSend.value = false;
-      } else {
+    } else {
         message.success("data berhasil dikirim");
         loadingSend.value = false;
         router.push("/task/apply-credit");
-      }
+    }
 };
 const hadleValid = async () => {
     await formPelanggan.value?.validate((errors) => {
@@ -1652,13 +1651,12 @@ const hadleValid = async () => {
             message.error("periksa kembali isian data order");
             statusInformasiOrder.value = "error"
         } else {
-
             statusInformasiOrder.value = "finish"
         }
     });
     await formExtra.value?.validate((errors) => {
         if (errors) {
-            message.error("periksa kembali isian data order");
+            message.error("periksa kembali isian data Extra");
             statusEkstra.value = "error"
         } else {
 
