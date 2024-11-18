@@ -773,9 +773,9 @@ const handleTanggalLahir = (e) => {
 };
 const formSurvey = ref(null);
 const handleSendButton=ref(true);
-const handleValid = (type) => {
+const handleValid = async (type) => {
 
-formOrder.value?.validate((errors) => {
+await formOrder.value?.validate((errors) => {
     if (errors) {
         message.error("periksa kembali isian informasi order");
         statusInformasiOrder.value = "error";
@@ -784,7 +784,7 @@ formOrder.value?.validate((errors) => {
     }
 });
 
-formPelanggan.value?.validate((errors) => {
+await formPelanggan.value?.validate((errors) => {
     if (errors) {
         message.error("periksa kembali isian data pelanggan");
         statusDataPelanggan.value = "error";
@@ -802,16 +802,16 @@ if (jaminanStore.listJaminan.length < 1) {
 
 }
 
-formSurvey.value?.validate((errors) => {
+await formSurvey.value?.validate((errors) => {
     if (errors) {
         message.error("periksa kembali isian data survey");
         statusDataSurvey.value = "error";
     } else {
         statusDataSurvey.value = "finish";
-        handleSave(type);
+
     }
 });
-
+ handleSave(type);
 }
 const endForm = () => {
     formSurvey.value?.validate((errors) => {
