@@ -1,20 +1,16 @@
 <template>
   <div>
     <n-space vertical>
-      <n-card
-
-        title="Data Pelanggan"
-        :segmented="{
-          content: true,
-          footer: 'soft',
-        }"
-      >
+      <n-card title="Data Pelanggan" :segmented="{
+        content: true,
+        footer: 'soft',
+      }">
         <template #header-extra>
           <n-space class="!gap-1">
             <div class="me-1">
               <n-popover trigger="click" placement="bottom-end">
                 <template #trigger>
-                  <n-button :circle="width <= 520 ? true:false">
+                  <n-button :circle="width <= 520 ? true : false">
                     <n-icon>
                       <search-icon />
                     </n-icon>
@@ -22,23 +18,14 @@
                   </n-button>
                 </template>
                 <n-space vertical>
-                  <n-input
-                    autofocus="true"
-                    clearable
-                    placeholder="cari disini.."
-                    v-model:value="searchBox"
-                  />
-                  <n-date-picker
-                    :default-value="[Date.now(), Date.now()]"
-                    :update-value-on-close="updateValueOnClose"
-                    type="daterange"
-                    @update:value="onConfirmDate"
-                  />
+                  <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+                  <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+                    type="daterange" @update:value="onConfirmDate" />
                 </n-space>
               </n-popover>
             </div>
             <div>
-              <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true:false">
+              <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
                 <template #icon>
                   <n-icon>
                     <download-icon />
@@ -47,8 +34,8 @@
                 <span v-if="width >= 520">Download</span>
               </n-button>
             </div>
-            <div >
-              <n-button type="primary" strong @click="handleAdd" :circle="width <= 520 ? true:false">
+            <div>
+              <n-button type="primary" strong @click="handleAdd" :circle="width <= 520 ? true : false">
                 <template #icon>
                   <n-icon>
                     <add-icon />
@@ -60,23 +47,15 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <n-data-table
-            striped
-            ref="tableRef"
-            :scroll-x="500"
-            size="small"
-            :columns="columns"
-            :data="showData"
-            :pagination="pagination"
-            :loading="loadData"
-          />
+          <n-data-table striped ref="tableRef" :scroll-x="500" size="small" :columns="columns" :data="showData"
+            :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
     </n-space>
   </div>
 </template>
 <script setup>
-import { ref, onMounted, h,computed } from "vue";
+import { ref, onMounted, h, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from "../../../router";
@@ -143,6 +122,7 @@ const columns = [
       return h(
         NTag,
         {
+          round: true,
           type: statusTag(row.status_code),
           size: "small",
         },
@@ -160,7 +140,6 @@ const columns = [
         NDropdown,
         {
           options: options(row),
-
           size: "small",
           onSelect: (e) => {
             if (e === "hapus") {
@@ -175,7 +154,7 @@ const columns = [
           },
         },
         {
-          default:()=> h(
+          default: () => h(
             NButton,
             {
               round: true,
@@ -203,6 +182,9 @@ const statusTag = (e) => {
   if (e === "WAKPS") {
     return "info";
   }
+  if (e === "WADM") {
+    return "info";
+  }
   if (e === "APHO") {
     return "success";
   }
@@ -211,8 +193,8 @@ const statusTag = (e) => {
   }
 };
 const statusLabel = (e) => {
-    let upLabel=e;
-    return upLabel.toUpperCase();
+  let upLabel = e;
+  return upLabel.toUpperCase();
 };
 const format = (e) => {
   const toNum = parseInt(e);

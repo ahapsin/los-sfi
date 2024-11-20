@@ -127,7 +127,7 @@
           </tr>
           <tr>
             <td>Bunga</td>
-            <td>{{ pelunasan.BUNGA_BERJALAN.toLocaleString() }}</td>
+            <td>{{ pelunasan.TUNGGAKAN_BUNGA.toLocaleString() }}</td>
             <td>{{ pelunasan.BAYAR_BUNGA.toLocaleString() }}</td>
             <td>{{ pelunasan.DISKON_BUNGA.toLocaleString() }}</td>
           </tr>
@@ -596,9 +596,9 @@ const pelunasan = reactive({
     if (bayarPokok >= 0) {
       pelunasan.BAYAR_POKOK = pelunasan.SISA_POKOK;
       pelunasan.DISKON_POKOK = 0;
-      let bayarBunga = bayarPokok - pelunasan.BUNGA_BERJALAN;
+      let bayarBunga = bayarPokok - pelunasan.TUNGGAKAN_BUNGA;
       if (bayarBunga > 0) {
-        pelunasan.BAYAR_BUNGA = pelunasan.BUNGA_BERJALAN;
+        pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
         pelunasan.DISKON_BUNGA = 0;
         let bayarPinalti = bayarBunga - pelunasan.PINALTI;
         if (bayarPinalti > 0) {
@@ -618,14 +618,14 @@ const pelunasan = reactive({
             pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
         }
       } else {
-        pelunasan.BAYAR_BUNGA = pelunasan.BUNGA_BERJALAN + bayarBunga;
+        pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA + bayarBunga;
         pelunasan.DISKON_POKOK = 0;
         pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
       }
     } else {
       pelunasan.BAYAR_POKOK = bayarPokok + pelunasan.SISA_POKOK;
       pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK - pelunasan.UANG_PELANGGAN;
-      pelunasan.DISKON_BUNGA = pelunasan.BUNGA_BERJALAN;
+      pelunasan.DISKON_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
       pelunasan.DISKON_DENDA = pelunasan.DENDA;
       pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
     }
@@ -641,14 +641,14 @@ const pelunasan = reactive({
   JUMLAH_TAGIHAN: computed(
     () =>
       pelunasan.SISA_POKOK +
-      pelunasan.BUNGA_BERJALAN +
+      pelunasan.TUNGGAKAN_BUNGA +
       pelunasan.PINALTI +
       pelunasan.DENDA
   ),
   TOTAL_BAYAR: computed(
     () =>
       pelunasan.SISA_POKOK +
-      pelunasan.BUNGA_BERJALAN +
+      pelunasan.TUNGGAKAN_BUNGA +
       pelunasan.PINALTI +
       pelunasan.DENDA
   ),
