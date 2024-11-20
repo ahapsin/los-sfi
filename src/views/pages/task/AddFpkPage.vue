@@ -1,8 +1,7 @@
 <template>
     <blacklist-alert :pesan="bl_pesan" />
     <div class="flex gap-2 mb-2" v-if="approval.kapos">
-
-        <n-alert class="w-full shadow" type="warning" title="KAPOS" v-if="approval.kapos">
+        <n-alert class="w-full shadow bg-white"  title="KAPOS" v-if="approval.kapos">
             <template #icon>
                 <n-icon>
                     <account-icon />
@@ -10,7 +9,7 @@
             </template>
             {{ approval.kapos }}
         </n-alert>
-        <n-alert class="w-full shadow" type="success" title="HO" v-if="approval.ho">
+        <n-alert class="w-full shadow bg-white" title="HO" v-if="approval.ho">
             <template #icon>
                 <n-icon>
                     <account-icon />
@@ -674,7 +673,7 @@
                             :allow-input="onlyAllowNumber" />
                     </n-form-item>
                     <n-divider title-placement="left"> Informasi Bank </n-divider>
-                    <n-dynamic-input v-model:value="formAssign.info_bank" :on-create="onCreate" v-if="!viewMode">
+                    <n-dynamic-input v-model:value="formAssign.info_bank" :on-create="onCreate" disabled v-if="viewMode">
                         <template #create-button-default> Tambah Bank </template>
                         <template #default="{ value }">
                             <div class="flex w-full gap-2 bg-pr-50 p-2 pb-0 rounded-md">
@@ -1367,12 +1366,6 @@ const rulesOrder = {
         message: "harus diisi",
     },
     lama_bekerja: {
-        trigger: "blur",
-        required: true,
-        validator: numberValidator,
-        message: "harus diisi",
-    },
-    tanggungan: {
         trigger: "blur",
         required: true,
         validator: numberValidator,

@@ -386,9 +386,13 @@ const rowProps = (row) => {
   return {
     style: "cursor: pointer;",
     onClick: () => {
+      if(row.status === "LUNAS"){
+        message.info("Fasilitas Sudah Lunas")
+      }else{
       selectedFasilitas.value = row.loan_number;
       getSkalaCredit(row.loan_number);
       getDataPelunasan(row.loan_number);
+      }
     },
   };
 };
@@ -427,6 +431,11 @@ const createColumns = () => {
       render(row) {
         return h("div", row.angsuran.toLocaleString("US"));
       },
+    },
+    {
+      title: "Status",
+      key: "status",
+      sorter: "default",
     },
   ];
 };

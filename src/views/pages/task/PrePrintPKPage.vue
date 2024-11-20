@@ -3,7 +3,7 @@
     content: true,
     footer: 'soft',
   }">
-    <!-- {{ jaminanFetch }} -->
+
     <!-- <n-collapse class="bg-yellow-100">
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
@@ -208,7 +208,7 @@
                     <tr>
                       <td>BPKB No</td>
                       <td width="25">:</td>
-                      <td>{{ jaminan.no_bpkb }}</td>
+                      <td>{{ jaminan.atr.no_bpkb }}</td>
                     </tr>
                     <tr>
                       <td>BPKB atas nama</td>
@@ -241,6 +241,11 @@
                       <td>No Sertifikat</td>
                       <td width="25">:</td>
                       <td>{{ jaminan.atr.no_sertifikat }}</td>
+                    </tr>
+                    <tr>
+                      <td>Atas Nama</td>
+                      <td width="25">:</td>
+                      <td>{{ jaminan.atr.atas_nama }}</td>
                     </tr>
                     <tr>
                       <td>Status Kepemilikan</td>
@@ -345,7 +350,7 @@
               <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
               <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                 dataPelanggan.tipe_identitas
-              }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
               bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
               disebut <b>Penerima Pinjaman.</b>
             </div>
@@ -447,7 +452,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.nama_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -456,7 +461,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.pekerjaan_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -465,7 +470,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.alamat_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
               </table>
@@ -545,39 +550,42 @@
               <b>PERNYATAAN PENJAMIN</b>
             </div>
             <div class="mb-4">yang bertanda tangan di bawah ini:</div>
-            <div class="mb-4">
-              <table>
-                <tr>
-                  <td width="100px">Nama</td>
-                  <td width="25">:</td>
-                  <td>
-                    <b class="uppercase">{{ dataPenjamin.nama }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Pekerjaan</td>
-                  <td width="25">:</td>
-                  <td>
-                    <b class="uppercase">{{ dataPenjamin.pekerjaan }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Alamat</td>
-                  <td width="25">:</td>
-                  <td>
-                    <b class="uppercase">{{ dataPenjamin.alamat }}</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Nomor KTP</td>
-                  <td width="25">:</td>
-                  <td>
-                    <b class="uppercase">{{ dataPenjamin.no_identitas }}</b>
-                  </td>
-                </tr>
-              </table>
-              Selanjutnya disebut <b>Penjamin</b>
+            <div class="grid grid-flow-col">
+              <div class="mb-4" v-for="(penjamin, i) in dataPenjamin" :key="penjamin">
+                <table>
+                  <tr>
+                    <td width="100px">Nama</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ penjamin.nama }}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Pekerjaan</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ penjamin.pekerjaan }}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Alamat</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ penjamin.alamat }}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nomor KTP</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ penjamin.no_identitas }}</b>
+                    </td>
+                  </tr>
+                </table>
+                Selanjutnya disebut <b>Penjamin {{ i + 1 }}</b>
+              </div>
             </div>
+
             <div class="mb-4">
               <!-- Selanjutnya disebut Penjamin<br /> -->
               Dengan ini menyatakan dan menegaskan bahwa :
@@ -644,11 +652,13 @@
               pasal 1832 Undang-Undang Hukum Perdata.
             </div>
 
-            <div class="flex mb-4 justify-end">
-              <div class="w-fit text-center bg-white">
-                {{ dayFull.full_date_only }}<br />
-                Penjamin,<br /><br /><br />
-                (<u class="uppercase">{{ upCase(dataPenjamin.nama) }}</u>)
+            <div class="mb-4 justify-end">
+              {{ dayFull.full_date_only }}<br />
+              <div class="w-fit gap-10 grid grid-flow-col text-center bg-white">
+                <div v-for="(penjamin, i) in dataPenjamin" :key="penjamin">
+                  Penjamin {{ i + 1 }},<br /><br /><br />
+                  (<u class="uppercase">{{ upCase(penjamin.nama) }}</u>)
+                </div>
               </div>
             </div>
           </div>
@@ -691,13 +701,13 @@
               <b>{{ dayFull.year }}</b>,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
               dalam keadaan baik dengan rincian sebagai berikut :
             </div>
-            <div class="mb-4 text-justify" v-for="jaminan, i in dataJaminan" :key="jaminan">
+            <div class="text-justify pt-2" v-for="jaminan, i in dataJaminan" :key="jaminan">
               {{ i + 1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
               <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                 <tr>
                   <td>BPKB No</td>
                   <td width="25">:</td>
-                  <td>{{ jaminan.no_bpkb }}</td>
+                  <td>{{ jaminan.atr.no_bpkb }}</td>
                 </tr>
                 <tr>
                   <td>BPKB atas nama</td>
@@ -732,6 +742,11 @@
                   <td>{{ jaminan.atr.no_sertifikat }}</td>
                 </tr>
                 <tr>
+                  <td>Atas Nama</td>
+                  <td width="25">:</td>
+                  <td>{{ jaminan.atr.atas_nama }}</td>
+                </tr>
+                <tr>
                   <td>Status Kepemilikan</td>
                   <td width="25">:</td>
                   <td>{{ jaminan.atr.status_kepemilikan }}</td>
@@ -739,7 +754,8 @@
                 <tr>
                   <td>IMB / Luas Tanah / Luas Bangunan</td>
                   <td width="25">:</td>
-                  <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 / ${jaminan.atr.luas_bangunan} m2` }}</td>
+                  <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 / ${jaminan.atr.luas_bangunan} m2` }}
+                  </td>
                 </tr>
                 <tr>
                   <td>Lokasi</td>

@@ -43,7 +43,7 @@
                   <span>Filter Status</span>
                   <n-tag size="small" type="info" v-if="filterData" @close="handleClose" closable :bordered="false">{{
                     filterData
-                    }}</n-tag>
+                  }}</n-tag>
                 </div>
               </n-button>
             </n-dropdown>
@@ -195,6 +195,7 @@ const columns = [
       return h(
         NTag,
         {
+          round: true,
           size: "small",
           type: statusTag(row.status_code),
         },
@@ -219,7 +220,7 @@ const columns = [
           NButton,
           {
             type: type,
-            size:"small",
+            size: "small",
             secondary: true,
             onClick: () => {
               handlePrePrint(row);
@@ -307,6 +308,9 @@ const statusTag = (e) => {
   }
   if (e === "APHO") {
     return "success";
+  }
+  if (e === "REORHO") {
+    return "error";
   }
 
 };
