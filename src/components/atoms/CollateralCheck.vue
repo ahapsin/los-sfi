@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex border-orange-100 bg-red-50 p-4 text-red-500 justify-between w-full"
-  >
+   v-if="getCheck.status">
     <div class="flex items-center gap-2">
       <n-icon size="30"><warning-icon /></n-icon>
       <div>
@@ -42,6 +42,7 @@ const payloadCheck = props.coll_data.map(item => {
 });
 const getCheck = ref([]);
 const userToken = localStorage.getItem("token");
+const emit = defineEmits();
 const checkCollateral = () => {
   useApi({
     method: "POST",
@@ -50,6 +51,7 @@ const checkCollateral = () => {
     token: userToken,
   }).then((e) => {
     getCheck.value = e.data;
+    emit('coll_val',e.data.status);
   });
 };
 

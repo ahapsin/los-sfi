@@ -340,28 +340,28 @@
                 </div>
                 <div class="md:flex gap-4">
                     <n-form-item label="Pendapatan pelanggan " path="pendapatan_pribadi" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
                             v-model:value="survey.pendapatan_pribadi" placeholder="pendapatan pelanggan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Pasangan" path="penghasilan_pasangan" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
                             v-model:value="survey.pendapatan_pasangan" placeholder="pendapatan pasangan"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Lainnya" path="penghasilan_pasangan" class="w-full">
-                        <n-input-number class="flex w-full" :parse="parse" :format="format"
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
                             v-model:value="survey.pendapatan_lainnya" placeholder="pendapatan lain-lain"
                             :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pengeluaran" path="pengeluaran" class="w-full">
-                        <n-input-number :parse="parse" :format="format" class="w-full"
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" class="w-full"
                             v-model:value="survey.pengeluaran" placeholder="pengeluaran" :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
@@ -745,6 +745,7 @@ const steps = [
 const currentStatus = ref("process");
 const loadingKTP = ref(false);
 const bl_pesan = ref();
+
 const handleKtp = async (e) => {
     loadingKTP.value = true;
     const bodyForm = {
@@ -762,6 +763,8 @@ const handleKtp = async (e) => {
     } else {
         let data = response.data;
         if (data.length > 0) {
+            console.log(data);
+            jaminanStore.filledJaminan(data[0].jaminan);
             order.value.category = "RO";
             Object.assign(pelanggan, data[0]);
         } else {
@@ -812,16 +815,16 @@ const handleTanggalLahir = (e) => {
 };
 const formSurvey = ref(null);
 const handleSendButton = ref(true);
-const validCheck=ref(true);
+const validCheck = ref(true);
 const handleValid = async (type) => {
 
-   await formOrder.value?.validate((errors) => {
+    await formOrder.value?.validate((errors) => {
         if (errors) {
-            validCheck.value=true;
+            validCheck.value = true;
             message.error("periksa kembali isian informasi order");
             statusInformasiOrder.value = "error";
         } else {
-            validCheck.value=false;
+            validCheck.value = false;
             statusInformasiOrder.value = "finish";
         }
     });
@@ -830,20 +833,20 @@ const handleValid = async (type) => {
         if (errors) {
             message.error("periksa kembali isian data pelanggan");
             statusDataPelanggan.value = "error";
-            validCheck.value=true;
+            validCheck.value = true;
         } else {
             statusDataPelanggan.value = "finish";
-            validCheck.value=false;
+            validCheck.value = false;
         }
     });
 
     if (jaminanStore.listJaminan.length < 1) {
         message.error("minimal memiliki satu jaminan");
         statusDataJaminan.value = "error";
-        validCheck.value=true;
+        validCheck.value = true;
     } else {
         statusDataJaminan.value = "finish";
-        validCheck.value=false;
+        validCheck.value = false;
 
     }
 
@@ -851,10 +854,10 @@ const handleValid = async (type) => {
         if (errors) {
             message.error("periksa kembali isian data survey");
             statusDataSurvey.value = "error";
-            validCheck.value=true;
+            validCheck.value = true;
         } else {
             statusDataSurvey.value = "finish";
-            validCheck.value=false;
+            validCheck.value = false;
 
         }
     });
@@ -981,6 +984,7 @@ const rulesSurvey = {
     },
 
 };
+const isRtl = true;
 const onlyAllowNumber = (value) => !value || /^\d+$/.test(value);
 onMounted(() => {
     jaminanStore.initJaminan();

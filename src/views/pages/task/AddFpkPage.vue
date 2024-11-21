@@ -331,32 +331,32 @@
                                 v-model:value="dataOrder.nama_ibu" />
                         </n-form-item>
                         <n-form-item label="Lama Bekerja" path="lama_bekerja" class="w-full">
-                            <n-input-number :show-button="false" placeholder="lama bekerja"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" placeholder="lama bekerja"
                                 v-model:value="dataOrder.lama_bekerja" class="w-full">
                                 <template #suffix> bulan </template>
                             </n-input-number>
                         </n-form-item>
                         <n-form-item label="Tanggungan" path="tanggungan" class="w-full">
-                            <n-input-number placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan"
                                 class="w-full" />
                         </n-form-item>
                     </div>
                     <div class="flex gap-2">
                         <n-form-item label="Pendapatan Pelanggan" path="pendapatan_pribadi" class="w-full">
-                            <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_pribadi"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_pribadi"
                                 :show-button="false" class="flex !w-full" placeholder="Pribadi" />
                         </n-form-item>
                         <n-form-item label="Pendapatan Pasangan" path="pendapatan_pasangan" class="w-full">
-                            <n-input-number :parse="parse" :format="format"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
                                 v-model:value="dataOrder.pendapatan_pasangan" :show-button="false" class="flex !w-full"
                                 placeholder="Pasangan" />
                         </n-form-item>
                         <n-form-item label="Pendapatan Lainnya" path="pendapatan_lainnya" class="w-full">
-                            <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_lainnya"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_lainnya"
                                 :show-button="false" class="flex !w-full" placeholder="Lainnya" />
                         </n-form-item>
                         <n-form-item label="Biaya" path="biaya_bulanan" class="w-full">
-                            <n-input-number :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
                                 :show-button="false" class="flex !w-full" placeholder="Pengeluaran" />
                         </n-form-item>
                     </div>
@@ -707,7 +707,7 @@
                     <div class="w-full flex md:flex-row flex-col gap-4">
                         <div class="flex flex-col w-full">
                             <n-form-item label="Pokok Pembayaran" path="Nama Bank" class="w-full">
-                                <n-input-number v-model:value="calcCredit.pokok_pembayaran" :parse="parse"
+                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.pokok_pembayaran" :parse="parse"
                                     :show-button="false" :format="format" disabled class="w-full">
                                 </n-input-number>
                             </n-form-item>
@@ -814,13 +814,13 @@
                         </div>
                         <div class="flex flex-col w-full">
                             <n-form-item label="Bunga / Margin Eff" path="Nama Bank" class="w-full">
-                                <n-input-number v-model:value="calcCredit.eff_rate" type="text" disabled :parse="parse"
+                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.eff_rate" type="text" disabled :parse="parse"
                                     :format="format" :show-button="false" class="w-full">
                                     <template #suffix> % </template>
                                 </n-input-number>
                             </n-form-item>
                             <n-form-item label="Total Admin" path="Nama Bank" class="w-full">
-                                <n-input-number v-model:value="calcCredit.total" type="text" class="w-full" disabled
+                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.total" type="text" class="w-full" disabled
                                     :parse="parse" :format="format" :show-button="false">
                                     <template #suffix> % </template>
                                 </n-input-number>
@@ -1663,6 +1663,7 @@ const hadleValid = async () => {
 const sumJaminan = computed(() => {
     return jaminanStore.listJaminan.reduce((sum, item) => sum + parseInt(item.atr.nilai, 10), 0);
 });
+const isRtl = true;
 onMounted(() => {
     getData()
 });

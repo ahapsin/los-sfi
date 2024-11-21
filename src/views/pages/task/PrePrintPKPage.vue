@@ -67,10 +67,10 @@
       v-show="prosesPK"
       class="flex gap-2 border-t p-4 justify-end"
     ></div> -->
-    <!-- <div class="sticky flex bottom-0 w-full" v-if="false">
-      <CollateralCheck :coll_data="dataJaminan" />
-    </div> -->
-    <div class="sticky b bg-white flex top-0 w-full justify-end p-2">
+    <div class="sticky flex bottom-0 w-full" v-if="!colCheck">
+      <CollateralCheck :coll_data="dataJaminan" @coll_val="handleCollCheck" />
+    </div>
+    <div class="sticky b bg-white flex top-0 w-full justify-end p-2" v-else>
       <n-button :type="pageData.flag == 1 ? 'warning' : 'primary'" class="gap-2" @click="handlePrint">
         <n-icon>
           <print-icon />
@@ -350,7 +350,7 @@
               <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
               <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                 dataPelanggan.tipe_identitas
-                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+              }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
               bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
               disebut <b>Penerima Pinjaman.</b>
             </div>
@@ -452,7 +452,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.nama_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -461,7 +461,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.pekerjaan_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -470,7 +470,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.alamat_pasangan)
-                      }}</b>
+                    }}</b>
                   </td>
                 </tr>
               </table>
@@ -1687,6 +1687,10 @@ const upCase = (e) => {
   return e;
 };
 
+const colCheck = ref(true);
+const handleCollCheck = (data) => {
+  colCheck.value = data;
+}
 const options = [];
 
 for (var x = 1; x <= 25; x++) {

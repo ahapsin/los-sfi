@@ -118,6 +118,7 @@ const resizeImage = (file) => {
 const beforeUpload = (data) => {
   resizeImage(data.file.file);
 };
+const emit = defineEmits();
 const errorCapture = ref(false);
 const handleImagePost = () => {
   const bodyForm = {
@@ -125,6 +126,7 @@ const handleImagePost = () => {
     type: props.type,
     reff: props.reff,
     cr_prospect_id: props.idapp,
+    uid:props.idapp,
   };
   const headers = {
     Authorization: `Bearer ${userToken}`,
@@ -134,7 +136,8 @@ const handleImagePost = () => {
       headers,
       json: bodyForm,
     })
-    .then(() => {
+    .then((json) => {
+      emit('fallback',json.json.response);
       message.success(`upload ${props.title} berhasil`);
     })
     .catch(() => {
@@ -149,6 +152,7 @@ const props = defineProps({
   type: String,
   reff: String,
   idapp: String,
+  fid: String,
   def_value: String,
   def_preview: Boolean,
   multi: Boolean,

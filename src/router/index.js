@@ -49,9 +49,9 @@ const routes = [
         component: () => import("../views/pages/transaction/repayPage.vue"),
       },
       {
-        path: "bpkb",
-        name: "bpkb",
-        component: () => import("../views/pages/transaction/deliveryPage.vue"),
+        path: "jaminan",
+        name: "jaminan",
+        component: () => import("../views/pages/transaction/jaminanPage.vue"),
       },
       {
         path: "bpkb-action",

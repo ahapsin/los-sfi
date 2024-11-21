@@ -1,14 +1,9 @@
 <template>
-  <n-card
-    content-style="padding: 0;"
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-  >
-  <!-- <pre>{{ bodyModal }}</pre> -->
-    <template #header
-      >Penerimaan Uang
+  <n-card content-style="padding: 0;" :segmented="{
+    content: true,
+    footer: 'soft',
+  }">
+    <template #header>Penerimaan Uang
       <!-- <n-icon v-if="width <=620">
         <phone-icon />
       </n-icon>
@@ -18,14 +13,7 @@
     </template>
     <template #header-extra>
       <n-space>
-        <n-button
-          round
-          v-show="!searchField"
-          strong
-          secondary
-          type="success"
-          @click="handleAddPay"
-        >
+        <n-button round v-show="!searchField" strong secondary type="success" @click="handleAddPay">
           <template #icon>
             <n-icon>
               <add-icon />
@@ -57,18 +45,9 @@
             </n-button>
           </template>
           <n-space vertical>
-            <n-input
-              autofocus="true"
-              clearable
-              placeholder="cari disini.."
-              v-model:value="searchBox"
-            />
-            <n-date-picker
-              :default-value="[Date.now(), Date.now()]"
-              :update-value-on-close="updateValueOnClose"
-              type="daterange"
-              @update:value="onConfirmDate"
-            />
+            <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+            <n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+              type="daterange" @update:value="onConfirmDate" />
           </n-space>
         </n-popover>
         <n-button type="success" secondary circle @click="downloadCsv">
@@ -78,51 +57,30 @@
             </n-icon>
           </template>
         </n-button>
-        <n-button type="error" secondary circle @click="handleBug">
+        <!-- <n-button type="error" secondary circle @click="handleBug">
           <template #icon>
             <n-icon>
               <bug-icon />
             </n-icon>
           </template>
         </n-button>
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          circle
-          @click="handleExpand"
-        >
+        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
               <full-icon />
             </n-icon>
           </template>
-        </n-button>
+        </n-button> -->
       </n-space>
     </template>
     <div>
       <n-space class="flex py-2"> </n-space>
-      <n-data-table
-        ref="tableRef"
-        striped
-        size="small"
-        :row-key="(row) => row.loan_number"
-        :columns="columns"
-        :scroll-x="870"
-        :data="showData"
-        :max-height="500"
-        :on-update:checked-row-keys="handleFasilitas"
-        :loading="loadDataPayment"
-        class="p-4"
-        :pagination="pagination"
-      />
+      <n-data-table ref="tableRef" striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
+        :scroll-x="870" :data="showData" :max-height="500" :on-update:checked-row-keys="handleFasilitas"
+        :loading="loadDataPayment" class="p-4" :pagination="pagination" />
     </div>
   </n-card>
-  <n-modal
-    class="w-full md:w-1/2"
-    title="Upload Berkas Pencairan"
-    v-model:show="showModal"
-  >
+  <n-modal class="w-full md:w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal">
     <n-card :bordered="false" aria-modal="true">
       <div class="flex justify-between">
         <div>
@@ -131,86 +89,61 @@
               <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">No Kontrak</label
-            ><span>
-              <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span
-            >
+            <label class="w-36">No Kontrak</label><span>
+              <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">No Transaksi</label
-            ><span>
-              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span
-            >
+            <label class="w-36">No Transaksi</label><span>
+              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span>
           </div>
-          
+
           <div class="flex">
-            <label class="w-36">Atas Nama </label
-            ><span>
-              <n-text strong> {{ bodyModal.nama }}</n-text></span
-            >
+            <label class="w-36">Atas Nama </label><span>
+              <n-text strong> {{ bodyModal.nama }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Alamat</label
-            ><span>
-              <n-text strong> {{ bodyModal.alamat }}</n-text></span
-            >
+            <label class="w-36">Alamat</label><span>
+              <n-text strong> {{ bodyModal.alamat }}</n-text></span>
           </div>
           <div class="flex">
             <label class="w-36">Angsuran Ke</label><span>
-              <n-text strong> {{ bodyModal.installment }}</n-text></span
-              >
+              <n-text strong> {{ bodyModal.installment }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Angsuran</label
-            ><span>
+            <label class="w-36">Angsuran</label><span>
               <n-text strong> {{ bodyModal.bayar_angsuran.toLocaleString('US') }}</n-text>
             </span>
           </div>
           <div class="flex">
-            <label class="w-36">Denda</label
-            ><span>
+            <label class="w-36">Denda</label><span>
               <n-text strong> {{ bodyModal.bayar_denda.toLocaleString('US') }}</n-text>
             </span>
           </div>
           <div class="flex">
-            <label class="w-36">Total Bayar</label
-            ><span>
+            <label class="w-36">Total Bayar</label><span>
               <n-text strong>
-                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text></span>
           </div>
-          
+
           <div class="flex">
-            <label class="w-36">Jumlah Uang</label
-            ><span>
+            <label class="w-36">Jumlah Uang</label><span>
               <n-text strong>
-                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Pembulatan</label
-            ><span>
+            <label class="w-36">Pembulatan</label><span>
               <n-text strong>
-                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text></span>
           </div>
-         
+
           <div class="flex">
-            <label class="w-36">Kembalian</label
-            ><span>
+            <label class="w-36">Kembalian</label><span>
               <n-text strong>
-                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Metode Pembayaran</label
-            ><span>
-              <n-text strong> {{ bodyModal.payment_method }}</n-text></span
-            >
+            <label class="w-36">Metode Pembayaran</label><span>
+              <n-text strong> {{ bodyModal.payment_method }}</n-text></span>
           </div>
           <!-- <div class="flex">
             <label class="w-36">Untuk Pembayaran</label>
@@ -235,29 +168,15 @@
         </div>
         <div class="flex gap-2">
           <n-space>
-            <n-tag
-              strong
-              :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'"
-            >
-              {{ bodyModal.STATUS }}</n-tag
-            >
-            <n-button
-              circle
-              secondary
-              @click="printReceipt"
-              v-show="bodyModal.STATUS == 'PAID' && width < 650"
-            >
+            <n-tag strong :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'">
+              {{ bodyModal.STATUS }}</n-tag>
+            <n-button circle secondary @click="printReceipt" v-show="bodyModal.STATUS == 'PAID' && width < 650">
               <n-icon>
                 <print-icon />
               </n-icon>
             </n-button>
-            <n-button
-              circle
-              secondary
-              type="warning"
-              @click="printReceiptDesktop"
-              v-show="bodyModal.STATUS == 'PAID' && width > 650"
-            >
+            <n-button circle secondary type="warning" @click="printReceiptDesktop"
+              v-show="bodyModal.STATUS == 'PAID' && width > 650">
               <n-icon>
                 <print-icon />
               </n-icon>
@@ -365,6 +284,7 @@ const createColumns = () => {
     {
       title: "nominal",
       width: 100,
+      align: 'right',
       key: "total_bayar",
       render(row) {
         return h("div", row.total_bayar.toLocaleString("US"));
@@ -483,9 +403,9 @@ const printReceipt = () => {
     " " +
     today.getHours() +
     ":" +
-    String(today.getMinutes()).padStart(2,"0") +
+    String(today.getMinutes()).padStart(2, "0") +
     ":" +
-    String(today.getSeconds()).padStart(2,"0");
+    String(today.getSeconds()).padStart(2, "0");
   pdfmake
     .createPdf({
       info: {
@@ -593,7 +513,7 @@ const printReceipt = () => {
         },
       },
       pageSize: {
-        width:  220,
+        width: 220,
         height: "auto",
       },
       defaultStyle: {
@@ -625,9 +545,9 @@ const printReceiptDesktop = () => {
     " " +
     today.getHours() +
     ":" +
-    String(today.getMinutes()).padStart(2,"0") +
+    String(today.getMinutes()).padStart(2, "0") +
     ":" +
-    String(today.getSeconds()).padStart(2,"0");
+    String(today.getSeconds()).padStart(2, "0");
   pdfmake
     .createPdf({
       info: {
@@ -735,7 +655,7 @@ const printReceiptDesktop = () => {
         },
       },
       pageSize: {
-        width:  920,
+        width: 920,
         height: "auto",
       },
       defaultStyle: {

@@ -1,25 +1,10 @@
 <template>
   <n-card>
     <template #header>Pending Transfer</template>
-    <!-- <n-collapse class="fixed flex bottom-0 left-0 z-50 shadow-xl">
-      <n-collapse-item
-        title="post payment"
-        name="1"
-        class="p-2 bg-black/10 border backdrop-blur-md rounded-t-xl overflow-auto max-h-[300px]"
-      >
-        <pre> {{ bodyPost }}</pre>
-      </n-collapse-item>
-    </n-collapse> -->
     <template #header-extra>
       <n-space>
         <n-badge :value="dataPending.length" :max="99" type="warning">
-          <n-button
-            v-show="!searchField"
-            strong
-            secondary
-            type="warning"
-            @click="dataPayment = dataPending"
-          >
+          <n-button v-show="!searchField" strong secondary type="warning" @click="dataPayment = dataPending">
             <template #icon>
               <n-icon>
                 <pending-icon />
@@ -28,13 +13,7 @@
             acc HO
           </n-button>
         </n-badge>
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          circle
-          @click="handleExpand"
-        >
+        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
               <full-icon />
@@ -44,145 +23,84 @@
       </n-space>
     </template>
     <div>
-      <n-data-table
-        striped
-        size="small"
-        :row-key="(row) => row.loan_number"
-        :columns="columns"
-        :data="dataPayment"
-        :max-height="300"
-        class="pb-2"
-        :pagination="pagination"
-      />
+      <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="dataPayment"
+        :max-height="300" class="pb-2" :pagination="pagination" />
     </div>
   </n-card>
-  <n-modal
-    class="w-2/5"
-    title="Upload Berkas Pencairan"
-    v-model:show="showModal"
-  >
+  <n-modal class="w-2/5" title="Upload Berkas Pencairan" v-model:show="showModal">
     <n-card :bordered="false" aria-modal="true">
       <div class="flex justify-between">
         <div>
           <div class="flex">
-            <label class="w-36">Tanggal</label
-            ><span>
-              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span
-            >
+            <label class="w-36">Tanggal</label><span>
+              <n-text strong> {{ bodyModal.tgl_transaksi }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">No Kontrak</label
-            ><span>
-              <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span
-            >
+            <label class="w-36">No Kontrak</label><span>
+              <n-text strong> {{ bodyModal.no_fasilitas }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">No Transaksi</label
-            ><span>
-              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span
-            >
+            <label class="w-36">No Transaksi</label><span>
+              <n-text strong> {{ bodyModal.no_transaksi }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Atas Nama </label
-            ><span>
-              <n-text strong> {{ bodyModal.nama }}</n-text></span
-            >
+            <label class="w-36">Atas Nama </label><span>
+              <n-text strong> {{ bodyModal.nama }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Alamat</label
-            ><span>
-              <n-text strong> {{ bodyModal.alamat }}</n-text></span
-            >
+            <label class="w-36">Alamat</label><span>
+              <n-text strong> {{ bodyModal.alamat }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Total Bayar</label
-            ><span>
+            <label class="w-36">Total Bayar</label><span>
               <n-text strong>
-                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.total_bayar.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Jumlah Uang</label
-            ><span>
+            <label class="w-36">Jumlah Uang</label><span>
               <n-text strong>
-                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Pembulatan</label
-            ><span>
+            <label class="w-36">Pembulatan</label><span>
               <n-text strong>
-                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.pembulatan.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">Metode Pembayaran</label
-            ><span>
-              <n-text strong> {{ bodyModal.payment_method }}</n-text></span
-            >
+            <label class="w-36">Metode Pembayaran</label><span>
+              <n-text strong> {{ bodyModal.payment_method }}</n-text></span>
           </div>
           <div class="flex">
-            <label class="w-36">kembalian</label
-            ><span>
+            <label class="w-36">kembalian</label><span>
               <n-text strong>
-                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text
-              ></span
-            >
+                {{ bodyModal.kembalian.toLocaleString("US") }}</n-text></span>
           </div>
           <div class="flex">
             <label class="w-36">Untuk Pembayaran</label>
             <n-space>
-              <n-tag
-                size="small"
-                v-for="pembayaran in bodyModal.pembayaran"
-                :bordered="false"
-                :key="pembayaran"
-                >{{ pembayaran.title }}
+              <n-tag size="small" v-for="pembayaran in bodyModal.pembayaran" :bordered="false" :key="pembayaran">{{
+                pembayaran.title }}
                 {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
-                <span v-show="pembayaran.bayar_denda > 0"
-                  >,denda
+                <span v-show="pembayaran.bayar_denda > 0">,denda
                   {{
                     parseInt(pembayaran.bayar_denda).toLocaleString("US")
-                  }}</span
-                >
+                  }}</span>
               </n-tag>
             </n-space>
           </div>
         </div>
         <div class="flex gap-2">
-          <label>Status</label
-          ><span>
-            <n-tag
-              strong
-              :type="bodyModal.STATUS == 'PENDING' ? 'warning' : 'success'"
-            >
-              {{ bodyModal.STATUS }}</n-tag
-            ></span
-          >
+          <label>Status</label><span>
+            <n-tag strong :type="statusTag(bodyModal.STATUS)">
+              {{ bodyModal.STATUS }}</n-tag></span>
         </div>
-        <n-popconfirm
-          :show-icon="false"
-          @positive-click="handlePositiveClick(bodyModal.no_transaksi)"
-          positive-text="konfirmasi"
-          negative-text="reject"
-          @negative-click="handleNegativeClick(bodyModal.no_transaksi)"
-        >
+        <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick(bodyModal.no_transaksi)"
+          positive-text="konfirmasi" negative-text="reject"
+          @negative-click="handleNegativeClick(bodyModal.no_transaksi)">
           <template #activator>
-            <n-button
-              :loading="loadingConf"
-              type="success"
-              v-show="bodyModal.STATUS == 'PENDING'"
-              >Konfirmasi</n-button
-            >
+            <n-button :loading="loadingConf" type="success" v-show="bodyModal.STATUS == 'PENDING'">Konfirmasi</n-button>
           </template>
-          <n-input
-            type="textarea"
-            placeholder="keterangan"
-            v-model:value="keterangan"
-          ></n-input>
+          <n-input type="textarea" placeholder="keterangan" v-model:value="keterangan"></n-input>
         </n-popconfirm>
       </div>
       <div v-show="bodyModal.payment_method == 'transfer'">
@@ -209,6 +127,7 @@ import {
   NBadge,
   NInput,
   useLoadingBar,
+  ellipsisProps,
 } from "naive-ui";
 import { computed, onMounted, reactive, h, ref } from "vue";
 const searchField = ref(false);
@@ -259,6 +178,9 @@ const createColumns = () => {
     {
       title: "no transaksi",
       sorter: "default",
+      ellipsis: {
+        tooltip: true
+      },
       key: "no_transaksi",
     },
     {
@@ -279,6 +201,7 @@ const createColumns = () => {
     {
       title: "nominal",
       key: "total_bayar",
+      align: 'right',
       render(row) {
         return h("div", row.total_bayar.toLocaleString("US"));
       },
@@ -291,7 +214,7 @@ const createColumns = () => {
         return h(
           NTag,
           {
-            type: row.STATUS == "PENDING" ? "warning" : "success",
+            type: statusTag(row.STATUS),
             onClick: () => {
               handleAction(row);
             },
@@ -340,6 +263,18 @@ const handleAction = (e) => {
   showModal.value = true;
   bodyModal.value = e;
 };
+
+const statusTag = (e) => {
+  if (e === "CANCEL") {
+    return "error";
+  }
+  if (e === "PAID") {
+    return "success";
+  }
+  if (e === "PENDING") {
+    return "warning";
+  }
+}
 const columns = createColumns();
 let userToken = localStorage.getItem("token");
 const keterangan = ref();
