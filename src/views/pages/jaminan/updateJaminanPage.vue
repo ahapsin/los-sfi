@@ -1,77 +1,29 @@
 <template>
-  <n-card
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-    :title="`Update Status Jaminan`"
-  >
+  <n-card :segmented="{
+    content: true,
+    footer: 'soft',
+  }" :title="`Update Status Jaminan`">
     <n-space vertical :size="12" class="mb-4">
-      <n-data-table
-        striped
-        size="small"
-        :row-key="(row) => row"
-        :columns="columns"
-        :data="dataBpkb"
-        :max-height="300"
-        :on-update:checked-row-keys="handleChecked"
-      />
+      <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+      <n-data-table striped size="small" :row-key="(row) => row" :columns="columns" :data="showData" :max-height="300"
+        :on-update:checked-row-keys="handleChecked" />
     </n-space>
     <div class="flex gap-2">
       <n-form-item label="Status" path="cabang" class="w-full">
-        <n-select
-          filterable
-          placeholder="Pilih Cabang"
-          :options="optTujuan"
-          v-model:value="dynamicForm.tujuan"
-          default-value="HO"
-        />
+        <n-select filterable placeholder="Pilih Cabang" :options="optTujuan" v-model:value="dynamicForm.tujuan"
+          default-value="HO" />
       </n-form-item>
-      <n-form-item
-        label="Nilai Jual"
-        path="cabang"
-        v-show="dynamicForm.tujuan === 'JUAL'"
-        class="w-full"
-      >
-        <n-input-number
-          :show-button="false"
-          filterable
-          placeholder="Nilai Jual"
-          v-model:value="dynamicForm.nilai_jual"
-          :parse="parse"
-          :format="format"
-          class="w-full"
-        />
+      <n-form-item label="Nilai Jual" path="cabang" v-show="dynamicForm.tujuan === 'JUAL'" class="w-full">
+        <n-input-number :show-button="false" filterable placeholder="Nilai Jual" v-model:value="dynamicForm.nilai_jual"
+          :parse="parse" :format="format" class="w-full" />
       </n-form-item>
-      <n-form-item
-        label="Uang Pelanggan"
-        path="cabang"
-        v-show="dynamicForm.tujuan === 'JUAL'"
-        class="w-full"
-      >
-        <n-input-number
-          :show-button="false"
-          filterable
-          placeholder="Nilai Jual"
-          v-model:value="dynamicForm.uang_pelanggan"
-          :parse="parse"
-          :format="format"
-          class="w-full"
-        />
+      <n-form-item label="Uang Pelanggan" path="cabang" v-show="dynamicForm.tujuan === 'JUAL'" class="w-full">
+        <n-input-number :show-button="false" filterable placeholder="Nilai Jual"
+          v-model:value="dynamicForm.uang_pelanggan" :parse="parse" :format="format" class="w-full" />
       </n-form-item>
-      <n-form-item
-        label="Titip di"
-        path="cabang"
-        v-show="dynamicForm.tujuan === 'TITIP'"
-        class="w-full"
-      >
-        <n-input
-          :show-button="false"
-          filterable
-          placeholder="Nilai Jual"
-          v-model:value="dynamicForm.uang_pelanggan"
-          class="w-full"
-        />
+      <n-form-item label="Titip di" path="cabang" v-show="dynamicForm.tujuan === 'TITIP'" class="w-full">
+        <n-input :show-button="false" filterable placeholder="Nilai Jual" v-model:value="dynamicForm.uang_pelanggan"
+          class="w-full" />
       </n-form-item>
     </div>
     <n-table size="small" v-show="dynamicForm.tujuan === 'JUAL'" class="mb-2">
@@ -134,11 +86,12 @@
 </template>
 <script setup>
 import { useMessage } from "naive-ui";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { usePDF } from "vue3-pdfmake";
 import router from "../../../router";
 import { useRoute } from "vue-router";
+import { useSearch } from "../../../helpers/searchObject";
 const dynamicForm = reactive({
   bpkb: null,
   tujuan: "NORMAL",
@@ -150,7 +103,10 @@ const message = useMessage();
 const baseRoute = useRoute();
 const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
-const handleCancel = () => router.push("/master/users");
+const emit = defineEmits();
+const handleCancel = () => {
+  emit('batal', false);
+};
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
@@ -161,47 +117,48 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const columns = [
-  {
-    type: "selection",
-  },
-  {
-    title: "No Polisi",
-    key: "no_polisi",
-  },
-  {
-    title: "No BPKB",
-    key: "no_bpkb",
-  },
-  {
-    title: "No Rangka",
-    key: "no_rangka",
-  },
-];
-const response = () =>
-  useApi({
-    method: "get",
-    api: `bpkb`,
-    token: userToken,
-  }).then((res) => {
-    if (res.ok) {
-      dataBPKB.value = res.data;
-      message.loading("memuat data BPKB");
+    {
+        type: "selection",
+    },
+    {
+        title: "Jenis",
+        key: "type",
+        sorter: "default",
+    },
+    {
+        title: "No Kontrak",
+        key: "order_number",
+        sorter: "default",
+        // render(row) {
+        //     return h("div", row.no_polisi);
+        // }
+    },
+    {
+        title: "Nama Debitur",
+        key: "nama_debitur",
+        sorter: "default",
+    },
+    {
+        title: "No Jaminan",
+        key: "no_jaminan",
+        sorter: "default",
+    },
+]
+
+useApi({
+    method: 'GET',
+    api: `jaminan`,
+    token: userToken
+}).then(res => {
+    if (!res.ok) {
+        console.log(res);
+        message.error("error koneksi api");
     } else {
-      message.error("error");
+        dataBpkb.value = res.data;
     }
-  });
-const bpkbToArray = (objects) => {
-  try {
-    return objects.map((obj, i) => [
-      i + 1,
-      obj.no_polisi,
-      obj.no_rangka,
-      obj.no_bpkb,
-    ]);
-  } catch (error) {
-    return [];
-  }
-};
+});
+const searchBox = ref();
+
 const colHeader = ["No", "No BPKB", "No Polisi", "No Rangka"];
 const handleSave = async () => {
   printAfter.value = true;
@@ -312,9 +269,8 @@ const optTujuan = ["NORMAL", "TITIP", "SITA", "JUAL"].map((v) => ({
   label: v,
   value: v,
 }));
-onMounted(() => {
-  if (param) {
-    response();
-  }
+const showData = computed(() => {
+    return useSearch(dataBpkb.value, searchBox.value);
 });
+onMounted(() => {});
 </script>

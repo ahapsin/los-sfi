@@ -80,7 +80,7 @@
         :loading="loadDataPayment" class="p-4" :pagination="pagination" />
     </div>
   </n-card>
-  <n-modal class="w-full md:w-1/2" title="Upload Berkas Pencairan" v-model:show="showModal">
+  <n-modal class="w-full md:w-fit" title="Upload Berkas Pencairan" v-model:show="showModal">
     <n-card :bordered="false" aria-modal="true">
       <div class="flex justify-between">
         <div>
@@ -359,7 +359,7 @@ const handleFasilitas = (e) => {
 const dataPayment = ref([]);
 const loadDataPayment = ref(false);
 const message = useMessage();
-const getDataPayment = async () => {
+const getDataPayment =  async () => {
   loadDataPayment.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -372,7 +372,6 @@ const getDataPayment = async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
-    loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
   }

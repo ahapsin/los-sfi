@@ -3,7 +3,7 @@
     content: true,
     footer: 'soft',
   }">
-    <!-- <pre>{{ dataStrukturKredit }}</pre> -->
+    <!-- <pre>{{ pageData }}</pre> -->
     <template #header>Tambah Penerimaan Uang</template>
     <template #header-extra>
 
@@ -58,7 +58,7 @@
       <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" size="small" :scroll-x="800"
         :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
         :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" v-show="dataFasilitas" />
-      <n-data-table striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
+      <n-data-table  striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
         :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure"
         v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran" class="py-2" />
       <n-space vertical>
@@ -95,7 +95,7 @@
               <template #icon>
                 <n-icon v-if="dataBuktiTransfer.length > 0"><check-icon /></n-icon>
               </template>
-             
+
               Bukti
             </n-button>
           </div>
@@ -106,9 +106,9 @@
           </n-input-number>
         </n-form-item>
         <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
-          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
-            v-model:value="pageData.jumlah_uang" :show-button="false" :parse="parse" :format="format" clearable
-            class="w-full">
+          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran" @focus="handleFocus"
+            ref="inputFocus" v-model:value="pageData.jumlah_uang" :show-button="false" :parse="parse" :format="format"
+            clearable class="w-full">
           </n-input-number>
         </n-form-item>
         <n-form-item label="Pembulatan" class="w-full">
@@ -139,8 +139,8 @@
   </n-card>
 
   <n-modal class="w-1/4" v-model:show="buktiTransfer" preset="card" :segmented="segmented">
-    <file-upload title="Bukti Transfer" :def_value="dataBuktiTransfer" endpoint="payment_attachment" type="bukti_transfer" :idapp="pageData.uid"
-      @fallback="handleResBack" />
+    <file-upload title="Bukti Transfer" :def_value="dataBuktiTransfer" endpoint="payment_attachment"
+      type="bukti_transfer" :idapp="pageData.uid" @fallback="handleResBack" />
   </n-modal>
 </template>
 <script setup>
@@ -248,6 +248,7 @@ const rowProps = (row) => {
       if (row.status === "LUNAS") {
         message.info("Fasilitas Sudah Lunas")
       } else {
+        isLasted.value=false;
         selectedFasilitas.value = row.loan_number;
         getSkalaCredit(row.loan_number);
         getDataPelunasan(row.loan_number);
@@ -319,6 +320,7 @@ const format = (value) => {
 const createColStruktur = () => {
   return [
     {
+      title: "ke",
       fixed: "left",
       type: "selection",
       disabled(row) {
@@ -346,7 +348,7 @@ const createColStruktur = () => {
     {
       title: "Angsuran",
       key: "installment",
-      align:'right',
+      align: 'right',
       width: 100,
       render(row) {
         return h("div", formatter.format(row.installment));
@@ -356,7 +358,7 @@ const createColStruktur = () => {
       title: "Denda",
       width: 100,
       key: "denda",
-      align:'right',
+      align: 'right',
       render(row) {
         return h("div", formatter.format(row.denda));
       },
@@ -503,7 +505,6 @@ const handleProses = async () => {
     negativeText: "cek kembali",
     onPositiveClick: () => {
       postDynamic();
-      router.push({ name: "pembayaran" });
     },
   });
   const postDynamic = async () => {
@@ -525,10 +526,15 @@ const handleProses = async () => {
     }
   };
 };
+const inputFocus = ref();
+const handleFocus = () => {
+  inputFocus.value?.select();
+}
 const dataSearch = ref([]);
 const loadSearch = ref(false);
 const dataFasilitas = ref(false);
 const handleSearch = async () => {
+  isLasted.value=false;
   dataAngsuran.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
@@ -614,9 +620,9 @@ const handleBack = () => {
   router.push({ name: "pembayaran" });
 };
 </script>
-
 <style scoped>
 :deep(.row-active td) {
+  font-weight: bolder;
   background-color: rgba(24, 160, 88, 0.2) !important;
   color: rgba(24, 160, 88, 1) !important;
 }

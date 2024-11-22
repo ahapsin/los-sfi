@@ -3,7 +3,6 @@
     content: true,
     footer: 'soft',
   }">
-
     <!-- <n-collapse class="bg-yellow-100">
             <n-collapse-item title="day" name="day">
                 <pre>{{ dayFull }}</pre>
@@ -31,8 +30,8 @@
         </n-form-item>
         <n-form-item label="Tanggal Awal Angsuran" path="order">
           <n-date-picker placeholder="Tanggal order" v-model:formatted-value="dynamicForm.awal"
-            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" :loading="lodingDateAwal"
-            :disabled="pkData.flag == 1" @update:formatted-value="getPrePK" />
+            value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" :disabled="pkData.flag == 1"
+            @update:formatted-value="getPrePK" />
         </n-form-item>
         <n-form-item label="Halaman" path="nama_panggilan">
           <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
@@ -202,8 +201,8 @@
             </tr>
             <tr>
               <td>
-                <div class="text-justify pt-2" v-for="jaminan, i in dataJaminan" :key="jaminan">
-                  {{ i + 1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
+                <div class="text-justify pt-2" v-for="jaminan, in dataJaminan" :key="jaminan">
+                  Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
                   <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                     <tr>
                       <td>BPKB No</td>
@@ -350,7 +349,7 @@
               <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
               <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                 dataPelanggan.tipe_identitas
-              }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
               bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
               disebut <b>Penerima Pinjaman.</b>
             </div>
@@ -452,7 +451,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.nama_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -461,7 +460,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.pekerjaan_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
                 <tr>
@@ -470,7 +469,7 @@
                   <td>
                     <b class="uppercase">{{
                       upCase(dataPasangan.alamat_pasangan)
-                    }}</b>
+                      }}</b>
                   </td>
                 </tr>
               </table>
@@ -701,8 +700,8 @@
               <b>{{ dayFull.year }}</b>,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
               dalam keadaan baik dengan rincian sebagai berikut :
             </div>
-            <div class="text-justify pt-2" v-for="jaminan, i in dataJaminan" :key="jaminan">
-              {{ i + 1 }}. Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
+            <div class="text-justify pt-2" v-for="jaminan in dataJaminan" :key="jaminan">
+              Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
               <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                 <tr>
                   <td>BPKB No</td>
@@ -913,9 +912,8 @@ useApi({
 const tgl_cetak = ref({});
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
-const loadingDateAwal = ref(false);
 const getPrePK = async () => {
-  loadingDateAwal.value = true;
+
   // const bodySend = {
   //     tgl_awal: yearServer + "-" + zeroPad((monthServer + 1), 2) + "-" + dynamicForm.awal,
   //     order_number: dynamicForm.order_number,
@@ -936,7 +934,7 @@ const getPrePK = async () => {
     if (!res.ok) {
       prosesPK.value = false;
     } else {
-      loadingDateAwal.value = false;
+
       prosesPK.value = true;
       pkData.value = res.data;
       let awal = res.data.tgl_awal_angsuran;
@@ -1429,25 +1427,7 @@ const createPdf = () => {
         headerRows: 1,
         body: [
           [
-            "BPKB No.",
-            ":",
-            `${pkData.value.no_bpkb ? pkData.value.no_bpkb : ""}`,
-          ],
-          ["BPKB atas nama.", ":", `${pkData.value.atas_nama}`],
-          [
-            "Merk/Type/Tahun",
-            ":",
-            `${pkData.value.merk} / ${pkData.value.type} / ${pkData.value.tahun}`,
-          ],
-          [
-            "Warna/No.Polisi. ",
-            ":",
-            `${pkData.value.warna}/${pkData.value.no_polisi}`,
-          ],
-          [
-            "No. Rangka/Mesin ",
-            ":",
-            `${pkData.value.no_rangka}/${pkData.value.no_mesin}`,
+            convertObject(dataJaminan.value)
           ],
         ],
       },
@@ -1557,28 +1537,9 @@ const createPdf = () => {
           layout: "noBorders",
           table: {
             width: [100, "*", 200, "*"],
-            headerRows: 1,
             body: [
               [
-                "BPKB No.",
-                ":",
-                `${pkData.value.no_bpkb ? pkData.value.no_bpkb : ""}`,
-              ],
-              ["BPKB atas nama.", ":", `${pkData.value.atas_nama}`],
-              [
-                "Merk/Type/Tahun",
-                ":",
-                `${pkData.value.merk} / ${pkData.value.type} / ${pkData.value.tahun}`,
-              ],
-              [
-                "Warna/No.Polisi. ",
-                ":",
-                `${pkData.value.warna}/${pkData.value.no_polisi}`,
-              ],
-              [
-                "No. Rangka/Mesin ",
-                ":",
-                `${pkData.value.no_rangka}/${pkData.value.no_mesin}`,
+                convertObject(dataJaminan.value),
               ],
             ],
           },
@@ -1682,7 +1643,23 @@ const handlePrint = () => {
   // doc.text(300, 30, `PERJANJIAN PEMBERIAN PINJAMAN\nNo. ${pkData.value.no_perjanjian}`, { align: 'center' });
   // doc.output('dataurlnewwindow');
 };
-
+function convertObject(object) {
+  return object.map(obj => [{
+    margin: [0, 0, 0, 20],
+    layout:'noBorders',
+    table: {
+      body: [
+        ['JENIS DOKUMEN', ":", obj.type],
+        ['BPKB NO', ":", obj.atr.no_bpkb],
+        ['BPKB Atas Nama', ":", obj.atr.atas_nama],
+        ['Merk/Type/Tahun', ":", `${obj.atr.merk}/${obj.atr.tipe}/${obj.atr.tahun}`],
+        ['Warna/ No. Polisi', ":", `${obj.atr.warna}/${obj.atr.no_polisi}`],
+        ['No. Rangka/No. Mesin', ":", `${obj.atr.no_rangka}/${obj.atr.no_mesin}/`],
+        ['No. Faktur', ":", obj.atr.no_faktur],
+      ]
+    }
+  }]);
+}
 const upCase = (e) => {
   return e;
 };

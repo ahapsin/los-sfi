@@ -51,19 +51,19 @@ const routes = [
       {
         path: "jaminan",
         name: "jaminan",
-        component: () => import("../views/pages/transaction/jaminanPage.vue"),
-      },
-      {
-        path: "bpkb-action",
-        name: "bpkb action",
-        component: () =>
-          import("../views/pages/transaction/addDeliveryPage.vue"),
+        component: () => import("../views/pages/jaminan/jaminanPage.vue"),
       },
       {
         path: "jaminan-action",
         name: "jaminan action",
         component: () =>
-          import("../views/pages/transaction/updateJaminanPage.vue"),
+          import("../views/pages/jaminan/trxJaminan.vue"),
+      },
+      {
+        path: "jaminan-update",
+        name: "jaminan update",
+        component: () =>
+          import("../views/pages/jaminan/updateJaminanPage.vue"),
       },
     ],
   },
