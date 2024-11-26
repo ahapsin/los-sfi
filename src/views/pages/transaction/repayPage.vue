@@ -1,25 +1,14 @@
-
 <template>
-  <n-card
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-  >
+  <n-card :segmented="{
+    content: true,
+    footer: 'soft',
+  }">
 
     <template #header>Pelunasan Angsuran</template>
-    <!-- <pre>{{ pelunasan }}</pre> -->
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
       <n-space v-if="!props.embed">
-        <n-button
-          round
-          v-show="!searchField"
-          strong
-          secondary
-          type="warning"
-          @click="handleBack"
-        >
+        <n-button round v-show="!searchField" strong secondary type="warning" @click="handleBack">
           <template #icon>
             <n-icon>
               <back-icon />
@@ -42,13 +31,7 @@
             </template>
             <span class="hidden md:flex">pindah ke penerimaan</span>
           </n-button> -->
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          circle
-          @click="handleExpand"
-        >
+        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
               <full-icon />
@@ -64,214 +47,142 @@
     </template>
     <div class="flex flex-col md:flex-row gap-2" v-show="!props.embed">
       <n-form-item label="Nama Pelanggan" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.nama"
-          type="text"
-          placeholder="Nama"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @input="handleSearch" clearable />
       </n-form-item>
       <n-form-item label="No Polisi" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.no_polisi"
-          type="text"
-          placeholder="No Polisi"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.no_polisi" type="text" placeholder="No Polisi" @input="handleSearch"
+          clearable />
       </n-form-item>
       <n-form-item label="No Kontrak" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.no_kontrak"
-          type="text"
-          placeholder="No Kontrak"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="No Kontrak" @input="handleSearch"
+          clearable />
       </n-form-item>
     </div>
-    <div>
-      <n-data-table
-        striped
-        :scroll-x="1200"
-        size="small"
-        :row-key="(row) => row.loan_number"
-        :columns="props.embed ? columnsEmbed : columns"
-        :data="dataSearch"
-        :max-height="300"
-        :on-update:checked-row-keys="handleFasilitas"
-        :loading="loadSearch"
-        class="pb-2"
-        v-show="props.embed ? true : displayFasilitas"
-      />
-      <n-table
-        size="small"
-        v-show="props.embed ? true : displayFasilitas"
-        class="mb-2"
-      >
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Tagihan</th>
-            <th>Bayar</th>
-            <th>Diskon</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>pokok</td>
-            <td>{{ pelunasan.SISA_POKOK.toLocaleString() }}</td>
-            <td>{{ pelunasan.BAYAR_POKOK.toLocaleString() }}</td>
-            <td>{{ pelunasan.DISKON_POKOK.toLocaleString() }}</td>
-          </tr>
-          <tr>
-            <td>Bunga</td>
-            <td>{{ pelunasan.TUNGGAKAN_BUNGA.toLocaleString() }}</td>
-            <td>{{ pelunasan.BAYAR_BUNGA.toLocaleString() }}</td>
-            <td>{{ pelunasan.DISKON_BUNGA.toLocaleString() }}</td>
-          </tr>
-          <tr>
-            <td>Pinalti</td>
-            <td>{{ pelunasan.PINALTI.toLocaleString() }}</td>
-            <td>{{ pelunasan.BAYAR_PINALTI.toLocaleString() }}</td>
-            <td>{{ pelunasan.DISKON_PINALTI.toLocaleString() }}</td>
-          </tr>
-          <tr>
-            <td>Denda</td>
-            <td>{{ pelunasan.DENDA.toLocaleString() }}</td>
-            <td>{{ pelunasan.BAYAR_DENDA.toLocaleString() }}</td>
-            <td>{{ pelunasan.DISKON_DENDA.toLocaleString() }}</td>
-          </tr>
-          <tr>
-            <th>Jumlah</th>
-            <th>{{ pelunasan.JUMLAH_TAGIHAN.toLocaleString() }}</th>
-            <th>{{ pelunasan.JUMLAH_BAYAR.toLocaleString() }}</th>
-            <th>{{ pelunasan.JUMLAH_DISKON.toLocaleString() }}</th>
-          </tr>
-        </tbody>
-      </n-table>
-      <div
-        class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
-        v-show="props.embed ? true : displayFasilitas"
-      >
-        <n-form-item
-          path="nestedValue.path2"
-          label="Jenis Pembayaran"
-          class="w-full"
-        >
-          <div class="flex gap-2">
-            <n-select
-              filterable
-              :options="optTipePay"
-              placeholder="Jenis Pembayaran"
-              v-model:value="pelunasan.METODE_PEMBAYARAN"
-            />
-            <n-button
-              v-show="pageData.payment_method == 'transfer'"
-              type="warning"
-              @click="buktiTransfer = true"
-            >
-              Bukti ({{ dataBuktiTransfer.length }})
-            </n-button>
+    <!-- <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" size="small" :scroll-x="800"
+        :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
+        :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" v-show="dataFasilitas" /> -->
+    <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" :scroll-x="1200" size="small"
+      :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
+      :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2"
+      v-show="props.embed ? true : displayFasilitas" />
+    <n-spin v-if="displayDetail" :show="spinnerShow">
+      <n-alert type="warning" :show-icon="false" v-show="props.embed ? true : displayFasilitas">
+        <div class="flex items-center justify-between">
+          <div>Penghapusan Bunga</div>
+          <div>
+            <n-text><strong>{{ formatter.format(pelunasan.DISC_BUNGA) }}</strong></n-text>
           </div>
-        </n-form-item>
-        <n-form-item
-          path="nestedValue.path2"
-          label="Total Bayar"
-          class="w-full"
-        >
-          <n-input-number
-            placeholder="Jumlah Pembayaran"
-            v-model:value="pelunasan.JUMLAH_TAGIHAN"
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            readonly
-            class="w-full"
-          >
-          </n-input-number>
-        </n-form-item>
-        <n-form-item
-          path="nestedValue.path2"
-          label="Uang Pelanggan"
-          class="w-full"
-        >
-          <n-input-number
-            placeholder="Jumlah Pembayaran"
-            v-model:value="pelunasan.UANG_PELANGGAN"
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            clearable
-            @blur="pushJumlahUang"
-            class="w-full"
-          >
-          </n-input-number>
-        </n-form-item>
-        <n-form-item
-          path="nestedValue.path2"
-          label="Jumlah Diskon"
-          class="w-full"
-        >
-          <n-input-number
-            placeholder="Jumlah Pembayaran"
-            v-model:value="pelunasan.JUMLAH_DISKON"
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            clearable
-            @blur="pushJumlahUang"
-            class="w-full"
-            readonly
-          >
-          </n-input-number>
-        </n-form-item>
-        <n-form-item label="Pembulatan" class="w-full">
-          <n-input-number
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            v-model:value="pelunasan.PEMBULATAN"
-            clearable
-            class="w-full"
-            :disabled="
-              pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false
-            "
-          />
-        </n-form-item>
-        <n-form-item label="Kembalian" class="w-full">
-          <n-input-number
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            v-model:value="pelunasan.KEMBALIAN"
-            readonly
-            class="w-full"
-            :disabled="
-              pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false
-            "
-          />
-        </n-form-item>
-        <n-form-item class="w-full">
-          <n-button
-            type="primary"
-            @click="handleProses"
-            :loading="loadProses"
-            class="w-full"
-          >
-            Proses
-          </n-button>
-        </n-form-item>
+        </div>
+      </n-alert>
+      <div>
+        <n-table size="small" v-show="props.embed ? true : displayFasilitas" class="mb-2" single-column
+          :single-line="false">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th align="right">Tagihan</th>
+              <th align="right">Bayar</th>
+              <th valign="right">Diskon</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pokok</td>
+              <td align="right">{{ formatter.format(pelunasan.SISA_POKOK) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.BAYAR_POKOK) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.DISKON_POKOK) }}</td>
+            </tr>
+            <tr>
+              <td>Bunga</td>
+              <td align="right">{{ formatter.format(pelunasan.TUNGGAKAN_BUNGA) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.BAYAR_BUNGA) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.DISKON_BUNGA) }}</td>
+            </tr>
+            <tr>
+              <td>Pinalti</td>
+              <td align="right">{{ formatter.format(pelunasan.PINALTI) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.BAYAR_PINALTI) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.DISKON_PINALTI) }}</td>
+            </tr>
+            <tr>
+              <td>Denda</td>
+              <td align="right">{{ formatter.format(pelunasan.DENDA) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.BAYAR_DENDA) }}</td>
+              <td align="right">{{ formatter.format(pelunasan.DISKON_DENDA) }}</td>
+            </tr>
+            <tr>
+              <td class="bg-pr"><strong>Jumlah</strong></td>
+              <td align="right"><strong>{{ formatter.format(pelunasan.JUMLAH_TAGIHAN) }}</strong></td>
+              <td align="right"><strong>{{ formatter.format(pelunasan.JUMLAH_BAYAR) }}</strong></td>
+              <td align="right"><strong>{{ formatter.format(pelunasan.JUMLAH_DISKON) }}</strong></td>
+            </tr>
+          </tbody>
+        </n-table>
+        <div class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
+          v-show="props.embed ? true : displayFasilitas">
+          <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
+            <div class="flex gap-2">
+              <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
+                v-model:value="pelunasan.METODE_PEMBAYARAN" />
+              <n-button v-show="pelunasan.METODE_PEMBAYARAN == 'transfer'"
+                :type="dataBuktiTransfer.length > 0 ? 'success' : 'warning'" @click="buktiTransfer = true">
+                <template #icon>
+                  <n-icon v-if="dataBuktiTransfer.length > 0"><check-icon /></n-icon>
+                </template>
+                Bukti
+              </n-button>
+            </div>
+          </n-form-item>
+          <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
+            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
+              v-model:value="pelunasan.JUMLAH_TAGIHAN" :show-button="false" :parse="parse" :format="format" readonly
+              class="w-full">
+            </n-input-number>
+          </n-form-item>
+          <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
+            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
+              v-model:value="pelunasan.UANG_PELANGGAN" :show-button="false" :parse="parse" :format="format" clearable
+              @blur="pushJumlahUang" class="w-full">
+            </n-input-number>
+          </n-form-item>
+          <n-form-item path="nestedValue.path2" label="Jumlah Diskon" class="w-full">
+            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
+              v-model:value="pelunasan.JUMLAH_DISKON" :show-button="false" :parse="parse" :format="format" clearable
+              @blur="pushJumlahUang" class="w-full" readonly>
+            </n-input-number>
+          </n-form-item>
+          <n-form-item label="Pembulatan" class="w-full">
+            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :parse="parse" :format="format"
+              v-model:value="pelunasan.PEMBULATAN" clearable class="w-full" :disabled="pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false
+                " />
+          </n-form-item>
+          <n-form-item label="Kembalian" class="w-full">
+            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :parse="parse" :format="format"
+              v-model:value="pelunasan.KEMBALIAN" readonly class="w-full" :disabled="pelunasan.UANG_PELANGGAN < pelunasan.JUMLAH_TAGIHAN ? true : false
+                " />
+          </n-form-item>
+          <n-form-item class="w-full">
+            <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full" :disabled="pelunasan.UANG_PELANGGAN === 0
+              ? true
+              : pelunasan.jumlah_uang <= 0
+                ? true
+                : pelunasan.kembalian < 0
+                  ? true
+                  : dataBuktiTransfer.length == 0 && pelunasan.METODE_PEMBAYARAN == 'transfer'
+                    ? true
+                    : false">
+              Proses
+            </n-button>
+          </n-form-item>
+        </div>
       </div>
-    </div>
+    </n-spin>
   </n-card>
-  <n-modal
-    class="w-3/4"
-    title="Upload Berkas Pencairan"
-    v-model:show="dialogProses"
-    :mask-closable="false"
-  >
+  <n-modal class="w-1/4" v-model:show="buktiTransfer" preset="card" :segmented="segmented">
+    <file-upload title="Bukti Transfer" :def_value="dataBuktiTransfer" endpoint="payment_attachment"
+      type="bukti_transfer" :idapp="pageData.uid" @fallback="handleResBack" />
+  </n-modal>
+  <n-modal class="w-3/4" title="Upload Berkas Pencairan" v-model:show="dialogProses" :mask-closable="false">
     <n-card title="Transaksi Berhasil">
       <div class="flex gap-8 font-mono">
         <table class="table-auto w-1/2">
@@ -309,10 +220,8 @@
             <td valign="top">Keterangan</td>
             <td valign="top">:</td>
             <td>
-              <span
-                v-for="pembayaran in paymentData.pembayaran"
-                v-bind:key="pembayaran.id"
-                >{{ pembayaran.title }} ({{ pembayaran.payment_value }}),
+              <span v-for="pembayaran in paymentData.pembayaran" v-bind:key="pembayaran.id">{{ pembayaran.title }} ({{
+                pembayaran.payment_value }}),
               </span>
             </td>
           </tr>
@@ -358,10 +267,11 @@
     </n-card>
   </n-modal>
 </template>
-  <script setup>
+<script setup>
 import { useApi } from "../../../helpers/axios";
 import router from "../../../router";
 import {
+  CheckCircleRound as checkIcon,
   ChevronLeftRound as backIcon,
   OpenInFullRound as fullIcon,
 } from "@vicons/material";
@@ -377,8 +287,10 @@ import { computed, reactive, ref, h, onMounted } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
+const spinnerShow = ref(true);
 const dialogProses = ref(false);
 const dataBuktiTransfer = ref([]);
+const buktiTransfer = ref(false);
 const paymentData = ref([]);
 const pageData = reactive({
   no_facility: null,
@@ -397,18 +309,20 @@ const pageData = reactive({
   no_rekening: null,
   bukti_transafer: null,
 });
+
+
+
 const dynamicSearch = reactive({
   nama: "",
   no_polisi: "",
   no_kontrak: "",
 });
+
+const handleResBack = (data) => {
+  dataBuktiTransfer.value = data;
+}
 const createColumns = () => {
   return [
-    {
-      type: "selection",
-      multiple: false,
-      fixed: "left",
-    },
     {
       title: "No Kontrak",
       key: "loan_number",
@@ -433,9 +347,15 @@ const createColumns = () => {
     {
       title: "Angsuran",
       key: "angsuran",
+      align: "right",
       render(row) {
-        return h("div", row.angsuran.toLocaleString("US"));
+        return h("div", formatter.format(row.angsuran));
       },
+    },
+    {
+      title: "Status",
+      key: "status",
+      sorter: "default",
     },
   ];
 };
@@ -471,6 +391,34 @@ const createColumnsEmbed = () => {
     },
   ];
 };
+const selectedFasilitas = ref();
+const rowProps = (row) => {
+  return {
+    style: "cursor: pointer;",
+    onClick: () => {
+      if (row.status === "LUNAS") {
+        message.info("Fasilitas Sudah Lunas")
+      } else {
+        console.log(row.loan_number);
+        selectedFasilitas.value = row.loan_number;
+        displayDetail.value = true;
+        pelunasan.LOAN_NUMBER = row[0];
+        pelunasan.UANG_PELANGGAN = 0;
+        pelunasan.BAYAR_POKOK = 0;
+        pelunasan.BAYAR_BUNGA = 0;
+        pelunasan.BAYAR_DENDA = 0;
+        pelunasan.BAYAR_PINALTI = 0;
+        pelunasan.SISA_POKOK = 0;
+        pelunasan.BUNGA_BERJALAN = 0;
+        pelunasan.TUNGGAKAN_BUNGA = 0;
+        pelunasan.DENDA = 0;
+        pelunasan.PINALTI = 0;
+        displayDetail.value = true;
+        getDataPelunasan(row.loan_number);
+      }
+    },
+  };
+};
 const handleDone = () => {
   dialogProses.value = false;
   router.push({ name: "pembayaran" });
@@ -492,6 +440,7 @@ const loadingAngsuran = ref(false);
 const displayDetail = ref(false);
 const displayPayment = ref(false);
 const handleFasilitas = (e) => {
+  displayDetail.value = true;
   pelunasan.LOAN_NUMBER = e[0];
   pelunasan.UANG_PELANGGAN = 0;
   pelunasan.BAYAR_POKOK = 0;
@@ -546,6 +495,7 @@ const dataSearch = ref([]);
 const loadSearch = ref(false);
 const displayFasilitas = ref(false);
 const handleSearch = async () => {
+  displayDetail.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
   const response = await useApi({
@@ -669,16 +619,23 @@ const pelunasan = reactive({
   PEMBULATAN: 0,
   KEMBALIAN: computed(() =>
     pelunasan.UANG_PELANGGAN - pelunasan.JUMLAH_TAGIHAN - pelunasan.PEMBULATAN <
-    0
+      0
       ? 0
       : pelunasan.UANG_PELANGGAN -
-        pelunasan.JUMLAH_TAGIHAN -
-        pelunasan.PEMBULATAN
+      pelunasan.JUMLAH_TAGIHAN -
+      pelunasan.PEMBULATAN
   ),
 });
+const isRtl = true;
+
+const formatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 const getDataPelunasan = async (e) => {
+  spinnerShow.value = true;
   const dynamicBody = {
-    loan_number: e[0],
+    loan_number: e,
   };
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -691,6 +648,7 @@ const getDataPelunasan = async (e) => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    spinnerShow.value = false;
     dataPelunasan.value = response.data;
     Object.assign(pelunasan, response.data[0]);
     displayPayment.value = true;
@@ -718,5 +676,17 @@ onMounted(() => {
 const handleBack = () => {
   router.push({ name: "pelunasan" });
 };
+const rowClassName = (row) => {
+  if (row.loan_number == selectedFasilitas.value) {
+    return "row-active";
+  }
+  return "";
+};
 </script>
-  
+<style scoped>
+:deep(.row-active td) {
+  font-weight: bolder;
+  background-color: rgba(24, 160, 88, 0.2) !important;
+  color: rgba(24, 160, 88, 1) !important;
+}
+</style>

@@ -1,24 +1,15 @@
 <template>
-  <n-card
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-  >
-  <!-- <pre>{{ dataStrukturKredit }}</pre> -->
+  <n-card :segmented="{
+    content: true,
+    footer: 'soft',
+  }">
+    <!-- <pre>{{ pageData }}</pre> -->
     <template #header>Tambah Penerimaan Uang</template>
     <template #header-extra>
-      
+
       <n-space>
-        
-        <n-button
-          round
-          v-show="!searchField"
-          strong
-          secondary
-          type="warning"
-          @click="handleBack"
-        >
+
+        <n-button round v-show="!searchField" strong secondary type="warning" @click="handleBack">
           <template #icon>
             <n-icon>
               <back-icon />
@@ -41,13 +32,7 @@
           </template>
           <p class="hidden">pindah ke pelunasan</p>
         </n-button> -->
-        <n-button
-          v-show="!searchField"
-          strong
-          secondary
-          circle
-          @click="handleExpand"
-        >
+        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
           <template #icon>
             <n-icon>
               <full-icon />
@@ -58,70 +43,26 @@
     </template>
     <div class="flex flex-col md:flex-row gap-2">
       <n-form-item label="Nama Pelanggan" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.nama"
-          type="text"
-          placeholder="Nama"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @input="handleSearch" clearable />
       </n-form-item>
       <n-form-item label="No Polisi" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.no_polisi"
-          type="text"
-          placeholder="No Polisi"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.no_polisi" type="text" placeholder="No Polisi" @input="handleSearch"
+          clearable />
       </n-form-item>
       <n-form-item label="No Kontrak" class="w-full">
-        <n-input
-          v-model:value="dynamicSearch.no_kontrak"
-          type="text"
-          placeholder="No Kontrak"
-          @input="handleSearch"
-          clearable
-        />
+        <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="No Kontrak" @input="handleSearch"
+          clearable />
       </n-form-item>
     </div>
     <div>
-      <n-data-table
-        :row-props="rowProps"
-        striped
-        :row-class-name="rowClassName"
-        size="small"
-        :scroll-x="800"
-        :row-key="(row) => row.loan_number"
-        :columns="columns"
-        :data="dataSearch"
-        :max-height="300"
-        :on-update:checked-row-keys="handleFasilitas"
-        :loading="loadSearch"
-        class="pb-2"
-        v-show="dataFasilitas"
-      />
-      <n-data-table
-        striped
-        size="small"
-        :scroll-x="1200"
-        :row-key="(row) => row"
-        :columns="columnStruktur"
-        :data="dataStrukturKredit"
-        :max-height="300"
-        :checked-row-keys="checkedRowCredit"
-        :loading="loadStructure"
-        v-show="dataAngsuran"
-        :on-update:checked-row-keys="handleAngsuran"
-        class="py-2"
-      />
+      <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" size="small" :scroll-x="800"
+        :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
+        :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" v-show="dataFasilitas" />
+      <n-data-table  striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
+        :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure"
+        v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran" class="py-2" />
       <n-space vertical>
-        <n-alert
-          type="warning"
-          :show-icon="false"
-          class="mb-2"
-          v-show="isLasted"
-        >
+        <n-alert type="warning" :show-icon="false" class="mb-2" v-show="isLasted">
           <div class="flex justify-between gap-4">
             <div class="flex w-full justify-start gap-4 items-center">
               <div>Tungakan denda</div>
@@ -132,20 +73,9 @@
             <div class="flex w-full justify-end items-center gap-2">
               <div>Diskon</div>
               <div class="flex gap-2">
-                <n-input-number
-                  :show-button="false"
-                  :min="0"
-                  :default-value="0"
-                  clearable
-                  icon
-                  size=""
-                  :parse="parse"
-                  :format="format"
-                  :max="pageData.tunggakan_denda"
-                  @input="diskonFormat"
-                  placeholder="Jumlah Diskon"
-                  v-model:value="pageData.diskon_tunggakan"
-                />
+                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :min="0" :default-value="0"
+                  clearable icon size="" :parse="parse" :format="format" :max="pageData.tunggakan_denda"
+                  @input="diskonFormat" placeholder="Jumlah Diskon" v-model:value="pageData.diskon_tunggakan" />
                 <n-button secondary circle @click="diskonInput = !diskonInput">
                   <span v-if="diskonInput">Rp</span>
                   <span v-else>%</span>
@@ -155,103 +85,52 @@
           </div>
         </n-alert>
       </n-space>
-      <div
-        class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
-        v-show="dataPayment"
-      >
-        <n-form-item
-          path="nestedValue.path2"
-          label="Jenis Pembayaran"
-          class="w-full"
-        >
+      <div class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4" v-show="dataPayment">
+        <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
           <div class="flex gap-2">
-            <n-select
-              filterable
-              :options="optTipePay"
-              placeholder="Jenis Pembayaran"
-              v-model:value="pageData.payment_method"
-            />
-            <n-button
-              v-show="pageData.payment_method == 'transfer'"
-              type="warning"
-              @click="buktiTransfer = true"
-            >
-              Bukti ({{ dataBuktiTransfer.length }})
+            <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
+              v-model:value="pageData.payment_method" />
+            <n-button v-show="pageData.payment_method == 'transfer'"
+              :type="dataBuktiTransfer.length > 0 ? 'success' : 'warning'" @click="buktiTransfer = true">
+              <template #icon>
+                <n-icon v-if="dataBuktiTransfer.length > 0"><check-icon /></n-icon>
+              </template>
+
+              Bukti
             </n-button>
           </div>
         </n-form-item>
-        <n-form-item
-          path="nestedValue.path2"
-          label="Total Bayar"
-          class="w-full"
-        >
-          <n-input-number
-            placeholder="Jumlah Pembayaran"
-            v-model:value="totalPay"
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            clearable
-            class="w-full"
-            readonly
-          >
+        <n-form-item path="nestedValue.path2" label="Total Bayar" class="w-full">
+          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran" v-model:value="totalPay"
+            :show-button="false" :parse="parse" :format="format" clearable class="w-full" readonly>
           </n-input-number>
         </n-form-item>
-        <n-form-item
-          path="nestedValue.path2"
-          label="Uang Pelanggan"
-          class="w-full"
-        >
-          <n-input-number
-            placeholder="Jumlah Pembayaran"
-            v-model:value="pageData.jumlah_uang"
-            :show-button="false"
-            :parse="parse"
-            :format="format"
-            clearable
-            class="w-full"
-          >
+        <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
+          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran" @focus="handleFocus"
+            ref="inputFocus" v-model:value="pageData.jumlah_uang" :show-button="false" :parse="parse" :format="format"
+            clearable class="w-full">
           </n-input-number>
         </n-form-item>
         <n-form-item label="Pembulatan" class="w-full">
-          <n-input-number
-            :show-button="false"
-            :parse="parse"
-            min="0"
-            :format="format"
-            :max="pageData.jumlah_uang - totalPay"
-            v-model:value="pageData.pembulatan"
-            clearable
-            class="w-full"
-          />
+          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :parse="parse" min="0"
+            :format="format" :max="pageData.jumlah_uang - totalPay" v-model:value="pageData.pembulatan" clearable
+            class="w-full" />
         </n-form-item>
         <n-form-item label="Kembalian" class="w-full">
-          <n-input-number
-            :show-button="false"
-            min="0;"
-            :parse="parse"
-            :format="format"
-            v-model:value="pageData.kembalian"
-            readonly
-            class="w-full"
-          />
+          <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" min="0;" :parse="parse"
+            :format="format" v-model:value="pageData.kembalian" readonly class="w-full" />
         </n-form-item>
         <n-form-item class="w-full">
-          <n-button
-            type="primary"
-            @click="handleProses"
-            :loading="loadProses"
-            class="w-full"
-            :disabled="
-              totalPay === 0
+          <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full" :disabled="totalPay === 0
+            ? true
+            : pageData.jumlah_uang <= 0
+              ? true
+              : pageData.kembalian < 0
                 ? true
-                : pageData.jumlah_uang <= 0
-                ? true
-                : pageData.kembalian < 0
-                ? true
-                : false
-            "
-          >
+                : dataBuktiTransfer.length == 0 && pageData.payment_method == 'transfer'
+                  ? true
+                  : false
+            ">
             Proses
           </n-button>
         </n-form-item>
@@ -259,32 +138,9 @@
     </div>
   </n-card>
 
-  <n-modal class="w-1/4" v-model:show="buktiTransfer">
-    <n-card>
-      <n-upload
-        list-type="image"
-        multiple
-        :data="{ type: 'berkas pencairan' }"
-        :custom-request="handleImagePost"
-        :max="5"
-      >
-        <n-upload-dragger>
-          <div style="margin-bottom: 12px">
-            <n-icon size="48" :depth="3">
-              <add-icon />
-            </n-icon>
-          </div>
-          <n-text style="font-size: 16px">
-            Klik atau seret file ke area ini untuk diunggah
-          </n-text>
-        </n-upload-dragger>
-      </n-upload>
-      <n-image
-        v-for="imageBukti in dataBuktiTransfer"
-        :src="imageBukti"
-        v-bind:key="imageBukti"
-      />
-    </n-card>
+  <n-modal class="w-1/4" v-model:show="buktiTransfer" preset="card" :segmented="segmented">
+    <file-upload title="Bukti Transfer" :def_value="dataBuktiTransfer" endpoint="payment_attachment"
+      type="bukti_transfer" :idapp="pageData.uid" @fallback="handleResBack" />
   </n-modal>
 </template>
 <script setup>
@@ -295,7 +151,7 @@ import { useApi } from "../../../helpers/axios";
 import router from "../../../router";
 import _ from "lodash";
 import {
-  PlusFilled as addIcon,
+  CheckCircleRound as checkIcon,
   ChevronLeftRound as backIcon,
   OpenInFullRound as fullIcon,
 } from "@vicons/material";
@@ -321,6 +177,9 @@ const dataBuktiTransfer = ref([]);
 const diskonInput = ref("false");
 const isLast = ref(false);
 
+const handleResBack = (data) => {
+  dataBuktiTransfer.value = data;
+}
 const totalPay = computed(() => {
   const totalInstallment = () =>
     checkedRowCredit.value.reduce(
@@ -386,12 +245,13 @@ const rowProps = (row) => {
   return {
     style: "cursor: pointer;",
     onClick: () => {
-      if(row.status === "LUNAS"){
+      if (row.status === "LUNAS") {
         message.info("Fasilitas Sudah Lunas")
-      }else{
-      selectedFasilitas.value = row.loan_number;
-      getSkalaCredit(row.loan_number);
-      getDataPelunasan(row.loan_number);
+      } else {
+        isLasted.value=false;
+        selectedFasilitas.value = row.loan_number;
+        getSkalaCredit(row.loan_number);
+        getDataPelunasan(row.loan_number);
       }
     },
   };
@@ -428,8 +288,9 @@ const createColumns = () => {
     {
       title: "Angsuran",
       key: "angsuran",
+      align: "right",
       render(row) {
-        return h("div", row.angsuran.toLocaleString("US"));
+        return h("div", formatter.format(row.angsuran));
       },
     },
     {
@@ -459,6 +320,7 @@ const format = (value) => {
 const createColStruktur = () => {
   return [
     {
+      title: "ke",
       fixed: "left",
       type: "selection",
       disabled(row) {
@@ -486,17 +348,19 @@ const createColStruktur = () => {
     {
       title: "Angsuran",
       key: "installment",
+      align: 'right',
       width: 100,
       render(row) {
-        return h("div", row.installment.toLocaleString("US"));
+        return h("div", formatter.format(row.installment));
       },
     },
     {
       title: "Denda",
       width: 100,
       key: "denda",
+      align: 'right',
       render(row) {
-        return h("div", row.denda.toLocaleString("US"));
+        return h("div", formatter.format(row.denda));
       },
     },
     {
@@ -513,6 +377,7 @@ const createColStruktur = () => {
               : true,
             format: format,
             parse: parse,
+            dir: isRtl,
             max: row.installment,
             showButton: false,
             secondary: true,
@@ -537,7 +402,7 @@ const createColStruktur = () => {
         } else {
           return h(NInputNumber, {
             disabled: _.find(checkedRowCredit.value, ["key", row.key])
-              ? false
+              ? isLasted.value
               : true,
             clearable: true,
             max: row.denda,
@@ -576,7 +441,7 @@ const createColStruktur = () => {
             placeholder: "pembayaran",
             value: _.find(checkedRowCredit.value, ["key", row.key])
               ? dataStrukturKredit.value[index].bayar_angsuran +
-                dataStrukturKredit.value[index].bayar_denda
+              dataStrukturKredit.value[index].bayar_denda
               : 0,
           });
         }
@@ -584,6 +449,11 @@ const createColStruktur = () => {
     },
   ];
 };
+
+const formatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 const optTipePay = [
   {
     label: "Tunai",
@@ -600,7 +470,7 @@ const dataAngsuran = ref(false);
 const loadingAngsuran = ref(false);
 const loadStructure = ref(false);
 const selectedFasilitas = ref();
-
+const isRtl = true;
 const handleFasilitas = (e) => {
   // isLasted(e);
   isLast.value = true;
@@ -635,7 +505,6 @@ const handleProses = async () => {
     negativeText: "cek kembali",
     onPositiveClick: () => {
       postDynamic();
-      router.push({ name: "pembayaran" });
     },
   });
   const postDynamic = async () => {
@@ -657,10 +526,15 @@ const handleProses = async () => {
     }
   };
 };
+const inputFocus = ref();
+const handleFocus = () => {
+  inputFocus.value?.select();
+}
 const dataSearch = ref([]);
 const loadSearch = ref(false);
 const dataFasilitas = ref(false);
 const handleSearch = async () => {
+  isLasted.value=false;
   dataAngsuran.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
@@ -719,7 +593,7 @@ const handleImagePost = ({ file, onError, onFinish, onProgress }) => {
     Authorization: `Bearer ${userToken}`,
   };
   lyla
-    .post("https://api.kspdjaya.id/payment_attachment", {
+    .post(`${import.meta.env.VITE_APP_API_BASE}payment_attachment`, {
       headers,
       body: form,
       onUploadProgress: ({ percent }) => {
@@ -727,6 +601,7 @@ const handleImagePost = ({ file, onError, onFinish, onProgress }) => {
       },
     })
     .then(({ json }) => {
+      dataBuktiTransfer.value = [];
       dataBuktiTransfer.value.push(json);
       message.success("image berhasil di upload");
       onFinish();
@@ -745,9 +620,9 @@ const handleBack = () => {
   router.push({ name: "pembayaran" });
 };
 </script>
-
 <style scoped>
 :deep(.row-active td) {
+  font-weight: bolder;
   background-color: rgba(24, 160, 88, 0.2) !important;
   color: rgba(24, 160, 88, 1) !important;
 }

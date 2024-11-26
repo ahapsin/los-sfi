@@ -167,6 +167,9 @@ const columns = [
   },
   {
     title: "Order",
+    ellipsis: {
+      tooltip: true,
+    },
     sorter: "default",
     key: "order_number",
     width: 100,
@@ -180,6 +183,7 @@ const columns = [
   {
     width: 100,
     title: "Plafond",
+    align: 'right',
     sorter: "default",
     key: "plafond",
     render(row) {

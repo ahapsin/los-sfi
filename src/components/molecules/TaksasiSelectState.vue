@@ -44,6 +44,7 @@
     </n-form-item>
     <n-form-item label="Harga Pasar" path="pasar" class="w-full">
       <n-input-number
+      v-bind:dir="isRtl ? 'rtl' : 'ltr'"
         :show-button="false"
         v-model:value="props.pasar"
         placeholder="Harga Pasar"
@@ -68,7 +69,7 @@ const loadingBrand = ref(false);
 const col_brand = ref([]);
 const col_tipe = ref([]);
 const filter_tipe = ref([]);
-
+const isRtl = true;
 const loadingTipe = ref(false);
 const loadingTahun = ref(false);
 const col_tahun = ref();

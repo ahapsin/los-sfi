@@ -109,6 +109,7 @@ const columns = [
   {
     title: "Plafond",
     sorter: "default",
+    align:'right',
     key: "plafond",
     render(row) {
       return h("div", format(row.plafond));

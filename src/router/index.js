@@ -49,21 +49,21 @@ const routes = [
         component: () => import("../views/pages/transaction/repayPage.vue"),
       },
       {
-        path: "bpkb",
-        name: "bpkb",
-        component: () => import("../views/pages/transaction/deliveryPage.vue"),
-      },
-      {
-        path: "bpkb-action",
-        name: "bpkb action",
-        component: () =>
-          import("../views/pages/transaction/addDeliveryPage.vue"),
+        path: "jaminan",
+        name: "jaminan",
+        component: () => import("../views/pages/jaminan/jaminanPage.vue"),
       },
       {
         path: "jaminan-action",
         name: "jaminan action",
         component: () =>
-          import("../views/pages/transaction/updateJaminanPage.vue"),
+          import("../views/pages/jaminan/trxJaminan.vue"),
+      },
+      {
+        path: "jaminan-update",
+        name: "jaminan update",
+        component: () =>
+          import("../views/pages/jaminan/updateJaminanPage.vue"),
       },
     ],
   },
@@ -141,7 +141,7 @@ const routes = [
         path: "approval_trf",
         name: "pending transfer",
         component: () =>
-          import("../views/pages/task/HO/PendingTransferPage.vue"),
+          import("../views/pages/task/HO/PersetujuanPage.vue"),
       },
       {
         path: "new-survey",

@@ -2,7 +2,7 @@
  <div id="app">
     <LoadingScreen class="absolute" :isLoading="isLoading" />
     <main v-if="!isLoading">
-      <n-config-provider :theme-overrides="themeOverrides">
+      <n-config-provider :theme-overrides="themeOverrides" >
         <n-message-provider>
           <n-dialog-provider>
             <n-loading-bar-provider>
@@ -17,7 +17,7 @@
 <script setup>
 import { ref,onMounted } from "vue";
 import LoadingScreen from "../src/components/organism/LoadingScreen.vue";
-
+import { darkTheme } from "naive-ui";
 const themeOverrides = {
   common: {
     // primaryColor: '#213B94',

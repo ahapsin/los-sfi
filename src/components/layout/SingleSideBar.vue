@@ -52,7 +52,7 @@
       >
         <SideMenu />
       </n-layout-sider>
-      <n-layout class="bg-pr-50/50 p-2 md:p-4" :native-scrollbar="false">
+      <n-layout class="bg-white p-2 md:p-4" :native-scrollbar="false">
         <RouterView />
       </n-layout>
     </n-layout>
