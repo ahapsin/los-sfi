@@ -62,15 +62,15 @@
         :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
         :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" v-show="dataFasilitas" /> -->
     <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" :scroll-x="1200" size="small"
-      :row-key="(row) => row.loan_number" :columns="props.embed ? columnsEmbed : columns" :data="dataSearch"
-      :max-height="300" :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2"
+      :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
+      :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2"
       v-show="props.embed ? true : displayFasilitas" />
     <n-spin v-if="displayDetail" :show="spinnerShow">
       <n-alert type="warning" :show-icon="false" v-show="props.embed ? true : displayFasilitas">
         <div class="flex items-center justify-between">
           <div>Penghapusan Bunga</div>
           <div>
-            <n-text><strong>{{ formatter.format(pelunasan.DISKON_BUNGA) }}</strong></n-text>
+            <n-text><strong>{{ formatter.format(pelunasan.DISC_BUNGA) }}</strong></n-text>
           </div>
         </div>
       </n-alert>
@@ -162,7 +162,15 @@
                 " />
           </n-form-item>
           <n-form-item class="w-full">
-            <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full">
+            <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full" :disabled="pelunasan.UANG_PELANGGAN === 0
+              ? true
+              : pelunasan.jumlah_uang <= 0
+                ? true
+                : pelunasan.kembalian < 0
+                  ? true
+                  : dataBuktiTransfer.length == 0 && pelunasan.METODE_PEMBAYARAN == 'transfer'
+                    ? true
+                    : false">
               Proses
             </n-button>
           </n-form-item>
@@ -279,7 +287,7 @@ import { computed, reactive, ref, h, onMounted } from "vue";
 const searchField = ref(false);
 const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
-const spinnerShow=ref(true);
+const spinnerShow = ref(true);
 const dialogProses = ref(false);
 const dataBuktiTransfer = ref([]);
 const buktiTransfer = ref(false);
@@ -316,11 +324,6 @@ const handleResBack = (data) => {
 const createColumns = () => {
   return [
     {
-      type: "selection",
-      multiple: false,
-      fixed: "left",
-    },
-    {
       title: "No Kontrak",
       key: "loan_number",
       sorter: "default",
@@ -344,9 +347,15 @@ const createColumns = () => {
     {
       title: "Angsuran",
       key: "angsuran",
+      align: "right",
       render(row) {
-        return h("div", row.angsuran.toLocaleString("US"));
+        return h("div", formatter.format(row.angsuran));
       },
+    },
+    {
+      title: "Status",
+      key: "status",
+      sorter: "default",
     },
   ];
 };
@@ -381,6 +390,34 @@ const createColumnsEmbed = () => {
       },
     },
   ];
+};
+const selectedFasilitas = ref();
+const rowProps = (row) => {
+  return {
+    style: "cursor: pointer;",
+    onClick: () => {
+      if (row.status === "LUNAS") {
+        message.info("Fasilitas Sudah Lunas")
+      } else {
+        console.log(row.loan_number);
+        selectedFasilitas.value = row.loan_number;
+        displayDetail.value = true;
+        pelunasan.LOAN_NUMBER = row[0];
+        pelunasan.UANG_PELANGGAN = 0;
+        pelunasan.BAYAR_POKOK = 0;
+        pelunasan.BAYAR_BUNGA = 0;
+        pelunasan.BAYAR_DENDA = 0;
+        pelunasan.BAYAR_PINALTI = 0;
+        pelunasan.SISA_POKOK = 0;
+        pelunasan.BUNGA_BERJALAN = 0;
+        pelunasan.TUNGGAKAN_BUNGA = 0;
+        pelunasan.DENDA = 0;
+        pelunasan.PINALTI = 0;
+        displayDetail.value = true;
+        getDataPelunasan(row.loan_number);
+      }
+    },
+  };
 };
 const handleDone = () => {
   dialogProses.value = false;
@@ -596,9 +633,9 @@ const formatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 });
 const getDataPelunasan = async (e) => {
-  spinnerShow.value=true;
+  spinnerShow.value = true;
   const dynamicBody = {
-    loan_number: e[0],
+    loan_number: e,
   };
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -611,7 +648,7 @@ const getDataPelunasan = async (e) => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
-    spinnerShow.value=false;
+    spinnerShow.value = false;
     dataPelunasan.value = response.data;
     Object.assign(pelunasan, response.data[0]);
     displayPayment.value = true;
@@ -638,6 +675,12 @@ onMounted(() => {
 });
 const handleBack = () => {
   router.push({ name: "pelunasan" });
+};
+const rowClassName = (row) => {
+  if (row.loan_number == selectedFasilitas.value) {
+    return "row-active";
+  }
+  return "";
 };
 </script>
 <style scoped>

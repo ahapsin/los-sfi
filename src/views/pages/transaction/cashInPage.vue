@@ -402,7 +402,7 @@ const createColStruktur = () => {
         } else {
           return h(NInputNumber, {
             disabled: _.find(checkedRowCredit.value, ["key", row.key])
-              ? false
+              ? isLasted.value
               : true,
             clearable: true,
             max: row.denda,

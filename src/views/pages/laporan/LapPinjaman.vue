@@ -1,8 +1,8 @@
 <template>
   <div>
     <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`">
-        <n-tabs type="segment" animated>
+      <n-card :title="`Tabel Laporan`">
+        <n-tabs type="card" animated>
           <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman </n-tab-pane>
           <n-tab-pane name="pembayaran" tab="PEMBAYARAN">
             Informasi Pembayaran

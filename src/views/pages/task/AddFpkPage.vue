@@ -48,7 +48,7 @@
     <n-spin :show="suspense">
         <!-- <pre>{{ calcCredit }}</pre> -->
         <slot name="addition"></slot>
-        <n-space vertical class="bg-sc-50 border rounded-2xl p-4">
+        <n-space vertical class="rounded-2xl p-4">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
                 <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
                 <n-step title="Order" :status="statusInformasiOrder" />
@@ -814,13 +814,13 @@
                         </div>
                         <div class="flex flex-col w-full">
                             <n-form-item label="Bunga / Margin Eff" path="Nama Bank" class="w-full">
-                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.eff_rate" type="text" disabled :parse="parse"
+                                <n-input-number v-model:value="calcCredit.eff_rate" type="text" disabled :parse="parse"
                                     :format="format" :show-button="false" class="w-full">
                                     <template #suffix> % </template>
                                 </n-input-number>
                             </n-form-item>
                             <n-form-item label="Total Admin" path="Nama Bank" class="w-full">
-                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.total" type="text" class="w-full" disabled
+                                <n-input-number  v-model:value="calcCredit.total" type="text" class="w-full" disabled
                                     :parse="parse" :format="format" :show-button="false">
                                     <template #suffix> % </template>
                                 </n-input-number>

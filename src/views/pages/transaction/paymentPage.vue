@@ -19,7 +19,7 @@
               <add-icon />
             </n-icon>
           </template>
-          <span class="hidden md:flex">tambah penerimaan</span>
+          <span class="hidden md:flex">tambah</span>
         </n-button>
         <!-- <n-button
           round
@@ -204,11 +204,6 @@ import {
   FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
 import { useWindowSize } from "@vueuse/core";
-import {
-  BugOutline as BugIcon,
-  DesktopOutline as DesktopIcon,
-  PhonePortraitOutline as PhoneIcon,
-} from "@vicons/ionicons5";
 import { useLoadingBar } from "naive-ui";
 const loadingBar = useLoadingBar();
 import { useMessage, NIcon, NTag, NButton, NInput } from "naive-ui";
@@ -372,6 +367,7 @@ const getDataPayment =  async () => {
     localStorage.removeItem("token");
     router.push("/");
   } else {
+    loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
   }

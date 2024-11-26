@@ -141,7 +141,7 @@ const routes = [
         path: "approval_trf",
         name: "pending transfer",
         component: () =>
-          import("../views/pages/task/HO/PendingTransferPage.vue"),
+          import("../views/pages/task/HO/PersetujuanPage.vue"),
       },
       {
         path: "new-survey",

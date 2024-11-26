@@ -1,6 +1,6 @@
 <template>
   <n-card>
-    <n-tabs @update:value="handleUpdateValue" class="card-tabs" default-value="jaminan" size="large" animated
+    <n-tabs size="medium" @update:value="handleUpdateValue" class="card-tabs" default-value="jaminan" animated type="card"
       pane-wrapper-style="margin: 0 -4px" pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
       <n-tab-pane name="jaminan" tab="Jaminan">
         <n-data-table :columns="columns" :data="dataTable" />
