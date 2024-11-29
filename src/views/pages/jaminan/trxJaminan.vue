@@ -2,8 +2,8 @@
     <n-card :segmented="{
         content: true,
         footer: 'soft'
-    }" :title="`Form Kirim Jaminan`">
-
+    }" :title="`Form Transaksi Jaminan`">
+{{ dynamicForm }}
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
@@ -32,9 +32,9 @@
                 <n-button type="error" @click="handleCancel">
                     Batal
                 </n-button>
-                <n-button type="info" @click="handlePrint" v-show="printAfter">
+                <!-- <n-button type="info" @click="handlePrint" v-show="printAfter">
                     Cetak
-                </n-button>
+                </n-button> -->
             </n-space>
         </template>
     </n-card>
@@ -53,10 +53,10 @@ import { useSearch } from '../../../helpers/searchObject';
 const emit = defineEmits();
 
 const dynamicForm = reactive({
-    bpkb: null,
+    jaminan: null,
     tujuan: 'HO',
     catatan: null,
-
+    type:'send'
 });
 const loading = ref(false);
 
@@ -105,6 +105,11 @@ const columns = [
     {
         title: "No Jaminan",
         key: "no_jaminan",
+        sorter: "default",
+    },
+    {
+        title: "Status",
+        key: "status_jaminan",
         sorter: "default",
     },
 ]

@@ -352,11 +352,11 @@ const createColumns = () => {
         return h("div", formatter.format(row.angsuran));
       },
     },
-    {
-      title: "Status",
-      key: "status",
-      sorter: "default",
-    },
+    // {
+    //   title: "Status",
+    //   key: "status",
+    //   sorter: "default",
+    // },
   ];
 };
 const createColumnsEmbed = () => {
@@ -396,9 +396,9 @@ const rowProps = (row) => {
   return {
     style: "cursor: pointer;",
     onClick: () => {
-      if (row.status === "LUNAS") {
-        message.info("Fasilitas Sudah Lunas")
-      } else {
+      // if (row.status === "LUNAS") {
+      //   message.info("Fasilitas Sudah Lunas")
+      // } else {
         console.log(row.loan_number);
         selectedFasilitas.value = row.loan_number;
         displayDetail.value = true;
@@ -415,7 +415,7 @@ const rowProps = (row) => {
         pelunasan.PINALTI = 0;
         displayDetail.value = true;
         getDataPelunasan(row.loan_number);
-      }
+      // }
     },
   };
 };

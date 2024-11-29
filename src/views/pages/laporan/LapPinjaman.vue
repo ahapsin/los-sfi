@@ -1,7 +1,7 @@
 <template>
   <div>
     <n-space vertical>
-      <n-card :title="`Tabel Laporan`">
+      <n-card :title="`Laporan Listing Beban`">
         <n-tabs type="card" animated>
           <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman </n-tab-pane>
           <n-tab-pane name="pembayaran" tab="PEMBAYARAN">

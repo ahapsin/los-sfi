@@ -264,6 +264,11 @@ const routes = [
         component: () => import("../views/pages/master/menus/ActionMenuPage.vue"),
       },
       {
+        path: "menu-action/:idMenu",
+        name: "update menu",
+        component: () => import("../views/pages/master/menus/ActionMenuPage.vue"),
+      },
+      {
         path: "position",
         name: "position",
         component: () => import("../views/pages/master/position/PositionPage.vue"),
@@ -282,7 +287,7 @@ const routes = [
     children:[
       {
         path: "inq_pinjaman",
-        name: "inquery pinjaman",
+        name: "Listing Beban",
         component: () =>
           import("../views/pages/laporan/LapPinjaman.vue"),
       },

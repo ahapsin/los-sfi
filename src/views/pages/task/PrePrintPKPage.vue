@@ -1359,6 +1359,7 @@ const createPdf = () => {
   ]);
   const tandaTerima = ref([
     {
+
       table: {
         widths: [36, "auto"],
         headerRows: 2,
@@ -1555,6 +1556,7 @@ const createPdf = () => {
           alignment: "justify",
         },
         {
+          pageBreak: `after`,
           margin: [0, 20, 0, 0],
           layout: "noBorders",
           style: "tableExample",
@@ -1568,10 +1570,7 @@ const createPdf = () => {
             ],
           },
         },
-        optPrint.skalaPage ? skalaAngsuranPage.value : "",
-        optPrint.ktpaPage ? creditTanpaAsuransiPage.value : "",
-        optPrint.pasanganPage ? persetujuanPasangan.value : "",
-        optPrint.penjaminPage ? pernyataanPenjaminPage.value : "",
+
         optPrint.tandaTerima ? tandaTerima.value : "",
       ],
       styles: {
@@ -1663,7 +1662,10 @@ function convertObject(object) {
 const upCase = (e) => {
   return e;
 };
-
+// optPrint.skalaPage ? skalaAngsuranPage.value : "",
+//         optPrint.ktpaPage ? creditTanpaAsuransiPage.value : "",
+//         optPrint.pasanganPage ? persetujuanPasangan.value : "",
+//         optPrint.penjaminPage ? pernyataanPenjaminPage.value : "",
 const colCheck = ref(true);
 const handleCollCheck = (data) => {
   colCheck.value = data;

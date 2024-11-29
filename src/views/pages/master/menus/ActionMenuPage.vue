@@ -1,47 +1,22 @@
 <template>
-  <n-card
-    :segmented="{
-      content: true,
-      footer: 'soft',
-    }"
-    :title="`Form ${$route.name}`"
-  >
-    <n-form
-      ref="formRef"
-      :model="dynamicForm"
-      :rules="rules"
-      :label-placement="width <= 920 ? 'top' : 'left'"
-      require-mark-placement="right-hanging"
-      :size="size"
-      label-width="auto"
-    >
-      <n-alert
-        v-show="errorAPI"
-        title="Peringatan"
-        type="warning"
-        closable
-        class="my-4"
-      >
+  <n-card :segmented="{
+    content: true,
+    footer: 'soft',
+  }" :title="`Form ${$route.name}`">
+    <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
+      require-mark-placement="right-hanging"  label-width="auto">
+      <n-alert v-show="errorAPI" title="Peringatan" type="warning" closable class="my-4">
         {{ errorAPI }}
       </n-alert>
       <n-form-item label="Nama Menu">
-        <n-input
-          placeholder="nama menu"
-          v-model:value="dynamicForm.menu_name"
-        />
+        <n-input placeholder="nama menu" v-model:value="dynamicForm.menu_name" />
       </n-form-item>
       <n-form-item label="Nama Route">
-        <n-input placeholder="nama Route" v-model:value="dynamicForm.route" />
+        <n-input placeholder="nama Route" v-model:value="dynamicForm.route" :disabled="param" />
       </n-form-item>
-      <n-form-item label="Parent">
-        <n-select
-          v-model:value="dynamicForm.parent"
-          filterable
-          label-field="menu_name"
-          value-field="id"
-          placeholder="parent menu"
-          :options="dataMenu"
-        />
+      <n-form-item label="Parent" v-if="!param">
+        <n-select v-model:value="dynamicForm.parent" filterable label-field="menu_name" value-field="id"
+          placeholder="parent menu" :options="dataMenu" />
       </n-form-item>
     </n-form>
     <template #action>
@@ -64,6 +39,7 @@ import { useApi } from "../../../../helpers/axios";
 import router from "../../../../router";
 import { useRoute } from "vue-router";
 
+
 const dynamicForm = reactive({
   menu_name: "",
   route: "",
@@ -80,7 +56,7 @@ const errorAPI = ref(null);
 const message = useMessage();
 const PageData = ref([]);
 const baseRoute = useRoute();
-const param = baseRoute.params.idbranch;
+const param = baseRoute.params.idMenu;
 const userToken = localStorage.getItem("token");
 
 const rules = {
@@ -97,23 +73,25 @@ const rules = {
 };
 
 const handleCancel = () => router.go(-1);
-const dataMenu = ref();
+const dataMenu = ref([]);
 const response = () =>
   useApi({
     method: "get",
-    api: `menu`,
+    api: `menu/${param}`,
     token: userToken,
   }).then((res) => {
     if (res.ok) {
       dataMenu.value = res.data.response;
+      Object.assign(dynamicForm, dataMenu.value[0]);
     }
   });
 
 const handleSave = async () => {
   loading.value = true;
+
   const response = await useApi({
-    method: "POST",
-    api: "menu",
+    method: param ? "PUT" : "POST",
+    api: param ? `menu/${param}` : "menu",
     data: dynamicForm,
     token: userToken,
   });
@@ -125,10 +103,10 @@ const handleSave = async () => {
   } else {
     message.success("data berhasil disimpan");
     loading.value = false;
-    router.replace({ name: "cabang" });
+    router.replace({ name: "menu" });
   }
 };
 onMounted(() => {
-  response();
+  if (param) { response() }
 });
 </script>

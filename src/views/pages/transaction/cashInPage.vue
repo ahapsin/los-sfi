@@ -58,7 +58,7 @@
       <n-data-table :row-props="rowProps" striped :row-class-name="rowClassName" size="small" :scroll-x="800"
         :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="300"
         :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2" v-show="dataFasilitas" />
-      <n-data-table  striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
+      <n-data-table striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
         :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit" :loading="loadStructure"
         v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran" class="py-2" />
       <n-space vertical>
@@ -67,19 +67,16 @@
             <div class="flex w-full justify-start gap-4 items-center">
               <div>Tungakan denda</div>
               <div class="text-lg">
-                {{ pageData.tunggakan_denda.toLocaleString("US") }}
+                {{ formatter.format(pageData.tunggakan_denda + dendaAngsuranBerjalan) }}
               </div>
             </div>
             <div class="flex w-full justify-end items-center gap-2">
               <div>Diskon</div>
               <div class="flex gap-2">
                 <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :min="0" :default-value="0"
-                  clearable icon size="" :parse="parse" :format="format" :max="pageData.tunggakan_denda"
+                  clearable icon size="" :parse="parse" :format="format" :max="pageData.tunggakan_denda + dendaAngsuranBerjalan"
                   @input="diskonFormat" placeholder="Jumlah Diskon" v-model:value="pageData.diskon_tunggakan" />
-                <n-button secondary circle @click="diskonInput = !diskonInput">
-                  <span v-if="diskonInput">Rp</span>
-                  <span v-else>%</span>
-                </n-button>
+               
               </div>
             </div>
           </div>
@@ -180,6 +177,16 @@ const isLast = ref(false);
 const handleResBack = (data) => {
   dataBuktiTransfer.value = data;
 }
+const dendaAngsuranBerjalan = computed(
+  () => {
+    const totalPenalty = () =>
+      checkedRowCredit.value.reduce(
+        (total, installment) => total + installment.bayar_denda,
+        0
+      );
+    return totalPenalty();
+  }
+);
 const totalPay = computed(() => {
   const totalInstallment = () =>
     checkedRowCredit.value.reduce(
@@ -245,14 +252,14 @@ const rowProps = (row) => {
   return {
     style: "cursor: pointer;",
     onClick: () => {
-      if (row.status === "LUNAS") {
-        message.info("Fasilitas Sudah Lunas")
-      } else {
-        isLasted.value=false;
-        selectedFasilitas.value = row.loan_number;
-        getSkalaCredit(row.loan_number);
-        getDataPelunasan(row.loan_number);
-      }
+      // if (row.status === "LUNAS") {
+      //   message.info("Fasilitas Sudah Lunas")
+      // } else {
+      isLasted.value = false;
+      selectedFasilitas.value = row.loan_number;
+      getSkalaCredit(row.loan_number);
+      getDataPelunasan(row.loan_number);
+      // }
     },
   };
 };
@@ -293,11 +300,11 @@ const createColumns = () => {
         return h("div", formatter.format(row.angsuran));
       },
     },
-    {
-      title: "Status",
-      key: "status",
-      sorter: "default",
-    },
+    // {
+    //   title: "Status",
+    //   key: "status",
+    //   sorter: "default",
+    // },
   ];
 };
 const rowClassName = (row) => {
@@ -412,7 +419,7 @@ const createColStruktur = () => {
             secondary: true,
             placeholder: "pembayaran",
             value: _.find(checkedRowCredit.value, ["key", row.key])
-              ? row.bayar_denda
+              ? isLasted.value ? 0 : row.bayar_denda
               : 0,
             onUpdateValue(v) {
               dataStrukturKredit.value[index].bayar_denda = v;
@@ -440,8 +447,8 @@ const createColStruktur = () => {
             secondary: true,
             placeholder: "pembayaran",
             value: _.find(checkedRowCredit.value, ["key", row.key])
-              ? dataStrukturKredit.value[index].bayar_angsuran +
-              dataStrukturKredit.value[index].bayar_denda
+              ? isLasted.value ? dataStrukturKredit.value[index].bayar_angsuran : dataStrukturKredit.value[index].bayar_angsuran +
+                dataStrukturKredit.value[index].bayar_denda
               : 0,
           });
         }
@@ -534,7 +541,7 @@ const dataSearch = ref([]);
 const loadSearch = ref(false);
 const dataFasilitas = ref(false);
 const handleSearch = async () => {
-  isLasted.value=false;
+  isLasted.value = false;
   dataAngsuran.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
