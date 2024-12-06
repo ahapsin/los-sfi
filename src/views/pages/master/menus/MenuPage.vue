@@ -168,7 +168,7 @@ const handleConfirm = (row, index) => {
     });
 }
 const handleDetail = (evt) => {
-    router.push(`/master/branch-action/${evt.id}/detail`);
+    router.push(`/master/menu-action/${evt.id}`);
 }
 const handleUpdate = (evt) => {
     router.push(`/master/branch-action/${evt.id}`);

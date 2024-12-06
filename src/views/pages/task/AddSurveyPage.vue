@@ -12,18 +12,17 @@
     <!-- card -->
 
     <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
-        order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
+            order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
         (50%)</n-alert>
     <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
         content: true,
     }">
-
         <!-- container 1 -->
         <div v-show="current == 1">
             <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
                 <div class="md:flex gap-2">
                     <n-form-item label="Plafond" path="plafond" class="w-full">
-                        <n-input-number :parse="parse" :format="format" :min="1000000" v-model:value="order.plafond"
+                        <n-input-number :parse="parse" :format="format" :min="999999" v-model:value="order.plafond"
                             placeholder="plafond" :loading="loading" :show-button="false" class="flex !w-full" clearable
                             :on-update:value="handlePlafond" />
                     </n-form-item>
@@ -40,10 +39,10 @@
                                 <n-radio name="tenor" value="6">
                                     6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -51,10 +50,10 @@
                                 <n-radio name="tenor" value="12">
                                     12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -62,10 +61,10 @@
                                 <n-radio name="tenor" value="18">
                                     18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -73,10 +72,10 @@
                                 <n-radio name="tenor" value="24">
                                     24 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -87,10 +86,10 @@
                                 <n-radio name="tenor" value="3">
                                     1x 3 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -98,10 +97,10 @@
                                 <n-radio name="tenor" value="6">
                                     1 x 6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -109,10 +108,10 @@
                                 <n-radio name="tenor" value="12">
                                     2 x 12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -120,10 +119,10 @@
                                 <n-radio name="tenor" value="18">
                                     3 x 18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -198,9 +197,12 @@
                 <n-divider title-placement="left"> UPLOAD DOKUMEN IDENTITAS</n-divider>
 
                 <div class="flex flex-col md:flex-row gap-2">
-                    <file-upload title="KTP" endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id" />
-                    <file-upload title="KK" endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id" />
+                    <file-upload title="KTP" :def_value="findDocByType(pelanggan.dokumen_indentitas, 'ktp')"
+                        endpoint="image_upload_prospect" type="ktp" :idapp="dynamicForm.id" />
+                    <file-upload title="KK" :def_value="findDocByType(pelanggan.dokumen_indentitas, 'kk')"
+                        endpoint="image_upload_prospect" type="kk" :idapp="dynamicForm.id" />
                     <file-upload title="KTP Pasangan" endpoint="image_upload_prospect" type="ktp_pasangan"
+                        :def_value="findDocByType(pelanggan.dokumen_indentitas, 'ktp_pasangan')"
                         :idapp="dynamicForm.id" />
                 </div>
             </n-form>
@@ -269,13 +271,16 @@
                                 <div v-if="coll.type == 'kendaraan'">
                                     <n-divider title-placement="left"> UPLOAD DOKUMEN JAMINAN </n-divider>
                                     <div class="flex flex-col md:flex-row gap-2">
+
                                         <file-upload :reff="coll.counter_id" title="No Rangka"
-                                            endpoint="image_upload_prospect" :type="`no_rangka`"
-                                            :idapp="dynamicForm.id" />
+                                            endpoint="image_upload_prospect" :type="`no_rangka`" :idapp="dynamicForm.id"
+                                            :def_value="findDocByType(coll.atr.document, 'no_rangka')" />
                                         <file-upload :reff="coll.counter_id" title="No Mesin"
+                                            :def_value="findDocByType(coll.atr.document, 'no_mesin')"
                                             endpoint="image_upload_prospect" :type="`no_mesin`"
                                             :idapp="dynamicForm.id" />
                                         <file-upload :reff="coll.counter_id" title="STNK"
+                                            :def_value="findDocByType(coll.atr.document, 'stnk')"
                                             endpoint="image_upload_prospect" :type="`stnk`" :idapp="dynamicForm.id" />
                                     </div>
                                 </div>
@@ -283,13 +288,17 @@
                                 </n-divider>
                                 <div v-if="coll.type == 'kendaraan'" class="flex flex-col md:flex-row gap-2">
                                     <file-upload title="Depan" endpoint="image_upload_prospect" :type="`depan`"
-                                        :idapp="dynamicForm.id" :reff="coll.counter_id" />
-                                    <file-upload title="Belakang" endpoint="image_upload_prospect" :type="`belakang`"
-                                        :idapp="dynamicForm.id" :reff="coll.counter_id" />
-                                    <file-upload title="Kanan" endpoint="image_upload_prospect" :type="`kanan`"
-                                        :idapp="dynamicForm.id" :reff="coll.counter_id" />
-                                    <file-upload title="Kiri" endpoint="image_upload_prospect" :type="`kiri`"
-                                        :idapp="dynamicForm.id" :reff="coll.counter_id" />
+                                        :idapp="dynamicForm.id" :reff="coll.counter_id"
+                                        :def_value="findDocByType(coll.atr.document, 'depan')" />
+                                    <file-upload title="Belakang" :reff="coll.counter_id"
+                                        :def_value="findDocByType(coll.atr.document, 'belakang')"
+                                        endpoint="image_upload_prospect" :type="`belakang`" :idapp="dynamicForm.id" />
+                                    <file-upload title="Kanan" :reff="coll.counter_id" endpoint="image_upload_prospect"
+                                        :def_value="findDocByType(coll.atr.document, 'kanan')" :type="`kanan`"
+                                        :idapp="dynamicForm.id" />
+                                    <file-upload title="Kiri" :reff="coll.counter_id" endpoint="image_upload_prospect"
+                                        :type="`kiri`" :def_value="findDocByType(coll.atr.document, 'kiri')"
+                                        :idapp="dynamicForm.id" />
                                 </div>
                                 <div v-else class="flex flex-col w-full">
                                     <file-upload :title="`dokumen`" :def_preview="true" :multi="true"
@@ -340,29 +349,30 @@
                 </div>
                 <div class="md:flex gap-4">
                     <n-form-item label="Pendapatan pelanggan " path="pendapatan_pribadi" class="w-full">
-                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.pendapatan_pribadi" placeholder="pendapatan pelanggan"
-                            :show-button="false">
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse"
+                            :format="format" v-model:value="survey.pendapatan_pribadi"
+                            placeholder="pendapatan pelanggan" :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Pasangan" path="penghasilan_pasangan" class="w-full">
-                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.pendapatan_pasangan" placeholder="pendapatan pasangan"
-                            :show-button="false">
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse"
+                            :format="format" v-model:value="survey.pendapatan_pasangan"
+                            placeholder="pendapatan pasangan" :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pendapatan Lainnya" path="penghasilan_pasangan" class="w-full">
-                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse" :format="format"
-                            v-model:value="survey.pendapatan_lainnya" placeholder="pendapatan lain-lain"
-                            :show-button="false">
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" class="flex w-full" :parse="parse"
+                            :format="format" v-model:value="survey.pendapatan_lainnya"
+                            placeholder="pendapatan lain-lain" :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
                     <n-form-item label="Pengeluaran" path="pengeluaran" class="w-full">
-                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" class="w-full"
-                            v-model:value="survey.pengeluaran" placeholder="pengeluaran" :show-button="false">
+                        <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
+                            class="w-full" v-model:value="survey.pengeluaran" placeholder="pengeluaran"
+                            :show-button="false">
                             <template #suffix> perbulan </template>
                         </n-input-number>
                     </n-form-item>
@@ -692,19 +702,6 @@ const initPelanggan = {
     kelurahan: "",
 };
 const pelanggan = reactive({ ...initPelanggan });
-// 'const jaminan = ref({'
-//     tipe: null,
-//     tahun: null,
-//     merk: "",
-//     warna: "",
-//     atas_nama: "",
-//     no_polisi: "",
-//     no_rangka: "",
-//     no_mesin: "",
-//     no_bpkb: "",
-//     no_stnk: "",
-//     nilai: null,
-// });
 var dt = new Date();
 let year = dt.getFullYear();
 let month = (dt.getMonth() + 1).toString().padStart(2, "0");
@@ -746,6 +743,8 @@ const currentStatus = ref("process");
 const loadingKTP = ref(false);
 const bl_pesan = ref();
 
+const dataRo = ref();
+const jaminan =ref();
 const handleKtp = async (e) => {
     loadingKTP.value = true;
     const bodyForm = {
@@ -761,6 +760,7 @@ const handleKtp = async (e) => {
     if (!response.ok) {
         loadingKTP.value = false;
     } else {
+        dataRo.value = response.data;
         let data = response.data;
         if (data.length > 0) {
             console.log(data);
@@ -774,6 +774,11 @@ const handleKtp = async (e) => {
         }
         loadingKTP.value = false;
     }
+};
+
+const findDocByType = (c, e) => {
+    const docPath = ref(_.find(c, { TYPE: e }));
+    if (docPath.value) return docPath.value.PATH;
 };
 const handleTipe = (e) => {
     tipeAngsuran.value = e;
@@ -895,7 +900,7 @@ const handleSave = async (type) => {
     }
 };
 const plafondValidator = (rule, value) => {
-    return value > 1000000;
+    return value >= 1000000;
 };
 const numberValidator = (rule, value) => {
     return value > 0;

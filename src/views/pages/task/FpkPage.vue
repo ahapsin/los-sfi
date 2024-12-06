@@ -51,7 +51,7 @@
         </template>
         <n-space vertical :size="12" class="pt-4">
           <!-- <pre>{{ showData }}</pre> -->
-          <n-data-table size="small" ref="tableRef" triped :scroll-x="1200" :columns="columns" :data="showData"
+          <n-data-table size="small" ref="tableRef" triped :scroll-x="1000" :columns="columns" :data="showData"
             :pagination="pagination" :loading="loadData" />
         </n-space>
       </n-card>
@@ -158,32 +158,32 @@ const handleSelesai = () => {
 const columns = [
   {
     title: "Tanggal",
+        width: 100,
     sorter: "default",
     key: "visit_date",
-    width: 100,
     render(row) {
       return h("div", row.visit_date);
     },
   },
   {
     title: "Order",
+      width: 100,
     ellipsis: {
       tooltip: true,
     },
     sorter: "default",
     key: "order_number",
-    width: 100,
   },
   {
     title: "Nama",
+      width: 100,
     sorter: "default",
     key: "nama_debitur",
-    width: 100,
   },
   {
-    width: 100,
     title: "Plafond",
     align: 'right',
+    width:100,
     sorter: "default",
     key: "plafond",
     render(row) {
@@ -193,7 +193,7 @@ const columns = [
   {
     title: "Status",
     sorter: "default",
-    width: 100,
+      width: 100,
     key: "status",
     render(row) {
       return h(
@@ -209,7 +209,7 @@ const columns = [
   },
   {
     key: "status",
-    width: 50,
+      width: 100,
     render(row) {
       let status = row.status_code;
       if (status == 'APHO') {
@@ -239,7 +239,7 @@ const columns = [
   },
   {
     key: "status",
-    width: 50,
+      width: 100,
     render(row) {
       if (row.flag != 0) {
         const iconUpload = h(NIcon, null, {
@@ -275,7 +275,7 @@ const columns = [
   {
     title: "Action",
     align: "right",
-    width: 50,
+      width: 100,
     key: "more",
     render(row) {
       return h(
@@ -400,7 +400,7 @@ const handleAction = (e, data) => {
   }
 };
 const handlePrePrint = (row) => {
-  router.push({ name: "pre print pk", params: { idapplication: row.id } });
+  router.push({ name: "pre print pk", params: { idapplication: row.order_number } });
 };
 const getData = async () => {
   loadData.value = true;
