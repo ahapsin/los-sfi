@@ -47,10 +47,10 @@
       v-show="prosesPK"
       class="flex gap-2 border-t p-4 justify-end"
     ></div> -->
-        <div class="sticky flex bottom-0 w-full" v-if="!colCheck">
-            <CollateralCheck :coll_data="dataJaminan" @coll_val="handleCollCheck" />
+        <div class="sticky flex bottom-0 w-full" v-if="colCheck">
+            <CollateralCheck :coll_data="payloadCheck()" @coll_val="handleCollCheck" />
         </div>
-        <div class="sticky b bg-white flex top-0 w-full justify-end p-2" v-else>
+        <div class="sticky b bg-white flex top-0 w-full justify-end p-2">
             <n-button :type="pkData.flag == 1 ? 'warning' : 'primary'" class="gap-2" @click="handlePrint">
                 <n-icon>
                     <print-icon />
@@ -332,7 +332,7 @@
                             <b> {{ dataPelanggan.pekerjaan }}</b> Bertempat tinggal di
                             <b>{{ pihak2.alamat }} </b> Pemegang kartu identitas (<b>{{
                                 dataPelanggan.tipe_identitas
-                            }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
+                                }}</b>) nomor <b>{{ dataPelanggan.no_identitas }}</b> Dalam hal ini
                             bertindak untuk dan atas nama <b>{{ pihak2.nama }}</b> Selanjutnya
                             disebut <b>Penerima Pinjaman.</b>
                         </div>
@@ -434,7 +434,7 @@
                                     <td>
                                         <b class="uppercase">{{
                                             upCase(dataPasangan.nama_pasangan)
-                                        }}</b>
+                                            }}</b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -443,7 +443,7 @@
                                     <td>
                                         <b class="uppercase">{{
                                             upCase(dataPasangan.pekerjaan_pasangan)
-                                        }}</b>
+                                            }}</b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -452,7 +452,7 @@
                                     <td>
                                         <b class="uppercase">{{
                                             upCase(dataPasangan.alamat_pasangan)
-                                        }}</b>
+                                            }}</b>
                                     </td>
                                 </tr>
                             </table>
@@ -911,7 +911,7 @@ const getPrePK = async () => {
         order_number: idApp,
         tgl_awal: tgl_cetaks.value,
     };
-    useApi({
+    await useApi({
         method: "POST",
         data: bodySend,
         api: `pk`,
@@ -1669,6 +1669,21 @@ const colCheck = ref(true);
 const handleCollCheck = (data) => {
     colCheck.value = data;
 }
+
+const payloadCheck = ()=>dataJaminan.value.map(item => {
+    if (item.type === 'kendaraan') {
+        return {
+            type: item.type,
+            number: item.atr.no_bpkb
+        };
+    } else if (item.type === 'sertifikat') {
+        return {
+            type: item.type,
+            number: item.atr.no_sertifikat
+        };
+    }
+});
+
 const options = [];
 
 for (var x = 1; x <= 25; x++) {

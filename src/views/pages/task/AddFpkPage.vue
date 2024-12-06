@@ -29,7 +29,7 @@
     <n-spin :show="suspense">
         <!-- <pre>{{ calcCredit }}</pre> -->
         <slot name="addition"></slot>
-        <n-space vertical class="rounded-2xl p-4">
+        <n-space vertical class="rounded-2xl p-4 sticky top-0 bg-white border z-50">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
                 <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
                 <n-step title="Order" :status="statusInformasiOrder" />
