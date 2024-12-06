@@ -3,11 +3,11 @@
         content: true,
         footer: 'soft'
     }" :title="`Form Transaksi Jaminan`">
-{{ dynamicForm }}
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
                 <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+
                 <n-data-table striped size="small" :row-key="(row) => row" :columns="columns" :data="showData"
                     :max-height="300" :on-update:checked-row-keys="handleChecked" />
             </n-space>

@@ -118,9 +118,9 @@ const routes = [
         component: () => import("../views/pages/task/SurveyPage.vue"),
       },
       {
-        path: "detail-survey/:idsurvey/:action",
+        path: "detail-survey/:idsurvey",
         name: "detail survey",
-        component: () => import("../views/pages/task/EditSurveyPage.vue"),
+        component: () => import("../views/pages/task/DetailSurveyPage.vue"),
       },
       {
         path: "survey/:idsurvey",

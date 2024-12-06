@@ -1,5 +1,4 @@
 <template>
-  <pre>{{ dataTransaction }}</pre>
   <n-tabs size="medium" @update:value="handleUpdateValue" class="card-tabs" default-value="jaminan" animated type="card"
     pane-wrapper-style="margin: 0 -4px" pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
     <n-tab-pane name="jaminan" tab="Jaminan">
@@ -88,9 +87,7 @@
           <tr>
             <th>Dokumen</th>
             <td>
-              <n-image width="64" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg" />
-              <n-image width="64" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg" />
-              <n-image width="64" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg" />
+              <n-image v-for="doc in bodyModal.document" width="64" height="64" :src="doc.PATH" :key="doc"/>
             </td>
           </tr>
         </tbody>

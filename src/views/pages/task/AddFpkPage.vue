@@ -1,7 +1,7 @@
 <template>
     <blacklist-alert :pesan="bl_pesan" />
     <div class="flex gap-2 mb-2" v-if="approval.kapos">
-        <n-alert class="w-full shadow bg-white"  title="KAPOS" v-if="approval.kapos">
+        <n-alert class="w-full shadow bg-white" title="KAPOS" v-if="approval.kapos">
             <template #icon>
                 <n-icon>
                     <account-icon />
@@ -18,33 +18,14 @@
             {{ approval.ho }}
         </n-alert>
     </div>
-    <n-collapse>
-        <!-- <n-collapse-item title="identitas" name="1">
-      <div>
-        <pre>{{ dok_identitas }}</pre>
-      </div>
-    </n-collapse-item>
-    <n-collapse-item title="jaminan" name="2">
-      <div>
-        <pre>{{ dok_jaminan }}</pre>
-      </div>
-    </n-collapse-item>
-    <n-collapse-item title="order" name="3">
-      <div>
-        <pre>{{ dataOrder }}</pre>
-      </div>
-    </n-collapse-item>
-    <n-collapse-item title="taksasi" name="4">
-      <div>
-        <pre>{{ dataTaksasi }}</pre>
-      </div>
-    </n-collapse-item> -->
-        <!-- <n-collapse-item title="page data" name="5">
+
+    <!-- <n-collapse>
+        <n-collapse-item title="page data" name="5">
       <div>
         <pre>{{ pageData }}</pre>
       </div>
-    </n-collapse-item> -->
-    </n-collapse>
+    </n-collapse-item>
+    </n-collapse> -->
     <n-spin :show="suspense">
         <!-- <pre>{{ calcCredit }}</pre> -->
         <slot name="addition"></slot>
@@ -59,7 +40,7 @@
         <n-alert class="mt-2" type="warning"
             v-if="sumJaminan != 0 && calcCredit.nilai_yang_diterima > sumJaminan / 2">Nilai
             Plafon <b>{{ calcCredit.nilai_yang_diterima.toLocaleString() }}</b> > Nilai Jaminan {{
-                (sumJaminan / 2).toLocaleString() }} (50%)</n-alert>
+            (sumJaminan / 2).toLocaleString() }} (50%)</n-alert>
         <n-flex class="pt-2">
             <n-card v-show="current == 1" title="Informasi pelanggan" :segmented="{
                 content: true,
@@ -331,20 +312,21 @@
                                 v-model:value="dataOrder.nama_ibu" />
                         </n-form-item>
                         <n-form-item label="Lama Bekerja" path="lama_bekerja" class="w-full">
-                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" placeholder="lama bekerja"
-                                v-model:value="dataOrder.lama_bekerja" class="w-full">
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false"
+                                placeholder="lama bekerja" v-model:value="dataOrder.lama_bekerja" class="w-full">
                                 <template #suffix> bulan </template>
                             </n-input-number>
                         </n-form-item>
                         <n-form-item label="Tanggungan" path="tanggungan" class="w-full">
-                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Tanggungan" v-model:value="dataOrder.tanggungan"
-                                class="w-full" />
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Tanggungan"
+                                v-model:value="dataOrder.tanggungan" class="w-full" />
                         </n-form-item>
                     </div>
                     <div class="flex gap-2">
                         <n-form-item label="Pendapatan Pelanggan" path="pendapatan_pribadi" class="w-full">
-                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_pribadi"
-                                :show-button="false" class="flex !w-full" placeholder="Pribadi" />
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
+                                v-model:value="dataOrder.pendapatan_pribadi" :show-button="false" class="flex !w-full"
+                                placeholder="Pribadi" />
                         </n-form-item>
                         <n-form-item label="Pendapatan Pasangan" path="pendapatan_pasangan" class="w-full">
                             <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
@@ -352,12 +334,14 @@
                                 placeholder="Pasangan" />
                         </n-form-item>
                         <n-form-item label="Pendapatan Lainnya" path="pendapatan_lainnya" class="w-full">
-                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.pendapatan_lainnya"
-                                :show-button="false" class="flex !w-full" placeholder="Lainnya" />
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
+                                v-model:value="dataOrder.pendapatan_lainnya" :show-button="false" class="flex !w-full"
+                                placeholder="Lainnya" />
                         </n-form-item>
                         <n-form-item label="Biaya" path="biaya_bulanan" class="w-full">
-                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format" v-model:value="dataOrder.biaya_bulanan"
-                                :show-button="false" class="flex !w-full" placeholder="Pengeluaran" />
+                            <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :parse="parse" :format="format"
+                                v-model:value="dataOrder.biaya_bulanan" :show-button="false" class="flex !w-full"
+                                placeholder="Pengeluaran" />
                         </n-form-item>
                     </div>
                     <n-divider title-placement="left"> NPWP </n-divider>
@@ -673,7 +657,8 @@
                             :allow-input="onlyAllowNumber" />
                     </n-form-item>
                     <n-divider title-placement="left"> Informasi Bank </n-divider>
-                    <n-dynamic-input v-model:value="formAssign.info_bank" :on-create="onCreate" disabled v-if="viewMode">
+                    <n-dynamic-input v-model:value="formAssign.info_bank" :on-create="onCreate" disabled
+                        v-if="viewMode">
                         <template #create-button-default> Tambah Bank </template>
                         <template #default="{ value }">
                             <div class="flex w-full gap-2 bg-pr-50 p-2 pb-0 rounded-md">
@@ -707,8 +692,9 @@
                     <div class="w-full flex md:flex-row flex-col gap-4">
                         <div class="flex flex-col w-full">
                             <n-form-item label="Pokok Pembayaran" path="Nama Bank" class="w-full">
-                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" v-model:value="calcCredit.pokok_pembayaran" :parse="parse"
-                                    :show-button="false" :format="format" disabled class="w-full">
+                                <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'"
+                                    v-model:value="calcCredit.pokok_pembayaran" :parse="parse" :show-button="false"
+                                    :format="format" disabled class="w-full">
                                 </n-input-number>
                             </n-form-item>
                             <n-form-item label="Jenis Angsuran" path="jenis">
@@ -721,10 +707,10 @@
                                         <n-radio @change="handleChange" name="tenor" value="6">
                                             6 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -732,10 +718,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="12">
                                             12 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -743,10 +729,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="18">
                                             18 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -754,10 +740,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="24">
                                             24 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -768,10 +754,10 @@
                                         <n-radio @change="handleChange" name="tenor" value="3">
                                             1 x 3 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -779,10 +765,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="6">
                                             1 x 6 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -790,10 +776,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="12">
                                             2 x 12 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -801,10 +787,10 @@
                                         <n-radio name="tenor" @change="handleChange" value="18">
                                             3 x 18 bulan<n-text code>
                                                 {{
-                                                    skemaAngsuran.length == null
-                                                        ? ` /
+                                                skemaAngsuran.length == null
+                                                ? ` /
                                                 ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                        : ""
+                                                : ""
                                                 }}
                                             </n-text>
                                         </n-radio>
@@ -820,7 +806,7 @@
                                 </n-input-number>
                             </n-form-item>
                             <n-form-item label="Total Admin" path="Nama Bank" class="w-full">
-                                <n-input-number  v-model:value="calcCredit.total" type="text" class="w-full" disabled
+                                <n-input-number v-model:value="calcCredit.total" type="text" class="w-full" disabled
                                     :parse="parse" :format="format" :show-button="false">
                                     <template #suffix> % </template>
                                 </n-input-number>
@@ -1409,7 +1395,7 @@ const getData = async () => {
         message.error("halam tidak ditemukan !");
         suspense.value = true;
     } else {
-        message.loading("memuat fpk");
+        message.loading("memuat Order");
         suspense.value = false;
         pageData.value = response.data.response;
         Object.assign(calcCredit, pageData.value.ekstra);
