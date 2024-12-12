@@ -458,7 +458,6 @@ const tenor12 = ref([]);
 const tenor18 = ref([]);
 const tenor24 = ref([]);
 const refAdmin = async (body) => {
-    skemaAngsuran.value = [];
     loading.value = true;
     const response = await useApi({
         method: "post",
