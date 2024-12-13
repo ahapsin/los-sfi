@@ -22,6 +22,7 @@
         </n-alert>
       </div> -->
     </template>
+
   </fpk-form>
 </template>
 
@@ -59,7 +60,7 @@ const handleClick = async (e) => {
   } else {
     message.success("konfirmasi berhasil");
     loading.value = false;
-    router.push({ name: 'approval' });
+      router.push({ name: 'Approval HO' });
   }
 };
 </script>

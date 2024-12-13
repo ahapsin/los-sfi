@@ -18,6 +18,7 @@
         content: true,
     }">
         <!-- container 1 -->
+
         <div v-show="current == 1">
             <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
                 <div class="md:flex gap-2">
@@ -33,6 +34,7 @@
                     </n-form-item>
                 </div>
                 <div class="md:flex gap-2">
+
                     <n-form-item label="Tenor / Angsuran" path="tenor" class="w-full">
                         <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'bulanan'">
                             <n-radio-group v-model:value="order.tenor" name="radiogroup">
