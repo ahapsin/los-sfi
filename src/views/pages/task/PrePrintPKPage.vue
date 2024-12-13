@@ -64,7 +64,7 @@
                     <kop-header />
                     <table border="1" class="mb-10">
                         <tr>
-                            <td align="center"><b>PERJANJIAN PEMBERIAN PINJAMAN</b></td>
+                            <td align="center"><b>PERJANJIAN PEMBERIAN PINJAMAN {{ pkData.alamat_kantor }}</b></td>
                         </tr>
                         <tr v-if="pkData.no_perjanjian">
                             <td align="center">
@@ -120,7 +120,7 @@
                                         <td>{{ pihak2.no_identitas }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Alamat Kantor</td>
+                                        <td>Alamat</td>
                                         <td width="25">:</td>
                                         <td>{{ pihak2.alamat }}</td>
                                     </tr>
@@ -1433,8 +1433,8 @@ const createPdf = (e) => {
                 widths: ["*", "*"],
                 body: [
                     [
-                        `Pengirim,\n\n\n\n\n\n${dataPelanggan.value.nama}`,
-                        `penerima,\n\n\n\n\n\n${pihak1.value.nama}`,
+                        `Pemberi,\n\n\n\n\n\n${pihak2.value.nama}`,
+                        `Penerima,\n\n\n\n\n\n${pihak1.value.nama}`,
                     ],
                 ],
             },

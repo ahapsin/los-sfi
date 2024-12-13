@@ -81,7 +81,7 @@
                                         }}
                                     </n-text>
                                 </n-radio>
-                            </n-radio-group>
+                            </n-radio-group> m
                         </div>
                         <div class="flex flex-col md:flex-row" v-show="tipeAngsuran == 'musiman'">
                             <n-radio-group v-model:value="order.tenor" name="radiogroup">
