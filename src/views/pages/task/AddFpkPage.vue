@@ -702,7 +702,7 @@
                                     v-model:value="calcCredit.jenis_angsuran" @update:value="handleTipe" />
                             </n-form-item>
                             <n-form-item label="Tenor / Angsuran" path="tenor">
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'bulanan'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran == 'bulanan'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="6">
                                             6 bulan<n-text code>
@@ -749,7 +749,7 @@
                                         </n-radio>
                                     </n-radio-group>
                                 </div>
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase()== 'musiman'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran== 'musiman'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="3">
                                             1 x 3 bulan<n-text code>
@@ -1075,6 +1075,11 @@ const handleTipe = (e) => {
     tipeAngsuran.value = e;
     calcCredit.jenis_angsuran = e;
     calcCredit.tenor = "0";
+    const body = {
+        plafond: calcCredit.nilai_yang_diterima,
+        jenis_angsuran: e,
+    };
+    refAdmin(body);
 };
 const optJenisKelamin = ["LAKI-LAKI", "PEREMPUAN"].map((v) => ({
     label: v,
@@ -1176,7 +1181,7 @@ const optJaminan = ["KENDARAAN", "SERTIFIKAT"].map((v) => ({
 }));
 const jenisAngsuran = ["Bulanan", "Musiman"].map((v) => ({
     label: v.toUpperCase(),
-    value: v.toUpperCase(),
+    value: v.toLowerCase(),
 }));
 const optStatusKawin = ["Kawin", "Belum Kawin", "Janda", "Duda"].map((v) => ({
     label: v.toUpperCase(),
@@ -1650,6 +1655,6 @@ const sumJaminan = computed(() => {
 });
 const isRtl = true;
 onMounted(() => {
-    getData()
+    getData();
 });
 </script>
