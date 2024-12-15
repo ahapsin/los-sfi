@@ -5,6 +5,9 @@
             <n-p>
                 <b>KSP DJAYA</b><br />
                 <p class="text-xs capitalize">
+                    {{ props.cabang }}
+                </p>
+                <p class="text-xs capitalize">
                     {{ props.alamat_cabang }}
                 </p>
             </n-p>
@@ -16,6 +19,7 @@ const props=defineProps({
     alamat_cabang: {
         type:String,
         default: "JL.BY PASS KANDANGHAUR DEPAN KANTOR PLN BLOK ANJUN DS.KARANGANYAR KEC.KANDANHAUR KAB.INDRAMAYU KARANGANYAR KANDANGHAUR INDRAMAYU",
-    }
+    },
+    cabang:String,
 });
 </script>
