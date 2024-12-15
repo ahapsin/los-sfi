@@ -83,7 +83,7 @@
   </n-card>
 </template>
 <script setup>
-import { useMessage, NInput } from "naive-ui";
+import { useMessage, NInput, NInputNumber } from "naive-ui";
 import { ref, reactive, onMounted, computed } from "vue";
 import { useWindowSize } from "@vueuse/core";
 const { width } = useWindowSize();
@@ -98,7 +98,7 @@ const errorAPI = ref(null);
 const message = useMessage();
 const PageData = ref();
 const baseRoute = useRoute();
-const param = baseRoute.params.idbranch;
+const param = baseRoute.params.idtaksasi;
 const userToken = localStorage.getItem("token");
 
 const rules = {
@@ -118,13 +118,13 @@ const handleCancel = () => router.push("/master/taksasi");
 const response = () =>
   useApi({
     method: "get",
-    api: `cabang/${param}`,
+    api: `taksasi/${param}`,
     token: userToken,
   }).then((res) => {
     if (res.ok) {
-      message.loading("memuat cabang");
-      PageData.value = res.data.response;
-      Object.assign(dynamicForm, res.data.response);
+      message.loading("memuat taksasi");
+      PageData.value = res.data;
+      Object.assign(dynamicForm, res.data);
     }
   });
 
@@ -181,9 +181,10 @@ const createColumns = () => [
     title: "HARGA",
     key: "value",
     render(row, index) {
-      return h(NInput, {
-        value: row.age,
+      return h(NInputNumber, {
+        value: row.harga,
         parse: parse,
+        showButton:false,
         format: format,
         onUpdateValue(v) {
           data.value[index].harga = v;

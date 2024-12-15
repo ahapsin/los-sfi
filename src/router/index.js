@@ -171,6 +171,11 @@ const routes = [
         component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
       },
       {
+        path: "taksasi-action/:idtaksasi",
+        name: "Update Taksasi",
+        component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
+      },
+      {
         path: "employees",
         name: "karyawan",
         component: () => import("../views/pages/master/EmployeesPage.vue"),
