@@ -119,6 +119,15 @@ const columns = [
         },
     },
     {
+        title: "Tipe",
+        sorter: "default",
+        align: 'right',
+        key: "jenis_angsuran",
+        render(row) {
+            return h("div", row.jenis_angsuran);
+        },
+    },
+    {
         title: "Status",
         sorter: "default",
         key: "status",
