@@ -702,7 +702,6 @@
                                     v-model:value="calcCredit.jenis_angsuran" @update:value="handleTipe" />
                             </n-form-item>
                             <n-form-item label="Tenor / Angsuran" path="tenor">
-
                                 <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'bulanan'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="6">
@@ -750,7 +749,7 @@
                                         </n-radio>
                                     </n-radio-group>
                                 </div>
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'musiman'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase()== 'musiman'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="3">
                                             1 x 3 bulan<n-text code>
