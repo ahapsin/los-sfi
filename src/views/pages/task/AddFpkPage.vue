@@ -29,7 +29,7 @@
     <n-spin :show="suspense">
         <!-- <pre>{{ calcCredit }}</pre> -->
         <slot name="addition"></slot>
-        <n-space vertical class="rounded-2xl p-4">
+        <n-space vertical class="rounded-2xl p-4 sticky top-0 bg-white border z-50">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
                 <n-step title="Pelanggan" :status="statusInformasiPelanggan" />
                 <n-step title="Order" :status="statusInformasiOrder" />
@@ -702,8 +702,7 @@
                                     v-model:value="calcCredit.jenis_angsuran" @update:value="handleTipe" />
                             </n-form-item>
                             <n-form-item label="Tenor / Angsuran" path="tenor">
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase()
-			== 'bulanan'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'bulanan'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="6">
                                             6 bulan<n-text code>
@@ -885,7 +884,6 @@ import {
 import { useJaminanStore } from "../../../stores/jaminan";
 import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
 import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
-import { GlobeLocation20Filled } from "@vicons/fluent";
 const message = useMessage();
 const loading = ref(false);
 const loadingSend = ref(false);

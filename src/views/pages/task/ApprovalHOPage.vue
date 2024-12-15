@@ -31,8 +31,8 @@
                     </n-space>
                 </template>
                 <n-space vertical :size="12" class="pt-4">
-                    <n-data-table size="small" :loading="loadData" :columns="columns" :data="showData"
-                        :pagination="pagination" ellipsis />
+                    <n-data-table :loading="loadData" size="small" :columns="columns" :data="showData"
+                        :pagination="pagination" ellipsis :scroll-x="800" />
                 </n-space>
             </n-card>
         </n-space>
@@ -71,68 +71,74 @@ const dataTable = ref([]);
 const searchBox = ref();
 const { width } = useWindowSize();
 const columns = [
-  {
-    title: "Cabang",
-    key: "cabang",
-    sorter: "default",
-  },
-  {
-    title: "AO",
-    key: "nama_ao",
-    sorter: "default",
-  },
-  {
-    title: "Nama Debitur",
-    key: "nama_debitur",
-    sorter: "default",
-  },
-  {
-    title: "Plafond",
-    key: "plafond",
-    sorter: "default",
-    render(row) {
-      return h("div", format(row.plafond));
+    {
+        title: "Cabang",
+        key: "cabang",
+        sorter: "default",
+        width: 100,
     },
-  },
-  {
-    title: "Tenor",
-    key: "tenor",
-    sorter: "default",
-  },
-  {
-    title: "Status",
-    key: "status",
-    sorter: "default",
-    render(row) {
-      return h(
-        NTag,
-        {
-          bordered: false,
-          type: statusTag(row.status_code),
-          size: "small",
+    {
+        title: "AO",
+        key: "nama_ao",
+        sorter: "default",
+        width: 100,
+    },
+    {
+        title: "Nama Debitur",
+        key: "nama_debitur",
+        sorter: "default",
+        width: 300,
+    },
+    {
+        title: "Plafond",
+        key: "plafond",
+        width: 100,
+        render(row) {
+            return h("div", format(row.plafond));
         },
-        { default: () => row.status.toUpperCase() }
-      );
     },
-  },
-  {
-    title: "",
-    align: "right",
-    key: "more",
-    render(row) {
-      return h(
-        NButton,
-        {
-          size: "small",
-            type: statusTag(row.status_code),
-          onClick: () => {
-            handelAction(row);
-          },
+    {
+        title: "Tenor",
+        key: "tenor",
+        sorter: "default",
+        width: 100,
+    },
+    {
+        title: "Status",
+        key: "status",
+        sorter: "default",
+        width: 100,
+        render(row) {
+            return h(
+                NTag,
+                {
+                    bordered: false,
+                    type: statusTag(row.status_code),
+                    size: "small",
+                },
+                { default: () => row.status.toUpperCase() }
+            );
         },
-        { default: ()=>statusHandle(row) }
-      );
     },
-  },
+    {
+        title: "",
+        align: "right",
+        key: "more",
+        width: 100,
+        render(row) {
+            return h(
+                NButton,
+                {
+                    size: "small",
+                    type: statusTag(row.status_code),
+                    onClick: () => {
+                        handelAction(row);
+                    },
+                },
+                { default: () => statusHandle(row.status_code) }
+            );
+        },
+    },
 ];
 
 const format = (e) => {
