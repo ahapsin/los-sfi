@@ -703,7 +703,7 @@
                             </n-form-item>
                             <n-form-item label="Tenor / Angsuran" path="tenor">
 
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran == 'bulanan'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'bulanan'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="6">
                                             6 bulan<n-text code>
@@ -750,7 +750,7 @@
                                         </n-radio>
                                     </n-radio-group>
                                 </div>
-                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran == 'musiman'">
+                                <div class="flex flex-col md:flex-row" v-show="calcCredit.jenis_angsuran.toLowerCase() == 'musiman'">
                                     <n-radio-group v-model:value="calcCredit.tenor" name="radiogroup">
                                         <n-radio @change="handleChange" name="tenor" value="3">
                                             1 x 3 bulan<n-text code>
@@ -885,7 +885,6 @@ import {
 import { useJaminanStore } from "../../../stores/jaminan";
 import JaminanKendaraan from "./survey/JaminanKendaraan.vue";
 import JaminanSertifikat from "./survey/JaminanSertifikat.vue";
-import { GlobeLocation20Filled } from "@vicons/fluent";
 const message = useMessage();
 const loading = ref(false);
 const loadingSend = ref(false);
