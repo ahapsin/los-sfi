@@ -18,7 +18,7 @@
                                     v-model:value="searchBox" />
                             </n-popover>
                         </div>
-                        <div class="flex gap-2" v-if="unReadBadge() > 0">
+                        <div class="flex gap-2" >
                             <n-badge :value="unReadBadge()" :max="15">
                                 <n-button @click="handleUnRead">
                                     Belum diperiksa
@@ -78,7 +78,7 @@ const columns = [
         width: 100,
     },
     {
-        title: "AO",
+        title: "MCF",
         key: "nama_ao",
         sorter: "default",
         width: 100,
@@ -100,6 +100,12 @@ const columns = [
     {
         title: "Tenor",
         key: "tenor",
+        sorter: "default",
+        width: 100,
+    },
+    {
+        title: "Jenis Angsuran",
+        key: "jenis_angsuran",
         sorter: "default",
         width: 100,
     },
@@ -154,7 +160,7 @@ const statusTag = (e) => {
     }
 };
 const statusHandle = (e) => {
-  if (e.status_code === "WAHO") {
+  if (e === "WAHO") {
     return "Periksa Order";
   }  else {
     return "Lihat Order";
@@ -224,14 +230,14 @@ onMounted(() => getData());
 const cekUnread = ref(false);
 const handleUnRead = () => {
     cekUnread.value = true;
-    searchBox.value = "menunggu";
+    searchBox.value = "menunggu ho";
 }
 const handleAll = () => {
     cekUnread.value = false;
     searchBox.value = "";
 }
 const unReadBadge = () => {
-    let count = _.filter(dataTable.value, { 'status_code': 'APKPS' });
+    let count = _.filter(dataTable.value, { 'status_code': 'WAHO' });
     return count.length;
 }
 const showData = computed(() => {

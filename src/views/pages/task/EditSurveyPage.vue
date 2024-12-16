@@ -11,7 +11,7 @@
         </n-space>
     </n-scrollbar>
     <n-alert type="warning" v-if="sumJaminan != 0 && order.plafond > sumJaminan / 2">Nilai Plafon <b>{{
-        order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
+            order.plafond.toLocaleString() }}</b> > Nilai Jaminan {{ (sumJaminan / 2).toLocaleString() }}
         (50%)</n-alert>
     <!-- card -->
     <n-card :bordered="true" :title="`${current}. ${steps[current - 1]}`" :segmented="{
@@ -22,9 +22,9 @@
             <n-form ref="formOrder" :model="order" :rules="rulesOrder" require-mark-placement="right-hanging">
                 <div class="md:flex gap-2">
                     <n-form-item label="Plafond" path="plafond" class="w-full">
-                        <n-input-number :parse="parse" :format="format"
-                            :min="1000000" v-model:value="order.plafond" placeholder="plafond" :loading="loading"
-                            :show-button="false" class="flex !w-full" clearable :on-update:value="handlePlafond" />
+                        <n-input-number :parse="parse" :format="format" :min="1000000" v-model:value="order.plafond"
+                            placeholder="plafond" :loading="loading" :show-button="false" class="flex !w-full" clearable
+                            :on-update:value="handlePlafond" />
                     </n-form-item>
                     <n-form-item label="Jenis Angsuran" path="jenis_angsuran" class="w-full">
                         <n-select filterable placeholder="Jenis Angsuran" :options="jenisAngsuran"
@@ -39,10 +39,10 @@
                                 <n-radio name="tenor" value="6">
                                     6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -50,10 +50,10 @@
                                 <n-radio name="tenor" value="12">
                                     12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -61,10 +61,10 @@
                                 <n-radio name="tenor" value="18">
                                     18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -72,10 +72,10 @@
                                 <n-radio name="tenor" value="24">
                                     24 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -86,10 +86,10 @@
                                 <n-radio name="tenor" value="3">
                                     1x 3 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_6.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -97,10 +97,10 @@
                                 <n-radio name="tenor" value="6">
                                     1 x 6 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_12.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -108,10 +108,10 @@
                                 <n-radio name="tenor" value="12">
                                     2 x 12 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_18.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -119,10 +119,10 @@
                                 <n-radio name="tenor" value="18">
                                     3 x 18 bulan<n-text code>
                                         {{
-                                            skemaAngsuran.length == null
-                                                ? ` /
+                                        skemaAngsuran.length == null
+                                        ? ` /
                                         ${skemaAngsuran.tenor_24.angsuran.toLocaleString("US")}`
-                                                : ""
+                                        : ""
                                         }}
                                     </n-text>
                                 </n-radio>
@@ -191,7 +191,8 @@
                 </div>
                 <div>
                     <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
-                        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" />
+                        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan"
+                        v-model:kodepos="pelanggan.kodepos" />
                 </div>
                 <n-divider title-placement="left"> UPLOAD DOKUMEN IDENTITAS</n-divider>
 

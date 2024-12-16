@@ -194,7 +194,8 @@
                 </div>
                 <div>
                     <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
-                        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" />
+                        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan"
+                        v-model:kodepos="pelanggan.kodepos" />
                 </div>
                 <n-divider title-placement="left"> UPLOAD DOKUMEN IDENTITAS</n-divider>
 

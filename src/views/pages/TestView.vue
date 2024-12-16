@@ -1,12 +1,14 @@
 <template>
-  <div>
-    {{ redd }}
-    <n-input @input="$event => (redd = $event.toUpperCase())" v-model:value="redd"/></div>
+    <select-state-region v-model:provinsi="pelanggan.provinsi" v-model:kota="pelanggan.kota"
+        v-model:kecamatan="pelanggan.kecamatan" v-model:desa="pelanggan.kelurahan" v-model:kodepos="pelanggan.kodepos" />
 </template>
 <script setup>
-import {ref} from 'vue';
-const redd=ref();
-const upCase =(e)=>{
-   e.toUpperCase();
-}
+import {reactive} from 'vue';
+const pelanggan=reactive({
+    provinsi:null,
+    kota:null,
+    kecamatan:null,
+    kelurahan:null,
+    kodepos:null,
+})
 </script>

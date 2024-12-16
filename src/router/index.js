@@ -162,12 +162,17 @@ const routes = [
       },
       {
         path: "taksasi",
-        name: "Taksasi",
+        name: "taksasi",
         component: () => import("../views/pages/master/TaksasiPage.vue"),
       },
       {
         path: "taksasi-action",
         name: "Taksasi baru",
+        component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
+      },
+      {
+        path: "taksasi-action/:idtaksasi",
+        name: "Update Taksasi",
         component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
       },
       {
