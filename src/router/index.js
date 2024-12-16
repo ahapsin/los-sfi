@@ -162,7 +162,7 @@ const routes = [
       },
       {
         path: "taksasi",
-        name: "Taksasi",
+        name: "taksasi",
         component: () => import("../views/pages/master/TaksasiPage.vue"),
       },
       {

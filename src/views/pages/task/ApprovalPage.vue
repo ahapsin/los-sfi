@@ -65,7 +65,7 @@ const columns = [
         width: 100,
     },
     {
-        title: "AO",
+        title: "MCF",
         key: "nama_ao",
         sorter: "default",
         width: 100,
@@ -87,6 +87,12 @@ const columns = [
     {
         title: "Tenor",
         key: "tenor",
+        sorter: "default",
+        width: 100,
+    },
+    {
+        title: "Jenis Angsuran",
+        key: "jenis_angsuran",
         sorter: "default",
         width: 100,
     },
