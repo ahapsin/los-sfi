@@ -75,8 +75,8 @@ const rules = {
         message: "nama wajib diisi",
     },
 };
-const dari = ref();
-const sampai = ref();
+const dari = ref(null);
+const sampai = ref(null);
 const handleCancel = () => router.push("/master/taksasi");
 const price = ref([]);
 
@@ -101,6 +101,8 @@ const response = () =>
             PageData.value = res.data;
             price.value = _.sortBy(res.data.price,"name");
             Object.assign(dynamicForm, res.data);
+            dari.value = res.data.dari.toString();
+            sampai.value=res.data.sampai.toString();
         }
     });
 
@@ -187,7 +189,7 @@ const maxYear = () => {
     const harga=ref();
 
     for (let i = dari.value; i <= sampai.value; i++) {
-        const item = _.find(PageData.value.price, (o) => o.name === i.toString());
+        const item = _.find(PageData.value.price, (o) => o.name === i);
         price.value.push({
             name: i,
             harga:  item ? item.harga:0,
