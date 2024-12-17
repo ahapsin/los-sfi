@@ -235,7 +235,7 @@ const handleReset = (e) => {
             }
             const response = await useApi({
                 method: "POST",
-                api: `change_password`,
+                api: `reset_password`,
                 data: body,
                 token: userToken,
             });
