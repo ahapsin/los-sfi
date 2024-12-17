@@ -62,7 +62,7 @@ const options = [
     key: 2,
     props: {
       onClick: () => {
-        message.success("ganti password!");
+            handleChangePassword();
       },
     },
   },
@@ -89,6 +89,9 @@ const me = useMeStore();
 
 const handleAccount = () => {
   router.push({ name: "myaccount" });
+};
+const handleChangePassword = () => {
+  router.push({ name: "changepassword" });
 };
 
 const GetMe = async () => {

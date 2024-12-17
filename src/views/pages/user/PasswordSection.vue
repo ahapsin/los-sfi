@@ -1,5 +1,5 @@
 <template>
- 
+
     <n-form
       ref="formRef"
       :model="dynamicForm"

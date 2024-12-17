@@ -56,14 +56,12 @@ const routes = [
       {
         path: "jaminan-action",
         name: "jaminan action",
-        component: () =>
-          import("../views/pages/jaminan/trxJaminan.vue"),
+        component: () => import("../views/pages/jaminan/trxJaminan.vue"),
       },
       {
         path: "jaminan-update",
         name: "jaminan update",
-        component: () =>
-          import("../views/pages/jaminan/updateJaminanPage.vue"),
+        component: () => import("../views/pages/jaminan/updateJaminanPage.vue"),
       },
     ],
   },
@@ -140,8 +138,7 @@ const routes = [
       {
         path: "approval_trf",
         name: "pending transfer",
-        component: () =>
-          import("../views/pages/task/HO/PersetujuanPage.vue"),
+        component: () => import("../views/pages/task/HO/PersetujuanPage.vue"),
       },
       {
         path: "new-survey",
@@ -255,8 +252,12 @@ const routes = [
       {
         path: "myaccount",
         name: "myaccount",
-        component: () =>
-          import("../views/pages/user/MyAccountPage.vue"),
+        component: () => import("../views/pages/user/MyAccountPage.vue"),
+      },
+      {
+        path: "changepassword",
+        name: "changepassword",
+        component: () => import("../views/pages/user/PasswordSection.vue"),
       },
       {
         path: "menu",
@@ -266,22 +267,26 @@ const routes = [
       {
         path: "menu-action",
         name: "menu action",
-        component: () => import("../views/pages/master/menus/ActionMenuPage.vue"),
+        component: () =>
+          import("../views/pages/master/menus/ActionMenuPage.vue"),
       },
       {
         path: "menu-action/:idMenu",
         name: "update menu",
-        component: () => import("../views/pages/master/menus/ActionMenuPage.vue"),
+        component: () =>
+          import("../views/pages/master/menus/ActionMenuPage.vue"),
       },
       {
         path: "position",
         name: "position",
-        component: () => import("../views/pages/master/position/PositionPage.vue"),
+        component: () =>
+          import("../views/pages/master/position/PositionPage.vue"),
       },
       {
         path: "position-action",
         name: "position action",
-        component: () => import("../views/pages/master/position/ActionPositionPage.vue"),
+        component: () =>
+          import("../views/pages/master/position/ActionPositionPage.vue"),
       },
     ],
   },
@@ -289,20 +294,18 @@ const routes = [
     path: "/laporan",
     name: "laporan",
     component: () => import("../views/pages/DashboardPage.vue"),
-    children:[
+    children: [
       {
         path: "inq_pinjaman",
         name: "Listing Beban",
-        component: () =>
-          import("../views/pages/laporan/LapPinjaman.vue"),
+        component: () => import("../views/pages/laporan/LapPinjaman.vue"),
       },
       {
         path: "inq_jaminan",
         name: "inquery jaminan",
-        component: () =>
-          import("../views/pages/laporan/LapJaminan.vue"),
+        component: () => import("../views/pages/laporan/LapJaminan.vue"),
       },
-    ]
+    ],
   },
 ];
 
