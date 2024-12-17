@@ -4,19 +4,19 @@
             <n-select filterable placeholder="Pilih Provinsi" label-field="text" value-field="id"
                 v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged" />
         </n-form-item>
-        <n-form-item label="Kota" path="kota"  class="w-full">
+        <n-form-item label="Kota" path="kota" class="w-full">
             <n-select filterable placeholder="Pilih Kab/Kota" label-field="text" value-field="id"
-                v-model:value="props.kota" :options="col_kota" @update:value="kotaChanged" />
+                v-model:value="props.kota" :options="col_kota" @update:value="kotaChanged" @click="kotaUpdate" />
         </n-form-item>
         <n-form-item label="Kecamatan" path="kecamatan" class="w-full">
             <n-select filterable placeholder="Pilih Kecamatan" label-field="text" value-field="id"
-                v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" />
+                v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" @click="kecUpdate" />
         </n-form-item>
         <n-form-item label="Desa" path="desa" class="w-full">
-            <n-select filterable placeholder="Pilih Desa" label-field="text" value-field="id"
-                v-model:value="props.desa" :options="col_desa" @update:value="desaChanged" />
+            <n-select filterable placeholder="Pilih Desa" label-field="text" value-field="id" v-model:value="props.desa"
+                :options="col_desa" @update:value="desaChanged" @click="desaUpdate"/>
         </n-form-item>
-        <n-form-item label="Kode Pos" path="kodepos"  class="w-full">
+        <n-form-item label="Kode Pos" path="kodepos" class="w-full">
             <n-select filterable placeholder="Pilih Kodepos" label-field="text" value-field="id"
                 v-model:value="props.kodepos" :options="col_kodepos" @update:value="kodeposChanged" />
         </n-form-item>
@@ -28,6 +28,7 @@
 import axios from "axios";
 import { ref, reactive } from "vue";
 import { useOpenAPIget } from "../../helpers/axios";
+import _ from "lodash" ;
 
 const sel_provinsi = ref('pilih');
 const sel_kota = ref('pilih');
@@ -78,22 +79,25 @@ const dataAlamat = reactive({
     provinsi: props.kota,
 });
 const provinsiChanged = async (value, option) => {
+    emit('update:kota', "");
+    emit('update:kecamatan', "");
+    emit('update:desa', option.name);
+    emit('update:kodepos', option.name);
     try {
-        console.log(props.kota);
-        console.log(dataAlamat);
         let getKota = await axios.get(`https://alamat.thecloudalert.com/api/kabkota/get/?d_provinsi_id=${value}`);
         col_kota.value = getKota.data.result;
-        emit('update:provinsi', option.name);
+        emit('update:provinsi', option.text);
     } catch (error) {
         console.log(error);
     }
 };
 const kotaChanged = async (value, option) => {
+    emit('update:kecamatan', "");
     sel_kota.value = value;
     try {
         let getKec = await axios.get(`https://alamat.thecloudalert.com/api/kecamatan/get/?d_kabkota_id=${value}`);
         col_kec.value = getKec.data.result;
-        emit('update:kota', option.name);
+        emit('update:kota', option.text);
     } catch (error) {
         console.log(error);
     }
@@ -103,25 +107,52 @@ const kecChanged = async (value, option) => {
     try {
         let getKec = await axios.get(`https://alamat.thecloudalert.com/api/kelurahan/get/?d_kecamatan_id=${value}`);
         col_desa.value = getKec.data.result;
-        emit('update:kecamatan', option.name);
+        emit('update:kecamatan', option.text);
     } catch (error) {
         console.log(error);
     }
 };
+
+
+const kodeposChanged = (value, option) => {
+    // console.log(option.name);
+    emit('update:kodepos', option.text);
+};
+const kotaUpdate = ()=>{
+    const find = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase())
+    provinsiChanged(find.id);
+}
+const kotPlace=ref();
+const kecPlace=ref();
+const kecUpdate = async () => {
+    const findKota = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase());
+    kotPlace.value=findKota.id;
+    await provinsiChanged(findKota.id);
+    const findKec = _.find(col_kota.value, (o) => o.text.toLowerCase() === props.kota.toLowerCase());
+    kecPlace.value=findKec.id;
+    await kotaChanged(findKec.id);
+}
+
+const desaUpdate = async () => {
+    const findKota = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase());
+    kotPlace.value=findKota.id;
+    await provinsiChanged(findKota.id);
+    const findKec = _.find(col_kota.value, (o) => o.text.toLowerCase() === props.kota.toLowerCase());
+    kecPlace.value=findKec.id;
+    await kotaChanged(findKec.id);
+    const findDesa = _.find(col_kec.value, (o) => o.text.toLowerCase() === props.kecamatan.toLowerCase());
+    await kecChanged(findDesa.id);
+}
 const desaChanged = async (value, option) => {
     sel_desa.value = value;
     try {
-        let getKodepos =await  axios.get(`https://alamat.thecloudalert.com/api/kodepos/get/?d_kabkota_id=${sel_kota.value}&d_kecamatan_id=${sel_kec.value}`);
+        let getKodepos =await  axios.get(`https://alamat.thecloudalert.com/api/kodepos/get/?d_kabkota_id=${sel_kota.value ? sel_kota.value:kotPlace.value}&d_kecamatan_id=${sel_kec.value ? sel_kec.value:kecPlace.value}`);
         col_kodepos.value = getKodepos.data.result;
         emit('update:desa', option.name);
     } catch (error) {
         console.log(error);
     }
 
-};
-const kodeposChanged = (value, option) => {
-    // console.log(option.name);
-    emit('update:kodepos', option.name);
 };
 
 useOpenAPIget("https://alamat.thecloudalert.com/api/provinsi/get/").then(([res]) => { col_provinsi.value = res.result });

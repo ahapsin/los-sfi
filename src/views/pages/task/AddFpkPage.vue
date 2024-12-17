@@ -27,7 +27,7 @@
     </n-collapse-item>
     </n-collapse> -->
     <n-spin :show="suspense">
-        <!-- <pre>{{ calcCredit }}</pre> -->
+        <pre>{{ formAssign }}</pre>
         <slot name="addition"></slot>
         <n-space vertical class="rounded-2xl p-4 sticky top-0 bg-white border z-50">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
@@ -150,9 +150,10 @@
                             </n-input>
                         </n-form-item>
                     </div>
+                    {{ alamatIdentitas }}
                     <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
                         v-model:kecamatan="alamatIdentitas.kecamatan" v-model:desa="alamatIdentitas.kelurahan"
-                        v-model:kodepos="alamatIdentitas.kodepos" />
+                        v-model:kodepos="alamatIdentitas.kode_pos" />
                     <div class="flex items-center justify-between border-b pb-2 mb-2">
                         <strong class="text-base">Informasi Alamat Tagih</strong>
                         <n-button secondary type="primary" @click="copyAddress" v-show="!viewMode">
