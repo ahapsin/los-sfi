@@ -27,7 +27,6 @@
     </n-collapse-item>
     </n-collapse> -->
     <n-spin :show="suspense">
-        <!-- <pre>{{ calcCredit }}</pre> -->
         <slot name="addition"></slot>
         <n-space vertical class="rounded-2xl p-4 sticky top-0 bg-white border z-50">
             <n-steps :current="current" v-model:current="current" :status="currentStatus">
@@ -150,9 +149,10 @@
                             </n-input>
                         </n-form-item>
                     </div>
+
                     <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
                         v-model:kecamatan="alamatIdentitas.kecamatan" v-model:desa="alamatIdentitas.kelurahan"
-                        v-model:kodepos="alamatIdentitas.kodepos" />
+                        v-model:kodepos="alamatIdentitas.kode_pos" />
                     <div class="flex items-center justify-between border-b pb-2 mb-2">
                         <strong class="text-base">Informasi Alamat Tagih</strong>
                         <n-button secondary type="primary" @click="copyAddress" v-show="!viewMode">
@@ -180,7 +180,7 @@
                     </div>
                     <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
                         v-model:kecamatan="alamatTagih.kecamatan" v-model:desa="alamatTagih.kelurahan"
-                        v-model:kodepos="alamatTagih.kodepos" />
+                        v-model:kodepos="alamatTagih.kode_pos" />
                     <n-divider title-placement="left"> Dokumen Identitas </n-divider>
                     <n-space justify="space-between">
                         <n-space>
@@ -924,8 +924,12 @@ const dataPelanggan = ref({
 });
 
 const { width } = useWindowSize();
-const alamatIdentitas = ref({});
-const alamatTagih = ref({});
+const alamatIdentitas = ref({
+    kelurahan:null,
+});
+const alamatTagih = ref({
+    kelurahan: null,
+});
 const dataPekerjaan = ref({});
 const dataOrder = ref({});
 const dataTaksasi = ref({});
