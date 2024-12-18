@@ -2,15 +2,15 @@
     <div class="flex md:flex-row flex-col w-full  gap-2">
         <n-form-item label="Provinsi" path="provinsi" class="w-full">
             <n-select filterable placeholder="Pilih Provinsi" label-field="text" value-field="id"
-                v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged" />
+                v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged" @blur="provUpdate" />
         </n-form-item>
         <n-form-item label="Kota" path="kota" class="w-full">
             <n-select filterable placeholder="Pilih Kab/Kota" label-field="text" value-field="id"
-                v-model:value="props.kota" :options="col_kota" @update:value="kotaChanged" @click="kotaUpdate" />
+                v-model:value="props.kota" :options="col_kota" @update:value="kotaChanged" @blur="kotaUpdate" />
         </n-form-item>
         <n-form-item label="Kecamatan" path="kecamatan" class="w-full">
             <n-select filterable placeholder="Pilih Kecamatan" label-field="text" value-field="id"
-                v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" @click="kecUpdate" />
+                v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" @blur="kecUpdate" />
         </n-form-item>
         <n-form-item label="Desa" path="desa" class="w-full">
             <n-select filterable placeholder="Pilih Desa" label-field="text" value-field="id" v-model:value="props.desa"
@@ -79,10 +79,6 @@ const dataAlamat = reactive({
     provinsi: props.kota,
 });
 const provinsiChanged = async (value, option) => {
-    emit('update:kota', "");
-    emit('update:kecamatan', "");
-    emit('update:desa', option.name);
-    emit('update:kodepos', option.name);
     try {
         let getKota = await axios.get(`https://alamat.thecloudalert.com/api/kabkota/get/?d_provinsi_id=${value}`);
         col_kota.value = getKota.data.result;
@@ -91,8 +87,14 @@ const provinsiChanged = async (value, option) => {
         console.log(error);
     }
 };
-const kotaChanged = async (value, option) => {
+const provUpdate = ()=>{
+    emit('update:kota', "");
     emit('update:kecamatan', "");
+    emit('update:desa', "");
+    emit('update:kodepos',"");
+}
+const kotaChanged = async (value, option) => {
+
     sel_kota.value = value;
     try {
         let getKec = await axios.get(`https://alamat.thecloudalert.com/api/kecamatan/get/?d_kabkota_id=${value}`);
@@ -119,12 +121,17 @@ const kodeposChanged = (value, option) => {
     emit('update:kodepos', option.text);
 };
 const kotaUpdate = ()=>{
+    emit('update:kecamatan', "");
+    emit('update:desa', "");
+    emit('update:kodepos',"");
     const find = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase())
     provinsiChanged(find.id);
 }
 const kotPlace=ref();
 const kecPlace=ref();
 const kecUpdate = async () => {
+    emit('update:desa', "");
+    emit('update:kodepos',"");
     const findKota = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase());
     kotPlace.value=findKota.id;
     await provinsiChanged(findKota.id);
@@ -134,6 +141,7 @@ const kecUpdate = async () => {
 }
 
 const desaUpdate = async () => {
+    emit('update:kodepos',"");
     const findKota = _.find(col_provinsi.value, (o) => o.text.toLowerCase() === props.provinsi.toLowerCase());
     kotPlace.value=findKota.id;
     await provinsiChanged(findKota.id);
@@ -148,7 +156,7 @@ const desaChanged = async (value, option) => {
     try {
         let getKodepos =await  axios.get(`https://alamat.thecloudalert.com/api/kodepos/get/?d_kabkota_id=${sel_kota.value ? sel_kota.value:kotPlace.value}&d_kecamatan_id=${sel_kec.value ? sel_kec.value:kecPlace.value}`);
         col_kodepos.value = getKodepos.data.result;
-        emit('update:desa', option.name);
+        emit('update:desa', option.text);
     } catch (error) {
         console.log(error);
     }
