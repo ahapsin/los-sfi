@@ -276,7 +276,6 @@
                         <n-form-item label="Tanggal Order" path="order_tanggal" class="w-full">
                             <n-input :value="dataOrder.order_tanggal" disabled></n-input>
                         </n-form-item>
-                        <!-- <pre>{{ formAssign }}</pre> -->
                         <n-form-item label="Reff Pelanggan" path="ref_pelanggan" class="w-full">
                             <div class="flex gap-2 w-full">
 
@@ -629,7 +628,7 @@
                             <n-input placeholder="Nama Kerabat" v-model:value="dataKerabat.nama"
                                 @input="$event => (dataKerabat.nama = $event.toUpperCase())" />
                         </n-form-item>
-                        <n-form-item label="Telepon" path="telepon" class="w-full">
+                        <n-form-item label="Telepon" path="telepon_kerabat" class="w-full">
                             <n-input placeholder="Telepon Selular" v-model:value="dataKerabat.no_hp" maxlength="13"
                                 :allow-input="onlyAllowNumber" />
                         </n-form-item>
@@ -637,11 +636,11 @@
                     <n-form-item label="Alamat" path="alamat">
                         <n-input-group>
                             <n-input placeholder="Alamat" v-model:value="dataKerabat.alamat"
-                                @input="$event => (dataKerabat.alamat = $event.toUpperCase())" />
+                                @input="$event => (dataKerabat.alamat = $event.toUpperCase())" path="alamat_kerabat" />
                             <n-input placeholder="RT" v-model:value="dataKerabat.rt" maxlength="3"
-                                :allow-input="onlyAllowNumber" />
+                                :allow-input="onlyAllowNumber" path="rt_kerabat"/>
                             <n-input placeholder="RW" v-model:value="dataKerabat.rw" maxlength="3"
-                                :allow-input="onlyAllowNumber" />
+                                :allow-input="onlyAllowNumber" path="rt_kerabat"/>
                         </n-input-group>
                     </n-form-item>
                     <select-state-region v-model:provinsi="dataKerabat.provinsi" v-model:kota="dataKerabat.kota"
@@ -1007,59 +1006,7 @@ const statusInformasiOrder = ref();
 const statusEkstra = ref();
 const countError = ref(0);
 const globalForm = ref("error");
-const validateFormPelanggan = () => {
-    // formPelanggan.value?.validate((errors) => {
-    //     if (errors) {
-    //         message.error("periksa kembali isian data pelanggan");
-    //         globalForm.value = "error";
-    //     } else {
-    //         formPelangganPekerjaan.value?.validate((errors) => {
-    //             if (errors) {
-    //                 message.error("periksa kembali isian pekerjaan pelanggan");
-    //                 globalForm.value = "error";
-    //             } else {
-    //                 formPelangganAlamatIdentitas.value?.validate((errors) => {
-    //                     if (errors) {
 
-    //                         message.error("periksa kembali isian alamat identitas pelanggan");
-    //                         globalForm.value = "error";
-    //                     } else {
-    //                         formPelangganAlamatTagih.value?.validate((errors) => {
-    //                             if (errors) {
-    //                                 message.error("periksa kembali isian alamat tagih pelanggan");
-    //                                 globalForm.value = "error";
-    //                             } else {
-    //                                 globalForm.value = "finish";
-    //                             }
-    //                         });
-    //                     }
-    //                 });
-
-    //             }
-    //         });
-
-    //     }
-    // });
-
-    // formOrder.value?.validate((errors) => {
-    //   if (errors) {
-    //     message.error("periksa kembali isian order pelanggan");
-    //     statusInformasiOrder.value = "error";
-    //   } else {
-    //     globalForm.value = true;
-    //     statusInformasiOrder.value = "finish";
-    //   }
-    // });
-    // formExtra.value?.validate((errors) => {
-    //   if (errors) {
-    //     message.error("periksa kembali isian Ekstra");
-    //     statusEkstra.value = "error";
-    //   } else {
-    //     globalForm.value = true;
-    //     statusEkstra.value = "finish";
-    //   }
-    // });
-}
 const computForm = computed(() => (globalForm.value));
 const next = () => {
     current.value += 1
@@ -1369,7 +1316,23 @@ const rulesOrder = {
         message: "harus diisi",
     },
 }
-const rulesPasangan = {}
+const rulesPasangan = {
+    nama_kerabat: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    telepon_kerabat: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    alamat_kerabat: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    }
+}
 const formExtra = ref();
 const rulesExtra = {
     nilai_yang_diterima: {
