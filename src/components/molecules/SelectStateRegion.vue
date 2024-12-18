@@ -2,7 +2,8 @@
     <div class="flex md:flex-row flex-col w-full  gap-2">
         <n-form-item label="Provinsi" path="provinsi" class="w-full">
             <n-select filterable placeholder="Pilih Provinsi" label-field="text" value-field="id"
-                v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged" @blur="provUpdate" />
+                v-model:value="props.provinsi" :options="col_provinsi" @update:value="provinsiChanged"
+                @blur="provUpdate" />
         </n-form-item>
         <n-form-item label="Kota" path="kota" class="w-full">
             <n-select filterable placeholder="Pilih Kab/Kota" label-field="text" value-field="id"
@@ -14,9 +15,12 @@
         </n-form-item>
         <n-form-item label="Desa" path="desa" class="w-full">
             <n-select filterable placeholder="Pilih Desa" label-field="text" value-field="id" v-model:value="props.desa"
-                :options="col_desa" @update:value="desaChanged" @click="desaUpdate"/>
+                :options="col_desa" @update:value="desaChanged" @click="desaUpdate" />
         </n-form-item>
-        <n-form-item label="Kode Pos" path="kodepos" class="w-full">
+        <n-form-item label="Kode Pos" path="kodepos" class="w-full" v-if="col_kodepos.length <= 0">
+            <n-input v-model:value="props.kodepos" placeholder="Kode Pos" @update:value="kodePostUp" maxlength="5"/>
+        </n-form-item>
+        <n-form-item label="Kode Pos" path="kodepos" class="w-full" v-else>
             <n-select filterable placeholder="Pilih Kodepos" label-field="text" value-field="id"
                 v-model:value="props.kodepos" :options="col_kodepos" @update:value="kodeposChanged" />
         </n-form-item>
@@ -38,7 +42,8 @@ const col_provinsi = ref();
 const col_kota = ref();
 const col_kec = ref();
 const col_desa = ref();
-const col_kodepos = ref();
+const kodepostText=ref();
+const col_kodepos = ref([]);
 
 const emit = defineEmits(['update:provinsi', 'update:kota', 'update:kecamatan', 'update:desa', 'update:kodepos']);
 const props = defineProps({
@@ -115,11 +120,13 @@ const kecChanged = async (value, option) => {
     }
 };
 
-
 const kodeposChanged = (value, option) => {
     // console.log(option.name);
     emit('update:kodepos', option.text);
 };
+const kodePostUp = (option)=>{
+    emit('update:kodepos', option);
+}
 const kotaUpdate = ()=>{
     emit('update:kecamatan', "");
     emit('update:desa', "");
