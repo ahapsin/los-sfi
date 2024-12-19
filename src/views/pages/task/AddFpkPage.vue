@@ -584,35 +584,35 @@
                         </div>
                         <div class="p-4 pb-0">
                             <div class="flex gap-2">
-                                <n-form-item label="No KTP" path="nama_kerabat" class="w-full">
+                                <n-form-item label="No KTP" path="ktp_penjamin" class="w-full">
                                     <n-input placeholder="KTP Penjamin" v-model:value="penjamin.no_identitas" show-count
                                         :maxlength="16" :allow-input="onlyAllowNumber" />
                                 </n-form-item>
-                                <n-form-item label="Nama Penjamin" path="nama_kerabat" class="w-full">
+                                <n-form-item label="Nama Penjamin" path="nama_penjamin" class="w-full">
                                     <n-input placeholder="Nama penjamin" v-model:value="penjamin.nama"
                                         @input="$event => (penjamin.nama = $event.toUpperCase())" />
                                 </n-form-item>
-                                <n-form-item label="Tanggal Lahir" path="order" class="w-full">
+                                <n-form-item label="Tanggal Lahir" path="tgllahir_penjamin" class="w-full">
                                     <n-date-picker placeholder="Tanggal lahir"
                                         v-model:formatted-value="penjamin.tgl_lahir" value-format="yyyy-MM-dd"
                                         format="dd-MM-yyyy" type="date" class="w-full" />
                                 </n-form-item>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <n-form-item label="Hubungan Dengan konsumen" path="hub_konsumen">
+                                <n-form-item label="Hubungan Dengan konsumen" path="hub_penjamin">
                                     <n-select filterable :options="optHubCust" v-model:value="penjamin.hub_cust" />
                                 </n-form-item>
-                                <n-form-item label="Telepon" path="telepon">
+                                <n-form-item label="Telepon" path="telepon_penjamin">
                                     <n-input placeholder="Telepon Sellular 1" v-model:value="penjamin.no_hp"
                                         maxlength="13" :allow-input="onlyAllowNumber" />
                                 </n-form-item>
-                                <n-form-item label="Pekerjaan" path="nama">
+                                <n-form-item label="Pekerjaan" path="pekerjaan_penjamin">
                                     <n-input placeholder="Pekerjaan Penjamin" v-model:value="penjamin.pekerjaan"
                                         @input="$event => (penjamin.pekerjaan = $event.toUpperCase())">
                                     </n-input>
                                 </n-form-item>
                             </div>
-                            <n-form-item label="Alamat" path="nama_kerabat" class="w-full">
+                            <n-form-item label="Alamat" path="alamat_penjamin" class="w-full">
                                 <n-input :autosize="{
                                     minRows: 3,
                                 }" type="textarea" placeholder="Alamat" v-model:value="penjamin.alamat"
@@ -633,7 +633,7 @@
                                 :allow-input="onlyAllowNumber" />
                         </n-form-item>
                     </div>
-                    <n-form-item label="Alamat" path="alamat">
+                    <n-form-item label="Alamat" path="alamat_kerabat">
                         <n-input-group>
                             <n-input placeholder="Alamat" v-model:value="dataKerabat.alamat"
                                 @input="$event => (dataKerabat.alamat = $event.toUpperCase())" path="alamat_kerabat" />
@@ -1317,6 +1317,41 @@ const rulesOrder = {
     },
 }
 const rulesPasangan = {
+    ktp_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    nama_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    tgllahir_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    hub_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    telepon_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    pekerjaan_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
+    alamat_penjamin: {
+        trigger: "blur",
+        required: true,
+        message: "harus diisi",
+    },
     nama_kerabat: {
         trigger: "blur",
         required: true,
@@ -1331,7 +1366,7 @@ const rulesPasangan = {
         trigger: "blur",
         required: true,
         message: "harus diisi",
-    }
+    },
 }
 const formExtra = ref();
 const rulesExtra = {

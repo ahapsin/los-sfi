@@ -2,19 +2,18 @@
     <n-card :segmented="{
         content: true,
         footer: 'soft'
-    }" :title="`Form Transaksi Jaminan`">
+    }" :title="`Form ${props.type} jaminan`">
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
                 <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
-
                 <n-data-table striped size="small" :row-key="(row) => row" :columns="columns" :data="showData"
                     :max-height="300" :on-update:checked-row-keys="handleChecked" />
             </n-space>
             <n-space>
-                <n-form-item label="Tujuan" path="cabang">
-                    <n-select filterable placeholder="Pilih Cabang" :options="optTujuan"
-                        v-model:value="dynamicForm.tujuan" default-value="HO" />
+                <n-form-item label="Tujuan" path="cabang" v-if="props.type === 'kirim'">
+                    <n-select filterable placeholder="Pilih Cabang" :options="branchData"
+                        v-model:value="dynamicForm.tujuan" value-field="id" label-field="nama" />
                 </n-form-item>
                 <n-form-item label="Kurir" path="cabang">
                     <n-input filterable placeholder="Kurir" v-model:value="dynamicForm.kurir" />
@@ -49,14 +48,19 @@ import { usePDF } from "vue3-pdfmake";
 import router from '../../../router';
 import { useRoute } from 'vue-router';
 import { useSearch } from '../../../helpers/searchObject';
+import _ from 'lodash';
+import { useMeStore } from '../../../stores/me';
 
 const emit = defineEmits();
+const props = defineProps({
+    type: String,
+});
 
 const dynamicForm = reactive({
     jaminan: null,
-    tujuan: 'HO',
+    tujuan: null,
     catatan: null,
-    type:'send'
+    type: 'send'
 });
 const loading = ref(false);
 
@@ -68,7 +72,7 @@ const baseRoute = useRoute();
 const param = baseRoute.params.iduser;
 const userToken = localStorage.getItem("token");
 const handleCancel = () => {
-    emit('batal', false);
+    emit('batal', true);
 };
 
 
@@ -83,6 +87,11 @@ const rules = {
 const columns = [
     {
         type: "selection",
+        disabled(row) {
+            return (
+                row.status_jaminan === "SENDING"
+            );
+        },
     },
     {
         title: "Jenis",
@@ -159,6 +168,7 @@ const handleSave = async () => {
     } else {
         router.push({ name: 'jaminan' })
         message.success("data berhasil disimpan");
+        emit('simpan', false);
         loading.value = false;
     }
 }
@@ -168,7 +178,7 @@ const handleChecked = (e) => {
 const dataBpkb = ref([]);
 useApi({
     method: 'GET',
-    api: `jaminan`,
+    api: props.type == 'minta' ? `forgetjaminan` : `forgetjaminan`,
     token: userToken
 }).then(res => {
     if (!res.ok) {
@@ -178,8 +188,26 @@ useApi({
         dataBpkb.value = res.data;
     }
 });
+const me = useMeStore();
+const branchData = ref([]);
+const branch = async () => {
+    useApi({
+        method: 'GET',
+        api: `cabang`,
+        token: userToken
+    }).then(res => {
+        if (!res.ok) {
+            console.log(res);
+            message.error("error koneksi api");
+        } else {
+            let branchDataApi = _.filter(res.data.response, (o) => o.id != me.me.cabang_id);
+            branchData.value = branchDataApi;
+        }
+    })
+};
 const showData = computed(() => {
-    return useSearch(dataBpkb.value, searchBox.value);
+    let data = _.filter(dataBpkb.value, (o) => o.lokasi != 'HO');
+    return useSearch(data, searchBox.value);
 });
 const kopSurat = [{
     table: {
@@ -260,15 +288,11 @@ const handlePrint = () => {
 
 }
 
-const optTujuan = ["HO"].map(
-    (v) => ({
-        label: v,
-        value: v
-    }));
 
 
 onMounted(() => {
-    if (param) { response() };
+    branch();
+    if (param) { response(); };
 
 });
 </script>

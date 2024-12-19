@@ -4,7 +4,7 @@
       <div class="flex items-center gap-2">
         <span class="flex flex-col items-end">
           <strong>{{ dataUser?.nama }}</strong>
-          <small class="text-pr hidden md:flex">{{ dataUser?.email }}</small>
+          <small class="text-pr hidden md:flex uppercase"> POS :{{ dataUser?.cabang_nama }}</small>
         </span>
         <n-avatar
           round
