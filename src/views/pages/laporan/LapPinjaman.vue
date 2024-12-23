@@ -1,39 +1,43 @@
 <template>
   <div>
     <n-space vertical>
-      <n-card :title="`Laporan Listing Beban`">
-        <n-tabs type="card" animated>
-          <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman </n-tab-pane>
-          <n-tab-pane name="pembayaran" tab="PEMBAYARAN">
-            Informasi Pembayaran
+      <n-card :title="`Laporan Keuangan`">
+        <n-tabs type="card" animated @before-leave="handleBeforeLeave">
+<!--          <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman</n-tab-pane>-->
+<!--          <n-tab-pane name="pembayaran" tab="PEMBAYARAN">-->
+<!--            Informasi Pembayaran-->
+<!--          </n-tab-pane>-->
+<!--          <n-tab-pane name="jaminan" tab="JAMINAN"> Informasi Jaminan</n-tab-pane>-->
+<!--          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan</n-tab-pane>-->
+          {{handleRange}}
+          <n-tab-pane name="arus kas" tab="ARUS KAS">
+            <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10" :range="handleRange"/>
           </n-tab-pane>
-          <n-tab-pane name="jaminan" tab="JAMINAN"> Informasi Jaminan </n-tab-pane>
-          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan </n-tab-pane>
         </n-tabs>
         <template #header-extra>
           <n-space class="!gap-1">
             <div class="me-1 flex gap-2">
               <n-date-picker
-                v-model:value="timestamp"
-                type="month"
-                 :default-value="Date.now()"
-                format="y MMM"
-                month-format="MMM"
-                clearable
+                  v-model:value="timestamp"
+                  type="month"
+                  :default-value="Date.now()"
+                  format="y MMM"
+                  month-format="MMM"
+                  clearable
               />
               <n-popover trigger="click" placement="bottom-end">
                 <template #trigger>
                   <n-button circle>
                     <n-icon>
-                      <search-icon />
+                      <search-icon/>
                     </n-icon>
                   </n-button>
                 </template>
                 <n-input
-                  autofocus="true"
-                  clearable
-                  placeholder="cari disini.."
-                  v-model:value="searchBox"
+                    autofocus="true"
+                    clearable
+                    placeholder="cari disini.."
+                    v-model:value="searchBox"
                 />
               </n-popover>
             </div>
@@ -41,7 +45,7 @@
               <n-button circle type="success" secondary>
                 <template #icon>
                   <n-icon>
-                    <download-icon />
+                    <download-icon/>
                   </n-icon>
                 </template>
               </n-button>
@@ -50,34 +54,25 @@
               <n-button type="primary" @click="handleAdd">
                 <template #icon>
                   <n-icon>
-                    <add-icon />
+                    <add-icon/>
                   </n-icon>
                 </template>
               </n-button>
             </div>
           </n-space>
         </template>
-        <n-space vertical :size="12" class="pt-4">
-          <n-data-table
-            size="small"
-            :columns="columns"
-            :data="showData"
-            :pagination="pagination"
-          />
-        </n-space>
       </n-card>
     </n-space>
   </div>
 </template>
-  <script setup>
-import { ref, onMounted, h,computed } from "vue";
-import { useApi } from "../../../helpers/axios";
-import { useSearch } from "../../../helpers/searchObject";
+<script setup>
+import {ref, onMounted, h, computed} from "vue";
+import {useApi} from "../../../helpers/axios";
+import {useSearch} from "../../../helpers/searchObject";
 import router from "../../../router";
 import {
   useDialog,
   useMessage,
-  NDropdown,
   NIcon,
   NButton,
 } from "naive-ui";
@@ -90,67 +85,90 @@ import {
   DeleteOutlined as DeleteIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
+import TabArusKas from "./TabArusKas.vue";
+
+const handleRange = ref();
 const message = useMessage();
 const dialog = useDialog();
 const dataTable = ref([]);
+const dataArusKas = ref([]);
 const searchBox = ref();
 const columns = [
   {
-    title: "No Pelanggan",
-    key: "CUST_CODE",
+    title: "Tanggal",
+    key: "ENTRY_DATE",
     sorter: "default",
   },
   {
-    title: "Nama",
-    key: "NAME",
+    title: "Type",
+    key: "TYPE",
+    sorter: "default",
+    defaultFilter: ['TES', 'TEST'],
+    filterOptions: [
+      {
+        label: 'CASH-IN',
+        value: 'CASH-IN'
+      },
+      {
+        label: 'CASH-OUT',
+        value: 'CASH-OUT'
+      }
+    ],
+    filter(value, row) {
+      return !!~row.TYPE.indexOf(value);
+    }
+  },
+  {
+    title: "Keterangan",
+    key: "JENIS",
     sorter: "default",
   },
   {
-    title: "Tanggal Lahir",
-    key: "BIRTHDATE",
+    title: "Cabang",
+    key: "BRANCH",
     sorter: "default",
   },
   {
-    title: "Nama Ibu Kandung",
-    sorter: "default",
-    key: "MOTHER_NAME",
-  },
-  {
-    title: "",
+    title: "Jumlah",
     align: "right",
-    key: "more",
-    render(row, index) {
-      return h(
-        NDropdown,
-        {
-          options: options,
-          size: "small",
-          onSelect: (e) => {
-            if (e === "hapus") {
-              handleConfirm(row, index);
-            }
-            if (e === "detail") {
-              handleDetail(row);
-            }
-            if (e === "edit") {
-              handleUpdate(row);
-            }
-          },
-        },
-        {
-          default: h(
-            NButton,
-            {
-              size: "small",
-            },
-            { default: () => "Action" }
-          ),
-        }
-      );
-    },
+    key: "ORIGINAL_AMOUNT",
+    sorter: "default",
+    render(row) {
+      return h("div", row.ORIGINAL_AMOUNT.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+    }
   },
 ];
+const loadData = ref(false);
 
+const handleBeforeLeave = async (t) => {
+  switch (t) {
+    case "arus kas":
+      await getArusKas();
+      return true;
+    default:
+      return true;
+  }
+}
+
+const getArusKas = async () => {
+  message.loading('memuat data arus kas');
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "POST",
+    api: "arus_kas",
+    data:{
+      dari : "2024-12-16",
+      sampai : "2024-12-16"
+    },
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error('ERROR API');
+  } else {
+    loadData.value = false;
+    dataArusKas.value = response.data;
+  }
+}
 const handleConfirm = (row, index) => {
   dialog.warning({
     title: "Confirm",
@@ -222,7 +240,7 @@ const options = [
 const pagination = {
   pageSize: 10,
 };
-onMounted(() => getData());
+onMounted(() => getArusKas());
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
 });

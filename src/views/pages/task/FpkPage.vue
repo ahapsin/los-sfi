@@ -331,17 +331,6 @@ const statusTag = (e) => {
 const statusLabel = (e) => {
   return e.toUpperCase();
 };
-const typeAction = (e) => {
-  if (e === "REORKPS") {
-    return "error";
-  }
-  if (e === "CROR") {
-    return "warning";
-  }
-  if (e === "WAKPS") {
-    return "info";
-  }
-};
 const actionLabel = (e) => {
   let status = e;
   if (status === "WADM") {

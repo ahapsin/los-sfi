@@ -2,7 +2,7 @@
     <n-card :segmented="{
         content: true,
         footer: 'soft'
-    }" :title="`Form ${props.type} jaminan`">
+    }" :title="`Form ${props.type} jaminan`" id="drawer-target" class="overflow-hidden">
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
@@ -11,7 +11,7 @@
                     :max-height="300" :on-update:checked-row-keys="handleChecked" />
             </n-space>
             <n-space>
-                <n-form-item label="Tujuan" path="cabang" v-if="props.type === 'kirim'">
+                <n-form-item label="Tujuan" path="cabang" v-if="props.type === 'pengiriman'">
                     <n-select filterable placeholder="Pilih Cabang" :options="branchData"
                         v-model:value="dynamicForm.tujuan" value-field="id" label-field="nama" />
                 </n-form-item>
@@ -37,9 +37,72 @@
             </n-space>
         </template>
     </n-card>
+    <n-drawer v-model:show="modalTrx" :height="400" placement="bottom" to="#drawer-target">
+        <n-drawer-content title="Detail Jaminan">
+            <n-table :bordered="false" :single-line="false" size="small">
+                <thead>
+                    <tr>
+                        <th>Jenis</th>
+                        <th>Nama Debitur</th>
+                        <th>Order Number</th>
+                        <th>No Jaminan</th>
+                        <th>Lokasi</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bodyModalTrx.type }}</td>
+                        <td>{{ bodyModalTrx.nama_debitur }}</td>
+                        <td>{{ bodyModalTrx.order_number }}</td>
+                        <td>{{ bodyModalTrx.no_jaminan }}</td>
+                        <td>{{ bodyModalTrx.lokasi }}</td>
+                        <td>{{ bodyModalTrx.status_jaminan }}</td>
+                    </tr>
+                </tbody>
+            </n-table>
+            <n-table :bordered="false" :single-line="false" size="small">
+                <tbody>
+                    <tr>
+                        <th>BPKB NO</th>
+                        <td>{{ bodyModalTrx.no_bpkb }}</td>
+                    </tr>
+                    <tr>
+                        <th>BPKB Atas Nama</th>
+                        <td>{{ bodyModalTrx.atas_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Merk/Tipe/Tahun</th>
+                        <td>{{ bodyModalTrx.merk }} / {{ bodyModalTrx.tipe }} / {{ bodyModalTrx.tahun }}</td>
+                    </tr>
+                    <tr>
+                        <th>Warna/No Polisi</th>
+                        <td>{{ bodyModalTrx.warna }} /{{ bodyModalTrx.no_polisi }}</td>
+                    </tr>
+                    <tr>
+                        <th>No Rangka/No Mesin</th>
+                        <td>{{ bodyModalTrx.no_rangka }}/ {{ bodyModalTrx.no_mesin }}</td>
+                    </tr>
+                    <tr>
+                        <th>No Faktur</th>
+                        <td>{{ bodyModalTrx.no_faktur }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dokumen</th>
+                        <td>
+                            <div class="flex gap-2">
+                                <n-image v-for="doc in bodyModalTrx.document" width="64" height="64" :src="doc.PATH"
+                                    :key="doc" class="w-14 h-14 rounded-lg"/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </n-table>
+        </n-drawer-content>
+    </n-drawer>
 </template>
 <script setup>
-import { useMessage } from 'naive-ui';
+import { NButton, useMessage } from 'naive-ui';
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 const { width, } = useWindowSize();
@@ -60,8 +123,7 @@ const dynamicForm = reactive({
     jaminan: null,
     tujuan: null,
     catatan: null,
-    type: 'send'
-});
+    type: props.type == "pengiriman"?"send":'request'});
 const loading = ref(false);
 
 
@@ -121,6 +183,27 @@ const columns = [
         key: "status_jaminan",
         sorter: "default",
     },
+    {
+        width: 100,
+        align: "right",
+        key: "action",
+        render(row) {
+            return h(
+                NButton,
+                {
+                    size: "small",
+                    secondary: true,
+                    round: true,
+                    onClick: () => {
+                        detailTrx(row);
+                    },
+                },
+                {
+                    default: () => "detail",
+                }
+            );
+        },
+    },
 ]
 const dataBPKB = ref([]);
 
@@ -137,6 +220,12 @@ const response = async () => await useApi({
     }
 });
 const searchBox = ref();
+const modalTrx=ref(false);
+const bodyModalTrx =ref();
+const detailTrx = (e) => {
+    bodyModalTrx.value = e;
+    modalTrx.value = true;
+}
 
 const bpkbToArray = (objects) => {
     try {
@@ -178,7 +267,7 @@ const handleChecked = (e) => {
 const dataBpkb = ref([]);
 useApi({
     method: 'GET',
-    api: props.type == 'minta' ? `forgetjaminan` : `forgetjaminan`,
+    api: props.type == 'pengiriman' ? `forpostjaminan` : `forgetjaminan`,
     token: userToken
 }).then(res => {
     if (!res.ok) {

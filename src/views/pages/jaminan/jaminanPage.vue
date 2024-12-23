@@ -24,7 +24,7 @@
             <n-data-table :columns="columnsTransaction" :data="dataTransaction" size="small" />
         </n-tab-pane>
         <n-tab-pane name="Approval" tab="Approval">
-            <n-data-table :columns="columnsTransaction" :data="dataTransactionApproval" size="small" />
+            <n-data-table :columns="columnsTransactionApproval" :data="dataTransactionApproval" size="small" />
         </n-tab-pane>
         <template #suffix>
             <n-dropdown trigger="hover" :options="options" @select="handleSelect" v-if="addButtonDisplay">
@@ -157,11 +157,59 @@
             </div>
         </n-card>
     </n-modal>
+    <n-modal v-model:show="modalTrxApproval" title="Modal">
+        <n-card class="w-2/3">
+            <h1 class="font-semibold py-4">Data Surat</h1>
+            <n-table :bordered="false" :single-line="false" size="small">
+                <thead>
+                    <tr>
+                        <th>No Surat</th>
+                        <th>Transaksi</th>
+                        <th>Tanggal</th>
+                        <th>Dari</th>
+                        <th>Ke</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bodyModalTrx.trx_code }}</td>
+                        <td>{{ bodyModalTrx.type }}</td>
+                        <td>{{ bodyModalTrx.tgl }}</td>
+                        <td>{{ bodyModalTrx.dari_cabang }}</td>
+                        <td>{{ bodyModalTrx.ke_cabang }}</td>
+                        <td>{{ bodyModalTrx.status }}</td>
+                    </tr>
+                </tbody>
+            </n-table>
+            <n-table :bordered="false" :single-line="false" size="small">
+                <tr>
+                    <th style="width:10%">Kurir</th>
+                    <td>{{ bodyModalTrx.kurir }}</td>
+                </tr>
+                <tr>
+                    <th>Keterangan</th>
+                    <td>{{ bodyModalTrx.keterangan }}</td>
+                </tr>
+            </n-table>
+            <h1 class="font-semibold py-4">Data Jaminan</h1>
+            <n-data-table :row-key="(row) => row.id" :checked-row-keys="checkedRowJaminan" :bordered="false"
+                :single-line="false" size="small" :columns="bodyModalTrx.status == 'SELESAI'?columnsJaminan:columnsJaminanApprove" :data="bodyModalTrx.jaminan"
+                :on-update:checked-row-keys="handleCheckedJaminan">
+            </n-data-table>
+            <div v-if="bodyModalTrx.status !='SELESAI' ">
+                <n-form-item label="keterangan" class="pt-2">
+                    <n-input type="textarea" v-model:value="bodyApprove.keterangan" />
+                </n-form-item>
+                <n-button type="primary" @click="handleApprove">approve</n-button>
+            </div>
+        </n-card>
+    </n-modal>
 </template>
 
 <script setup>
 import { computed, h, onMounted, ref } from 'vue';
-import { NButton, useMessage } from 'naive-ui';
+import { NButton, useLoadingBar, useMessage } from 'naive-ui';
 import { useApi } from '../../../helpers/axios';
 import router from '../../../router';
 import FormTransaksi from './trxJaminan.vue';
@@ -225,9 +273,11 @@ const getDataTransaction = async () => {
         router.push("/");
     } else {
         message.info("memuat transaksi jaminan");
+
         dataTransaction.value = response.data;
     }
 };
+const loadingBar = useLoadingBar();
 const getDataTransactionApproval = async () => {
     let userToken = localStorage.getItem("token");
     const response = await useApi({
@@ -238,7 +288,8 @@ const getDataTransactionApproval = async () => {
     if (!response.ok) {
         message.error("ERROR API");
     } else {
-        message.info("memuat transaksi jaminan");
+        loadingBar.finish();
+        message.info("memuat transaksi jaminan approval");
         dataTransactionApproval.value = response.data;
     }
 };
@@ -387,6 +438,64 @@ const columnsTransaction = [
         },
     },
 ];
+const columnsTransactionApproval = [
+    {
+        title: "No Surat",
+        key: "trx_code",
+        sorter: "default",
+    },
+    {
+        title: "Transaksi",
+        key: "type",
+        sorter: "default",
+    },
+    {
+        title: "Tanggal",
+        key: "tgl",
+        sorter: "default",
+    },
+    {
+        title: "Jumlah Jaminan",
+        key: "jml_jaminan",
+        sorter: "default",
+    },
+    {
+        title: "dari",
+        key: "dari_cabang",
+        sorter: "default",
+    },
+    {
+        title: "ke",
+        key: "ke_cabang",
+        sorter: "default",
+    },
+    {
+        title: "Status",
+        key: "status",
+        sorter: "default",
+    },
+    {
+        width: 100,
+        align: "right",
+        key: "action",
+        render(row) {
+            return h(
+                NButton,
+                {
+                    size: "small",
+                    secondary: true,
+                    round: true,
+                    onClick: () => {
+                        detailTrxApproval(row);
+                    },
+                },
+                {
+                    default: () => "detail",
+                }
+            );
+        },
+    },
+];
 const checkedRowJaminan = ref([]);
 const statusCheck = ref();
 const modelJaminan = ref();
@@ -439,32 +548,32 @@ const columnsJaminanApprove = [
         type: "selection",
     },
     {
-        title: "No Surat",
+        title: "No BPKB",
         key: "BPKB_NUMBER",
         sorter: "default",
     },
     {
-        title: "Transaksi",
+        title: "No Polisi",
         key: "POLICE_NUMBER",
         sorter: "default",
     },
     {
-        title: "Tanggal",
+        title: "Atas Nama",
         key: "ON_BEHALF",
         sorter: "default",
     },
     {
-        title: "Jumlah Jaminan",
+        title: "No Rangka",
         key: "CHASIS_NUMBER",
         sorter: "default",
     },
     {
-        title: "dari",
+        title: "No Mesin",
         key: "ENGINE_NUMBER",
         sorter: "default",
     },
     {
-        title: "ke",
+        title: "No Order",
         key: "LOAN_NUMBER",
         sorter: "default",
     }
@@ -473,10 +582,12 @@ const bodyModal = ref();
 const bodyModalTrx = ref();
 const showDetailModal = ref(false);
 const modalTrx = ref(false);
+const modalTrxApproval = ref(false);
 const handleAction = (e) => {
     showDetailModal.value = true;
     bodyModal.value = e;
 }
+
 const detailTrx = (e) => {
     bodyApprove.no_surat = e.trx_code;
     let jaminan = e.jaminan;
@@ -490,6 +601,20 @@ const detailTrx = (e) => {
     bodyModalTrx.value = e;
     modalTrx.value = true;
 }
+const detailTrxApproval = (e) => {
+    bodyApprove.no_surat = e.trx_code;
+    let jaminan = e.jaminan;
+    modelJaminan.value = jaminan.map((o) => {
+        return {
+            id: o.id,
+            flag: "check"
+        }
+    });
+    checkedRowJaminan.value = jaminan.map((o) => o.id);
+    bodyModalTrx.value = e;
+    modalTrxApproval.value = true;
+}
+
 onMounted(() => { getData(); getDataTransaction(); getDataTransactionApproval(); });
 
 const pdfmake = usePDF({
