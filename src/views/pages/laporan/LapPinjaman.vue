@@ -11,17 +11,44 @@
           <!--          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan</n-tab-pane>-->
 
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PINJAMAN">
-           <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman"/>
+            <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman"/>
           </n-tab-pane>
           <n-tab-pane name="arus_kas" tab="ARUS KAS">
             <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
-                        @change-date-range="handleRange"/>
+                        @filter-form="handleRange"/>
           </n-tab-pane>
 
         </n-tabs>
 
       </n-card>
     </n-space>
+    <n-modal v-model:show="modalDetail">
+      <n-card content-style="padding: 0;" class="w-2/3">
+        <n-tabs
+            type="line"
+            size="small"
+            :tabs-padding="20"
+            pane-style="padding: 20px;"
+            @before-leave="handleBeforeLeaveModal"
+        >
+          <n-tab-pane name="Pelanggan">
+            <pre>{{ dataDetailPelanggan }}</pre>
+          </n-tab-pane>
+          <n-tab-pane name="Pinjaman">
+            <pre>{{ dataDetailPinjaman }}</pre>
+          </n-tab-pane>
+          <n-tab-pane name="Jaminan">
+            <pre>{{ dataDetailJaminan }}</pre>
+          </n-tab-pane>
+          <n-tab-pane name="Pembayaran">
+            Pembayaran
+          </n-tab-pane>
+          <n-tab-pane name="Tunggakan">
+            Tunggakan
+          </n-tab-pane>
+        </n-tabs>
+      </n-card>
+    </n-modal>
   </div>
 </template>
 <script setup>
@@ -32,7 +59,7 @@ import router from "../../../router";
 import {
   useDialog,
   useMessage,
-  NIcon,
+  NIcon, NButton,
 } from "naive-ui";
 import {
   DeleteOutlined as DeleteIcon,
@@ -57,7 +84,6 @@ const columns = [
     title: "Type",
     key: "TYPE",
     sorter: "default",
-    defaultFilter: ['TES', 'TEST'],
     filterOptions: [
       {
         label: 'CASH-IN',
@@ -98,7 +124,7 @@ const columns = [
 const columnsPinjaman = [
   {
     title: "Nomor Order",
-    key: "ORDER_NUMBER",
+    key: "order_number",
     sorter: "default",
   }, {
     title: "Nama Debitur",
@@ -106,28 +132,51 @@ const columnsPinjaman = [
     sorter: "default",
   }, {
     title: "Nomor Polisi",
-    key: "POLICE_NUMBER",
+    key: "police_number",
     sorter: "default",
   }, {
     title: "Tanggal Pencairan",
-    key: "ENTRY_DATE",
+    key: "entry_date",
     sorter: "default",
-  },{
+  }, {
     title: "Cabang",
     key: "branch_name",
     sorter: "default",
   },
   {
-    title: "Detail",
-    key: "ENTRY_DATE",
-    sorter: "default",
+    title: "Action",
+    align: "right",
+    width: 100,
+    key: "more",
+    render(row) {
+      return h(
+          NButton,
+          {
+            secondary: false,
+            size: "small",
+            onClick: () => handleDetailRow(row),
+          },
+          {
+            default: "detail",
+          }
+      );
+    },
   },
 
 ];
+
+const modalDetail = ref(false);
+const modalBody = ref();
+const handleDetailRow = (e) => {
+  modalDetail.value = true;
+  console.log(e);
+  modalBody.value = e;
+}
+
 const loadData = ref(false);
 const handleRange = (value) => {
-  rangeDate.value = value;
-  getArusKas(value);
+  console.log(value);
+  //getArusKas(value);
 }
 
 const handleBeforeLeave = async (t) => {
@@ -142,9 +191,63 @@ const handleBeforeLeave = async (t) => {
       return true;
   }
 }
+const handleBeforeLeaveModal = (t) => {
+  switch (t) {
+    case "Pelanggan":
+      getDetailPelanggan(modalBody.value.cust_id);
+      return true;
+    case "Jaminan":
+      getDetailJaminan(modalBody.value.credit_id);
+      return true;
+    case "Pinjaman":
+      getDetailPinjaman(modalBody.value.credit_id);
+      return true;
+    default:
+      return true;
+  }
+}
 
-const handleUpdateValue = (value) => {
-
+const dataDetailPelanggan = ref();
+const getDetailPelanggan = async (e) => {
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: `customerReport/${e}`,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    dataDetailPelanggan.value = response.data;
+  }
+}
+const dataDetailJaminan = ref();
+const getDetailJaminan = async (e) => {
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: `collateralReport/${e}`,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    dataDetailJaminan.value = response.data;
+  }
+}
+const dataDetailPinjaman = ref();
+const getDetailPinjaman = async (e) => {
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: `creditReport/${e}`,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    dataDetailPinjaman.value = response.data;
+  }
 }
 
 const getArusKas = async (e) => {
@@ -153,10 +256,7 @@ const getArusKas = async (e) => {
   const response = await useApi({
     method: "POST",
     api: "arus_kas",
-    data: {
-      dari: e ? e[0] : "",
-      sampai: e ? e[1] : "",
-    },
+    data: e,
     token: userToken,
   });
   if (!response.ok) {
@@ -169,11 +269,11 @@ const getArusKas = async (e) => {
 
 const dataInqPinjaman = ref();
 const getInqPinjaman = async (e) => {
-  message.loading('memuat data arus kas');
+  message.loading('memuat inquery pinjaman');
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
-    api: "creditReport",
+    api: "inquiryList",
     token: userToken,
   });
   if (!response.ok) {
