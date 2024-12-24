@@ -48,7 +48,7 @@ const handleSubmit = () => {
   let a = {
     dari: rangeDate.value ? rangeDate.value[0] : null,
     sampai: rangeDate.value ? rangeDate.value[1] : null,
-    branch_id: selectBranch.value
+    cabang_id: selectBranch.value ? selectBranch.value:null
   }
   emit("filterForm", a);
 }
@@ -56,7 +56,9 @@ const handleSubmit = () => {
 const dataBranch = ref([]);
 const selectBranch = ref();
 const userToken = localStorage.getItem("token");
+const loadingBranch = ref(false);
 const getBranch = async () => {
+  loadingBranch.value = true;
   const response = await useApi({
     method: "GET",
     api: "cabang",
@@ -65,7 +67,12 @@ const getBranch = async () => {
   if (!response.ok) {
     message.error("ERROR API");
   } else {
-    dataBranch.value = response.data.response;
+    loadingBranch.value = false;
+    dataBranch.value=response.data.response;
+    dataBranch.value.unshift({
+      id:"",
+      nama:"SEMUA CABANG"
+    })
   }
 }
 
