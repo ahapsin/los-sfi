@@ -13,7 +13,11 @@
             <n-select filterable placeholder="Pilih Kecamatan" label-field="text" value-field="id"
                 v-model:value="props.kecamatan" :options="col_kec" @update:value="kecChanged" @blur="kecUpdate" />
         </n-form-item>
-        <n-form-item label="Desa" path="desa" class="w-full">
+      <n-form-item label="Desa" path="desa" class="w-full" v-if="col_desa.length <= 0 ">
+        <n-input v-model:value="props.desa" placeholder="Kelurahan / Desa" @update:value="desaPostUp" />
+      </n-form-item>
+
+        <n-form-item label="Desa" path="desa" class="w-full" v-else>
             <n-select filterable placeholder="Pilih Desa" label-field="text" value-field="id" v-model:value="props.desa"
                 :options="col_desa" @update:value="desaChanged" @click="desaUpdate" />
         </n-form-item>
@@ -41,7 +45,7 @@ const sel_desa = ref('pilih');
 const col_provinsi = ref();
 const col_kota = ref();
 const col_kec = ref();
-const col_desa = ref();
+const col_desa = ref([]);
 const kodepostText=ref();
 const col_kodepos = ref([]);
 
@@ -127,6 +131,11 @@ const kodeposChanged = (value, option) => {
 const kodePostUp = (option)=>{
     emit('update:kodepos', option);
 }
+
+const desaPostUp = (option)=>{
+    emit('update:desa', option);
+}
+
 const kotaUpdate = ()=>{
     emit('update:kecamatan', "");
     emit('update:desa', "");

@@ -8,15 +8,15 @@
               <template #trigger>
                 <n-button circle>
                   <n-icon>
-                    <search-icon />
+                    <search-icon/>
                   </n-icon>
                 </n-button>
               </template>
               <n-input
-                autofocus="true"
-                clearable
-                placeholder="cari disini.."
-                v-model:value="searchBox"
+                  autofocus="true"
+                  clearable
+                  placeholder="cari disini.."
+                  v-model:value="searchBox"
               />
             </n-popover>
           </div>
@@ -34,7 +34,7 @@
             <n-button>
               <template #icon>
                 <n-icon>
-                  <download-icon />
+                  <download-icon/>
                 </n-icon>
               </template>
             </n-button>
@@ -53,7 +53,7 @@
             <n-button type="primary" @click="handleAdd">
               <template #icon>
                 <n-icon>
-                  <add-icon />
+                  <add-icon/>
                 </n-icon>
               </template>
             </n-button>
@@ -62,19 +62,163 @@
       </template>
       <n-space vertical :size="12" class="pt-4">
         <n-data-table
-          size="small"
-          :columns="columns"
-          :data="showData"
-          :pagination="pagination"
+            size="small"
+            :columns="columns"
+            :data="showData"
+            :pagination="pagination"
         />
       </n-space>
     </n-card>
   </n-space>
+  <n-modal v-model:show="modalDetailCustomer">
+    <n-card class="w-11/12 min-h-[600px] ">
+      <n-spin :show="spinPelanggan">
+        <n-scrollbar  trigger="none">
+          <n-form ref="formPelanggan" :model="dataPelanggan" :rules="rulesPelanggan"
+                  :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging"
+                  :disabled="formDisable" label-width="auto">
+            <div class="flex w-full gap-2">
+              <n-form-item label="Nama" path="nama" class="w-full">
+                <n-input placeholder="nama" v-model:value="dataPelanggan.nama"
+                         @input="$event => (dataPelanggan.nama = $event.toUpperCase())"/>
+              </n-form-item>
+              <n-form-item label="Nama Panggilan" path="nama_panggilan" class="w-full">
+                <n-input placeholder="nama panggilan" v-model:value="dataPelanggan.nama_panggilan"
+                         @input="$event => (dataPelanggan.nama_panggilan = $event.toUpperCase())"/>
+              </n-form-item>
+            </div>
+            <div class="flex w-full gap-2">
+              <n-form-item label="Jenis kelamin" path="jenis_kelamin" class="w-full">
+                <n-select filterable placeholder="Jenis Kelamin" :options="optJenisKelamin"
+                          v-model:value="dataPelanggan.jenis_kelamin"/>
+              </n-form-item>
+              <n-form-item label="Tempat Lahir" path="tempat_lahir" class="w-full">
+                <n-input placeholder="tempat lahir" v-model:value="dataPelanggan.tempat_lahir"
+                         @input="$event => (dataPelanggan.tempat_lahir = $event.toUpperCase())"/>
+              </n-form-item>
+              <n-form-item label="Tanggal lahir" path="tgl_lahir" class="w-full">
+                <n-date-picker placeholder="Tanggal Lahir" v-model:formatted-value="dataPelanggan.tgl_lahir"
+                               value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date"
+                               @update:value="handleTanggalLahir" class="w-full"/>
+                <span
+                    class="absolute text-xs text-orange-500 top-6 bg-orange-50 w-full p-0.5 mt-2 animate-pulse"
+                    v-show="notifUsia">{{ noteUsia }}</span>
+              </n-form-item>
+              <n-form-item label="Status Kawin" path="status_kawin" class="w-full">
+                <n-input-group>
+                  <n-select filterable placeholder="Status Kawin" :options="optStatusKawin"
+                            v-model:value="dataPelanggan.status_kawin"/>
+                </n-input-group>
+              </n-form-item>
+            </div>
+            <div class="flex w-full gap-2">
+              <n-form-item label="Tipe Identitas" path="tipe_identitas" class="w-full">
+                <n-select filterable placeholder="Jenis Identitas" :options="optJenisIdentitas"
+                          v-model:value="dataPelanggan.tipe_identitas"/>
+              </n-form-item>
+              <n-form-item label="No Identitas" path="no_identitas" class="w-full">
+                <n-input :allow-input="onlyAllowNumber" class="w-full" placeholder="No Identitas" show-count
+                         :maxlength="16" v-model:value="dataPelanggan.no_identitas">
+                </n-input>
+              </n-form-item>
+              <n-form-item label="No KK" path="no_kk" class="w-full">
+                <n-input :allow-input="onlyAllowNumber" placeholder="No Kartu Keluarga"
+                         v-model:value="dataPelanggan.no_kk" show-count :maxlength="16"/>
+              </n-form-item>
+            </div>
+          </n-form>
+          <n-form ref="formPelangganPekerjaan" :model="dataPekerjaan" :rules="rulesPekerjaan" :disabled="formDisable"
+                  :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging"
+                  label-width="auto">
+            <div class="flex gap-4">
+              <n-form-item label="Sektor" path="pekerjaan_id" class="w-full">
+                <n-select filterable placeholder="pekerjaan" :options="optPekerjaan"
+                          v-model:value="dataPekerjaan.pekerjaan_id"/>
+              </n-form-item>
+              <n-form-item label="Pendidikan" path="pendidikan" class="w-full">
+                <n-select filterable placeholder="pendidikan" :options="optPendidikan"
+                          v-model:value="dataPekerjaan.pendidikan"/>
+              </n-form-item>
+            </div>
+            <div class="flex gap-2">
+              <n-form-item label="Telepon Selullar 1" path="telepon_selular" class="w-full">
+                <n-input placeholder="Telepon Sellular 1" :allow-input="onlyAllowNumber"
+                         v-model:value="dataPekerjaan.telepon_selular" maxlength="13"/>
+              </n-form-item>
+
+              <n-form-item label="Telepon Selullar 2" path="telepon_rumah" class="w-full">
+                <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_rumah"
+                         :allow-input="onlyAllowNumber">
+                </n-input>
+              </n-form-item>
+            </div>
+            <n-divider title-placement="left">
+              Informasi Alamat Identitas
+            </n-divider>
+          </n-form>
+          <n-form ref="formPelangganAlamatIdentitas" :model="alamatIdentitas" :rules="rulesIdentitas"
+                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
+                  require-mark-placement="right-hanging" label-width="auto">
+            <div class="flex gap-2">
+              <n-form-item label="Alamat" class="w-full" path="alamat">
+                <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat"
+                         @input="$event => (alamatIdentitas.alamat = $event.toUpperCase())"/>
+              </n-form-item>
+              <n-form-item label="RT" path="rt">
+                <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
+                         :maxlength="3" @input="$event => (alamatIdentitas.rt = $event.toUpperCase())">
+                </n-input>
+              </n-form-item>
+              <n-form-item label="RW" path="rw">
+                <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
+                         :maxlength="3" @input="$event => (alamatIdentitas.rw = $event.toUpperCase())">
+                </n-input>
+              </n-form-item>
+            </div>
+
+            <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
+                                 v-model:kecamatan="alamatIdentitas.kecamatan"
+                                 v-model:desa="alamatIdentitas.kelurahan"
+                                 v-model:kodepos="alamatIdentitas.kode_pos"/>
+            <n-divider title-placement="left">
+              Informasi Alamat Tagih
+            </n-divider>
+          </n-form>
+          <n-form ref="formPelangganAlamatTagih" :model="alamatTagih" :rules="rulesAlamatTagih"
+                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
+                  require-mark-placement="right-hanging" label-width="auto">
+            <div class="flex gap-2">
+              <n-form-item label="Alamat" class="w-full" path="alamat">
+                <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat"
+                         @input="$event => (alamatTagih.alamat = $event.toUpperCase())"/>
+              </n-form-item>
+              <n-form-item label="RT" path="rt">
+                <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber"
+                         :maxlength="3" @input="$event => (alamatTagih.rt = $event.toUpperCase())">
+                </n-input>
+              </n-form-item>
+              <n-form-item label="RW" path="rw">
+                <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber"
+                         :maxlength="3" @input="$event => (alamatTagih.rw = $event.toUpperCase())">
+                </n-input>
+              </n-form-item>
+            </div>
+            <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
+                                 v-model:kecamatan="alamatTagih.kecamatan" v-model:desa="alamatTagih.kelurahan"
+                                 v-model:kodepos="alamatTagih.kode_pos"/>
+            <n-button @click="handleSubmit" type="success">
+              Ubah
+            </n-button>
+          </n-form>
+        </n-scrollbar>
+      </n-spin>
+    </n-card>
+  </n-modal>
 </template>
 <script setup>
-import { ref, onMounted, h,computed } from "vue";
-import { useApi } from "../../../../helpers/axios";
-import { useSearch } from "../../../../helpers/searchObject";
+import {ref, onMounted, h, computed} from "vue";
+import {useApi} from "../../../../helpers/axios";
+import {useSearch} from "../../../../helpers/searchObject";
 import router from "../../../../router";
 import {
   useDialog,
@@ -99,6 +243,7 @@ const message = useMessage();
 const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
+const formDisable = ref(false);
 
 const columns = [
   {
@@ -127,31 +272,31 @@ const columns = [
     key: "more",
     render(row, index) {
       return h(
-        NDropdown,
-        {
-          options: options,
-          size: "small",
-          onSelect: (e) => {
-            if (e === "hapus") {
-              handleConfirm(row, index);
-            }
-            if (e === "detail") {
-              handleDetail(row);
-            }
-            if (e === "edit") {
-              handleUpdate(row);
-            }
-          },
-        },
-        {
-          default:()=> h(
-            NButton,
-            {
-              size: "small",
+          NDropdown,
+          {
+            options: options,
+            size: "small",
+            onSelect: (e) => {
+              if (e === "hapus") {
+                handleConfirm(row, index);
+              }
+              if (e === "detail") {
+                handleDetail(row);
+              }
+              if (e === "edit") {
+                handleUpdate(row);
+              }
             },
-            { default: () => "Action" }
-          ),
-        }
+          },
+          {
+            default: () => h(
+                NButton,
+                {
+                  size: "small",
+                },
+                {default: () => "Action"}
+            ),
+          }
       );
     },
   },
@@ -182,16 +327,40 @@ const handleConfirm = (row, index) => {
     },
   });
 };
-const handleDetail = (evt) => {
-  router.push(`/master/branch-action/${evt.id}/detail`);
-};
+const modalDetailCustomer = ref(false);
+const dataDetailPelanggan = ref();
+const dataPelanggan = ref([]);
+const dataPekerjaan = ref([]);
+const alamatIdentitas = ref([]);
+const alamatTagih = ref([]);
+const spinPelanggan = ref(false);
+const handleDetail = async (e) => {
+  modalDetailCustomer.value = true;
+  spinPelanggan.value = true;
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: `customerReport/${e.ID}`,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    Object.assign(dataPelanggan.value, response.data.pelanggan);
+    Object.assign(dataPekerjaan.value, response.data.pekerjaan);
+    Object.assign(alamatIdentitas.value, response.data.alamat_identitas);
+    Object.assign(alamatTagih.value, response.data.alamat_tagih);
+    dataDetailPelanggan.value = response.data;
+    spinPelanggan.value = false;
+  }
+}
 const handleUpdate = (evt) => {
   router.push(`/master/branch-action/${evt.id}`);
 };
 const handleAdd = () => {
   router.push("/master/branch-action");
 };
-const loadingBar=useLoadingBar();
+const loadingBar = useLoadingBar();
 const getData = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -216,11 +385,6 @@ const renderIcon = (icon) => {
   };
 };
 const options = [
-  {
-    label: "Hapus",
-    key: "hapus",
-    icon: renderIcon(DeleteIcon),
-  },
   {
     label: "Detail",
     key: "detail",
