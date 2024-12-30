@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.192",
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -18,10 +18,11 @@
     "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "oh-vue-icons": "^1.0.0-rc3",
+    "papaparse": "^5.4.1",
     "pinia": "^2.2.2",
     "uuid": "^9.0.1",
     "vue": "^3.4.21",
-    "vue-core-image-upload": "^2.4.14",
+    "vue-core-image-upload": "^1.0.0",
     "vue-router": "^4.3.2",
     "vue3-pdfmake": "^2.2.0"
   },
@@ -31,13 +32,13 @@
     "@vicons/ionicons5": "^0.12.0",
     "@vicons/tabler": "^0.12.0",
     "@vitejs/plugin-vue": "^5.0.4",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.11.1",
     "eslint-plugin-vue": "^9.28.0",
     "globals": "^15.9.0",
     "naive-ui": "^2.38.2",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "unplugin-auto-import": "^0.17.6",
     "unplugin-vue-components": "^0.27.0",
     "vite": "^5.2.0"
