@@ -36,7 +36,7 @@
                                 </template>
                             </n-button>
                         </div>
-                        <div class="hidden md:flex">
+                        <div class="hidden md:flex gap-2">
                             <n-button type="primary" @click="handleAdd">
                                 <template #icon>
                                     <n-icon>
@@ -45,12 +45,27 @@
                                 </template>
                                 <strong>tambah</strong>
                             </n-button>
+                          <n-button type="warning" @click="handleUpdateBatch">
+                                <template #icon>
+                                    <n-icon>
+                                        <edit-icon />
+                                    </n-icon>
+                                </template>
+                                <strong>Update Taksasi</strong>
+                            </n-button>
                         </div>
                         <div class=" md:hidden">
                             <n-button type="primary" @click="handleAdd">
                                 <template #icon>
                                     <n-icon>
                                         <add-icon />
+                                    </n-icon>
+                                </template>
+                            </n-button>
+                          <n-button type="warning" @click="handleUpdateBatch">
+                                <template #icon>
+                                    <n-icon>
+                                        <edit-icon />
                                     </n-icon>
                                 </template>
                             </n-button>
@@ -70,7 +85,7 @@ import { ref, onMounted, h } from "vue";
 import { useApi } from "../../../helpers/axios";
 import { useSearch } from "../../../helpers/searchObject";
 import router from '../../../router';
-import { useDialog, useMessage, NDropdown, NIcon, NTag, NButton, NEllipsis, useLoadingBar } from "naive-ui";
+import { useDialog, useMessage, NDropdown, NIcon, NButton, useLoadingBar } from "naive-ui";
 import {
     AddCircleOutlineRound as AddIcon,
     SearchOutlined as SearchIcon,
@@ -78,7 +93,7 @@ import {
 
 } from "@vicons/material"
 import {
-    EditOutlined as EditIcon,
+  SyncFilled as EditIcon,
     DeleteOutlined as DeleteIcon,
     ListAltOutlined as DetailIcon
 } from "@vicons/material";
@@ -184,6 +199,9 @@ const handleUpdate = (evt) => {
 }
 const handleAdd = () => {
     router.push('/master/taksasi-action');
+}
+const handleUpdateBatch = () => {
+    router.push({name:"taksasi batch"});
 }
 const loading = ref(false);
 const loadingBar=useLoadingBar();

@@ -17,7 +17,6 @@
             <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
                         @filter-form="handleRange"/>
           </n-tab-pane>
-
         </n-tabs>
 
       </n-card>
@@ -222,6 +221,11 @@
           <n-tab-pane name="Jaminan">
             <n-spin :show="spinJaminan">
               <n-data-table :data="dataDetailJaminan" :columns="colJaminan" sortable/>
+            </n-spin>
+          </n-tab-pane>
+          <n-tab-pane name="Angsuran">
+            <n-spin :show="spinAngsuran">
+              <n-data-table :data="dataDetailAngsuran" :columns="columnsAngsuran"></n-data-table>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Pembayaran">
@@ -455,16 +459,12 @@ const columnsPembayran = [
     sorter: "default",
   },
   {
-    title: "Metode Pembayran",
+    title: "Metode Pembayaran",
     key: "PAYMENT_METHOD",
-    sorter: "default",
-  },{
-    title: "Cabang",
-    key: "Branch",
     sorter: "default",
   },
   {
-    title: "Desakripsi",
+    title: "Deskripsi",
     key: "TITLE",
     sorter: "default",
   },
@@ -485,6 +485,87 @@ const columnsPembayran = [
   },
 
 ];
+const columnsAngsuran = [
+  {
+    title: "ke",
+    key: "angsuran_ke",
+    sorter: "default",
+    width: 80,
+  },
+  {
+    title: "Loan Number",
+    key: "loan_number",
+    sorter: "default",
+    width: 150,
+  },
+  {
+    title: "Tanggal",
+    key: "tgl_angsuran",
+    sorter: "default",
+    width: 100,
+  },
+  {
+    title: "principal",
+    key: "principal",
+    sorter: "default",
+    width: 100,
+  },
+  {
+    title: "interest",
+    key: "interest",
+    sorter: "default",
+    width: 100,
+  },
+  {
+    title: "installment",
+    key: "installment",
+    sorter: "default",
+    width: 100,
+  },
+  {
+    title: "principal remain",
+    key: "principal_remains",
+    sorter: "default",
+    width: 100,
+  },
+  {
+    title: "payment",
+    key: "payment",
+    sorter: "default",
+    width: 100,
+  },  {
+    title: "payment",
+    key: "payment",
+    sorter: "default",
+    width: 100,
+  },  {
+    title: "bayar angsuran",
+    key: "bayar_angsuran",
+    sorter: "default",
+    width: 100,
+  },{
+    title: "bayar denda",
+    key: "bayar_denda",
+    sorter: "default",
+    width: 100,
+  },{
+    title: "total_bayar",
+    key: "bayar_angsuran",
+    sorter: "default",
+    width: 100,
+  },{
+    title: "flag",
+    key: "flag",
+    sorter: "default",
+    width: 100,
+  },{
+    title: "denda",
+    key: "denda",
+    sorter: "default",
+    width: 100,
+  },
+];
+
 const columnsTunggakan = [
   {
     title: "No Order",
@@ -550,6 +631,9 @@ const handleBeforeLeaveModal = (t) => {
       return true;
     case "Pembayaran":
       getDetailPembayaran(modalBody.value.loan_number);
+      return true;
+    case "Angsuran":
+      getDetailAngsuran(modalBody.value.loan_number);
       return true;
     case "Tunggakan":
       getDetailTunggakan(modalBody.value.loan_number);
@@ -631,6 +715,27 @@ const getDetailPembayaran = async (e) => {
     dataDetailPembayaran.value = response.data;
   }
 }
+
+const dataDetailAngsuran = ref();
+const spinAngsuran = ref(false);
+const getDetailAngsuran = async (e) => {
+  spinAngsuran.value = true;
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "POST",
+    data: {loan_number:e},
+    api: `struktur_kredit`,
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    spinAngsuran.value = false;
+    dataDetailAngsuran.value = response.data;
+  }
+}
+
+
 const dataDetailTunggakan = ref();
 const spinTunggakan = ref(false);
 const getDetailTunggakan = async (e) => {
