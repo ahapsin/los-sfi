@@ -168,6 +168,11 @@ const routes = [
         component: () => import("../views/pages/master/ActionTaksasiPage.vue"),
       },
       {
+        path: "taksasi-batch",
+        name: "taksasi batch",
+        component: () => import("../views/pages/master/UpdateBatchTakasasi.vue"),
+      },
+      {
         path: "taksasi-action/:idtaksasi",
         name: "Update Taksasi",
         component: () => import("../views/pages/master/ActionTaksasiPage.vue"),

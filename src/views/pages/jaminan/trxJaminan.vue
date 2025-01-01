@@ -115,7 +115,7 @@ import _ from 'lodash';
 import { useMeStore } from '../../../stores/me';
 
 const emit = defineEmits();
-const props = defineProps({st
+const props = defineProps({
     type: String,
 });
 
