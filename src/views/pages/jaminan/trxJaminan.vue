@@ -3,6 +3,11 @@
         content: true,
         footer: 'soft'
     }" :title="`Form ${props.type} jaminan`" id="drawer-target" class="overflow-hidden">
+      <template #header-extra>
+        <n-badge :value="dynamicForm.bpkb?dynamicForm.bpkb.length:0" :max="15">
+          <n-button circle secondary type="primary"><n-icon><list-icon/></n-icon></n-button>
+        </n-badge>
+      </template>
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
@@ -104,6 +109,9 @@
 <script setup>
 import { NButton, useMessage } from 'naive-ui';
 import { ref, reactive, onMounted, computed } from 'vue';
+import {
+  ListAltRound as ListIcon,
+} from "@vicons/material";
 import { useWindowSize } from '@vueuse/core';
 const { width, } = useWindowSize();
 import { useApi } from '../../../helpers/axios';
