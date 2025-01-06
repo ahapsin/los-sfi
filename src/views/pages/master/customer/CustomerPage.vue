@@ -12,12 +12,15 @@
                   </n-icon>
                 </n-button>
               </template>
-              <n-input
-                  autofocus="true"
-                  clearable
-                  placeholder="cari disini.."
-                  v-model:value="searchBox"
-              />
+              <n-space>
+                <n-input
+                    autofocus="true"
+                    clearable
+                    placeholder="cari disini.."
+                    v-model:value="searchBox"
+                />
+                <n-button type="success" @click="handleSearch">cari</n-button>
+              </n-space>
             </n-popover>
           </div>
           <!-- <div class="hidden md:flex">
@@ -62,10 +65,13 @@
       </template>
       <n-space vertical :size="12" class="pt-4">
         <n-data-table
+            remote
+            :loading="loadingPage"
             size="small"
             :columns="columns"
-            :data="showData"
-            :pagination="pagination"
+            :data="dataTable"
+            :pagination="paginationRef"
+            @update:page="handlePageChange"
         />
       </n-space>
     </n-card>
@@ -73,7 +79,7 @@
   <n-modal v-model:show="modalDetailCustomer">
     <n-card class="w-11/12 min-h-[600px] ">
       <n-spin :show="spinPelanggan">
-        <n-scrollbar  trigger="none">
+        <n-scrollbar trigger="none">
           <n-form ref="formPelanggan" :model="dataPelanggan" :rules="rulesPelanggan"
                   :label-placement="width <= 920 ? 'top' : 'top'" require-mark-placement="right-hanging"
                   :disabled="formDisable" label-width="auto">
@@ -361,22 +367,27 @@ const handleAdd = () => {
   router.push("/master/branch-action");
 };
 const loadingBar = useLoadingBar();
-const getData = async () => {
+const countItem = ref();
+
+const loadingPage = ref(false);
+const getData = async (e) => {
+  loadingPage.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
-    api: "customer",
+    api: e ? `customer?page=${e}&search=${searchBox.value ? searchBox.value : ''}` : `customer`,
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error("ERROR API TRANSACTION");
   } else {
     loadingBar.finish();
-    dataTable.value = response.data;
+    loadingPage.value = false;
+    dataTable.value = response.data.data;
+    countItem.value = response.data.total;
   }
 };
+
 const renderIcon = (icon) => {
   return () => {
     return h(NIcon, null, {
@@ -391,13 +402,27 @@ const options = [
     icon: renderIcon(DetailIcon),
   },
 ];
-const pagination = {
+const paginationRef = reactive({
   pageSize: 10,
-};
-
-onMounted(() => getData());
-const showData = computed(() => {
-  return useSearch(dataTable.value, searchBox.value);
-  // return filterIt(dataTable.value, searchBox.value);
+  itemCount: computed(() => countItem.value),
+  showSizePicker: true,
+  onChange: (page) => {
+    paginationRef.page = page;
+  },
+  onUpdatePageSize: (pageSize) => {
+    paginationRef.pageSize = pageSize;
+    paginationRef.page = 1;
+  }
 });
+const handleSearch = (page) => {
+  getData(page);
+}
+const handlePageChange = (page) => {
+  getData(page);
+}
+onMounted(() => getData());
+// const showData = computed(() => {
+//   return useSearch(dataTable.value, searchBox.value);
+//   // return filterIt(dataTable.value, searchBox.value);
+// });
 </script>
