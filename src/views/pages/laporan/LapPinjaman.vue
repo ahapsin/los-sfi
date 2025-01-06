@@ -17,6 +17,10 @@
             <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
                         @filter-form="handleRange"/>
           </n-tab-pane>
+<!--          <n-tab-pane name="lkbh" tab="LKBH">-->
+<!--            <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"-->
+<!--                        @filter-form="handleRange"/>-->
+<!--          </n-tab-pane>-->
         </n-tabs>
 
       </n-card>

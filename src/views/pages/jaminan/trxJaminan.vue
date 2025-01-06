@@ -3,6 +3,11 @@
         content: true,
         footer: 'soft'
     }" :title="`Form ${props.type} jaminan`" id="drawer-target" class="overflow-hidden">
+      <template #header-extra>
+        <n-badge :value="dynamicForm.bpkb?dynamicForm.bpkb.length:0" :max="15">
+          <n-button circle secondary type="primary"><n-icon><list-icon/></n-icon></n-button>
+        </n-badge>
+      </template>
         <n-form ref="formRef" :model="dynamicForm" :rules="rules" :label-placement="width <= 920 ? 'top' : 'left'"
             require-mark-placement="right-hanging" :size="size" label-width="auto">
             <n-space vertical :size="12" class="mb-4">
@@ -15,7 +20,7 @@
                     <n-select filterable placeholder="Pilih Cabang" :options="branchData"
                         v-model:value="dynamicForm.tujuan" value-field="id" label-field="nama" />
                 </n-form-item>
-                <n-form-item label="Kurir" path="cabang">
+                <n-form-item label="Kurir" path="cabang" v-if="props.type === 'pengiriman'">
                     <n-input filterable placeholder="Kurir" v-model:value="dynamicForm.kurir" />
                 </n-form-item>
             </n-space>
@@ -25,8 +30,11 @@
         </n-form>
         <template #action>
             <n-space>
-                <n-button :loading="loading" type="success" @click="handleSave">
-                    <span v-if="!param">Simpan</span>
+                <n-button :loading="loading" type="success" @click="handleSave" v-if="props.type === 'pengiriman'">
+                    <span v-if="!param">Simpan Pengiriman</span>
+                </n-button>
+              <n-button :loading="loading" type="success" @click="handleSavePerminataan" v-else>
+                    <span v-if="!param">Simpan Permintaan</span>
                 </n-button>
                 <n-button type="error" @click="handleCancel">
                     Batal
@@ -104,6 +112,9 @@
 <script setup>
 import { NButton, useMessage } from 'naive-ui';
 import { ref, reactive, onMounted, computed } from 'vue';
+import {
+  ListAltRound as ListIcon,
+} from "@vicons/material";
 import { useWindowSize } from '@vueuse/core';
 const { width, } = useWindowSize();
 import { useApi } from '../../../helpers/axios';
@@ -248,6 +259,29 @@ const handleSave = async () => {
         method: 'POST',
         api: 'jaminan_transaction',
         data: dynamicForm,
+        token: userToken
+    });
+
+    if (!response.ok) {
+        message.error("data gagal disimpan");
+        loading.value = false;
+    } else {
+        router.push({ name: 'jaminan' })
+        message.success("data berhasil disimpan");
+        emit('simpan', false);
+        loading.value = false;
+    }
+}
+const handleSavePerminataan = async () => {
+    printAfter.value = true;
+    const bodyData = {
+      collateral_id:dynamicForm.bpkb,
+      catatan:dynamicForm.catatan,
+    }
+    const response = await useApi({
+        method: 'POST',
+        api: 'jaminan_transaction_permintaan',
+        data: bodyData,
         token: userToken
     });
 
