@@ -87,7 +87,7 @@
         </n-gi>
       </n-grid>
       <n-divider />
-      <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
+      <!-- <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
         :max="5">
         <n-upload-dragger>
           <div style="margin-bottom: 12px">
@@ -99,7 +99,7 @@
             Klik atau seret file ke area ini untuk diunggah
           </n-text>
         </n-upload-dragger>
-      </n-upload>
+      </n-upload> -->
       <n-space>
         <div v-for="attachment in selectedData.attachment" :key="attachment" class="bg-slate-50 !p-0">
           <n-space>
@@ -118,6 +118,7 @@
       </div>
     </n-card>
   </n-modal>
+
 </template>
 <script setup>
 import { ref, reactive, onMounted, h, computed } from "vue";
@@ -129,6 +130,7 @@ import { useSearch } from "../../../helpers/searchObject";
 import { useLoadingBar } from "naive-ui";
 const loadingBar = useLoadingBar();
 import {
+  CancelOutlined as CancelIcon,
   SearchOutlined as SearchIcon,
   ImageFilled as UploadIcon,
   FileDownloadOutlined as DownloadFile,
@@ -141,6 +143,7 @@ const tableRef = ref();
 const downloadCsv = () =>
   tableRef.value?.downloadCsv({ fileName: "export-data-fpk" });
 const showModal = ref(false);
+const confModal = ref(false);
 const dataTable = ref([]);
 const searchBox = ref();
 const selectedData = ref();
@@ -241,7 +244,7 @@ const columns = [
             },
           },
           {
-            default: () => `${cetak} PK`,
+            default: () => `${cetak}`,
           }
         );
       }
@@ -269,6 +272,8 @@ const columns = [
           {
             class: classType,
             type: typeUpload,
+
+            size:"small",
             secondary: true,
             onClick: () => {
               selectedData.value = row;
@@ -292,7 +297,6 @@ const columns = [
         NButton,
         {
           secondary: false,
-
           size: "small",
           type: statusTag(row.status_code),
           onClick: () => {
@@ -326,6 +330,9 @@ const statusTag = (e) => {
   if (e === "REORHO") {
     return "error";
   }
+  if (e === "REORADM") {
+    return "error";
+  }
 
 };
 const statusLabel = (e) => {
@@ -337,6 +344,9 @@ const actionLabel = (e) => {
     return "Buat Order";
   }
   if (status === "CROR") {
+    return "Update Order";
+  }
+  if (status === "REORADM") {
     return "Update Order";
   }
   if (status === "REORKPS") {
@@ -386,6 +396,11 @@ const handleAction = (e, data) => {
       params: { idapplication: data.id },
     });
   } else if (status === "REORHO") {
+    router.push({
+      name: "Form Pengajuan Kredit",
+      params: { idapplication: data.id },
+    });
+  } else if (status === "REORADM") {
     router.push({
       name: "Form Pengajuan Kredit",
       params: { idapplication: data.id },
@@ -468,7 +483,7 @@ const handleImagePost = ({ file, data, onError, onFinish, onProgress }) => {
     Authorization: `Bearer ${userToken}`,
   };
   lyla
-    .post("https://api.kspdjaya.id/image_upload_prospect", {
+    .post("https://dev.kspdjaya.id/image_upload_prospect", {
       headers,
       body: form,
       onUploadProgress: ({ percent }) => {

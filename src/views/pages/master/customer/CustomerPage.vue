@@ -4,24 +4,17 @@
       <template #header-extra>
         <n-space class="!gap-1">
           <div class="me-1">
-            <n-popover trigger="click" placement="bottom-end">
-              <template #trigger>
-                <n-button circle>
-                  <n-icon>
-                    <search-icon/>
-                  </n-icon>
-                </n-button>
-              </template>
-              <n-space>
-                <n-input
-                    autofocus="true"
-                    clearable
-                    placeholder="cari disini.."
-                    v-model:value="searchBox"
-                />
-                <n-button type="success" @click="handleSearch">cari</n-button>
-              </n-space>
-            </n-popover>
+
+            <n-space>
+              <n-input
+                  autofocus="true"
+                  clearable
+                  placeholder="cari disini.."
+                  v-model:value="searchBox"
+              />
+              <n-button type="success" @click="handleSearch">cari</n-button>
+            </n-space>
+
           </div>
           <!-- <div class="hidden md:flex">
                             <n-button>
@@ -70,8 +63,13 @@
             size="small"
             :columns="columns"
             :data="dataTable"
-            :pagination="paginationRef"
+
+        />
+        <n-pagination
             @update:page="handlePageChange"
+            v-model:page="pageLocation"
+            v-model:page-size="pageSize"
+            :page-count="countItem"
         />
       </n-space>
     </n-card>
@@ -147,16 +145,12 @@
               </n-form-item>
             </div>
             <div class="flex gap-2">
-              <n-form-item label="Telepon Selullar 1" path="telepon_selular" class="w-full">
-                <n-input placeholder="Telepon Sellular 1" :allow-input="onlyAllowNumber"
-                         v-model:value="dataPekerjaan.telepon_selular" maxlength="13"/>
+
+              <n-form-item label="Telepon Selullar " path="telepon_selular" class="w-full">
+                <n-dynamic-tags v-model:value="telpKonsumen" />
               </n-form-item>
 
-              <n-form-item label="Telepon Selullar 2" path="telepon_rumah" class="w-full">
-                <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_rumah"
-                         :allow-input="onlyAllowNumber">
-                </n-input>
-              </n-form-item>
+
             </div>
             <n-divider title-placement="left">
               Informasi Alamat Identitas
@@ -224,7 +218,6 @@
 <script setup>
 import {ref, onMounted, h, computed} from "vue";
 import {useApi} from "../../../../helpers/axios";
-import {useSearch} from "../../../../helpers/searchObject";
 import router from "../../../../router";
 import {
   useDialog,
@@ -237,11 +230,9 @@ import {
 } from "naive-ui";
 import {
   AddCircleOutlineRound as AddIcon,
-  SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 import {
-  DeleteOutlined as DeleteIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
 
@@ -250,7 +241,7 @@ const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const formDisable = ref(false);
-
+const telpKonsumen=ref([]);
 const columns = [
   {
     title: "No Pelanggan",
@@ -358,6 +349,8 @@ const handleDetail = async (e) => {
     Object.assign(alamatTagih.value, response.data.alamat_tagih);
     dataDetailPelanggan.value = response.data;
     spinPelanggan.value = false;
+    telpKonsumen.value.push(dataPekerjaan.value.telepon_selular);
+
   }
 }
 const handleUpdate = (evt) => {
@@ -368,6 +361,7 @@ const handleAdd = () => {
 };
 const loadingBar = useLoadingBar();
 const countItem = ref();
+const pageLocation = ref(1);
 
 const loadingPage = ref(false);
 const getData = async (e) => {
@@ -385,6 +379,7 @@ const getData = async (e) => {
     loadingPage.value = false;
     dataTable.value = response.data.data;
     countItem.value = response.data.total;
+    pageLocation.value = response.data.current_page;
   }
 };
 

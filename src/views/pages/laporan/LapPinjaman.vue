@@ -1,6 +1,7 @@
 <template>
   <div>
     <n-space vertical>
+
       <n-card :title="`Laporan Keuangan`">
         <n-tabs type="card" animated @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
           <!--          <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman</n-tab-pane>-->
@@ -11,10 +12,14 @@
           <!--          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan</n-tab-pane>-->
 
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PIUTANG">
-            <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman"/>
+            <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman" :loading="loadInqPinjaman"/>
           </n-tab-pane>
-          <n-tab-pane name="arus_kas" tab="ARUS KAS">
+          <n-tab-pane name="arus_kas" tab="LKBH">
             <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
+                        @filter-form="handleRange"/>
+          </n-tab-pane>
+          <n-tab-pane name="listing_beban" tab="LISTING BEBAN">
+            <TabListBan :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
                         @filter-form="handleRange"/>
           </n-tab-pane>
 <!--          <n-tab-pane name="lkbh" tab="LKBH">-->
@@ -261,6 +266,7 @@ import {
 } from "@vicons/material";
 import TabArusKas from "./TabArusKas.vue";
 import TabInqPinjaman from "./TabInqPinjaman.vue";
+import TabListBan from "./TabInqPinjaman.vue";
 
 const rangeDate = ref();
 const message = useMessage();
@@ -759,7 +765,7 @@ const getDetailTunggakan = async (e) => {
 }
 
 const getArusKas = async (e) => {
-  message.loading('memuat data arus kas');
+  message.loading('memuat data LKBH');
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -776,7 +782,9 @@ const getArusKas = async (e) => {
 }
 
 const dataInqPinjaman = ref();
+const loadInqPinjaman=ref(false);
 const getInqPinjaman = async (e) => {
+    loadInqPinjaman.value=true;
   message.loading('memuat inquery pinjaman');
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -787,7 +795,7 @@ const getInqPinjaman = async (e) => {
   if (!response.ok) {
     message.error('ERROR API');
   } else {
-    loadData.value = false;
+      loadInqPinjaman.value = false;
     dataInqPinjaman.value = response.data;
   }
 }

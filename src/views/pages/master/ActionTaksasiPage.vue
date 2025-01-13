@@ -9,16 +9,16 @@
                 {{ errorAPI }}
             </n-alert>
             <n-form-item label="Brand">
-                <n-input placeholder="kode" v-model:value="dynamicForm.brand" />
+                <n-input placeholder="ex. HONDA / YAMAHA / SUZUKI, dll" v-model:value="dynamicForm.brand" />
             </n-form-item>
-            <n-form-item label="Kode">
-                <n-input placeholder="kode" v-model:value="dynamicForm.code" />
+            <n-form-item label="Vehicle">
+                <n-input placeholder="ex. ADB / CG6 / NB1" v-model:value="dynamicForm.code" />
             </n-form-item>
-            <n-form-item label="model">
-                <n-input placeholder="kode" v-model:value="dynamicForm.model" />
+            <n-form-item label="Type">
+                <n-input placeholder="ex. PS5E549202 MT / SUPRA X 125 TLD" v-model:value="dynamicForm.model" />
             </n-form-item>
-            <n-form-item label="Deskripsi">
-                <n-input type="textarea" v-model:value="dynamicForm.descr" placeholder="Deskripsi" />
+            <n-form-item label="Descr">
+                <n-input type="textarea" v-model:value="dynamicForm.descr" placeholder="ex. Vario Tecno / Supra X 125 / Satria FU, dll " />
             </n-form-item>
             <div class="flex gap-2">
                 <n-form-item label="Dari" path="tahun_kendaraan" :rule="rules.tahun_jaminan">
