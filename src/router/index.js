@@ -141,6 +141,11 @@ const routes = [
         component: () => import("../views/pages/task/HO/PersetujuanPage.vue"),
       },
       {
+        path: "approval-center",
+        name: "approval-center",
+        component: () => import("../views/pages/task/HO/PersetujuanPage.vue"),
+      },
+      {
         path: "new-survey",
         name: "tambah survey",
         component: () => import("../views/pages/task/AddSurveyPage.vue"),
@@ -170,7 +175,8 @@ const routes = [
       {
         path: "taksasi-batch",
         name: "taksasi batch",
-        component: () => import("../views/pages/master/UpdateBatchTakasasi.vue"),
+        component: () =>
+          import("../views/pages/master/UpdateBatchTakasasi.vue"),
       },
       {
         path: "taksasi-action/:idtaksasi",

@@ -4,24 +4,17 @@
       <template #header-extra>
         <n-space class="!gap-1">
           <div class="me-1">
-            <n-popover trigger="click" placement="bottom-end">
-              <template #trigger>
-                <n-button circle>
-                  <n-icon>
-                    <search-icon/>
-                  </n-icon>
-                </n-button>
-              </template>
-              <n-space>
-                <n-input
-                    autofocus="true"
-                    clearable
-                    placeholder="cari disini.."
-                    v-model:value="searchBox"
-                />
-                <n-button type="success" @click="handleSearch">cari</n-button>
-              </n-space>
-            </n-popover>
+
+            <n-space>
+              <n-input
+                  autofocus="true"
+                  clearable
+                  placeholder="cari disini.."
+                  v-model:value="searchBox"
+              />
+              <n-button type="success" @click="handleSearch">cari</n-button>
+            </n-space>
+
           </div>
           <!-- <div class="hidden md:flex">
                             <n-button>
@@ -70,14 +63,19 @@
             size="small"
             :columns="columns"
             :data="dataTable"
-            :pagination="paginationRef"
+
+        />
+        <n-pagination
             @update:page="handlePageChange"
+            v-model:page="pageLocation"
+            v-model:page-size="pageSize"
+            :page-count="countItem"
         />
       </n-space>
     </n-card>
   </n-space>
   <n-modal v-model:show="modalDetailCustomer">
-    <n-card class="w-11/12 min-h-[600px] ">
+    <n-card class="w-11/12 max-h-[500px] overflow-x-auto ">
       <n-spin :show="spinPelanggan">
         <n-scrollbar trigger="none">
           <n-form ref="formPelanggan" :model="dataPelanggan" :rules="rulesPelanggan"
@@ -147,75 +145,80 @@
               </n-form-item>
             </div>
             <div class="flex gap-2">
-              <n-form-item label="Telepon Selullar 1" path="telepon_selular" class="w-full">
-                <n-input placeholder="Telepon Sellular 1" :allow-input="onlyAllowNumber"
-                         v-model:value="dataPekerjaan.telepon_selular" maxlength="13"/>
+
+              <n-form-item label="Telepon Selullar " path="telepon_selular" class="w-full">
+                <n-dynamic-input v-model:value="telpKonsumen" :min="1"/>
               </n-form-item>
 
-              <n-form-item label="Telepon Selullar 2" path="telepon_rumah" class="w-full">
-                <n-input placeholder="Telepon Sellular 2" v-model:value="dataPekerjaan.telepon_rumah"
-                         :allow-input="onlyAllowNumber">
-                </n-input>
-              </n-form-item>
             </div>
             <n-divider title-placement="left">
-              Informasi Alamat Identitas
+              <n-space>Informasi Alamat Identitas
+              </n-space>
             </n-divider>
           </n-form>
-          <n-form ref="formPelangganAlamatIdentitas" :model="alamatIdentitas" :rules="rulesIdentitas"
-                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
-                  require-mark-placement="right-hanging" label-width="auto">
-            <div class="flex gap-2">
-              <n-form-item label="Alamat" class="w-full" path="alamat">
-                <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat"
-                         @input="$event => (alamatIdentitas.alamat = $event.toUpperCase())"/>
-              </n-form-item>
-              <n-form-item label="RT" path="rt">
-                <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatIdentitas.rt = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-              <n-form-item label="RW" path="rw">
-                <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatIdentitas.rw = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-            </div>
+          <n-dynamic-input
+              :min="1"
+              v-model:value="alamat_identitas">
+            <template #default="{ alamat_identitas }">
+              <div class="flex w-full gap-2">
+                <div class="flex gap-2">
+                  <n-form-item label="Alamat" class="w-full" path="alamat">
+                    <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat"
+                             @input="$event => (alamatIdentitas.alamat = $event.toUpperCase())"/>
+                  </n-form-item>
+                  <n-form-item label="RT" path="rt">
+                    <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatIdentitas.rt = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="RW" path="rw">
+                    <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatIdentitas.rw = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                </div>
+                <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
+                                     v-model:kecamatan="alamatIdentitas.kecamatan"
+                                     v-model:desa="alamatIdentitas.kelurahan"
+                                     v-model:kodepos="alamatIdentitas.kode_pos"/>
+              </div>
+            </template>
+          </n-dynamic-input>
 
-            <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
-                                 v-model:kecamatan="alamatIdentitas.kecamatan"
-                                 v-model:desa="alamatIdentitas.kelurahan"
-                                 v-model:kodepos="alamatIdentitas.kode_pos"/>
-            <n-divider title-placement="left">
-              Informasi Alamat Tagih
-            </n-divider>
-          </n-form>
-          <n-form ref="formPelangganAlamatTagih" :model="alamatTagih" :rules="rulesAlamatTagih"
-                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
-                  require-mark-placement="right-hanging" label-width="auto">
-            <div class="flex gap-2">
-              <n-form-item label="Alamat" class="w-full" path="alamat">
-                <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat"
-                         @input="$event => (alamatTagih.alamat = $event.toUpperCase())"/>
-              </n-form-item>
-              <n-form-item label="RT" path="rt">
-                <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatTagih.rt = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-              <n-form-item label="RW" path="rw">
-                <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatTagih.rw = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-            </div>
-            <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
-                                 v-model:kecamatan="alamatTagih.kecamatan" v-model:desa="alamatTagih.kelurahan"
-                                 v-model:kodepos="alamatTagih.kode_pos"/>
+          <n-divider title-placement="left">
+            Informasi Alamat Tagih
+          </n-divider>
+          <n-dynamic-input
+              :min="1"
+              v-model:value="alamat_tagih">
+            <template #default="{ alamat_tagih }">
+              <div class="flex w-full gap-2">
+                <div class="flex gap-2">
+                  <n-form-item label="Alamat" class="w-full" path="alamat">
+                    <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat"
+                             @input="$event => (alamatTagih.alamat = $event.toUpperCase())"/>
+                  </n-form-item>
+                  <n-form-item label="RT" path="rt">
+                    <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatTagih.rt = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="RW" path="rw">
+                    <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatTagih.rw = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                </div>
+                <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
+                                     v-model:kecamatan="alamatTagih.kecamatan"
+                                     v-model:desa="alamatTagih.kelurahan"
+                                     v-model:kodepos="alamatTagih.kode_pos"/>
+              </div>
+            </template>
+          </n-dynamic-input>
             <n-button @click="handleSubmit" type="success">
               Ubah
             </n-button>
-          </n-form>
         </n-scrollbar>
       </n-spin>
     </n-card>
@@ -224,7 +227,6 @@
 <script setup>
 import {ref, onMounted, h, computed} from "vue";
 import {useApi} from "../../../../helpers/axios";
-import {useSearch} from "../../../../helpers/searchObject";
 import router from "../../../../router";
 import {
   useDialog,
@@ -237,11 +239,9 @@ import {
 } from "naive-ui";
 import {
   AddCircleOutlineRound as AddIcon,
-  SearchOutlined as SearchIcon,
   FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 import {
-  DeleteOutlined as DeleteIcon,
   ListAltOutlined as DetailIcon,
 } from "@vicons/material";
 
@@ -250,7 +250,7 @@ const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const formDisable = ref(false);
-
+const telpKonsumen = ref([]);
 const columns = [
   {
     title: "No Pelanggan",
@@ -307,7 +307,26 @@ const columns = [
     },
   },
 ];
-
+const model_alamat_identitas = {
+  alamat: null,
+  rt: null,
+  rw: null,
+  provinsi: null,
+  kota: null,
+  kecamatan: null,
+  desa: null,
+  kodepos: null,
+}
+const alamat_identitas = ref([{
+  alamat: null,
+  rt: null,
+  rw: null,
+  provinsi: null,
+  kota: null,
+  kecamatan: null,
+  desa: null,
+  kodepos: null,
+}]);
 const handleConfirm = (row, index) => {
   dialog.warning({
     title: "Confirm",
@@ -358,6 +377,8 @@ const handleDetail = async (e) => {
     Object.assign(alamatTagih.value, response.data.alamat_tagih);
     dataDetailPelanggan.value = response.data;
     spinPelanggan.value = false;
+    telpKonsumen.value.push(dataPekerjaan.value.telepon_selular);
+
   }
 }
 const handleUpdate = (evt) => {
@@ -368,6 +389,7 @@ const handleAdd = () => {
 };
 const loadingBar = useLoadingBar();
 const countItem = ref();
+const pageLocation = ref(1);
 
 const loadingPage = ref(false);
 const getData = async (e) => {
@@ -385,6 +407,7 @@ const getData = async (e) => {
     loadingPage.value = false;
     dataTable.value = response.data.data;
     countItem.value = response.data.total;
+    pageLocation.value = response.data.current_page;
   }
 };
 

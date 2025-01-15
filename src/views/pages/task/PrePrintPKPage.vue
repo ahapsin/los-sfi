@@ -10,13 +10,14 @@
                 </n-form-item>
                 <n-form-item label="Tanggal Awal Angsuran" path="order">
 
-                    <n-date-picker placeholder="tanggal awal angsuran" v-model:formatted-value="tgl_cetaks"
+                    <n-date-picker placeholder="tanggal awal angsuran" v-model:formatted-value="pkData.tgl_awal_pk"
                         value-format="yyyy-MM-dd" format="dd-MM-yyyy" type="date" :disabled="pkData.flag == 1"
-                        @update:formatted-value="getPrePK" />
+                        @update:formatted-value="getPrePK" :is-date-disabled="dateAvailable" />
                 </n-form-item>
                 <n-form-item label="Halaman" path="nama_panggilan">
                     <!-- <n-checkbox label="Semua Halaman" v-model:checked="optAllPage" checked /> -->
-                    <n-grid cols="2 6" class="bg-slate-100 p-2 rounded"> <n-grid-item>
+                    <n-grid cols="2 6" class="bg-slate-100 p-2 rounded">
+                        <n-grid-item>
                             <n-checkbox value="pk" label="Perjanjian Kredit" checked disabled />
                         </n-grid-item>
                         <n-grid-item>
@@ -39,23 +40,36 @@
                 </n-form-item>
             </n-form>
             <!-- <n-form-item class="w-full">
-                    <n-button type="primary" @click="handleProses">Proses</n-button>
-                </n-form-item> -->
+              <n-button type="primary" @click="handleProses">Proses</n-button>
+          </n-form-item> -->
         </div>
         <!-- <div
-      title="PK"
-      v-show="prosesPK"
-      class="flex gap-2 border-t p-4 justify-end"
-    ></div> -->
+  title="PK"
+  v-show="prosesPK"
+  class="flex gap-2 border-t p-4 justify-end"
+></div> -->
         <div class="sticky flex bottom-0 w-full" v-if="colCheck">
             <CollateralCheck :coll_data="payloadCheck()" @coll_val="handleCollCheck" />
         </div>
-        <div class="sticky b bg-white flex top-0 w-full justify-end p-2">
+        <div class="sticky b bg-white flex gap-2 top-0 w-full justify-end p-2">
             <n-button :type="pkData.flag == 1 ? 'warning' : 'primary'" class="gap-2" @click="handlePrint">
                 <n-icon>
                     <print-icon />
                 </n-icon>
-                {{ pkData.flag == 1 ? "Cetak Ulang PK" : "Cetak PK" }}
+                {{ pkData.flag == 1 ? "Cetak Ulang Order" : "Cetak Order" }}
+            </n-button>
+            <n-button v-if="pkData.flag === 1 && tgl_cetaks == pkData.tgl_awal_pk" type="error" class="gap-2"
+                @click="confModal = true">
+                <n-icon>
+                    <cancel-icon />
+                </n-icon>
+                Batal Order
+            </n-button>
+            <n-button v-else-if="pkData.flag !== 1" type="info" class="gap-2" @click="confModalRevisi = true">
+                <n-icon>
+                    <edit-icon />
+                </n-icon>
+                Revisi Order
             </n-button>
         </div>
         <div class="flex bg-slate-100 justify-center overflow-auto p-2" v-show="prosesPK">
@@ -236,8 +250,10 @@
                                         <tr>
                                             <td>IMB / Luas Tanah / Luas Bangunan</td>
                                             <td width="25">:</td>
-                                            <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 /
-                                                ${jaminan.atr.luas_bangunan} m2` }}
+                                            <td>{{
+                                                `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 /
+                                                ${jaminan.atr.luas_bangunan} m2`
+                                                }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -266,7 +282,7 @@
                                 <br />
                                 Demikian Perjanjian Pemberian Pinjaman ini dibuat dan
                                 ditandatangani, tanpa adanya unsur paksaan.<br />
-                                {{ pkData.kota }},  {{ dayFull.full_date_only }}
+                                {{ pkData.kota }}, {{ dayFull.full_date_only }}
                             </td>
                         </tr>
                         <tr>
@@ -275,7 +291,8 @@
                                 <table width="100%">
                                     <tr>
                                         <td>
-                                            Pihak Pertama<br />{{ pkData.cabang
+                                            Pihak Pertama<br />{{
+                                                pkData.cabang
                                             }}<br /><br /><br /><br />
                                             ( {{ pihak1.nama }} )
                                         </td>
@@ -736,8 +753,10 @@
                                 <tr>
                                     <td>IMB / Luas Tanah / Luas Bangunan</td>
                                     <td width="25">:</td>
-                                    <td>{{ `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 /
-                                        ${jaminan.atr.luas_bangunan} m2` }}
+                                    <td>{{
+                                        `${jaminan.atr.imb} / ${jaminan.atr.luas_tanah} m2 /
+                                        ${jaminan.atr.luas_bangunan} m2`
+                                        }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -774,6 +793,16 @@
             </div>
         </div>
     </n-card>
+    <n-modal v-model:show="confModal" preset="dialog" draggable title="Konfirmasi" positive-text="Ajukan Batal Order"
+        negative-text="Tidak" @positive-click="handleCancel" @negative-click="cancelCallback">
+        <div>Masukan alasan batal order</div>
+        <n-input type="textarea" placeholder="alasan batal order" v-model:value="bodyCancel.descr" />
+    </n-modal>
+    <n-modal v-model:show="confModalRevisi" preset="dialog" draggable title="Konfirmasi" positive-text="Ya"
+        negative-text="Tidak" @positive-click="handleCancel('revisi')" @negative-click="cancelCallback">
+        <div>Apakah yakin revisi order ?</div>
+        <!--    <n-input type="textarea" placeholder="alasan revisi order" v-model:value="bodyCancel.descr"/>-->
+    </n-modal>
 </template>
 <style scoped>
 table.tblprint>tr>th {
@@ -795,7 +824,7 @@ table.tblprint>tr>td {
 }
 </style>
 <script setup>
-import { LocalPrintshopRound as PrintIcon } from "@vicons/material";
+import { LocalPrintshopRound as PrintIcon, CancelFilled as CancelIcon, EditOutlined as EditIcon } from "@vicons/material";
 import { NButton, NIcon, useMessage } from "naive-ui";
 import { toRef, useDateFormat, useNow } from '@vueuse/core'
 import { computed, onMounted, reactive, ref } from "vue";
@@ -822,7 +851,8 @@ const optPrint = reactive({
     penjaminPage: true,
     tandaTerima: true,
 });
-
+const confModal = ref(false);
+const confModalRevisi = ref(false);
 const baseRoute = useRoute();
 const idApp = baseRoute.params.idapplication;
 const userToken = localStorage.getItem("token");
@@ -932,8 +962,8 @@ const getPrePK = async () => {
             }
             if (res.data.tgl_cetak) {
                 tgl_cetak.value = res.data.tgl_cetak;
-            }else{
-                tgl_cetak.value=thisday;
+            } else {
+                tgl_cetak.value = thisday;
             }
 
             dataPasangan.value = res.data.pasangan;
@@ -1354,7 +1384,7 @@ const createPdf = (e) => {
         },
     ]);
     const tandaTerima = ref([
-         {
+        {
             table: {
                 widths: [32, "auto"],
                 headerRows: 2,
@@ -1640,6 +1670,7 @@ const handlePrint = async () => {
     // doc.text(300, 30, `PERJANJIAN PEMBERIAN PINJAMAN\nNo. ${pkData.value.no_perjanjian}`, { align: 'center' });
     // doc.output('dataurlnewwindow');
 };
+
 function convertObject(object) {
     return object.map(obj => [{
         margin: [20, 10, 0, 0],
@@ -1666,6 +1697,7 @@ function convertObject(object) {
         },
     }]);
 }
+
 const upCase = (e) => {
     return e;
 };
@@ -1678,7 +1710,7 @@ const handleCollCheck = (data) => {
     colCheck.value = data;
 }
 
-const payloadCheck = ()=>dataJaminan.value.map(item => {
+const payloadCheck = () => dataJaminan.value.map(item => {
     if (item.type === 'kendaraan') {
         return {
             type: item.type,
@@ -1691,7 +1723,12 @@ const payloadCheck = ()=>dataJaminan.value.map(item => {
         };
     }
 });
-
+const dateAvailable = (ts) => {
+    const date = new Date(ts).getDate();
+    if (date > 10) {
+        return date < 15 + 6;
+    }
+}
 const options = [];
 
 for (var x = 1; x <= 25; x++) {
@@ -1705,6 +1742,29 @@ const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 });
+const bodyCancel = reactive({
+    order_number: computed(() => idApp),
+    descr: null,
+    req_flag: "cancel",
+})
+const handleCancel = async (e) => {
+    bodyCancel.req_flag = e;
+    const userToken = localStorage.getItem("token");
+    const response = await useApi({
+        method: "post",
+        api: "pk_cancel",
+        data: bodyCancel,
+        token: userToken,
+    });
+    if (!response.ok) {
+        message.error("ERROR API");
+        router.push({ name: 'Pengajuan Kredit' })
+    } else {
+        message.success("pengajuan batal order berhasil....");
+    }
+}
+
+
 onMounted(() => {
     getPrePK();
 });
