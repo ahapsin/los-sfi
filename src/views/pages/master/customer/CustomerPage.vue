@@ -75,7 +75,7 @@
     </n-card>
   </n-space>
   <n-modal v-model:show="modalDetailCustomer">
-    <n-card class="w-11/12 min-h-[600px] ">
+    <n-card class="w-11/12 max-h-[500px] overflow-x-auto ">
       <n-spin :show="spinPelanggan">
         <n-scrollbar trigger="none">
           <n-form ref="formPelanggan" :model="dataPelanggan" :rules="rulesPelanggan"
@@ -147,69 +147,78 @@
             <div class="flex gap-2">
 
               <n-form-item label="Telepon Selullar " path="telepon_selular" class="w-full">
-                <n-dynamic-tags v-model:value="telpKonsumen" />
+                <n-dynamic-input v-model:value="telpKonsumen" :min="1"/>
               </n-form-item>
-
 
             </div>
             <n-divider title-placement="left">
-              Informasi Alamat Identitas
+              <n-space>Informasi Alamat Identitas
+              </n-space>
             </n-divider>
           </n-form>
-          <n-form ref="formPelangganAlamatIdentitas" :model="alamatIdentitas" :rules="rulesIdentitas"
-                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
-                  require-mark-placement="right-hanging" label-width="auto">
-            <div class="flex gap-2">
-              <n-form-item label="Alamat" class="w-full" path="alamat">
-                <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat"
-                         @input="$event => (alamatIdentitas.alamat = $event.toUpperCase())"/>
-              </n-form-item>
-              <n-form-item label="RT" path="rt">
-                <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatIdentitas.rt = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-              <n-form-item label="RW" path="rw">
-                <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatIdentitas.rw = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-            </div>
+          <n-dynamic-input
+              :min="1"
+              v-model:value="alamat_identitas">
+            <template #default="{ alamat_identitas }">
+              <div class="flex w-full gap-2">
+                <div class="flex gap-2">
+                  <n-form-item label="Alamat" class="w-full" path="alamat">
+                    <n-input placeholder="Alamat" v-model:value="alamatIdentitas.alamat"
+                             @input="$event => (alamatIdentitas.alamat = $event.toUpperCase())"/>
+                  </n-form-item>
+                  <n-form-item label="RT" path="rt">
+                    <n-input placeholder="RT" v-model:value="alamatIdentitas.rt" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatIdentitas.rt = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="RW" path="rw">
+                    <n-input placeholder="RW" v-model:value="alamatIdentitas.rw" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatIdentitas.rw = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                </div>
+                <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
+                                     v-model:kecamatan="alamatIdentitas.kecamatan"
+                                     v-model:desa="alamatIdentitas.kelurahan"
+                                     v-model:kodepos="alamatIdentitas.kode_pos"/>
+              </div>
+            </template>
+          </n-dynamic-input>
 
-            <select-state-region v-model:provinsi="alamatIdentitas.provinsi" v-model:kota="alamatIdentitas.kota"
-                                 v-model:kecamatan="alamatIdentitas.kecamatan"
-                                 v-model:desa="alamatIdentitas.kelurahan"
-                                 v-model:kodepos="alamatIdentitas.kode_pos"/>
-            <n-divider title-placement="left">
-              Informasi Alamat Tagih
-            </n-divider>
-          </n-form>
-          <n-form ref="formPelangganAlamatTagih" :model="alamatTagih" :rules="rulesAlamatTagih"
-                  :disabled="formDisable" :label-placement="width <= 920 ? 'top' : 'top'"
-                  require-mark-placement="right-hanging" label-width="auto">
-            <div class="flex gap-2">
-              <n-form-item label="Alamat" class="w-full" path="alamat">
-                <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat"
-                         @input="$event => (alamatTagih.alamat = $event.toUpperCase())"/>
-              </n-form-item>
-              <n-form-item label="RT" path="rt">
-                <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatTagih.rt = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-              <n-form-item label="RW" path="rw">
-                <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber"
-                         :maxlength="3" @input="$event => (alamatTagih.rw = $event.toUpperCase())">
-                </n-input>
-              </n-form-item>
-            </div>
-            <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
-                                 v-model:kecamatan="alamatTagih.kecamatan" v-model:desa="alamatTagih.kelurahan"
-                                 v-model:kodepos="alamatTagih.kode_pos"/>
+          <n-divider title-placement="left">
+            Informasi Alamat Tagih
+          </n-divider>
+          <n-dynamic-input
+              :min="1"
+              v-model:value="alamat_tagih">
+            <template #default="{ alamat_tagih }">
+              <div class="flex w-full gap-2">
+                <div class="flex gap-2">
+                  <n-form-item label="Alamat" class="w-full" path="alamat">
+                    <n-input placeholder="Alamat" v-model:value="alamatTagih.alamat"
+                             @input="$event => (alamatTagih.alamat = $event.toUpperCase())"/>
+                  </n-form-item>
+                  <n-form-item label="RT" path="rt">
+                    <n-input placeholder="RT" v-model:value="alamatTagih.rt" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatTagih.rt = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="RW" path="rw">
+                    <n-input placeholder="RW" v-model:value="alamatTagih.rw" :allow-input="onlyAllowNumber"
+                             :maxlength="3" @input="$event => (alamatTagih.rw = $event.toUpperCase())">
+                    </n-input>
+                  </n-form-item>
+                </div>
+                <select-state-region v-model:provinsi="alamatTagih.provinsi" v-model:kota="alamatTagih.kota"
+                                     v-model:kecamatan="alamatTagih.kecamatan"
+                                     v-model:desa="alamatTagih.kelurahan"
+                                     v-model:kodepos="alamatTagih.kode_pos"/>
+              </div>
+            </template>
+          </n-dynamic-input>
             <n-button @click="handleSubmit" type="success">
               Ubah
             </n-button>
-          </n-form>
         </n-scrollbar>
       </n-spin>
     </n-card>
@@ -241,7 +250,7 @@ const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const formDisable = ref(false);
-const telpKonsumen=ref([]);
+const telpKonsumen = ref([]);
 const columns = [
   {
     title: "No Pelanggan",
@@ -298,7 +307,26 @@ const columns = [
     },
   },
 ];
-
+const model_alamat_identitas = {
+  alamat: null,
+  rt: null,
+  rw: null,
+  provinsi: null,
+  kota: null,
+  kecamatan: null,
+  desa: null,
+  kodepos: null,
+}
+const alamat_identitas = ref([{
+  alamat: null,
+  rt: null,
+  rw: null,
+  provinsi: null,
+  kota: null,
+  kecamatan: null,
+  desa: null,
+  kodepos: null,
+}]);
 const handleConfirm = (row, index) => {
   dialog.warning({
     title: "Confirm",

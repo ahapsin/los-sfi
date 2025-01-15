@@ -19,13 +19,14 @@
                         @filter-form="handleRange"/>
           </n-tab-pane>
           <n-tab-pane name="listing_beban" tab="LISTING BEBAN">
-            <TabListBan :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
+            <TabListBan :data="dataListBan" :columns="convertObjectToArray(dataListBan)" :load="loadListingBeban"
+                        :page-size="10"
                         @filter-form="handleRange"/>
           </n-tab-pane>
-<!--          <n-tab-pane name="lkbh" tab="LKBH">-->
-<!--            <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"-->
-<!--                        @filter-form="handleRange"/>-->
-<!--          </n-tab-pane>-->
+          <!--          <n-tab-pane name="lkbh" tab="LKBH">-->
+          <!--            <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"-->
+          <!--                        @filter-form="handleRange"/>-->
+          <!--          </n-tab-pane>-->
         </n-tabs>
 
       </n-card>
@@ -266,7 +267,7 @@ import {
 } from "@vicons/material";
 import TabArusKas from "./TabArusKas.vue";
 import TabInqPinjaman from "./TabInqPinjaman.vue";
-import TabListBan from "./TabInqPinjaman.vue";
+import TabListBan from "./TabListBan.vue";
 
 const rangeDate = ref();
 const message = useMessage();
@@ -325,7 +326,11 @@ const columns = [
 ];
 
 const convertObjectToArray = (obj) => {
-  return Object.entries(obj).map(([key, value]) => ({key, value}));
+  if (!Array.isArray(obj) || obj.length === 0) {
+    return [];
+  }
+  const keys = Object.keys(obj[0]);
+  return keys.map(key => ({title: key, key: key}));
 }
 const colJaminan = [
   {
@@ -457,6 +462,8 @@ const columnsPinjaman = [
   },
 
 ];
+
+let messageReactive = null;
 const columnsPembayran = [
   {
     title: "No Pembayaran",
@@ -543,32 +550,32 @@ const columnsAngsuran = [
     key: "payment",
     sorter: "default",
     width: 100,
-  },  {
+  }, {
     title: "payment",
     key: "payment",
     sorter: "default",
     width: 100,
-  },  {
+  }, {
     title: "bayar angsuran",
     key: "bayar_angsuran",
     sorter: "default",
     width: 100,
-  },{
+  }, {
     title: "bayar denda",
     key: "bayar_denda",
     sorter: "default",
     width: 100,
-  },{
+  }, {
     title: "total_bayar",
     key: "bayar_angsuran",
     sorter: "default",
     width: 100,
-  },{
+  }, {
     title: "flag",
     key: "flag",
     sorter: "default",
     width: 100,
-  },{
+  }, {
     title: "denda",
     key: "denda",
     sorter: "default",
@@ -591,7 +598,7 @@ const columnsTunggakan = [
     title: "Total Tunggakan",
     key: "PAST_DUE_PINALTY",
     sorter: "default",
-  },{
+  }, {
     title: "Status",
     key: "STATUS_REC",
     sorter: "default",
@@ -623,6 +630,9 @@ const handleBeforeLeave = async (t) => {
       return true;
     case "pembayaran":
       await getDetailPembayaran();
+      return true;
+    case "listing_beban":
+      await getListBan();
       return true;
     default:
       return true;
@@ -733,7 +743,7 @@ const getDetailAngsuran = async (e) => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
-    data: {loan_number:e},
+    data: {loan_number: e},
     api: `struktur_kredit`,
     token: userToken,
   });
@@ -780,12 +790,35 @@ const getArusKas = async (e) => {
     dataArusKas.value = response.data;
   }
 }
+const dataListBan = ref([]);
+const loadListingBeban = ref(false);
+
+
+const getListBan = async () => {
+  messageReactive = message.loading('memuat data listing beban', {duration: 0});
+  loadListingBeban.value = true;
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: "listBan",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error('ERROR API');
+  } else {
+    loadListingBeban.value = false;
+    messageReactive.destroy();
+    messageReactive = null;
+    dataListBan.value = response.data;
+  }
+}
 
 const dataInqPinjaman = ref();
-const loadInqPinjaman=ref(false);
+const loadInqPinjaman = ref(false);
+
 const getInqPinjaman = async (e) => {
-    loadInqPinjaman.value=true;
-  message.loading('memuat inquery pinjaman');
+  loadInqPinjaman.value = true;
+  messageReactive = message.loading('memuat inquery pinjaman');
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
@@ -795,7 +828,9 @@ const getInqPinjaman = async (e) => {
   if (!response.ok) {
     message.error('ERROR API');
   } else {
-      loadInqPinjaman.value = false;
+    messageReactive.destroy();
+    messageReactive = null;
+    loadInqPinjaman.value = false;
     dataInqPinjaman.value = response.data;
   }
 }

@@ -5,7 +5,14 @@
                 <n-input placeholder="cari" v-model:value="searchBox" clearable />
                 <n-button @click="downloadCsv" type="info">download</n-button>
             </n-space>
-            <n-data-table ref="tableRef" :columns="columns" :data="showData" :pagination="{ pageSize: 10 }"
+            <n-data-table ref="tableRef" :max-height="250"
+                          virtual-scroll
+                          virtual-scroll-x
+                          :scroll-x="scrollX"
+                          :min-row-height="48"
+                          :height-for-row="12"
+                          virtual-scroll-header
+                          :header-height="48" :columns="columns" :data="showData" :pagination="{ pageSize: 10 }"
                 :loading="loading" />
         </n-space>
     </div>
