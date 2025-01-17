@@ -261,7 +261,7 @@ const columns = [
         });
         let typeUpload;
         let classType;
-        if (row.attachment.length <= 3) {
+        if (row.attachment.length == 3) {
           classType = "animate-pulse";
           typeUpload = "error";
         } else {
