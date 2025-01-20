@@ -70,13 +70,13 @@
           <div class="flex justify-between gap-4">
 
             <div class="flex w-full justify-end items-center gap-2">
-<!--              <n-checkbox-->
-<!--                  checked-value="yes"-->
-<!--                  unchecked-value="no"-->
-<!--                  @update:checked="handleUpdateChecked"-->
-<!--              >-->
-<!--                Tangguhkan-->
-<!--              </n-checkbox>-->
+              <!--              <n-checkbox-->
+              <!--                  checked-value="yes"-->
+              <!--                  unchecked-value="no"-->
+              <!--                  @update:checked="handleUpdateChecked"-->
+              <!--              >-->
+              <!--                Tangguhkan-->
+              <!--              </n-checkbox>-->
               <div class="flex items-center gap-2" v-if="pageData.penangguhan_denda==='no'">
                 <div>Diskon</div>
                 <div class="flex gap-2">
@@ -184,7 +184,6 @@ const dialogProses = ref(false);
 const paymentData = ref([]);
 const buktiTransfer = ref(false);
 const dataBuktiTransfer = ref([]);
-const diskonInput = ref("false");
 const isLast = ref(false);
 
 const handleResBack = (data) => {
@@ -200,7 +199,6 @@ const dendaAngsuranBerjalan = computed(
       return totalPenalty();
     }
 );
-const tangguhkan = ref('no');
 
 const totalPay = computed(() => {
   const totalInstallment = () =>
@@ -214,13 +212,7 @@ const totalPay = computed(() => {
           0
       );
   const combinedTotal = () => totalInstallment() + totalPenalty();
-  if (isLasted.value) {
-    return (
-        combinedTotal() + pageData.denda - pageData.diskon_tunggakan
-    );
-  } else {
     return combinedTotal();
-  }
 });
 const uuid = uuidv4();
 const pageData = reactive({
@@ -243,9 +235,7 @@ const pageData = reactive({
   bukti_transafer: null,
   penangguhan_denda: 'no',
 });
-const handleUpdateChecked = (value) => {
-  pageData.penangguhan_denda = value;
-}
+
 const dataRepayment = ref([]);
 const getDataPelunasan = async (e) => {
   const dynamicBody = {
@@ -436,7 +426,7 @@ const createColStruktur = () => {
             secondary: true,
             placeholder: "pembayaran",
             value: _.find(checkedRowCredit.value, ["key", row.key])
-                ? isLasted.value ? 0 : row.bayar_denda
+                ? row.bayar_denda
                 : 0,
             onUpdateValue(v) {
               dataStrukturKredit.value[index].bayar_denda = v;
@@ -463,10 +453,8 @@ const createColStruktur = () => {
             showButton: false,
             secondary: true,
             placeholder: "pembayaran",
-            value: _.find(checkedRowCredit.value, ["key", row.key])
-                ? isLasted.value ? dataStrukturKredit.value[index].bayar_angsuran : dataStrukturKredit.value[index].bayar_angsuran +
-                    dataStrukturKredit.value[index].bayar_denda
-                : 0,
+            value: dataStrukturKredit.value[index].bayar_angsuran +
+                dataStrukturKredit.value[index].bayar_denda,
           });
         }
       },
@@ -599,7 +587,11 @@ const getSkalaCredit = async (e) => {
     dataPayment.value = true;
     checkedRowCredit.value = [];
     dataStrukturKredit.value = response.data;
-    dataStrukturKredit.value.map(e=>{if(e.flag==="PAID"){checkedRowCredit.value.push(e)}});
+    dataStrukturKredit.value.map(e => {
+      if (e.flag === "PAID") {
+        checkedRowCredit.value.push(e)
+      }
+    });
     dataAngsuran.value = true;
     loadStructure.value = false;
   }

@@ -46,7 +46,6 @@ import router from "../../../router";
 import { useMessage, NIcon, NTag, NButton } from "naive-ui";
 import {
     SearchOutlined as SearchIcon,
-    FileDownloadOutlined as DownloadIcon,
 } from "@vicons/material";
 import { useLoadingBar } from "naive-ui";
 import { useWindowSize } from "@vueuse/core";

@@ -1,28 +1,34 @@
 <template>
   <fpk-form :view-mode="true">
     <template #addition>
-      <n-alert class="mb-2" :show-icon="false">
-        <div class="flex items-center">
+      <n-alert class="mb-2 sticky top-0 z-50" :show-icon="false">
+        <div class="flex items-center justify-between">
           <n-text class="text-lg w-full">Konfirmasi</n-text>
-          <div class="flex w-full gap-2">
-            <n-input type="textarea" autosize placeholder="catatan" v-model:value="keterangan" />
-            <n-button type="primary" secondary @click="handleClick('yes')">Setuju</n-button>
-            <n-button secondary type="warning" @click="handleClick('revisi')">
-              Revisi
-            </n-button>
-            <n-button secondary type="error" @click="handleClick('no')">Tolak</n-button>
+          <div class="flex w-full  justify-end gap-2">
+            <n-popover trigger="click">
+              <template #trigger>
+                <n-button type="success">Konfirmasi</n-button>
+              </template>
+              <template #header>
+                <n-text strong depth="1">
+                  Konfirmasi Order
+                </n-text>
+              </template>
+              <n-input type="textarea" autosize placeholder="isi catatan disini" v-model:value="keterangan" />
+              <template #footer>
+                <div class="flex gap-2">
+                  <n-button type="primary" secondary @click="handleClick('yes')">Setuju</n-button>
+                  <n-button secondary type="warning" @click="handleClick('revisi')">
+                    Revisi
+                  </n-button>
+                  <n-button secondary type="error" @click="handleClick('no')">Tolak</n-button>
+                </div>
+              </template>
+            </n-popover>
           </div>
         </div>
       </n-alert>
-      <!-- <div class="flex gap-2 mb-2">
-        <n-alert type="warning" title="kapos" class="w-full">salah no ktp</n-alert>
-        <n-alert type="warning" title="ho" class="w-full">
-          hello
-          <div class="bg-white p-2">asdasd</div>
-        </n-alert>
-      </div> -->
     </template>
-
   </fpk-form>
 </template>
 

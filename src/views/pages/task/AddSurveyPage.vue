@@ -213,17 +213,15 @@
         <div v-show="current === 3">
             <n-alert type="error" v-if="statusDataJaminan === 'error'">minimal memiliki 1 jaminan</n-alert>
             <n-card embedded :segmented="true"
-                :title="`Jumlah Jaminan : ${jaminanStore.listJaminan.length}, Total Nilai Jaminan : ${sumJaminan.toLocaleString('US')}`">
-                <template #header-extra>
-                    <div class=" flex w-60 gap-2">
-                        <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
-                        <n-button circle type="success" @click="addJaminan">
-                            <n-icon>
-                                <add-icon />
-                            </n-icon>
-                        </n-button>
-                    </div>
-                </template>
+                :title="`Jumlah Jaminan : ${jaminanStore.listJaminan.length}, Total Nilai : ${sumJaminan.toLocaleString('US')}`">
+              <div class=" flex w-60 gap-2">
+                <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
+                <n-button circle type="success" @click="addJaminan">
+                  <n-icon>
+                    <add-icon />
+                  </n-icon>
+                </n-button>
+              </div>
                 <n-card :segmented="true" class="my-2 bg-white rounded-xl border hover:shadow"
                     v-for="(coll) in orderJaminan" :key="coll" :title="coll.type">
                     <template #header-extra>
@@ -486,54 +484,10 @@ const jaminanStore = useJaminanStore();
 const userToken = localStorage.getItem("token");
 const formOrder = ref(null);
 const formPelanggan = ref(null);
-// const formJaminan = ref(null);
-const showModal = ref(false);
-// const typeModal = ref();
 
-// init jaminan
-// const billyet = {
-//   status_jaminan: null,
-//   no_bilyet: null,
-//   tgl_valuta: null,
-//   jangka_waktu: null,
-//   nominal: null,
-//   atas_nama: null,
-// };
-// const kendaraan = {
-//   status_jaminan: null,
-//   merk: null,
-//   tipe: null,
-//   tahun: null,
-//   warna: null,
-//   atas_nama: null,
-//   no_polisi: null,
-//   no_rangka: null,
-//   no_mesin: null,
-//   no_bpkb: null,
-//   nilai: null,
-// };
-// const sertifikat = {
-//   status_jaminan: null,
-//   no_sertifikat: null,
-//   status_kepemilikan: null,
-//   imb: null,
-//   luas_tanah: null,
-//   luas_bangunan: null,
-//   lokasi: null,
-//   provinsi: null,
-//   kab_kota: null,
-//   kec: null,
-//   desa: null,
-//   atas_nama: null,
-//   nilai: null,
-// };
-// const emas = {
-//   kode_emas: null,
-//   berat: null,
-//   unit: null,
-//   nominal: null,
-//   atas_nama: null,
-// };
+
+const showModal = ref(false);
+
 
 const anyJaminan = ref([]);
 const receivedData = ref(null);
