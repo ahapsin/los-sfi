@@ -100,7 +100,7 @@ const formattedDate = `${year}-${month}-${day}`;
 
 const formatDateRange = (e) => e.join('_');
 const downloadCsv = () => tableRef.value?.downloadCsv({
-  fileName: `arus_kas_${formatDateRange(rangeDate.value)}`,
+  fileName: `lkbh_${formatDateRange(rangeDate.value)}`,
   keepOriginalData: true
 });
 

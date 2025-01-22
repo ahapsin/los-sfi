@@ -4,12 +4,6 @@
 
       <n-card :title="`Laporan Keuangan`">
         <n-tabs type="card" animated @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
-          <!--          <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman</n-tab-pane>-->
-          <!--          <n-tab-pane name="pembayaran" tab="PEMBAYARAN">-->
-          <!--            Informasi Pembayaran-->
-          <!--          </n-tab-pane>-->
-          <!--          <n-tab-pane name="jaminan" tab="JAMINAN"> Informasi Jaminan</n-tab-pane>-->
-          <!--          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan</n-tab-pane>-->
 
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PIUTANG">
             <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman" :loading="loadInqPinjaman"/>

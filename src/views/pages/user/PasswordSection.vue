@@ -11,6 +11,7 @@
         <n-form-item path="old" label="Password Lama" required>
           <n-input
             type="password"
+            show-password-on="mousedown"
             v-model:value="dynamicForm.old"
             placeholder="password lama"
           />
@@ -19,6 +20,7 @@
           <n-input
             type="password"
             v-model:value="dynamicForm.new"
+            show-password-on="mousedown"
             placeholder="password baru"
           />
         </n-form-item>
@@ -26,6 +28,7 @@
           <n-input
             type="password"
             v-model:value="dynamicForm.conf"
+            show-password-on="mousedown"
             placeholder="konfirmasi password baru"
             @blur="handleConf"
           />
