@@ -38,7 +38,7 @@
     <div class="flex flex-col md:flex-row gap-2">
       <span v-show="false">{{
           isLasted ? pageData.diskon_tunggakan = totalDenda : pageData.diskon_tunggakan = 0
-        }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0}}</span>
+        }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0 }}</span>
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch"
                  clearable/>
@@ -130,7 +130,9 @@
                           :format="format" v-model:value="pageData.kembalian" readonly class="w-full"/>
         </n-form-item>
         <n-form-item class="w-full">
-          <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full" :disabled="totalPay === 0
+          <n-button type="primary" @click="handleProses" :loading="loadProses" class="w-full" :disabled="
+          pageData.bayar_dengan_diskon === 'ya' && totalPay === 0 && pageData.jumlah_uang === 0
+          ? false : totalPay === 0
                         ? true
                         : pageData.jumlah_uang <= 0
                             ? true
