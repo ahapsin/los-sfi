@@ -81,8 +81,11 @@
                     :loading="loadDataPayment" class="p-4" :pagination="pagination"/>
     </div>
   </n-card>
-  <n-modal class="w-fit" title="Upload Berkas Pencairan" v-model:show="showModal">
-    <n-card :bordered="false" aria-modal="true" title=" ">
+  <n-modal class="w-fit" title="Upload Berkas Pencairan" v-model:show="showModal" :on-after-leave="onAfterLeave">
+    <n-card title="Detail Pembayaran" :segmented="{
+      content: true,
+      footer: 'soft',
+    }">
       <template #header-extra>
         <div class="flex gap-2">
           <n-space>
@@ -90,29 +93,39 @@
                    :type="bodyModal.STATUS == 'PENDING' ? 'warning' : bodyModal.STATUS == 'PAID' ? 'success' : 'error'">
               {{ bodyModal.STATUS }}
             </n-tag>
-
-            <n-button v-if="bodyModal.STATUS != 'CANCEL'" secondary type="error"
-                      @click="handleCancelPayment">
-              batalkan
-            </n-button>
-            <n-button secondary @click="handlePrint"
-                      v-show="bodyModal.STATUS == 'PAID' && width < 650">
-              <n-icon>
-                <print-icon/>
-              </n-icon>
-              Cetak
-            </n-button>
-            <n-button secondary type="warning" @click="handlePrint"
-                      v-show="bodyModal.STATUS == 'PAID' && width > 650">
-              <n-icon>
-                <print-icon/>
-              </n-icon>
-              Cetak
-            </n-button>
           </n-space>
         </div>
       </template>
-      <div ref="printReceiptRef" class="flex flex-col max-h-[500px] overflow-y-auto">
+      <template #footer>
+        <n-space>
+          <n-button v-if="bodyModal.STATUS != 'CANCEL'" secondary type="error"
+                    @click="handleCancelPayment">
+            batalkan
+          </n-button>
+          <n-button secondary type="warning" @click="printNota(bodyModal.no_transaksi)"
+                    v-show="bodyModal.STATUS == 'PAID' && width > 650" v-if="bodyModal.print_ke < 2">
+            <n-icon>
+              <print-icon/>
+            </n-icon>
+            Sisa Cetak {{ printCount - bodyModal.print_ke }}
+          </n-button>
+          <n-button secondary type="info" @click="uploadState = !uploadState"
+                    v-show="bodyModal.STATUS == 'PAID'" v-if="!uploadState">
+            <n-icon>
+              <upload-icon/>
+            </n-icon>
+            Upload Nota
+          </n-button>
+          <n-button secondary type="info" @click="uploadState = !uploadState"
+                    v-show="bodyModal.STATUS == 'PAID' " v-else>
+            <n-icon>
+              <file-icon/>
+            </n-icon>
+            Tampilkan Nota
+          </n-button>
+        </n-space>
+      </template>
+      <div ref="printReceiptRef" class="flex flex-col max-h-[500px] overflow-y-auto" v-if="!uploadState">
         <div class="p-2">
           <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed">
             <div class="flex gap-2">
@@ -205,6 +218,9 @@
           </div>
         </div>
       </div>
+      <div v-else>
+        <file-upload title="Upload Nota" type="nota" :idapp="bodyModal.payment_id" endpoint="payment_attachment" :def_value="bodyModal.attachment"/>
+      </div>
       <div v-show="bodyModal.payment_method == 'transfer'">
         <n-divider>bukti transfer</n-divider>
         <n-image :src="bodyModal.attachment" class="max-w-36"/>
@@ -226,6 +242,8 @@ import router from "../../../router";
 import {
   SearchRound as searchIcon,
   PlusFilled as addIcon,
+  AttachFileFilled as fileIcon,
+  CloudUploadOutlined as uploadIcon,
   LocalPrintshopOutlined as PrintIcon,
   FileDownloadOutlined as DownloadFile,
 } from "@vicons/material";
@@ -238,7 +256,7 @@ import {computed, onMounted, reactive, ref, h} from "vue";
 import {useVueToPrint} from "vue-to-print";
 import {useMeStore} from "../../../stores/me.js";
 
-
+const uploadState = ref(false);
 const meData = useMeStore();
 const searchField = ref(false);
 const searchBox = ref();
@@ -250,11 +268,32 @@ const {handlePrint} = useVueToPrint({
   content: printReceiptRef,
   documentTitle: "Receipt",
 });
-
+const printNota = async (e) => {
+  let userToken = localStorage.getItem("token");
+  const bodyPostPrint = {
+    id: e,
+  }
+  const response = await useApi({
+    method: "POST",
+    data: bodyPostPrint,
+    api: "log_print",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("error api");
+  } else {
+    handlePrint();
+    showModal.value = false;
+    getDataPayment();
+  }
+}
+const onAfterLeave = ()=>{
+  getDataPayment();
+}
 function findStringInParentheses(input) {
-  // Use a regular expression to match content within parentheses
+
   const matches = input.match(/\(([^)]+)\)/);
-  // Return the first matched group or null if no match
+
   return matches ? matches[1] : null;
 }
 
@@ -442,16 +481,14 @@ const getDataPayment = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error("ERROR API");
   } else {
     loadingBar.finish();
     loadDataPayment.value = false;
     dataPayment.value = response.data;
   }
 };
-
+const printCount = ref(2);
 const dataStrukturKredit = ref([]);
 const getSkalaCredit = async (e) => {
   pageData.no_facility = e[0];
