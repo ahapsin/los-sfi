@@ -1,7 +1,7 @@
 <template>
   <div class="pt-4">
     <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`" class="bg-white" :segmented="true">
+      <n-card :title="`Tabel Order`" class="bg-white" :segmented="true">
         <template #header-extra>
           <n-space class="!gap-1">
             <div class="me-1">
@@ -33,8 +33,6 @@
         <n-space vertical :size="12" class="pt-4">
           <n-data-table :loading="loadData" size="small" :columns="columns" :data="showData"
                         :pagination="pagination" ellipsis :scroll-x="800"/>
-          sadasd
-          {{ dataTableCancel }}
         </n-space>
       </n-card>
     </n-space>

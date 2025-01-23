@@ -16,7 +16,7 @@
       </n-form-item>
       <n-form-item label="Parent" v-if="!param">
         <n-select v-model:value="dynamicForm.parent" filterable label-field="menu_name" value-field="id"
-          placeholder="parent menu" :options="dataMenu" />
+          placeholder="parent menu" :options="dataMenu" :loading="loadingMenu"/>
       </n-form-item>
     </n-form>
     <template #action>
@@ -34,7 +34,7 @@
 import { useMessage } from "naive-ui";
 import { ref, reactive, onMounted } from "vue";
 import { useWindowSize } from "@vueuse/core";
-const { width, height } = useWindowSize();
+const { width } = useWindowSize();
 import { useApi } from "../../../../helpers/axios";
 import router from "../../../../router";
 import { useRoute } from "vue-router";
@@ -49,12 +49,10 @@ const dynamicForm = reactive({
   action: "",
 });
 const loading = ref(false);
-const action = ref("POST");
-const url = ref();
 const formRef = ref(null);
 const errorAPI = ref(null);
 const message = useMessage();
-const PageData = ref([]);
+
 const baseRoute = useRoute();
 const param = baseRoute.params.idMenu;
 const userToken = localStorage.getItem("token");
@@ -106,7 +104,27 @@ const handleSave = async () => {
     router.replace({ name: "menu" });
   }
 };
+const loadingData=ref(false);
+const getMenu = async () => {
+  loadingData.value = true;
+
+  const response = await useApi({
+    method: "GET",
+    api: "menu",
+    data: dynamicForm,
+    token: userToken,
+  });
+
+  if (!response.ok) {
+    loadingData.value = false;
+    errorAPI.value = response.error.data.message;
+  } else {
+    loadingData.value = false;
+    dataMenu.value = response.data.response;
+  }
+};
 onMounted(() => {
   if (param) { response() }
+  getMenu();
 });
 </script>

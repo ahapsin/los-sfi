@@ -3,19 +3,23 @@
     <n-tabs @update:value="handleUpdateValue" class="card-tabs" default-value="jaminan" size="medium" animated
         pane-wrapper-style="margin: 0 -4px" type="card"
         pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
-        <template #prefix>
-            Approval
-        </template>
-        <n-tab-pane name="Transfer" tab="Transfer">
+
+        <n-tab-pane name="Approve Order" tab="Order">
+          <template #tab>
+            Order
+          </template>
+          <ApprovalHOPage />
+        </n-tab-pane>
+      <n-tab-pane name="Transfer" tab="Transfer">
             <PendingTransferPage />
         </n-tab-pane>
-        <n-tab-pane name="Diskon" tab="Diskon">
+        <n-tab-pane name="Diskon" tab="Permintaan Diskon">
             <n-data-table :columns="columns" :data="dataTable" />
         </n-tab-pane>
         <n-tab-pane name="Order" tab="Order">
             <template #tab>
                 <n-space>
-                    Order
+                    Batal Order
                     <n-badge :value="dataCancelOrder.length" />
                 </n-space>
             </template>
@@ -24,7 +28,7 @@
         <n-tab-pane name="Pembayaran" tab="Pembayaran">
             <template #tab>
                 <n-space>
-                    Pembayaran
+                    Batal Bayar
                     <n-badge :value="dataCancelPayment.length"  />
                 </n-space>
             </template>
@@ -42,6 +46,7 @@ import PendingTransferPage from './PendingTransferPage.vue';
 import CancelOrderPage from './CancelOrderPage.vue';
 import { useApi } from '../../../../helpers/axios';
 import CancelPaymentPage from './CancelPaymentPage.vue';
+import ApprovalHOPage from "../ApprovalHOPage.vue";
 
 const dataCancelOrder = ref([]);
 const dataCancelPayment = ref([]);

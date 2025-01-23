@@ -312,6 +312,11 @@ const routes = [
         component: () => import("../views/pages/laporan/LapPinjaman.vue"),
       },
       {
+        path: "lkbh",
+        name: "lkbh",
+        component: () => import("../views/pages/laporan/LapLkbh.vue"),
+      },
+      {
         path: "inq_jaminan",
         name: "inquery jaminan",
         component: () => import("../views/pages/laporan/LapJaminan.vue"),

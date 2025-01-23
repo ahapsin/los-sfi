@@ -32,16 +32,13 @@
   </template>
   <p class="hidden">pindah ke pelunasan</p>
 </n-button> -->
-        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
-          <template #icon>
-            <n-icon>
-              <full-icon/>
-            </n-icon>
-          </template>
-        </n-button>
+
       </n-space>
     </template>
     <div class="flex flex-col md:flex-row gap-2">
+      <span v-show="false">{{
+          isLasted ? pageData.diskon_tunggakan = totalDenda : pageData.diskon_tunggakan = 0
+        }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0}}</span>
       <n-form-item label="Nama Pelanggan" class="w-full">
         <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch"
                  clearable/>
@@ -69,21 +66,23 @@
                  v-show="isLasted">
           <div class="flex justify-between gap-4">
 
-            <div class="flex w-full justify-end items-center gap-2">
-              <!--              <n-checkbox-->
-              <!--                  checked-value="yes"-->
-              <!--                  unchecked-value="no"-->
-              <!--                  @update:checked="handleUpdateChecked"-->
-              <!--              >-->
-              <!--                Tangguhkan-->
-              <!--              </n-checkbox>-->
+            <div class="flex w-full justify-between items-center gap-2">
+
               <div class="flex items-center gap-2" v-if="pageData.penangguhan_denda==='no'">
-                <div>Diskon</div>
+                <n-checkbox
+                    v-model:checked="pageData.bayar_dengan_diskon"
+                    checked-value="ya"
+                    unchecked-value="tidak"
+                >
+                </n-checkbox>
+                <div>{{ pageData.bayar_dengan_diskon }}, diskon denda</div>
                 <div class="flex gap-2">
-                  <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :min="0"
-                                  :default-value="0" clearable icon size="" :parse="parse" :format="format"
-                                  :max="pageData.tunggakan_denda + dendaAngsuranBerjalan" @input="diskonFormat"
-                                  placeholder="Jumlah Diskon" v-model:value="pageData.diskon_tunggakan"/>
+
+                  <strong class="font-bold">{{ pageData.diskon_tunggakan.toLocaleString('US') }}</strong>
+                  <!--                  <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" :show-button="false" :min="0"-->
+                  <!--                                  :default-value="0" clearable icon size="" :parse="parse" :format="format"-->
+                  <!--                                  :max="pageData.tunggakan_denda + dendaAngsuranBerjalan" @input="diskonFormat"-->
+                  <!--                                  placeholder="Jumlah Diskon" v-model:value="pageData.diskon_tunggakan"/>-->
 
                 </div>
               </div>
@@ -155,7 +154,6 @@
 </template>
 <script setup>
 import {v4 as uuidv4} from "uuid";
-import {lyla} from "@lylajs/web";
 import {useApi} from "../../../helpers/axios";
 
 import router from "../../../router";
@@ -163,7 +161,6 @@ import _ from "lodash";
 import {
   CheckCircleRound as checkIcon,
   ChevronLeftRound as backIcon,
-  OpenInFullRound as fullIcon,
 } from "@vicons/material";
 import {
   useDialog,
@@ -189,16 +186,7 @@ const isLast = ref(false);
 const handleResBack = (data) => {
   dataBuktiTransfer.value = data;
 }
-const dendaAngsuranBerjalan = computed(
-    () => {
-      const totalPenalty = () =>
-          checkedRowCredit.value.reduce(
-              (total, installment) => total + installment.bayar_denda,
-              0
-          );
-      return totalPenalty();
-    }
-);
+
 
 const totalPay = computed(() => {
   const totalInstallment = () =>
@@ -212,8 +200,23 @@ const totalPay = computed(() => {
           0
       );
   const combinedTotal = () => totalInstallment() + totalPenalty();
-    return combinedTotal();
+  return combinedTotal();
 });
+
+const totalDenda = computed(() => {
+  const totalPenalty = () =>
+      checkedRowCredit.value.reduce(
+          (total, installment) => total + installment.denda,
+          0
+      );
+  const totalPayPenalty = () =>
+      checkedRowCredit.value.reduce(
+          (total, installment) => total + installment.bayar_denda,
+          0
+      );
+  return totalPenalty() - totalPayPenalty();
+});
+
 const uuid = uuidv4();
 const pageData = reactive({
   uid: uuid,
@@ -221,6 +224,7 @@ const pageData = reactive({
   jumlah_uang: 0,
   payment_method: "cash",
   pembayaran: "angsuran",
+  bayar_dengan_diskon: 'tidak',
   tunggakan_denda: 0,
   diskon_tunggakan: 0,
   pembulatan: 0,
@@ -270,7 +274,6 @@ const rowProps = (row) => {
     },
   };
 };
-const diskonFormat = computed(() => pageData.tunggakan_bunga);
 const dynamicSearch = reactive({
   nama: "",
   no_polisi: "",
@@ -431,30 +434,7 @@ const createColStruktur = () => {
             onUpdateValue(v) {
               dataStrukturKredit.value[index].bayar_denda = v;
             },
-          });
-        }
-      },
-    },
-    {
-      title: "Jumlah Bayar",
-      width: 150,
-      key: "payment",
-      render(row, index) {
-        if (row.flag == "PENDING") {
-          return h(NTag, {type: "warning"}, {default: "dalam proses"});
-        } else {
-          return h(NInputNumber, {
-            readonly: true,
-            disabled: _.find(checkedRowCredit.value, ["key", row.key])
-                ? false
-                : true,
-            format: format,
-            parse: parse,
-            showButton: false,
-            secondary: true,
-            placeholder: "pembayaran",
-            value: dataStrukturKredit.value[index].bayar_angsuran +
-                dataStrukturKredit.value[index].bayar_denda,
+
           });
         }
       },
@@ -496,11 +476,18 @@ const isLasted = computed(() => {
       ...dataStrukturKredit.value.map((o) => o.angsuran_ke)
   );
   if (checkedRowCredit.value.length != 0) {
-    return mxChecked === mxStruct ? true : false;
+
+    if (mxChecked === mxStruct) {
+      return true
+    } else {
+      return false
+    }
   } else {
+
     return false;
   }
 });
+
 const handleAngsuran = (action, e, row) => {
   checkedRowCredit.value = e;
   if (row.action == "uncheck") {
@@ -522,6 +509,7 @@ const handleProses = async () => {
     },
   });
   const postDynamic = async () => {
+    loadProses.value = true;
     const response = await useApi({
       method: "POST",
       api: "payment",
@@ -597,37 +585,7 @@ const getSkalaCredit = async (e) => {
   }
 };
 const message = useMessage();
-const handleImagePost = ({file, onError, onFinish, onProgress}) => {
-  let userToken = localStorage.getItem("token");
-  const form = new FormData();
-  form.append("uid", pageData.uid);
-  form.append("image", file.file);
-  const headers = {
-    Authorization: `Bearer ${userToken}`,
-  };
-  lyla
-      .post(`${import.meta.env.VITE_APP_API_BASE}payment_attachment`, {
-        headers,
-        body: form,
-        onUploadProgress: ({percent}) => {
-          onProgress({percent: Math.ceil(percent)});
-        },
-      })
-      .then(({json}) => {
-        dataBuktiTransfer.value = [];
-        dataBuktiTransfer.value.push(json);
-        message.success("image berhasil di upload");
-        onFinish();
-      })
-      .catch(() => {
-        message.error("upload image gagal !");
-        onError();
-      });
-};
-const handleExpand = () => {
-  const fullPage = router.resolve({name: "expand transaction"});
-  window.open(fullPage.href, "_blank");
-};
+
 
 const handleBack = () => {
   router.push({name: "pembayaran"});

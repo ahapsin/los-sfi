@@ -117,11 +117,11 @@
           <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed">
             <div class="flex gap-2">
               <img
-                class="h-10 md:h-10"
-                src="../../../assets/logo.png"
-                alt="logo_company"
-            />
-            <span class="text-2xl font-bold">KSPDJAYA</span>
+                  class="h-10 md:h-10"
+                  src="../../../assets/logo.png"
+                  alt="logo_company"
+              />
+              <span class="text-2xl font-bold">KSPDJAYA</span>
             </div>
             <div class="flex flex-col items-end">
               <small class="text-reg">No Transaksi </small>
@@ -139,12 +139,13 @@
                 Rp.{{ bodyModal.total_bayar.toLocaleString("US") }}
               </n-text>
               <n-text small italic>
-                {{findStringInParentheses(bodyModal.terbilang)}}
+                {{ findStringInParentheses(bodyModal.terbilang) }}
               </n-text>
             </div>
           </div>
 
-          <div :class="width > 540 ? 'min-w-[300px] pt-2 grid grid-cols-5 gap-4':'min-w-[300px] grid grid-cols-1 gap-4' ">
+          <div
+              :class="width > 540 ? 'min-w-[300px] pt-2 grid grid-cols-5 gap-4':'min-w-[300px] grid grid-cols-1 gap-4' ">
             <div class="flex flex-col">
               <small class="text-reg">Tanggal & Waktu</small>
               <n-text strong class="text-lg"> {{ bodyModal.tgl_transaksi }}</n-text>
@@ -179,14 +180,17 @@
               <th class="border">Jumlah</th>
             </tr>
             <tr v-for="angs in bodyModal.struktur" :key="angs.id">
-              <td align="right" class="border pe-2">{{angs.angsuran_ke}}</td>
-              <td align="right" class="border pe-2">{{parseInt(angs.bayar_angsuran).toLocaleString('US')}}</td>
-              <td align="right" class="border pe-2">{{parseInt(angs.bayar_denda).toLocaleString('US')}}</td>
-              <td align="right" class="border pe-2">{{parseInt(parseInt(angs.bayar_angsuran)+parseInt(angs.bayar_denda)).toLocaleString(('US'))}}</td>
+              <td align="right" class="border pe-2">{{ angs.angsuran_ke }}</td>
+              <td align="right" class="border pe-2">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
+              <td align="right" class="border pe-2">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
+              <td align="right" class="border pe-2">
+                {{ parseInt(parseInt(angs.bayar_angsuran) + parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
+              </td>
             </tr>
             <tr>
               <td><strong>Total</strong></td>
-              <td colspan="3" align="right" class="pe-2"><strong>{{bodyModal.total_bayar.toLocaleString("US")}}</strong></td>
+              <td colspan="3" align="right" class="pe-2">
+                <strong>{{ bodyModal.total_bayar.toLocaleString("US") }}</strong></td>
             </tr>
           </table>
         </div>
@@ -246,12 +250,14 @@ const {handlePrint} = useVueToPrint({
   content: printReceiptRef,
   documentTitle: "Receipt",
 });
+
 function findStringInParentheses(input) {
   // Use a regular expression to match content within parentheses
   const matches = input.match(/\(([^)]+)\)/);
   // Return the first matched group or null if no match
   return matches ? matches[1] : null;
 }
+
 const downloadCsv = () =>
     tableRef.value?.downloadCsv({fileName: "export-penerimaan-uang"});
 const totalPay = computed(() => {
@@ -409,6 +415,7 @@ const message = useMessage();
 
 const postCancelPayment = async () => {
   loadDataPayment.value = true;
+
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -417,9 +424,13 @@ const postCancelPayment = async () => {
     token: userToken,
   });
   if (!response.ok) {
+    showModal.value = true;
     message.error("error api");
+    getDataPayment();
   } else {
+    showModal.value = false;
     message.success("pengajuan batal berhasil");
+    getDataPayment();
   }
 };
 const getDataPayment = async () => {
