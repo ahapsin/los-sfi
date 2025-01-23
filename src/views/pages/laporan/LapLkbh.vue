@@ -1,19 +1,51 @@
 <template>
-  <n-card title="Laporan Keuangan Berbasis Harian">
-    <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
+  <n-card title="Laporan Keuangan Berbasis Harian (LKBH)" :segmented="{
+    content: true,
+    footer: 'soft',
+  }">
+    <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData"
                 @filter-form="handleRange"/>
   </n-card>
 </template>
 
 <script setup>
 import TabArusKas from "./TabArusKas.vue";
-import {h, ref, onMounted} from "vue";
+import {h, ref} from "vue";
 import {useApi} from "../../../helpers/axios.js";
 import {
   useMessage,
 } from "naive-ui";
 
+
+
 const dataArusKas = ref([]);
+
+const filterJenis = ref([
+  {
+    label: 'PENCAIRAN',
+    value: 'PENCAIRAN'
+  },
+  {
+    label: 'TUNGGAKAN_POKOK',
+    value: 'TUNGGAKAN_POKOK'
+  },
+  {
+    label: 'TUNGGAKAN_BUNGA',
+    value: 'TUNGGAKAN_BUNGA'
+  },
+  {
+    label: 'BAYAR_POKOK',
+    value: 'BAYAR_POKOK'
+  },
+  {
+    label: 'BAYAR_BUNGA',
+    value: 'BAYAR_BUNGA'
+  },
+  {
+    label: 'BAYAR_LAINNYA',
+    value: 'BAYAR_LAINNYA'
+  },
+]);
 const columns = [
   {
     title: "Tanggal",
@@ -22,36 +54,35 @@ const columns = [
   },
   {
     title: "Metode Bayar",
-    key: "metode",
+    key: "PAYMENT_METHOD",
     sorter: "default",
     filterOptions: [
       {
         label: 'CASH',
-        value: 'CASH-IN'
+        value: 'cash'
       },
       {
         label: 'TRANSFER',
-        value: 'CASH-OUT'
+        value: 'transfer'
       }
     ],
     filter(value, row) {
-      return !!~row.TYPE.indexOf(value);
+      return !!~row.PAYMENT_METHOD.indexOf(value);
     }
   },
   {
-    title: "Pelanggan",
-    key: "ENTRY_DATE",
+    title: "Pelanggan (Alias)",
+    key: "PELANGGAN",
     sorter: "default",
   },
   {
     title: "Jenis",
     key: "JENIS",
     sorter: "default",
-  },
-  {
-    title: "Keterangan",
-    key: "JENIS",
-    sorter: "default",
+    filterOptions: filterJenis.value,
+    filter(value, row) {
+      return !!~row.JENIS.indexOf(value);
+    }
   },
   {
     title: "Cabang",
@@ -95,7 +126,4 @@ const handleRange = (value) => {
   getArusKas(value);
 }
 
-onMounted(() => {
-  getArusKas();
-})
 </script>
