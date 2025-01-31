@@ -197,7 +197,7 @@
               <th class="border">Jumlah</th>
             </tr>
             <tr v-for="angs in bodyModal.struktur" :key="angs.id">
-              <td class="border pe-2">{{ angs.angsuran_ke }}</td>
+              <td class="border text-center">{{ angs.angsuran_ke }}</td>
               <td class="border pe-2">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
               <td  class="border pe-2">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
               <td align="right" class="border pe-2">
