@@ -93,28 +93,34 @@
                    :type="bodyModal.STATUS == 'PENDING' ? 'warning' : bodyModal.STATUS == 'PAID' ? 'success' : 'error'">
               {{ bodyModal.STATUS }}
             </n-tag>
+            <n-button circle secondary @click="showModal = false">X</n-button>
           </n-space>
         </div>
       </template>
       <template #footer>
         <n-space>
-          <n-button v-if="bodyModal.STATUS != 'CANCEL'" secondary type="error"
-                    @click="handleCancelPayment">
-            batalkan
-          </n-button>
-          <n-button secondary type="warning" @click="printNota(bodyModal.no_transaksi)"
-                    v-show="bodyModal.STATUS == 'PAID' && width > 650" v-if="bodyModal.print_ke < 2">
+          <n-button type="warning" @click="printNota(bodyModal.no_transaksi)"
+                    v-show="bodyModal.STATUS == 'PAID'" :disabled="bodyModal.print_ke >2">
+            <n-space>
             <n-icon>
               <print-icon/>
             </n-icon>
-            Sisa Cetak {{ printCount - bodyModal.print_ke }}
+            <p>Sisa Cetak {{ printCount - bodyModal.print_ke }}</p>
+            </n-space>
           </n-button>
-          <n-button secondary type="info" @click="uploadState = !uploadState"
+
+          <n-button type="info" @click="uploadState = !uploadState"
                     v-show="bodyModal.STATUS == 'PAID'" v-if="!uploadState">
+            <n-space>
             <n-icon>
               <upload-icon/>
             </n-icon>
-            Upload Nota
+            <p>Upload Nota</p>
+            </n-space>
+          </n-button>
+          <n-button v-if="bodyModal.STATUS != 'CANCEL'"  type="error"
+                    @click="handleCancelPayment">
+            batalkan pembayaran
           </n-button>
           <n-button secondary type="info" @click="uploadState = !uploadState"
                     v-show="bodyModal.STATUS == 'PAID' " v-else>
@@ -125,40 +131,38 @@
           </n-button>
         </n-space>
       </template>
-      <div ref="printReceiptRef" class="flex flex-col max-h-[500px] overflow-y-auto" v-if="!uploadState">
+      <div ref="printReceiptRef" class="flex flex-col" v-if="!uploadState">
         <div class="p-2">
           <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed">
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
               <img
                   class="h-10 md:h-10"
                   src="../../../assets/logo.png"
                   alt="logo_company"
               />
-              <span class="text-2xl font-bold">KSPDJAYA</span>
-            </div>
-            <div class="flex flex-col items-end">
-              <small class="text-reg">No Transaksi </small>
-              <n-text strong class="text-lg"> {{ bodyModal.no_transaksi }}</n-text>
+              <span class="text-xl font-bold">KSPDJAYA</span>
             </div>
           </div>
-          <div class="flex justify-between border-b border-dashed" :class="width > 540 ? 'flex-row':'flex-col'">
+          <div class="flex justify-between border-b border-dashed" :class="width >800 ? 'flex-row':'flex-col'">
+            <div class="flex flex-col">
+              <p strong class="text-sm"> {{ bodyModal.no_transaksi }}</p>
+            </div>
             <div class="flex flex-col py-4">
               <small class="text-reg">Terima dari : </small>
               <n-text strong class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
               <small class="text-lg">{{ bodyModal.no_fasilitas }}</small>
             </div>
-            <div class="flex flex-col py-4 items-end ">
-              <n-text strong class="text-2xl">
-                Rp.{{ bodyModal.total_bayar.toLocaleString("US") }}
-              </n-text>
-              <n-text small italic>
-                {{ findStringInParentheses(bodyModal.terbilang) }}
-              </n-text>
-            </div>
+<!--            <div class="flex flex-col py-4 items-end ">-->
+<!--              <n-text strong class="text-2xl">-->
+<!--                Rp.{{ bodyModal.total_bayar.toLocaleString("US") }}-->
+<!--              </n-text>-->
+<!--              <n-text small italic>-->
+<!--                {{ findStringInParentheses(bodyModal.terbilang) }}-->
+<!--              </n-text>-->
+<!--            </div>-->
           </div>
 
-          <div
-              :class="width > 540 ? 'min-w-[300px] pt-2 grid grid-cols-5 gap-4':'min-w-[300px] grid grid-cols-1 gap-4' ">
+          <div class="min-w-[300px] pt-2 grid grid-cols-1 lg:grid-cols-5 gap-4">
             <div class="flex flex-col">
               <small class="text-reg">Tanggal & Waktu</small>
               <n-text strong class="text-lg"> {{ bodyModal.tgl_transaksi }}</n-text>
@@ -187,15 +191,15 @@
         <div class="px-3">
           <table width="100%" border="1">
             <tr>
-              <th class="border w-10">ke</th>
+              <th class="border">Ke</th>
               <th class="border">Angsuran</th>
               <th class="border">Denda</th>
               <th class="border">Jumlah</th>
             </tr>
             <tr v-for="angs in bodyModal.struktur" :key="angs.id">
-              <td align="right" class="border pe-2">{{ angs.angsuran_ke }}</td>
-              <td align="right" class="border pe-2">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
-              <td align="right" class="border pe-2">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
+              <td class="border text-center">{{ angs.angsuran_ke }}</td>
+              <td class="border pe-2">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
+              <td  class="border pe-2">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
               <td align="right" class="border pe-2">
                 {{ parseInt(parseInt(angs.bayar_angsuran) + parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
               </td>
