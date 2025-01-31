@@ -47,14 +47,14 @@
     </template>
     <div class="flex flex-col md:flex-row gap-2" v-show="!props.embed">
       <n-form-item label="Nama Pelanggan" class="w-full">
-        <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @input="handleSearch" clearable />
+        <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch" clearable />
       </n-form-item>
       <n-form-item label="No Polisi" class="w-full">
-        <n-input v-model:value="dynamicSearch.no_polisi" type="text" placeholder="No Polisi" @input="handleSearch"
+        <n-input v-model:value="dynamicSearch.no_polisi" type="text" placeholder="No Polisi" @blur="handleSearch"
           clearable />
       </n-form-item>
       <n-form-item label="No Kontrak" class="w-full">
-        <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="No Kontrak" @input="handleSearch"
+        <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="No Kontrak" @blur="handleSearch"
           clearable />
       </n-form-item>
     </div>

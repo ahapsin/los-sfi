@@ -57,9 +57,38 @@
                     :row-key="(row) => row.loan_number" :columns="columns" :data="dataSearch" :max-height="140"
                     :on-update:checked-row-keys="handleFasilitas" :loading="loadSearch" class="pb-2"
                     v-show="dataFasilitas"/>
+
+      <div v-if="pendingPayment.length > 0">
+        <n-alert type="warning" class="mb-2">
+          sedang ada pending transaksi
+          <n-table :bordered="false" :single-line="false" size="small" class="mt-2">
+            <thead>
+            <tr>
+              <th>Angsuran Ke</th>
+              <th>No Kontrak</th>
+              <th>Jatuh tempo</th>
+              <th>Angsuran</th>
+              <th>Denda</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="list in pendingPayment" :key="list.id">
+              <td>{{ list.angsuran_ke }}</td>
+              <td>{{ list.loan_number }}</td>
+              <td>{{ list.tgl_angsuran }}</td>
+              <td>{{ list.installment.toLocaleString('US') }}</td>
+              <td>{{ list.denda.toLocaleString('US') }}</td>
+              <td>{{ list.flag }}</td>
+            </tr>
+            </tbody>
+          </n-table>
+        </n-alert>
+      </div>
       <n-data-table striped size="small" :scroll-x="1200" :row-key="(row) => row" :columns="columnStruktur"
                     :data="dataStrukturKredit" :max-height="300" :checked-row-keys="checkedRowCredit"
-                    :loading="loadStructure" v-show="dataAngsuran" :on-update:checked-row-keys="handleAngsuran"
+                    :loading="loadStructure" v-else-if="dataAngsuran"
+                    :on-update:checked-row-keys="handleAngsuran"
                     class="py-2"/>
       <n-space vertical>
         <n-alert :type="pageData.penangguhan_denda === 'no' ? 'warning':'error'" :show-icon="false" class="mb-2"
@@ -90,7 +119,9 @@
           </div>
         </n-alert>
       </n-space>
-      <div class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4" v-show="dataPayment">
+      <div class="md:flex gap-2 bg-pr/10 rounded-xl items-center pt-4 px-4"
+           v-if="pendingPayment.length == 0 && dataPayment">
+
         <n-form-item path="nestedValue.path2" label="Jenis Pembayaran" class="w-full">
           <div class="flex gap-2">
             <n-select filterable :options="optTipePay" placeholder="Jenis Pembayaran"
@@ -467,6 +498,7 @@ const selectedFasilitas = ref();
 const isRtl = true;
 const handleFasilitas = (e) => {
   // isLasted(e);
+  pendingPayment.value = [];
   isLast.value = true;
   selectedFasilitas.value = e;
   prosesButton.value = true;
@@ -536,8 +568,10 @@ const dataSearch = ref([]);
 const loadSearch = ref(false);
 const dataFasilitas = ref(false);
 const handleSearch = async () => {
+  pendingPayment.value = [];
   isLasted.value = false;
   dataAngsuran.value = false;
+  dataPayment.value = false;
   let userToken = localStorage.getItem("token");
   loadSearch.value = true;
   const response = await useApi({
@@ -556,7 +590,9 @@ const handleSearch = async () => {
 };
 const dataStrukturKredit = ref([]);
 const dataPayment = ref(false);
+const pendingPayment = ref([]);
 const getSkalaCredit = async (e) => {
+  pendingPayment.value = [];
   pageData.no_facility = e;
   loadStructure.value = true;
   const dynamicBody = {
@@ -575,6 +611,8 @@ const getSkalaCredit = async (e) => {
     message.error("ERROR API");
   } else {
     dataPayment.value = true;
+    const cekPending = _.find(response.data, {'flag': 'PENDING'});
+    cekPending ? pendingPayment.value.push(cekPending) : null;
     checkedRowCredit.value = [];
     dataStrukturKredit.value = response.data;
     dataStrukturKredit.value.map(e => {
