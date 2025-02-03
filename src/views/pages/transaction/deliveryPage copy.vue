@@ -212,9 +212,7 @@ const getDataCustomer = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     dataCustomer.value = response.data;
   }
@@ -242,9 +240,7 @@ const getCreditCustomer = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     creditCustomer.value = response.data;
   }

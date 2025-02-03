@@ -454,9 +454,7 @@ const getData = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
+    message.error('ERROR API');
   } else {
     loadData.value = false;
     dataTable.value = response.data;
@@ -471,9 +469,7 @@ const handlePositiveClick = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.replace("/");
+    message.error('ERROR API');
   } else {
     message.success("berhasil update");
     gertData();

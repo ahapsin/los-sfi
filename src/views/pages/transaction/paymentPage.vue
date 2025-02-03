@@ -100,7 +100,7 @@
       <template #footer>
         <n-space>
           <n-button type="warning" @click="printNota(bodyModal.no_transaksi)"
-                    v-show="bodyModal.STATUS == 'PAID'" :disabled="bodyModal.print_ke >2">
+                    v-show="bodyModal.STATUS == 'PAID'" :disabled="bodyModal.print_ke >1500">
             <n-space>
             <n-icon>
               <print-icon/>
@@ -131,9 +131,9 @@
           </n-button>
         </n-space>
       </template>
-      <div ref="printReceiptRef" class="flex flex-col" v-if="!uploadState">
+      <div ref="printReceiptRef" class="flex flex-col" :class="width > 850 ? 'p-4':'p-0'" v-if="!uploadState">
         <div class="p-2">
-          <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed">
+          <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
             <div class="flex gap-2 items-center">
               <img
                   class="h-10 md:h-10"
@@ -142,27 +142,40 @@
               />
               <span class="text-xl font-bold">KSPDJAYA</span>
             </div>
+            <div class="text-lg font-bold hidden md:flex">KWITANSI PEMBAYARAN</div>
           </div>
-          <div class="flex justify-between border-b border-dashed" :class="width >800 ? 'flex-row':'flex-col'">
-            <div class="flex flex-col">
-              <p strong class="text-sm"> {{ bodyModal.no_transaksi }}</p>
+          <div class="flex justify-between border-b border-dashed border-black" :class="width > 850 ? 'flex-row':'flex-col'">
+            <div class="flex flex-col py-4">
+              <small class="text-reg">No Transaksi : </small>
+              <n-text strong class="text-lg font-bold"> {{ bodyModal.no_transaksi }}</n-text>
             </div>
             <div class="flex flex-col py-4">
               <small class="text-reg">Terima dari : </small>
               <n-text strong class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
               <small class="text-lg">{{ bodyModal.no_fasilitas }}</small>
             </div>
-<!--            <div class="flex flex-col py-4 items-end ">-->
-<!--              <n-text strong class="text-2xl">-->
-<!--                Rp.{{ bodyModal.total_bayar.toLocaleString("US") }}-->
-<!--              </n-text>-->
-<!--              <n-text small italic>-->
-<!--                {{ findStringInParentheses(bodyModal.terbilang) }}-->
-<!--              </n-text>-->
-<!--            </div>-->
           </div>
-
-          <div class="min-w-[300px] pt-2 grid grid-cols-1 lg:grid-cols-5 gap-4">
+<!--          <table cellpadding="4" width="100%">-->
+<!--            <tr>-->
+<!--              <td><small>Tanggal & Waktu</small></td>-->
+<!--              <td><small>Angsuran</small></td>-->
+<!--              <td><small>Jumlah Uang</small></td>-->
+<!--              <td><small>Kembalian</small></td>-->
+<!--              <td><small>Metode Pembayaran</small></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td><n-text strong class="text-lg"> {{ bodyModal.tgl_transaksi }}</n-text></td>-->
+<!--              <td><n-text strong class="text-lg"> {{-->
+<!--                  bodyModal.bayar_angsuran.toLocaleString('US') ? bodyModal.bayar_angsuran.toLocaleString('US') : 'n/a'-->
+<!--                }}-->
+<!--              </n-text></td>-->
+<!--              <td><n-text strong class="text-lg"> {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text></td>-->
+<!--              <td><n-text strong class="text-lg"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text></td>-->
+<!--              <td><n-text strong class="text-lg"> {{ bodyModal.payment_method }}</n-text></td>-->
+<!--            </tr>-->
+<!--            <tr><small>Angsuran</small></tr>-->
+<!--          </table>-->
+          <div class="grid border-b border-dashed border-black pb-2" :class="width > 850 ? 'grid-cols-5 gap-4':'grid-cols-1 '">
             <div class="flex flex-col">
               <small class="text-reg">Tanggal & Waktu</small>
               <n-text strong class="text-lg"> {{ bodyModal.tgl_transaksi }}</n-text>
@@ -180,7 +193,7 @@
             </div>
             <div class="flex flex-col">
               <small class="text-reg">Kembalian</small>
-              <n-text strong class="text-lg"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text>
+              <td><n-text strong class="text-lg"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text></td>
             </div>
             <div class="flex flex-col">
               <small class="text-reg">Metode Pembayaran</small>
@@ -189,18 +202,18 @@
           </div>
         </div>
         <div class="px-3">
-          <table width="100%" border="1">
+          <table width="100%"  class="border border-black">
             <tr>
-              <th class="border">Ke</th>
-              <th class="border">Angsuran</th>
-              <th class="border">Denda</th>
-              <th class="border">Jumlah</th>
+              <th class="border border-black">Ke</th>
+              <th class="border border-black">Angsuran</th>
+              <th class="border border-black">Denda</th>
+              <th class="border border-black">Jumlah</th>
             </tr>
             <tr v-for="angs in bodyModal.struktur" :key="angs.id">
-              <td class="border text-center">{{ angs.angsuran_ke }}</td>
-              <td class="border pe-2">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
-              <td  class="border pe-2">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
-              <td align="right" class="border pe-2">
+              <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
+              <td class="border pe-2 border-black">{{ parseInt(angs.bayar_angsuran).toLocaleString('US') }}</td>
+              <td  class="border pe-2 border-black">{{ parseInt(angs.bayar_denda).toLocaleString('US') }}</td>
+              <td align="right" class="border pe-2 border-black">
                 {{ parseInt(parseInt(angs.bayar_angsuran) + parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
               </td>
             </tr>
@@ -211,12 +224,12 @@
             </tr>
           </table>
         </div>
-        <div class="flex flex-col border-b border-dashed pb-4 ms-3">
+        <div class="flex flex-col border-b border-dashed border-black pb-4 ms-3">
           <div class="flex gap-4">
-            <div class="border-b pt-20 px-4">
+            <div class="border-b border-black pt-20 px-4">
               <n-text strong class="text-md font-bold"> {{ meData.me.nama }}</n-text>
             </div>
-            <div class="border-b pt-20 px-4">
+            <div class="border-b border-black pt-20 px-4">
               <n-text strong class="text-md font-bold"> {{ bodyModal.nama }}</n-text>
             </div>
           </div>
@@ -510,9 +523,7 @@ const getSkalaCredit = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;

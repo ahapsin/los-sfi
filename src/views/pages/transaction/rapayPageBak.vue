@@ -485,9 +485,7 @@ const handleProses = async () => {
       token: userToken,
     });
     if (!response.ok) {
-      message.error("sesi berakhir");
-      localStorage.removeItem("token");
-      router.push("/");
+      message.error('ERROR API');
     } else {
       loadProses.value = false;
       paymentData.value = response.data;
@@ -511,9 +509,7 @@ const handleSearch = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     displayFasilitas.value = true;
     loadSearch.value = false;
@@ -651,8 +647,7 @@ const getDataPelunasan = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     spinnerShow.value = false;
     dataPelunasan.value = response.data;

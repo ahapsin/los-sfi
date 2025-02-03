@@ -2,7 +2,9 @@
   <div>
     <n-space vertical :size="12" class="pt-4">
       <n-space>
-        <n-button @click="downloadCsv" type="success">download</n-button>
+        <json-excel :data="showData"  name="Detail Beban" :fields="json_fields" :stringifyLongNum="true">
+          <n-button type="success">Download</n-button>
+        </json-excel>
       </n-space>
       <n-data-table ref="tableRef" :max-height="300"
                     virtual-scroll
@@ -19,6 +21,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useSearch } from "../../../helpers/searchObject.js";
+import JsonExcel from "vue-json-excel3";
 
 const props = defineProps({
   loading: Boolean,

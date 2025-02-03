@@ -106,9 +106,7 @@ const GetMe = async () => {
         token: userToken,
     });
     if (!response.ok) {
-        localStorage.removeItem("token");
-        message.warning("sesi anda berakhir");
-        router.push("/");
+      message.error('ERROR API');
     } else {
         dataUser.value = response.data.response;
         me.storeMe(response.data.response);

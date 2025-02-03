@@ -4,12 +4,6 @@
     footer: 'soft',
   }">
     <template #header>Pelunasan dipercepat
-      <!-- <n-icon v-if="width <=620">
-        <phone-icon />
-      </n-icon>
-      <n-icon v-else>
-        <desktop-icon />
-      </n-icon> -->
     </template>
     <template #header-extra>
       <n-space>
@@ -21,21 +15,6 @@
           </template>
           <span class="hidden md:flex">tambah</span>
         </n-button>
-        <!-- <n-button
-          round
-          v-show="!searchField"
-          strong
-          secondary
-          type="warning"
-          @click="handlePayFull"
-        >
-          <template #icon>
-            <n-icon>
-              <full-pay />
-            </n-icon>
-          </template>
-          <span class="hidden md:flex">pindah ke pelunasan</span>
-        </n-button> -->
         <n-popover trigger="click" placement="bottom-end">
           <template #trigger>
             <n-button circle>
@@ -57,20 +36,6 @@
             </n-icon>
           </template>
         </n-button>
-        <!-- <n-button type="error" secondary circle @click="handleBug">
-          <template #icon>
-            <n-icon>
-              <bug-icon />
-            </n-icon>
-          </template>
-        </n-button>
-        <n-button v-show="!searchField" strong secondary circle @click="handleExpand">
-          <template #icon>
-            <n-icon>
-              <full-icon />
-            </n-icon>
-          </template>
-        </n-button> -->
       </n-space>
     </template>
     <div>
@@ -131,26 +96,6 @@
             <label class="w-36">Metode Pembayaran</label><span>
               <n-text strong> {{ bodyModal.payment_method }}</n-text></span>
           </div>
-          <!-- <div class="flex">
-            <label class="w-36">Untuk Pembayaran</label>
-            <n-space>
-              <n-tag
-                size="small"
-                type="success"
-                v-for="pembayaran in bodyModal.pembayaran"
-                :bordered="false"
-                v-bind:key="pembayaran.id"
-                >{{ pembayaran.title }}
-                {{ parseInt(pembayaran.bayar_angsuran).toLocaleString("US") }}
-                <span v-show="pembayaran.bayar_denda > 0"
-                  >,denda
-                  {{
-                    parseInt(pembayaran.bayar_denda).toLocaleString("US")
-                  }}</span
-                >
-              </n-tag>
-            </n-space>
-          </div> -->
         </div>
         <div class="flex gap-2">
           <n-space>
@@ -354,9 +299,7 @@ const getDataPayment =  async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     loadingBar.finish();
     loadDataPayment.value = false;
@@ -668,9 +611,7 @@ const getSkalaCredit = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error("ERROR API");
   } else {
     dataStrukturKredit.value = response.data;
     dataAngsuran.value = true;

@@ -343,9 +343,7 @@ const getDataPayment = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     loadingBar.finish();
     loadDataPayment.value = false;

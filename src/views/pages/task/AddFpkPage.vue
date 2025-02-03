@@ -1436,9 +1436,7 @@ const refAdmin = async (body) => {
         token: userToken,
     });
     if (!response.ok) {
-        message.error("sesi berakhir");
-        localStorage.removeItem("token");
-        router.push("/");
+      message.error('ERROR API');
     } else {
         loading.value = false;
         skemaAngsuran.value = response.data;
@@ -1489,9 +1487,7 @@ const handleChange = async () => {
         token: userToken,
     });
     if (!response.ok) {
-        message.error("sesi berakhir");
-        localStorage.removeItem("token");
-        router.push("/");
+      message.error('ERROR API');
     } else {
         loading.value = false;
         Object.assign(calcCredit, response.data);

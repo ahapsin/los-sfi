@@ -579,9 +579,7 @@
       token: userToken,
     });
     if (!response.ok) {
-      message.error("sesi berakhir");
-      localStorage.removeItem("token");
-      router.push("/");
+      message.error('ERROR API');
     } else {
       loading.value = false;
       skemaAngsuran.value = response.data;
