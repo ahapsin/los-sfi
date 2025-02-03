@@ -399,10 +399,9 @@ const rowProps = (row) => {
       // if (row.status === "LUNAS") {
       //   message.info("Fasilitas Sudah Lunas")
       // } else {
-        console.log(row.loan_number);
         selectedFasilitas.value = row.loan_number;
         displayDetail.value = true;
-        pelunasan.LOAN_NUMBER = row[0];
+        pelunasan.LOAN_NUMBER = row.loan_number;
         pelunasan.UANG_PELANGGAN = 0;
         pelunasan.BAYAR_POKOK = 0;
         pelunasan.BAYAR_BUNGA = 0;
@@ -441,7 +440,7 @@ const displayDetail = ref(false);
 const displayPayment = ref(false);
 const handleFasilitas = (e) => {
   displayDetail.value = true;
-  pelunasan.LOAN_NUMBER = e[0];
+  pelunasan.LOAN_NUMBER = e;
   pelunasan.UANG_PELANGGAN = 0;
   pelunasan.BAYAR_POKOK = 0;
   pelunasan.BAYAR_BUNGA = 0;
@@ -479,9 +478,7 @@ const handleProses = async () => {
       token: userToken,
     });
     if (!response.ok) {
-      message.error("sesi berakhir");
-      localStorage.removeItem("token");
-      router.push("/");
+      message.error("ERROR API");
     } else {
       loadProses.value = false;
       paymentData.value = response.data;
@@ -505,9 +502,7 @@ const handleSearch = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error("ERROR API");
   } else {
     displayFasilitas.value = true;
     loadSearch.value = false;
@@ -526,6 +521,7 @@ const optTipePay = [
 ];
 const dataPelunasan = ref([]);
 const pelunasan = reactive({
+  LOAN_NUMBER:null,
   METODE_PEMBAYARAN: "cash",
   SISA_POKOK: 0,
   BUNGA_BERJALAN: 0,
@@ -645,8 +641,7 @@ const getDataPelunasan = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     spinnerShow.value = false;
     dataPelunasan.value = response.data;

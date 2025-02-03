@@ -307,14 +307,12 @@ const getDataTransaction = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     message.info("memuat transaksi jaminan");
 
     dataTransaction.value = response.data;
-  }
+}
 };
 const loadingBar = useLoadingBar();
 const getDataTransactionApproval = async () => {

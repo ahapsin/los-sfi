@@ -163,9 +163,7 @@ const getData = async () => {
         token: userToken
     });
     if (!response.ok) {
-        message.error("sesi berakhir");
-        localStorage.removeItem("token");
-        router.push('/');
+      message.error('ERROR API');
     } else {
         dataTable.value = response.data.response;
     }

@@ -1,15 +1,8 @@
 <template>
   <div>
     <n-space vertical>
-      <n-card :title="`Tabel ${$route.name}`">
-        <n-tabs type="segment" animated>
-          <n-tab-pane name="pinjaman" tab="PINJAMAN"> Informasi Pinjaman </n-tab-pane>
-          <n-tab-pane name="pembayaran" tab="PEMBAYARAN">
-            Informasi Pembayaran
-          </n-tab-pane>
-          <n-tab-pane name="jaminan" tab="JAMINAN"> Informasi Jaminan </n-tab-pane>
-          <n-tab-pane name="tunggakan" tab="TUNGGAKAN"> Informasi Tunggakan </n-tab-pane>
-        </n-tabs>
+      <n-card :title="`Laporan data Jaminan`">
+
         <template #header-extra>
           <n-space class="!gap-1">
             <div class="me-1 flex gap-2">
@@ -38,12 +31,13 @@
               </n-popover>
             </div>
             <div>
-              <n-button circle type="success" secondary>
+              <n-button type="success" secondary>
                 <template #icon>
                   <n-icon>
                     <download-icon />
                   </n-icon>
                 </template>
+                Download
               </n-button>
             </div>
             <div class="md:hidden">
@@ -150,51 +144,16 @@ const columns = [
     },
   },
 ];
-const handleConfirm = (row, index) => {
-  dialog.warning({
-    title: "Confirm",
-    content: "Apakah anda yakin ingin menghapus data ?",
-    positiveText: "Ya",
-    negativeText: "Batal",
-    onPositiveClick: async () => {
-      let userToken = localStorage.getItem("token");
-      const response = await useApi({
-        method: "DELETE",
-        api: `cabang/${row.id}`,
-        token: userToken,
-      });
-      if (!response.ok) {
-        message.error("api transaction error");
-      } else {
-        dataTable.value.splice(index, 1);
-        message.success("Data berhasil dihapus");
-      }
-    },
-    onNegativeClick: () => {
-      message.error("Batal hapus data !");
-    },
-  });
-};
-const handleDetail = (evt) => {
-  router.push(`/master/branch-action/${evt.id}/detail`);
-};
-const handleUpdate = (evt) => {
-  router.push(`/master/branch-action/${evt.id}`);
-};
-const handleAdd = () => {
-  router.push("/master/branch-action");
-};
+
 const getData = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
-    api: "customer",
+    api: "collateral",
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     dataTable.value = response.data;
   }

@@ -2,9 +2,8 @@
   <div>
     <n-space vertical>
 
-      <n-card :title="`Laporan Keuangan`">
+      <n-card :title="`Laporan`">
         <n-tabs type="card" animated @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
-
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PIUTANG">
             <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman" :loading="loadInqPinjaman"/>
           </n-tab-pane>
@@ -224,12 +223,12 @@
           </n-tab-pane>
           <n-tab-pane name="Jaminan">
             <n-spin :show="spinJaminan">
-              <n-data-table :data="dataDetailJaminan" :columns="colJaminan" sortable/>
+              <n-data-table :data="dataDetailJaminan" :columns="convertObjectToArray(dataDetailJaminan)" sortable/>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Angsuran">
             <n-spin :show="spinAngsuran">
-              <n-data-table :data="dataDetailAngsuran" :columns="columnsAngsuran"></n-data-table>
+              <n-data-table :data="dataDetailAngsuran" :columns="convertObjectToArray(dataDetailAngsuran)" ></n-data-table>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Pembayaran">
@@ -736,9 +735,8 @@ const getDetailAngsuran = async (e) => {
   spinAngsuran.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
-    method: "POST",
-    data: {loan_number: e},
-    api: `struktur_kredit`,
+    method: "GET",
+    api: `strukturCredit/${e}`,
     token: userToken,
   });
   if (!response.ok) {
@@ -850,9 +848,7 @@ const getData = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("sesi berakhir");
-    localStorage.removeItem("token");
-    router.push("/");
+    message.error('ERROR API');
   } else {
     dataTable.value = response.data;
   }
