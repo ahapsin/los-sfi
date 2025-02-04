@@ -185,6 +185,7 @@ const getData = async () => {
     });
     if (!response.ok) {
       message.error('ERROR API');
+      router.push("/");
     } else {
         loadingBar.finish();
         dataTable.value = response.data.response;
