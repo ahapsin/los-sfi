@@ -5,7 +5,8 @@
       <n-card :title="`Laporan`">
         <n-tabs type="card" animated @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PIUTANG">
-            <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman" :loading="loadInqPinjaman"/>
+            <TabInqPinjaman :columns="columnsPinjaman" :data="dataInqPinjaman" :loading="loadInqPinjaman"
+                            @cari="handleCariInqPinjaman" :available="inqView"/>
           </n-tab-pane>
           <n-tab-pane name="arus_kas" tab="LKBH">
             <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData" :page-size="10"
@@ -228,16 +229,17 @@
           </n-tab-pane>
           <n-tab-pane name="Angsuran">
             <n-spin :show="spinAngsuran">
-              <n-data-table :data="dataDetailAngsuran" :columns="convertObjectToArray(dataDetailAngsuran)" ></n-data-table>
+              <n-data-table :data="dataDetailAngsuran"
+                            :columns="convertObjectToArray(dataDetailAngsuran)"></n-data-table>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Pembayaran">
             <n-spin :show="spinPembayaran">
-              <n-data-table :data="dataDetailPembayaran" :columns="columnsPembayran"></n-data-table>
+              <n-data-table :data="dataDetailPembayaran" :columns="convertObjectToArray(dataDetailPembayaran)"></n-data-table>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Tunggakan">
-            <n-data-table :data="dataDetailTunggakan" :columns="columnsTunggakan"></n-data-table>
+            <n-data-table :data="dataDetailTunggakan" :columns="convertObjectToArray(dataDetailTunggakan)"></n-data-table>
           </n-tab-pane>
         </n-tabs>
       </n-card>
@@ -807,13 +809,18 @@ const getListBan = async () => {
 
 const dataInqPinjaman = ref();
 const loadInqPinjaman = ref(false);
-
+const inqView = ref(false);
+const handleCariInqPinjaman = (e) => {
+  getInqPinjaman(e);
+  inqView.value = true;
+}
 const getInqPinjaman = async (e) => {
   loadInqPinjaman.value = true;
   messageReactive = message.loading('memuat inquery pinjaman');
   let userToken = localStorage.getItem("token");
   const response = await useApi({
-    method: "GET",
+    method: "POST",
+    data: e,
     api: "inquiryList",
     token: userToken,
   });
