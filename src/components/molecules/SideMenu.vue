@@ -14,6 +14,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import DisclosMenu from "../molecules/DisclosMenu.vue";
 import DisclosMenuSusp from "../molecules/DisclosMenuSusp.vue";
+import router from '../../../../router';
 
 const suspense = ref(false);
 const listMenu = reactive(
@@ -43,7 +44,8 @@ const getMenus = async () => {
                 listMenu.response = getListMenu.data.response;
                 suspense.value = false;
         } catch (error) {
-                console.log(error)
+                console.log(error);
+                router.push("/");
                 suspense.value = true;
         }
 
