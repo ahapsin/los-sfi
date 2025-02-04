@@ -14,7 +14,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import DisclosMenu from "../molecules/DisclosMenu.vue";
 import DisclosMenuSusp from "../molecules/DisclosMenuSusp.vue";
-import router from '../../../../router';
+import router from "../../router/index.js"
 
 const suspense = ref(false);
 const listMenu = reactive(
