@@ -1,7 +1,7 @@
 {
   "name": "los-app",
   "private": true,
-  "version": "0.0.23 (rep)",
+  "version": "0.0.231 (inqp)",
   "type": "module",
   "scripts": {
     "dev": "vite",

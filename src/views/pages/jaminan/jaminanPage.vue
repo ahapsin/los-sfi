@@ -3,6 +3,11 @@
           type="card" pane-wrapper-style="margin: 0 -4px"
           pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
     <n-tab-pane name="jaminan" tab="Jaminan">
+      <template #tab>
+        <div>
+          Jaminan
+        </div>
+      </template>
       <div class="flex w-full mb-2 justify-end">
         <n-popover trigger="click" placement="bottom-end">
           <template #trigger>
