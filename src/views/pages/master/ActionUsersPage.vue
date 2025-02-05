@@ -26,9 +26,6 @@
       <n-form-item label="Username" path="kode">
         <n-input placeholder="Username" v-model:value="dynamicForm.username"/>
       </n-form-item>
-      <n-form-item label="Password" path="password">
-        <n-input placeholder="Password" v-model:value="dynamicForm.password"/>
-      </n-form-item>
       <n-form-item label="No KTP" path="no_ktp">
         <n-input-number
             placeholder="no KTP"
@@ -43,7 +40,6 @@
       <n-form-item label="Cabang" path="cabang">
         <n-select
             :loading="loadingBranch"
-            @click="getBranch"
             filterable
             placeholder="Pilih Cabang"
             label-field="nama"
@@ -56,7 +52,6 @@
         <n-select
             filterable
             :loading="loadingPosition"
-            @click="getPosition"
             label-field="name"
             value-field="name"
             placeholder="Pilih Jabatan"
@@ -234,5 +229,7 @@ onMounted(() => {
   if (param) {
     response();
   }
+  getBranch();
+  getPosition();
 });
 </script>
