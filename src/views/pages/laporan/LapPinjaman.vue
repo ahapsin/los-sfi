@@ -1,7 +1,6 @@
 <template>
   <div>
     <n-space vertical>
-
       <n-card :title="`Laporan`">
         <n-tabs type="card" animated @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
           <n-tab-pane name="inq_pinjaman" tab="INQUERY PIUTANG">
@@ -26,13 +25,124 @@
       </n-card>
     </n-space>
     <n-modal v-model:show="modalDetail">
-      <n-card content-style="padding: 0;" class="w-11/12 min-h-[600px] ">
+      <n-card content-style="padding: 0;" class="w-11/12 ">
         <n-tabs
             type="line"
             :tabs-padding="20"
             pane-style="padding: 20px;"
             @before-leave="handleBeforeLeaveModal"
         >
+          <n-tab-pane name="Kartu Piutang">
+            <n-spin v-if="spinAngsuran"/>
+            <n-card v-else>
+              <div ref="printKartuRef" class="p-4">
+                <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
+                  <div class="flex gap-2 items-center">
+                    <img
+                        class="h-10 md:h-10"
+                        src="../../../assets/logo.png"
+                        alt="logo_company"
+                    />
+                    <div class="flex-col">
+                      <div class="text-xl font-bold">KSPDJAYA</div>
+                      <div class="small">POS {{ me.me.cabang_nama }}</div>
+                    </div>
+                  </div>
+                  <div class="text-lg font-bold hidden md:flex">KARTU PIUTANG</div>
+                </div>
+                <div class="grid grid-cols-2 font-mono border-b border-dashed border-black">
+                  <table>
+                    <tr>
+                      <td>NO KONTRAK</td>
+                      <td>:</td>
+                      <td>{{ dataHeaderAngsuran.no_kontrak }}</td>
+                    </tr>
+                    <tr>
+                      <td>TGL KONTRAK</td>
+                      <td>:</td>
+                      <td>{{ dataHeaderAngsuran.tgl_kontrak }}</td>
+                    </tr>
+                    <tr>
+                      <td>PELANGGAN</td>
+                      <td>:</td>
+                      <td>
+                        {{ dataHeaderAngsuran.nama }}/
+                        {{ dataHeaderAngsuran.no_pel }}
+                      </td>
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <td>STATUS</td>
+                      <td>:</td>
+                      <td>{{ dataHeaderAngsuran.status }}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="font-mono border-b border-dashed border-black">
+                  <table class="w-full">
+                    <tr class="border-b border-dashed border-black">
+                      <th class="p-2" align="right" v-for="head in convertObjectToArray(dataDetailAngsuran)"
+                          :key="head.id">{{
+                          head.title
+                        }}
+                      </th>
+                    </tr>
+                    <tr v-for="list in convertToValuesArray(dataDetailAngsuran)" :key="list.id">
+                      <td v-for="item in list" :key="item.id" align="right">{{ item }}</td>
+                    </tr>
+                    <!--                    <tr class="border-t border-dashed border-black">-->
+                    <!--                      <td colspan="3">JUMLAH</td>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[3].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[4].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[5].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[6].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[7].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[8].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[9].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                      <th align="right">-->
+                    <!--                        {{-->
+                    <!--                          convertToValuesArray(dataDetailAngsuran).reduce((sum, row) => sum + parseInt(row[10].replace(/,/g, '')), 0).toLocaleString('US')-->
+                    <!--                        }}-->
+                    <!--                      </th>-->
+                    <!--                    </tr>-->
+                  </table>
+                </div>
+              </div>
+              <template #footer>
+                <n-button type="success" @click="handlePrintKartu">Cetak Kartu Piutang</n-button>
+              </template>
+            </n-card>
+          </n-tab-pane>
           <n-tab-pane name="Pelanggan">
             <n-scrollbar style="max-height: 500px" trigger="none">
               <n-form ref="formPelanggan" :model="dataPelanggan" :rules="rulesPelanggan"
@@ -173,52 +283,12 @@
           </n-tab-pane>
           <n-tab-pane name="Pinjaman">
             <n-spin :show="spinPinjaman">
-              <div class="grid grid-rows-4 grid-flow-col gap-4" v-if="dataDetailPinjaman">
-                <n-form-item label="status" path="status" class="w-full">
-                  <n-input :value="dataDetailPinjaman.status" disabled></n-input>
+              <div class="grid grid-rows-4 grid-flow-col gap-2 " v-if="dataDetailPinjaman">
+                <n-form-item :label="list.title" path="status" class="w-full" v-for="list in dataDetailPinjaman"
+                             :key="list.id">
+                  <n-input :value="list.value" disabled></n-input>
                 </n-form-item>
-                <n-form-item label="loan_number" path="loan_number" class="w-full">
-                  <n-input :value="dataDetailPinjaman.loan_number" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="cust_code" path="cust_code" class="w-full">
-                  <n-input :value="dataDetailPinjaman.cust_code" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="branch_name" path="branch_name" class="w-full">
-                  <n-input :value="dataDetailPinjaman.branch_name" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="order_number" path="order_number" class="w-full">
-                  <n-input :value="dataDetailPinjaman.order_number" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="credit_type" path="credit_type" class="w-full">
-                  <n-input :value="dataDetailPinjaman.credit_type" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="tenor" path="tenor" class="w-full">
-                  <n-input :value="dataDetailPinjaman.tenor" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="installment_date" path="installment_date" class="w-full">
-                  <n-input :value="dataDetailPinjaman.installment_date" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="pcpl_ori" path="pcpl_ori" class="w-full">
-                  <n-input :value="dataDetailPinjaman.pcpl_ori" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="paid_principal" path="paid_principal" class="w-full">
-                  <n-input :value="dataDetailPinjaman.paid_principal" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="paid_interest" path="paid_interest" class="w-full">
-                  <n-input :value="dataDetailPinjaman.paid_interest" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="paid_penalty" path="paid_penalty" class="w-full">
-                  <n-input :value="dataDetailPinjaman.paid_penalty" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="mcf_name" path="mcf_name" class="w-full">
-                  <n-input :value="dataDetailPinjaman.mcf_name" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="created_by" path="created_by" class="w-full">
-                  <n-input :value="dataDetailPinjaman.created_by" disabled></n-input>
-                </n-form-item>
-                <n-form-item label="created_at" path="created_at" class="w-full">
-                  <n-input :value="dataDetailPinjaman.created_at" disabled></n-input>
-                </n-form-item>
+
               </div>
             </n-spin>
           </n-tab-pane>
@@ -235,11 +305,13 @@
           </n-tab-pane>
           <n-tab-pane name="Pembayaran">
             <n-spin :show="spinPembayaran">
-              <n-data-table :data="dataDetailPembayaran" :columns="convertObjectToArray(dataDetailPembayaran)"></n-data-table>
+              <n-data-table :data="dataDetailPembayaran"
+                            :columns="convertObjectToArray(dataDetailPembayaran)"></n-data-table>
             </n-spin>
           </n-tab-pane>
           <n-tab-pane name="Tunggakan">
-            <n-data-table :data="dataDetailTunggakan" :columns="convertObjectToArray(dataDetailTunggakan)"></n-data-table>
+            <n-data-table :data="dataDetailTunggakan"
+                          :columns="convertObjectToArray(dataDetailTunggakan)"></n-data-table>
           </n-tab-pane>
         </n-tabs>
       </n-card>
@@ -247,31 +319,35 @@
   </div>
 </template>
 <script setup>
-import {ref, h, computed} from "vue";
+import {ref, h} from "vue";
 import {useApi} from "../../../helpers/axios";
-import {useSearch} from "../../../helpers/searchObject";
-import router from "../../../router";
+
+
 import {
-  useDialog,
-  useMessage,
-  NIcon, NButton,
+  useMessage, NButton,
 } from "naive-ui";
-import {
-  DeleteOutlined as DeleteIcon,
-  ListAltOutlined as DetailIcon,
-} from "@vicons/material";
+import _ from "lodash";
 import TabArusKas from "./TabArusKas.vue";
 import TabInqPinjaman from "./TabInqPinjaman.vue";
 import TabListBan from "./TabListBan.vue";
+import {useMeStore} from "../../../stores/me.js";
+import {useVueToPrint} from "vue-to-print";
 
-const rangeDate = ref();
 const message = useMessage();
-const dialog = useDialog();
-const dataTable = ref([]);
+const me = useMeStore();
 const dataArusKas = ref([]);
-const searchBox = ref();
+
 const spinPinjaman = ref(false);
 const spinJaminan = ref(false);
+
+const printKartuRef = ref(null);
+const {handlePrint} = useVueToPrint({
+  content: printKartuRef,
+  documentTitle: "Kartu Piutang",
+});
+const handlePrintKartu = () => {
+  handlePrint();
+}
 const columns = [
   {
     title: "Tanggal",
@@ -327,93 +403,15 @@ const convertObjectToArray = (obj) => {
   const keys = Object.keys(obj[0]);
   return keys.map(key => ({title: key, key: key}));
 }
-const colJaminan = [
-  {
-    title: "ID",
-    key: "ID",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "CR_CREDIT_ID",
-    key: "CR_CREDIT_ID",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "HEADER_ID",
-    key: "HEADER_ID",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "BRAND",
-    key: "BRAND",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "TYPE",
-    key: "TYPE",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "PRODUCTION_YEAR",
-    key: "PRODUCTION_YEAR",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "COLOR",
-    key: "COLOR",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "ON_BEHALF",
-    key: "ON_BEHALF",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "POLICE_NUMBER",
-    key: "POLICE_NUMBER",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "CHASIS_NUMBER",
-    key: "CHASIS_NUMBER",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "ENGINE_NUMBER",
-    key: "ENGINE_NUMBER",
-    sorter: "default", width: 100,
-  }, {
-    title: "BPKB_NUMBER",
-    key: "BPKB_NUMBER",
-    sorter: "default", width: 100,
-  }, {
-    title: "STNK_NUMBER",
-    key: "STNK_NUMBER",
-    sorter: "default", width: 100,
-  }, {
-    title: "VALUE",
-    key: "VALUE",
-    sorter: "default", width: 100,
-  }, {
-    title: "COLLATERAL_FLAG",
-    key: "COLLATERAL_FLAG",
-    sorter: "default", width: 100,
-  }, {
-    title: "STATUS",
-    key: "STATUS",
-    sorter: "default", width: 100,
-  }, {
-    title: "LOCATION_BRANCH",
-    key: "LOCATION_BRANCH",
-    sorter: "default", width: 100,
-  }, {
-    title: "COLLATERAL_TYPE",
-    key: "COLLATERAL_TYPE",
-    sorter: "default", width: 100,
-  },
-];
+
+function convertToValuesArray(dataArray) {
+  if (dataArray) {
+    return dataArray.map(item => Object.values(item));
+  } else {
+    return [];
+  }
+}
+
 const columnsPinjaman = [
   {
     title: "Nomor Order",
@@ -459,147 +457,7 @@ const columnsPinjaman = [
 ];
 
 let messageReactive = null;
-const columnsPembayran = [
-  {
-    title: "No Pembayaran",
-    key: "INVOICE",
-    sorter: "default",
-  },
-  {
-    title: "Tipe Pembayaran",
-    key: "ACC_KEY",
-    sorter: "default",
-  },
-  {
-    title: "Metode Pembayaran",
-    key: "PAYMENT_METHOD",
-    sorter: "default",
-  },
-  {
-    title: "Deskripsi",
-    key: "TITLE",
-    sorter: "default",
-  },
-  {
-    title: "Nominal",
-    key: "ORIGINAL_AMOUNT",
-    sorter: "default",
-  },
-  {
-    title: "Dibuat",
-    key: "USER_ID",
-    sorter: "default",
-  },
-  {
-    title: "Stastus pembayaran",
-    key: "STTS_RCRD",
-    sorter: "default",
-  },
 
-];
-const columnsAngsuran = [
-  {
-    title: "ke",
-    key: "angsuran_ke",
-    sorter: "default",
-    width: 80,
-  },
-  {
-    title: "Loan Number",
-    key: "loan_number",
-    sorter: "default",
-    width: 150,
-  },
-  {
-    title: "Tanggal",
-    key: "tgl_angsuran",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "principal",
-    key: "principal",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "interest",
-    key: "interest",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "installment",
-    key: "installment",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "principal remain",
-    key: "principal_remains",
-    sorter: "default",
-    width: 100,
-  },
-  {
-    title: "payment",
-    key: "payment",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "payment",
-    key: "payment",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "bayar angsuran",
-    key: "bayar_angsuran",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "bayar denda",
-    key: "bayar_denda",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "total_bayar",
-    key: "bayar_angsuran",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "flag",
-    key: "flag",
-    sorter: "default",
-    width: 100,
-  }, {
-    title: "denda",
-    key: "denda",
-    sorter: "default",
-    width: 100,
-  },
-];
-
-const columnsTunggakan = [
-  {
-    title: "No Order",
-    key: "LOAN_NUMBER",
-    sorter: "default",
-  },
-  {
-    title: "Tanggal Nunggak",
-    key: "START_DATE",
-    sorter: "default",
-  },
-  {
-    title: "Total Tunggakan",
-    key: "PAST_DUE_PINALTY",
-    sorter: "default",
-  }, {
-    title: "Status",
-    key: "STATUS_REC",
-    sorter: "default",
-  },
-
-];
 
 const modalDetail = ref(false);
 const modalBody = ref();
@@ -608,6 +466,8 @@ const handleDetailRow = async (e) => {
   let trow = await e;
   getDetailPelanggan(trow.cust_id);
   modalBody.value = e;
+  getDetailAngsuran(trow.loan_number);
+  getDetailPinjaman(trow.credit_id);
 }
 
 const loadData = ref(false);
@@ -732,6 +592,7 @@ const getDetailPembayaran = async (e) => {
 }
 
 const dataDetailAngsuran = ref();
+const dataHeaderAngsuran = ref();
 const spinAngsuran = ref(false);
 const getDetailAngsuran = async (e) => {
   spinAngsuran.value = true;
@@ -742,10 +603,11 @@ const getDetailAngsuran = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("ERROR API");
+    message.error("ERROR API ");
   } else {
     spinAngsuran.value = false;
-    dataDetailAngsuran.value = response.data;
+    dataHeaderAngsuran.value = response.data.detail;
+    dataDetailAngsuran.value = response.data.data_credit;
   }
 }
 
@@ -835,58 +697,4 @@ const getInqPinjaman = async (e) => {
 }
 
 
-const handleDetail = (evt) => {
-  router.push(`/master/branch-action/${evt.id}/detail`);
-};
-
-const handleUpdate = (evt) => {
-  router.push(`/master/branch-action/${evt.id}`);
-};
-
-const handleAdd = () => {
-  router.push("/master/branch-action");
-};
-onMounted(() => getInqPinjaman());
-const getData = async () => {
-  let userToken = localStorage.getItem("token");
-  const response = await useApi({
-    method: "GET",
-    api: "customer",
-    token: userToken,
-  });
-  if (!response.ok) {
-    message.error('ERROR API');
-  } else {
-    dataTable.value = response.data;
-  }
-};
-
-const renderIcon = (icon) => {
-  return () => {
-    return h(NIcon, null, {
-      default: () => h(icon),
-    });
-  };
-};
-
-const options = [
-  {
-    label: "Hapus",
-    key: "hapus",
-    icon: renderIcon(DeleteIcon),
-  },
-  {
-    label: "Detail",
-    key: "detail",
-    icon: renderIcon(DetailIcon),
-  },
-];
-
-const pagination = {
-  pageSize: 10,
-};
-
-const showData = computed(() => {
-  return useSearch(dataTable.value, searchBox.value);
-});
 </script>

@@ -1,10 +1,16 @@
 <template>
   <div>
-    <n-space vertical :size="12" class="pt-4">
+    <n-space vertical>
       <n-space>
-        <n-input placeholder="Nomor Order" v-model:value="searchBox" clearable/>
+        <n-form-item label="Nomor Order">
+          <n-input placeholder="Nomor Order" v-model:value="searchBox" clearable/>
+        </n-form-item>
+        <n-form-item label="Nama Debitur">
         <n-input placeholder="Nama Debitur" v-model:value="namaDebitur" clearable/>
+        </n-form-item>
+        <n-form-item>
         <n-button type="success" @click="handleCari">Cari</n-button>
+        </n-form-item>
       </n-space>
       <n-data-table ref="tableRef"
                     :header-height="48" :columns="columns" :data="showData"
