@@ -211,14 +211,14 @@
                                     <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.no_transaksi
                                         }}
                                     </n-text>
-                                    <small class="text-reg">No Kontrak : </small>
-                                    <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.no_fasilitas }}</n-text>
+                                    <small class="text-reg">No Pelanggan : </small>
+                                    <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.cust_code }}</n-text>
                                 </div>
                                 <div class="flex flex-col py-4">
-                                    <small class="text-reg">Terima dari (No Pelanggan)</small>
+                                    <small class="text-reg">Terima dari (No Kontrak)</small>
                                     <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.nama
                                         }}</n-text>
-                                    <small class="text-lg">{{ responseProsesPayment.res.cust_code }}</small>
+                                    <small class="text-lg">{{ responseProsesPayment.res.no_fasilitas }}</small>
                                 </div>
                             </div>
                             <div class="grid border-b border-dashed border-black pb-2"

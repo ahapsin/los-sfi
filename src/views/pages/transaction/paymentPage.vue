@@ -145,12 +145,12 @@
                             <small class="text-reg">No Transaksi : </small>
                             <n-text strong class="text-lg font-bold"> {{ bodyModal.no_transaksi }}</n-text>
                             <small class="text-reg">No Kontrak : </small>
-                            <n-text strong class="text-lg font-bold"> {{ bodyModal.no_fasilitas }}</n-text>
+                            <n-text strong class="text-lg font-bold"> {{ bodyModal.cust_code }}</n-text>
                         </div>
                         <div class="flex flex-col py-4">
-                            <small class="text-reg">Terima dari (No Pelanggan) : </small>
+                            <small class="text-reg">Terima dari (No Kontrak) : </small>
                             <n-text strong class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
-                            <small class="text-lg">({{ bodyModal.cust_code }})</small>
+                            <small class="text-lg">({{ bodyModal.no_fasilitas }})</small>
                         </div>
                     </div>
                     <!--          <table cellpadding="4" width="100%">-->
