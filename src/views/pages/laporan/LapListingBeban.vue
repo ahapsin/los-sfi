@@ -61,7 +61,7 @@ const getListBan = async () => {
     }
 }
 
-onMounted(() => getListBan);
+onMounted(() => getListBan());
 
 
 </script>
