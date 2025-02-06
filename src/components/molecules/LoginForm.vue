@@ -10,7 +10,7 @@
                     <n-input v-model:value="dynamicForm.username" placeholder="username" />
                 </n-form-item>
                 <n-form-item label="password" path="password" :rule="rules.password">
-                    <n-input type="password" v-model:value="dynamicForm.password" placeholder="Password"
+                    <n-input type="password" v-model:value="dynamicForm.password" placeholder="Password" show-password-on="mousedown"
                         @keyup.enter="handleLogin" />
                 </n-form-item>
                 <n-button class="flex w-full" :loading="loading" icon-placement="left" type="primary"
