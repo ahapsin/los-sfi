@@ -1,7 +1,7 @@
 {
   "name": "los-app",
   "private": true,
-  "version": "0.0.232 (pinq)",
+  "version": "0.0.233 (lbn)",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -203,7 +203,8 @@
                                 </div>
 
                             </div>
-                            <div class="text-md font-bold hidden justify-center pt-4 md:flex">KWITANSI PEMBAYARAN</div>
+                            <div class="text-md font-bold justify-center pt-4 md:flex"
+                                :class="width > 850 ? 'flex' : 'hidden'">KWITANSI PEMBAYARAN</div>
                             <div class="flex justify-between border-b border-dashed border-black"
                                 :class="width > 850 ? 'flex-row' : 'flex-col'">
                                 <div class="flex flex-col py-4">
@@ -212,7 +213,8 @@
                                         }}
                                     </n-text>
                                     <small class="text-reg">No Pelanggan : </small>
-                                    <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.cust_code }}</n-text>
+                                    <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.cust_code
+                                        }}</n-text>
                                 </div>
                                 <div class="flex flex-col py-4">
                                     <small class="text-reg">Terima dari (No Kontrak)</small>

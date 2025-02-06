@@ -312,6 +312,11 @@ const routes = [
         component: () => import("../views/pages/laporan/LapPinjaman.vue"),
       },
       {
+        path: "list_ban",
+        name: "Listing Beban",
+        component: () => import("../views/pages/laporan/LapListingBeban.vue"),
+      },
+      {
         path: "lap_inq_pinjaman",
         name: "Inquery Pinjaman",
         component: () => import("../views/pages/laporan/LapInqueryPinjaman.vue"),
