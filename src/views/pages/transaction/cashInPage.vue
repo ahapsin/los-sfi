@@ -38,7 +38,7 @@
         <div class="flex flex-col md:flex-row gap-2">
             <span v-show="false">{{
                 isLasted ? pageData.diskon_tunggakan = totalDenda : pageData.diskon_tunggakan = 0
-            }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0 }}</span>
+                }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0 }}</span>
             <n-form-item label="Nama Pelanggan" class="w-full">
                 <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch"
                     clearable />
@@ -211,9 +211,11 @@
                                     <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.no_transaksi
                                         }}
                                     </n-text>
+                                    <small class="text-reg">No Kontrak : </small>
+                                    <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.no_fasilitas }}</n-text>
                                 </div>
                                 <div class="flex flex-col py-4">
-                                    <small class="text-reg">Terima dari : </small>
+                                    <small class="text-reg">Terima dari (No Pelanggan)</small>
                                     <n-text strong class="text-lg font-bold"> {{ responseProsesPayment.res.nama
                                         }}</n-text>
                                     <small class="text-lg">{{ responseProsesPayment.res.cust_code }}</small>
@@ -266,14 +268,14 @@
                                     <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
                                     <td class="border pe-2 border-black">{{
                                         parseInt(angs.bayar_angsuran).toLocaleString('US')
-                                    }}
+                                        }}
                                     </td>
                                     <td class="border pe-2 border-black">{{
                                         parseInt(angs.bayar_denda).toLocaleString('US') }}
                                     </td>
                                     <td align="right" class="border pe-2 border-black">
                                         {{ parseInt(parseInt(angs.bayar_angsuran) +
-                                            parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
+                                        parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
                                     </td>
                                 </tr>
                                 <tr>
