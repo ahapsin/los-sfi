@@ -284,7 +284,6 @@ import { useVueToPrint } from "vue-to-print";
 import { useMeStore } from "../../../stores/me.js";
 
 const uploadState = ref(false);
-const meData = useMeStore();
 const searchField = ref(false);
 const searchBox = ref();
 const checkedRowCredit = ref([]);
