@@ -45,7 +45,7 @@
                         </n-button>
                     </template>
                     <n-space vertical>
-                        <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+                        <n-input clearable placeholder="cari disini.." v-model:value="searchBox" />
                         <n-date-picker :default-value="[Date.now(), Date.now()]"
                             :update-value-on-close="updateValueOnClose" type="daterange"
                             @update:value="onConfirmDate" />
@@ -78,7 +78,7 @@
             <n-space class="flex py-2"></n-space>
             <n-data-table ref="tableRef" striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
                 :scroll-x="870" :data="showData" :max-height="500" :on-update:checked-row-keys="handleFasilitas"
-                :loading="loadDataPayment" class="p-4" :pagination="pagination" />
+                :loading="loadDataPayment" class="p-4" :pagination="{pageSize:10}"/>
         </div>
     </n-card>
     <n-modal class="w-fit" title="Upload Berkas Pencairan" v-model:show="showModal" :on-after-leave="onAfterLeave">
@@ -175,28 +175,32 @@
                         :class="width > 850 ? 'grid-cols-5 gap-4' : 'grid-cols-1 '">
                         <div class="flex flex-col">
                             <small class="text-reg">Tanggal & Waktu</small>
-                            <n-text strong class="text-lg"> {{ bodyModal.tgl_transaksi }}</n-text>
+                            <n-text strong class="text-md"> {{ bodyModal.tgl_transaksi }}</n-text>
                         </div>
                         <div class="flex flex-col">
                             <small class="text-reg">Angsuran</small>
-                            <n-text strong class="text-lg"> {{
+                            <n-text strong class="text-md"> {{
                                 bodyModal.bayar_angsuran.toLocaleString('US') ?
-                                    bodyModal.bayar_angsuran.toLocaleString('US') : 'n/a'
+                                bodyModal.bayar_angsuran.toLocaleString('US') : 'n/a'
                                 }}
                             </n-text>
                         </div>
                         <div class="flex flex-col">
+                            <small class="text-reg">Pembulatan</small>
+                            <n-text strong class="text-md"> {{ bodyModal.pembulatan }}</n-text>
+                        </div>
+                        <div class="flex flex-col">
                             <small class="text-reg">Jumlah Uang</small>
-                            <n-text strong class="text-lg"> {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text>
+                            <n-text strong class="text-md"> {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text>
                         </div>
                         <div class="flex flex-col">
                             <small class="text-reg">Kembalian</small>
-                            <td><n-text strong class="text-lg"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text>
+                            <td><n-text strong class="text-md"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text>
                             </td>
                         </div>
                         <div class="flex flex-col">
                             <small class="text-reg">Metode Pembayaran</small>
-                            <n-text strong class="text-lg"> {{ bodyModal.payment_method }}</n-text>
+                            <n-text strong class="text-md"> {{ bodyModal.payment_method }}</n-text>
                         </div>
                     </div>
                 </div>
@@ -217,7 +221,7 @@
                             </td>
                             <td align="right" class="border pe-2 border-black">
                                 {{ parseInt(parseInt(angs.bayar_angsuran) +
-                                    parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
+                                parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
                             </td>
                         </tr>
                         <tr>
@@ -311,12 +315,7 @@ const printNota = async (e) => {
 const onAfterLeave = () => {
     getDataPayment();
 }
-function findStringInParentheses(input) {
 
-    const matches = input.match(/\(([^)]+)\)/);
-
-    return matches ? matches[1] : null;
-}
 
 const downloadCsv = () =>
     tableRef.value?.downloadCsv({ fileName: "export-penerimaan-uang" });
@@ -350,7 +349,6 @@ const pageData = reactive({
     no_rekening: null,
     bukti_transafer: null,
 });
-const pagination = ref({ pageSize: 10 });
 const onConfirmDate = () => {
     getDataPayment();
 };
