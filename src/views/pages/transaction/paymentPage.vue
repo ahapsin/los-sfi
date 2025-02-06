@@ -144,11 +144,13 @@
                         <div class="flex flex-col py-4">
                             <small class="text-reg">No Transaksi : </small>
                             <n-text strong class="text-lg font-bold"> {{ bodyModal.no_transaksi }}</n-text>
+                            <small class="text-reg">No Kontrak : </small>
+                            <n-text strong class="text-lg font-bold"> {{ bodyModal.no_fasilitas }}</n-text>
                         </div>
                         <div class="flex flex-col py-4">
-                            <small class="text-reg">Terima dari : </small>
+                            <small class="text-reg">Terima dari (No Pelanggan) : </small>
                             <n-text strong class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
-                            <small class="text-lg">{{ bodyModal.no_fasilitas }}</small>
+                            <small class="text-lg">({{ bodyModal.cust_code }})</small>
                         </div>
                     </div>
                     <!--          <table cellpadding="4" width="100%">-->
@@ -235,7 +237,7 @@
                 <div class="flex flex-col border-b border-dashed border-black pb-4 ms-3">
                     <div class="flex gap-4">
                         <div class="border-b border-black pt-20 px-4">
-                            <n-text strong class="text-md font-bold"> {{ meData.me.nama }}</n-text>
+                            <n-text strong class="text-md font-bold"> {{ bodyModal.created_by }}</n-text>
                         </div>
                         <div class="border-b border-black pt-20 px-4">
                             <n-text strong class="text-md font-bold"> {{ bodyModal.nama }}</n-text>
