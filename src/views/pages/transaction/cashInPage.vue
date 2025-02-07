@@ -349,7 +349,7 @@ const isLast = ref(false);
 const handleResBack = (data) => {
     dataBuktiTransfer.value = data;
 }
-
+const { width } = useWindowSize();
 const printReceiptRef = ref();
 const { handlePrint } = useVueToPrint({
     content: printReceiptRef,
@@ -360,7 +360,7 @@ const handleCetakKwitansi = () => {
     handlePrint();
     router.go(-1)
 }
-const { width } = useWindowSize();
+
 
 
 const totalPay = computed(() => {
