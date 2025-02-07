@@ -19,6 +19,9 @@
         <n-button @click="handleSubmit" type="success">
           Cari
         </n-button>
+<!--        <json-excel :data="props.data.datas" :name="`LAP_LKBH_${formatDate(props.data.tgl_tarik)}`" :fields="convertObjectToArray(props.data.datas)" :stringifyLongNum="true">-->
+<!--          <n-button type="success" secondary>Download</n-button>-->
+<!--        </json-excel>-->
         <!--        <n-button @click="downloadCsv" type="info">-->
         <!--          download-->
         <!--        </n-button>-->
@@ -44,6 +47,9 @@
           <tr class="border-b border-t border-black border-dashed">
             <th class="py-2" colspan="2">NO</th>
             <th align="left">CABANG</th>
+            <th align="left">TGL</th>
+            <th align="left">USER</th>
+            <th align="left">POSITION</th>
             <th align="left">NO KONTRAK</th>
             <th align="left">TERIMA DARI / KE</th>
             <th align="left">KETERANGAN</th>
@@ -52,26 +58,32 @@
           </thead>
           <tbody>
           <tr>
-            <td colspan="6">CASH-IN {{ fillArray }}</td>
+            <td colspan="6">CASH-IN </td>
           </tr>
-          <tr v-for="cashout in props.data.CASH_IN" :key="cashout.id">
+          <tr v-for="cashin in compCashIn" :key="cashin.id">
             <td width="20px"></td>
-            <td>{{ cashout.no }}</td>
-            <td>{{ cashout.cabang }}</td>
-            <td>{{ cashout.no_kontrak }}</td>
-            <td>{{ cashout.nama_pelanggan }}</td>
-            <td>{{ cashout.keterangan }}</td>
-            <td align="right">{{ cashout.amount.toLocaleString() }}</td>
+            <td>{{ cashin.no }}</td>
+            <td>{{ cashin.cabang }}</td>
+            <td>{{ cashin.tgl }}</td>
+            <td>{{ cashin.user }}</td>
+            <td>{{ cashin.position }}</td>
+            <td>{{ cashin.no_kontrak }}</td>
+            <td>{{ cashin.nama_pelanggan }}</td>
+            <td>{{ cashin.keterangan }}</td>
+            <td align="right">{{ cashin.amount.toLocaleString() }}</td>
           </tr>
           </tbody>
           <tbody>
           <tr>
             <td colspan="6">CASH-OUT</td>
           </tr>
-          <tr v-for="cashout in props.data.CASH_OUT" :key="cashout.id">
+          <tr v-for="cashout in compCashOut" :key="cashout.id">
             <td></td>
             <td>{{ cashout.no }}</td>
             <td>{{ cashout.cabang }}</td>
+            <td>{{ cashin.tgl }}</td>
+            <td>{{ cashin.user }}</td>
+            <td>{{ cashin.position }}</td>
             <td>{{ cashout.no_kontrak }}</td>
             <td>{{ cashout.nama_pelanggan }}</td>
             <td>{{ cashout.keterangan }}</td>
@@ -82,11 +94,14 @@
           <tr class="border-b border-t border-black border-dashed">
             <td colspan="5" class="p-4"></td>
             <td>JUMLAH</td>
-            <th align="right">{{ (props.data.ttl_cash_out  - props.data.ttl_cash_in).toLocaleString('US') }}</th>
+            <th align="right">{{ (props.data.ttl_all).toLocaleString('US') }}</th>
           </tr>
           </tbody>
         </table>
+
       </div>
+
+
       <!--      <n-data-table-->
       <!--          ref="tableRef"-->
       <!--          :get-csv-cell="getCsvCell"-->
@@ -101,10 +116,12 @@
 </template>
 
 <script setup>
-import {ref, defineEmits, reactive} from "vue";
+import {ref, defineEmits, reactive,computed} from "vue";
+import _ from "lodash";
 import {useApi} from "../../../helpers/axios.js";
 import {useMessage} from "naive-ui";
 import {useMeStore} from "../../../stores/me.js";
+import JsonExcel from "vue-json-excel3";
 
 const rangeDate = ref();
 const tableRef = ref();
@@ -182,6 +199,13 @@ const year = today.getFullYear();
 let month = today.getMonth() + 1; // Months are zero-indexed, so add 1
 let day = today.getDate();
 
+const convertObjectToArray = (obj) => {
+  if (!Array.isArray(obj) || obj.length === 0) {
+    return [];
+  }
+  const keys = Object.keys(obj[0]);
+  return keys.map(key => ({title: key, key: key}));
+}
 
 month = month < 10 ? '0' + month : month;
 day = day < 10 ? '0' + day : day;
@@ -194,7 +218,12 @@ function formatDate(dateString) {
 
   return `${day}-${month}-${year}`;
 }
-
+const compCashOut = computed(()=>{
+  return _.filter(props.data.datas,['type',"CASH_OUT"]);
+});
+const compCashIn = computed(()=>{
+  return _.filter(props.data.datas,['type',"CASH_IN"]);
+});
 const formatDateRange = (e) => e.join('_');
 const downloadCsv = () => tableRef.value?.downloadCsv({
   fileName: `lkbh_${formatDateRange(rangeDate.value)}`,
