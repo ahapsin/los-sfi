@@ -45,7 +45,7 @@
             <th class="py-2" colspan="2">NO</th>
             <th align="left">CABANG</th>
             <th align="left">NO KONTRAK</th>
-            <th align="left">TERIMA DARI</th>
+            <th align="left">TERIMA DARI / KE</th>
             <th align="left">KETERANGAN</th>
             <th align="right">AMOUNT</th>
           </tr>
@@ -126,7 +126,7 @@ const paginationRef = reactive({
 const tarik = ref(false);
 const handleSubmit = () => {
   let a = {
-    dari: rangeDate.value,
+    dari: rangeDate.value ? rangeDate.value : Date.now() ,
     cabang_id: selectBranch.value ? selectBranch.value : null
   }
   emit("filterForm", a);

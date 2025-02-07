@@ -2,8 +2,8 @@
   <div>
     <n-space vertical>
       <n-space>
-        <n-form-item label="Nomor Order">
-          <n-input placeholder="Nomor Order" v-model:value="searchBox" clearable/>
+        <n-form-item label="Nomor Kontrak">
+          <n-input placeholder="Nomor Kontrak" v-model:value="searchBox" clearable/>
         </n-form-item>
         <n-form-item label="Nama Debitur">
         <n-input placeholder="Nama Debitur" v-model:value="namaDebitur" clearable/>
@@ -13,15 +13,14 @@
         </n-form-item>
       </n-space>
       <n-data-table ref="tableRef"
-                    :header-height="48" :columns="columns" :data="showData"
+                    :header-height="48" :columns="columns" :data="props.data"
                     :loading="loading" v-show="props.available" :pagination="{pageSize:10}"/>
     </n-space>
   </div>
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
-import {useSearch} from "../../../helpers/searchObject.js";
+import { ref} from "vue";
 
 const props = defineProps({
   loading: Boolean,
@@ -42,8 +41,5 @@ const handleCari = () => {
     nama: namaDebitur.value,
   });
 }
-const showData = computed(() => {
-  return useSearch(props.data ? props.data : [], searchBox.value);
-});
 
 </script>
