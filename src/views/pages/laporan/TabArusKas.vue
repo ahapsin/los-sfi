@@ -82,7 +82,7 @@
           <tr class="border-b border-t border-black border-dashed">
             <td colspan="5" class="p-4"></td>
             <td>JUMLAH</td>
-            <th align="right">{{ (props.data.ttl_cash_out  + props.data.ttl_cash_in).toLocaleString('US') }}</th>
+            <th align="right">{{ (props.data.ttl_cash_out  - props.data.ttl_cash_in).toLocaleString('US') }}</th>
           </tr>
           </tbody>
         </table>
