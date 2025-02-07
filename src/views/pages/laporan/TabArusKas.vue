@@ -203,7 +203,3 @@ const downloadCsv = () => tableRef.value?.downloadCsv({
 
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>
