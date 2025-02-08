@@ -175,7 +175,7 @@ const getBranch = async () => {
       selectBranch.value = "SEMUA CABANG";
       dataBranch.value = response.data.response;
       dataBranch.value.unshift({
-        id: "",
+        id: "SEMUA CABANG",
         nama: "SEMUA CABANG"
       });
     }

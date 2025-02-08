@@ -22,7 +22,10 @@
               src="../../assets/logo.png"
               alt="logo_company"
             />
-            KSPDJAYA
+            <div class="flex flex-col items-left justify-center">
+              <span>KSPDJAYA</span>
+            <span class="text-[10px]">v. {{ appVersion}}</span>
+            </div>
           </n-space>
           <span class="hidden md:flex capitalize"></span>
         </template>
@@ -72,7 +75,9 @@ import {
 } from "@vicons/tabler";
 import { useSidebar } from "../../stores/sidebar";
 import { useWindowSize } from "@vueuse/core";
+import pjson from '../../../package.json';
 
+const appVersion = pjson.version;
 const { width } = useWindowSize();
 
 const sideMenu = useSidebar();
