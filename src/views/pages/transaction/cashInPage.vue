@@ -17,28 +17,13 @@
                     </template>
                     <p class="hidden md:flex">kembali</p>
                 </n-button>
-                <!-- <n-button
-  round
-  v-show="!searchField"
-  strong
-  secondary
-  type="success"
-  @click="handlePayFull"
->
-  <template #icon>
-    <n-icon>
-      <full-pay />
-    </n-icon>
-  </template>
-  <p class="hidden">pindah ke pelunasan</p>
-</n-button> -->
 
             </n-space>
         </template>
         <div class="flex flex-col md:flex-row gap-2">
             <span v-show="false">{{
                 isLasted ? pageData.diskon_tunggakan = totalDenda : pageData.diskon_tunggakan = 0
-                }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0 }}</span>
+            }} {{ !isLasted ? pageData.bayar_dengan_diskon = 'tidak' : 0 }}</span>
             <n-form-item label="Nama Pelanggan" class="w-full">
                 <n-input v-model:value="dynamicSearch.nama" type="text" placeholder="Nama" @blur="handleSearch"
                     clearable />
@@ -270,14 +255,14 @@
                                     <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
                                     <td class="border pe-2 border-black">{{
                                         parseInt(angs.bayar_angsuran).toLocaleString('US')
-                                        }}
+                                    }}
                                     </td>
                                     <td class="border pe-2 border-black">{{
                                         parseInt(angs.bayar_denda).toLocaleString('US') }}
                                     </td>
                                     <td align="right" class="border pe-2 border-black">
                                         {{ parseInt(parseInt(angs.bayar_angsuran) +
-                                        parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
+                                            parseInt(angs.bayar_denda)).toLocaleString(('US')) }}
                                     </td>
                                 </tr>
                                 <tr>

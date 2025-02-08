@@ -72,7 +72,7 @@ const routes = [
     children: [
       {
         path: "apply-credit",
-        name: "Pengajuan Kredit",
+        name: "Order",
         component: () => import("../views/pages/task/FpkPage.vue"),
       },
       {
