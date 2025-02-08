@@ -88,7 +88,7 @@
 import { useMessage } from "naive-ui";
 import { ref, reactive, onMounted, computed } from "vue";
 import { useApi } from "../../../helpers/axios";
-import { usePDF } from "vue3-pdfmake";
+// import { usePDF } from "vue3-pdfmake";
 import router from "../../../router";
 import { useRoute } from "vue-router";
 import { useSearch } from "../../../helpers/searchObject";
@@ -207,64 +207,64 @@ const kopSurat = [
     layout: "noBorders",
   },
 ];
-const pdfmake = usePDF({
-  autoInstallVFS: true,
-});
+// const pdfmake = usePDF({
+//   autoInstallVFS: true,
+// });
 const printAfter = ref(false);
-const handlePrint = () => {
-  const dataBPKB = bpkbToArray(dynamicForm.bpkb);
-  dataBPKB.unshift(colHeader);
-  pdfmake
-    .createPdf({
-      info: {
-        title: `Surat keterangan serah terima BPKB`,
-        author: "ahapsin",
-      },
-      content: [
-        kopSurat,
-        {
-          text: "SURAT TANDA TERIMA DOKUMEN",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: `daftar list bpkb `,
-          margin: [0, 20, 0, 0],
-        },
-        {
-          table: {
-            widths: [20, "*", "*", "*"],
-            body: dataBPKB,
-          },
-          margin: [0, 20, 0, 0],
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 12,
-          bold: true,
-          margin: [0, 0, 0, 0],
-        },
-        subheader: {
-          fontSize: 16,
-          bold: true,
-          margin: [0, 10, 0, 5],
-        },
-        tableExample: {
-          margin: [0, 5, 0, 15],
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 10,
-          color: "black",
-        },
-      },
-      defaultStyle: {
-        fontSize: 10,
-      },
-    })
-    .print();
-};
+// const handlePrint = () => {
+//   const dataBPKB = bpkbToArray(dynamicForm.bpkb);
+//   dataBPKB.unshift(colHeader);
+//   pdfmake
+//     .createPdf({
+//       info: {
+//         title: `Surat keterangan serah terima BPKB`,
+//         author: "ahapsin",
+//       },
+//       content: [
+//         kopSurat,
+//         {
+//           text: "SURAT TANDA TERIMA DOKUMEN",
+//           style: "header",
+//           alignment: "center",
+//         },
+//         {
+//           text: `daftar list bpkb `,
+//           margin: [0, 20, 0, 0],
+//         },
+//         {
+//           table: {
+//             widths: [20, "*", "*", "*"],
+//             body: dataBPKB,
+//           },
+//           margin: [0, 20, 0, 0],
+//         },
+//       ],
+//       styles: {
+//         header: {
+//           fontSize: 12,
+//           bold: true,
+//           margin: [0, 0, 0, 0],
+//         },
+//         subheader: {
+//           fontSize: 16,
+//           bold: true,
+//           margin: [0, 10, 0, 5],
+//         },
+//         tableExample: {
+//           margin: [0, 5, 0, 15],
+//         },
+//         tableHeader: {
+//           bold: true,
+//           fontSize: 10,
+//           color: "black",
+//         },
+//       },
+//       defaultStyle: {
+//         fontSize: 10,
+//       },
+//     })
+//     .print();
+// };
 const optTujuan = ["NORMAL", "TITIP", "SITA", "JUAL"].map((v) => ({
   label: v,
   value: v,
