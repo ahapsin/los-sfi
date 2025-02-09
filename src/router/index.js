@@ -189,6 +189,11 @@ const routes = [
         component: () => import("../views/pages/master/EmployeesPage.vue"),
       },
       {
+        path: "master_jaminan",
+        name: "Jaminan",
+        component: () => import("../views/pages/master/jaminan/JaminanPage.vue"),
+      },
+      {
         path: "employee-action",
         name: "karyawan baru",
         component: () => import("../views/pages/master/ActionEmployeePage.vue"),

@@ -75,7 +75,7 @@
         <div class="flex bg-slate-100 justify-center overflow-auto p-2" v-show="prosesPK">
             <div class="flex flex-col min-w-[900px] p-10" ref="pk">
                 <div ref="areaPrintRef">
-                    <div class="bg-white max-w-[900px] shadow-lg p-8" v-show="optPrint.pkPage">
+                    <div class="bg-white max-w-[900px]  p-8" v-show="optPrint.pkPage">
                         <kop-header :alamat_cabang="`${pkData.alamat_kantor} ${pkData.kota}`" :cabang="pkData.cabang" />
                         <table border="1" class="mb-10">
                             <tr>
@@ -308,7 +308,7 @@
                         </table>
                     </div>
                     <div class="mt-2" v-show="optPrint.tandaTerima">
-                        <div class="bg-white max-w-[900px] shadow-lg p-8">
+                        <div class="bg-white max-w-[900px]  p-8">
                             <kop-header :alamat_cabang="`${pkData.alamat_kantor} ${pkData.kota}`" :cabang="pkData.cabang" />
                             <div class="mb-4 text-center text-base">
                                 <b>SURAT TANDA TERIMA DOKUMEN</b>
@@ -835,8 +835,6 @@ import { useRoute } from "vue-router";
 import { useApi } from "../../../helpers/axios";
 import router from "../../../router";
 import {useVueToPrint} from "vue-to-print";
-import { Message } from "@vicons/tabler";
-import { subtract } from "lodash";
 // import CollateralCheck from "../../../components/atoms/CollateralCheck.vue";
 const prosesPK = ref(false);
 const pageData = ref([]);
@@ -1053,7 +1051,7 @@ const handlePrintAction = async () => {
         token: userToken,
     }).then((res) => {
         console.log();
-        router.push({ name: "Pengajuan Kredit" });
+        router.push({ name: "Order" });
         // if (!res.ok) {
         //     message.warning('gagal proses print!');
         // } else {
@@ -1127,7 +1125,7 @@ const payloadCheck = () => dataJaminan.value.map(item => {
     if (item.type === 'kendaraan') {
         return {
             type: item.type,
-            number: item.atr.no_bpkb
+            number: item.atr.no_mesin
         };
     } else if (item.type === 'sertifikat') {
         return {
