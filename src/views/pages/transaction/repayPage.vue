@@ -506,7 +506,6 @@ const format = (value) => {
   return value.toLocaleString("en-US");
 };
 const columns = createColumns();
-const columnsEmbed = createColumnsEmbed();
 const loadingAngsuran = ref(false);
 const displayDetail = ref(false);
 const displayPayment = ref(false);
@@ -540,7 +539,6 @@ const message = useMessage();
 const dialog = useDialog();
 const loadProses = ref(false);
 const handleProses = async () => {
-  let userToken = localStorage.getItem("token");
   dialog.warning({
     title: "Konfirmasi",
     content: "apakah data yang anda masukan sudah benar ?",
@@ -560,7 +558,7 @@ const postDynamic = async () => {
   const response = await useApi({
     method: "POST",
     api: "payment_pelunasan",
-    data: pageData,
+    data: pelunasan,
     token: userToken,
   });
   if (!response.ok) {
