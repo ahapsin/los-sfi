@@ -181,89 +181,159 @@
     <file-upload title="Bukti Transfer" :def_value="dataBuktiTransfer" endpoint="payment_attachment"
                  type="bukti_transfer" :idapp="pageData.uid" @fallback="handleResBack"/>
   </n-modal>
-  <n-modal class="w-3/4" title="Upload Berkas Pencairan" v-model:show="dialogProses" :mask-closable="false">
-    <n-card title="Transaksi Berhasil">
-      <div class="flex gap-8 font-mono">
-        <table class="table-auto w-1/2">
-          <tr>
-            <td>No Transaksi</td>
-            <td>:</td>
-            <td>
-              <b>{{ paymentData.no_transaksi }}</b>
-            </td>
-          </tr>
-          <tr>
-            <td width="120px">Tgl Transaksi</td>
-            <td>:</td>
-            <td>{{ paymentData.tgl_transaksi }}</td>
-          </tr>
-          <tr>
-            <td>Terima Dari</td>
-            <td>:</td>
-            <td>
-              {{ paymentData.detail_pelanggan.cust_code }} -
-              {{ paymentData.detail_pelanggan.nama }}
-            </td>
-          </tr>
-          <tr>
-            <td>Jumlah Uang</td>
-            <td>:</td>
-            <td>{{ paymentData.jml_pembayaran }}</td>
-          </tr>
-          <tr>
-            <td>Terbilang</td>
-            <td>:</td>
-            <td>{{ paymentData.terbilang }}</td>
-          </tr>
-          <tr>
-            <td valign="top">Keterangan</td>
-            <td valign="top">:</td>
-            <td>
-              <span v-for="pembayaran in paymentData.pembayaran" v-bind:key="pembayaran.id">{{ pembayaran.title }} ({{
-                  pembayaran.payment_value
-                }}),
-              </span>
-            </td>
-          </tr>
-        </table>
-        <table class="table-auto w-1/2" height="0">
-          <tr>
-            <td width="120px">Metode</td>
-            <td>:</td>
-            <td>{{ paymentData.payment_method }}</td>
-          </tr>
-          <tbody v-if="paymentData.payment_method == 'cash'">
-          <tr>
-            <td width="120px">Pembulatan</td>
-            <td>:</td>
-            <td>{{ paymentData.pembulatan }}</td>
-          </tr>
-          <tr>
-            <td width="120px">Kembalian</td>
-            <td>:</td>
-            <td>{{ paymentData.kembalian }}</td>
-          </tr>
-          </tbody>
-          <tbody v-else>
-          <tr>
-            <td width="120px">Bank Tujuan</td>
-            <td>:</td>
-            <td>{{ paymentData.nama_bank.toUpperCase() }}</td>
-          </tr>
-          <tr>
-            <td width="120px">No Rekening</td>
-            <td>:</td>
-            <td>{{ paymentData.no_rekening }}</td>
-          </tr>
-          </tbody>
-        </table>
+  <n-modal v-model:show="modalProsesPayment" :mask-closable="false">
+    <n-card :class="width > 850 ? 'w-1/2' : 'w-fit'">
+      <div class="flex items-center gap-4" v-if="loadProses">
+        <n-spin size="small"/>
+        <n-text>memproses pelunasan</n-text>
       </div>
-      <template #action>
-        <n-space>
-          <n-button type="success">Cetak</n-button>
-          <n-button @click="handleDone">Selesai</n-button>
-        </n-space>
-      </template>
+      <n-result :status="responseProsesPayment.status"
+                :title="responseProsesPayment.status == 'success' ? 'Pembayaran Berhasil' : responseProsesPayment.status == 'error' ? 'Pembayaran Gagal' : 'Pembayaran Berhasil'"
+                size="small"
+                :description="responseProsesPayment.status == 'info' ? 'Proses pembayaran menunggu persetujuan HO' : responseProsesPayment.status == 'error' ? 'Silakan coba beberapa saat lagi' : ''"
+                v-else>
+        <n-scrollbar>
+          <div ref="printReceiptRef" class="flex flex-col border" :class="width > 850 ? 'p-4' : 'p-0'"
+               v-if="responseProsesPayment.status == 'success'">
+            <div class="p-2">
+              <div
+                  class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
+                <div class="flex gap-2 items-center">
+                  <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
+                  <span class="text-xl font-bold">KSPDJAYA</span>
+                </div>
+
+              </div>
+              <div class="text-md font-bold justify-center pt-4 md:flex"
+                   :class="width > 850 ? 'flex' : 'hidden'">KWITANSI PELUNASAN
+              </div>
+              <div class="flex justify-between border-b border-dashed border-black"
+                   :class="width > 850 ? 'flex-row' : 'flex-col'">
+                <div class="flex flex-col py-4">
+                  <small class="text-reg">No Transaksi : </small>
+                  <n-text strong class="text-lg font-bold"> {{
+                      responseProsesPayment.res.no_transaksi
+                    }}
+                  </n-text>
+                  <small class="text-reg">No Pelanggan : </small>
+                  <n-text strong class="text-lg font-bold"> {{
+                      responseProsesPayment.res.cust_code
+                    }}
+                  </n-text>
+                </div>
+                <div class="flex flex-col py-4">
+                  <small class="text-reg">Terima dari (No Kontrak)</small>
+                  <n-text strong class="text-lg font-bold"> {{
+                      responseProsesPayment.res.nama
+                    }}
+                  </n-text>
+                  <small class="text-lg">{{ responseProsesPayment.res.no_fasilitas }}</small>
+                </div>
+              </div>
+              <div class="grid border-b border-dashed border-black pb-2"
+                   :class="width > 850 ? 'grid-cols-6 gap-4' : 'grid-cols-1 '">
+                <div class="flex flex-col">
+                  <small class="text-reg">Tanggal & Waktu</small>
+                  <n-text strong class="text-md">{{
+                      responseProsesPayment.res.tgl_transaksi
+                    }}
+                  </n-text>
+                </div>
+                <div class="flex flex-col">
+                  <small class="text-reg">Angsuran</small>
+                  <n-text strong class="text-md">
+                    {{ responseProsesPayment.res.installment }}
+                  </n-text>
+                </div>
+                <div class="flex flex-col">
+                  <small class="text-reg">Pembulatan</small>
+                  <n-text strong class="text-md"> {{ responseProsesPayment.res.pembulatan }}</n-text>
+                </div>
+                <div class="flex flex-col">
+                  <small class="text-reg">Jumlah Uang</small>
+                  <n-text strong class="text-md"> {{ responseProsesPayment.res.jumlah_uang }}</n-text>
+                </div>
+                <div class="flex flex-col">
+                  <small class="text-reg">Kembalian</small>
+                  <td>
+                    <n-text strong class="text-md"> {{
+                        responseProsesPayment.res.kembalian
+                      }}
+                    </n-text>
+                  </td>
+                </div>
+                <div class="flex flex-col">
+                  <small class="text-reg">Metode Pembayaran</small>
+                  <n-text strong class="text-md"> {{
+                      responseProsesPayment.res.payment_method
+                    }}
+                  </n-text>
+                </div>
+              </div>
+            </div>
+            <div class="px-3">
+              <table width="100%" class="border border-black">
+                <tr>
+                  <th class="border border-black">Ke</th>
+                  <th class="border border-black">Angsuran</th>
+                  <th class="border border-black">Denda</th>
+                  <th class="border border-black">Jumlah</th>
+                </tr>
+
+                <tr v-for="angs in responseProsesPayment.res.struktur" :key="angs.id">
+                  <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
+                  <td class="border pe-2 border-black">{{
+                      parseInt(angs.bayar_angsuran).toLocaleString('US')
+                    }}
+                  </td>
+                  <td class="border pe-2 border-black">{{
+                      parseInt(angs.bayar_denda).toLocaleString('US')
+                    }}
+                  </td>
+                  <td align="right" class="border pe-2 border-black">
+                    {{
+                      parseInt(parseInt(angs.bayar_angsuran) +
+                          parseInt(angs.bayar_denda)).toLocaleString(('US'))
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Total</strong></td>
+                  <td colspan="3" align="right" class="pe-2">
+                    <strong>{{
+                        responseProsesPayment.res.total_bayar.toLocaleString("US")
+                      }}</strong>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="flex flex-col border-b border-dashed border-black pb-4 ms-3">
+              <div class="flex gap-4">
+                <div class="border-b border-black pt-20 px-4">
+                  <n-text strong class="text-md font-bold">{{
+                      responseProsesPayment.res.created_by
+                    }}
+                  </n-text>
+                </div>
+                <div class="border-b border-black pt-20 px-4">
+                  <n-text strong class="text-md font-bold">{{
+                      responseProsesPayment.res.nama
+                    }}
+                  </n-text>
+                </div>
+              </div>
+            </div>
+          </div>
+        </n-scrollbar>
+        <template #footer>
+          <div class="flex gap-4 justify-center">
+            <n-button type="success" v-if="responseProsesPayment.status == 'success'"
+                      @click="handleCetakKwitansi">Cetak Kwitansi
+            </n-button>
+            <n-button type="warning" @click="backPayment">Tutup</n-button>
+          </div>
+        </template>
+      </n-result>
     </n-card>
   </n-modal>
 </template>
@@ -284,6 +354,7 @@ import {
   useDialog,
 } from "naive-ui";
 import {computed, reactive, ref, h, onMounted} from "vue";
+import {useVueToPrint} from "vue-to-print";
 
 const searchField = ref(false);
 const valOptSearch = ref(null);
@@ -391,6 +462,7 @@ const createColumnsEmbed = () => {
     },
   ];
 };
+const printReceiptRef = ref();
 const selectedFasilitas = ref();
 const rowProps = (row) => {
   return {
@@ -455,6 +527,15 @@ const handleFasilitas = (e) => {
   displayDetail.value = true;
   getDataPelunasan(e);
 };
+const {handlePrint} = useVueToPrint({
+  content: printReceiptRef,
+  documentTitle: "Kwitansi Pelunasan",
+});
+const handleCetakKwitansi = () => {
+  handlePrint();
+  router.go(-1)
+}
+
 const message = useMessage();
 const dialog = useDialog();
 const loadProses = ref(false);
@@ -467,27 +548,41 @@ const handleProses = async () => {
     negativeText: "cek kembali",
     onPositiveClick: () => {
       postDynamic();
-      router.push({name: "pembayaran"});
     },
   });
-  const postDynamic = async () => {
-    const response = await useApi({
-      method: "POST",
-      api: "payment_pelunasan",
-      data: pelunasan,
-      token: userToken,
-    });
-    if (!response.ok) {
-      message.error("ERROR API");
-    } else {
-      loadProses.value = false;
-      paymentData.value = response.data;
-      dialogProses.value = true;
-      router.push({name: "pelunasan"});
-    }
-  };
+
+
+};
+const postDynamic = async () => {
+  let userToken = localStorage.getItem("token");
+  modalProsesPayment.value = true;
+  loadProses.value = true;
+  const response = await useApi({
+    method: "POST",
+    api: "payment_pelunasan",
+    data: pageData,
+    token: userToken,
+  });
+  if (!response.ok) {
+    loadProses.value = false;
+    responseProsesPayment.value = { status: "error", res: null };
+  } else {
+    responseProsesPayment.value = {
+      status: response.data.STATUS == 'PAID' ? 'success' : 'info',
+      res: response.data
+    };
+    loadProses.value = false;
+    paymentData.value = response.data;
+    dialogProses.value = true;
+  }
 };
 
+const modalProsesPayment = ref(false);
+const responseProsesPayment = ref();
+
+const backPayment = () => {
+  router.go(-1);
+}
 const dataSearch = ref([]);
 const loadSearch = ref(false);
 const displayFasilitas = ref(false);
@@ -528,14 +623,7 @@ const pelunasan = reactive({
   TUNGGAKAN_BUNGA: 0,
   DENDA: 0,
   PINALTI: 0,
-  // TOTAL_BAYAR: computed(
-  //   () =>
-  //     pelunasan.SISA_POKOK +
-  //     pelunasan.BUNGA_BERJALAN +
-  //     pelunasan.TUNGGAKAN_BUNGA +
-  //     pelunasan.DENDA +
-  //     pelunasan.PINALTI
-  // ),
+
   UANG_PELANGGAN: 0,
   DISKON: computed(() => {
     let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
@@ -658,7 +746,7 @@ const pushJumlahUang = async () => {
   pelunasan.BAYAR_DENDA = 0;
   pelunasan.DISKON_POKOK = 0;
   pelunasan.DISKON_PINALTI = 0;
-  peluansan.DISKON_BUNGA = 0;
+  pelunasan.DISKON_BUNGA = 0;
   pelunasan.DISKON_DENDA = 0;
 };
 const handleExpand = () => {

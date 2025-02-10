@@ -338,7 +338,7 @@ const { width } = useWindowSize();
 const printReceiptRef = ref();
 const { handlePrint } = useVueToPrint({
     content: printReceiptRef,
-    documentTitle: "Receipt",
+    documentTitle: "Nota Pembayaran",
 });
 
 const handleCetakKwitansi = () => {
