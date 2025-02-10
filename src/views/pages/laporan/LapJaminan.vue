@@ -80,6 +80,7 @@
             </n-form-item>
           </div>
           <n-data-table
+              :loading="loadTable"
               size="small"
               :columns="convertObjectToArray(showData)"
               :data="showData"
@@ -91,7 +92,7 @@
   </div>
 </template>
 <script setup>
-import {ref, onMounted, h, computed,reactive} from "vue";
+import {ref, onMounted, h, computed, reactive} from "vue";
 import {useApi} from "../../../helpers/axios";
 import {useSearch} from "../../../helpers/searchObject";
 import router from "../../../router";
@@ -117,28 +118,34 @@ const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const dynamicSearch = reactive({
-  pos:'',
-  loan_number:'',
-  nama:'',
-  nopol:'',
-  status:'',
+  pos: '',
+  loan_number: '',
+  nama: '',
+  nopol: '',
+  status: '',
 });
 
-const optStatusJaminan = ["NORMAL","TITIP","SITA","JUAL","RILIS"].map((v) => ({
+const optStatusJaminan = ["NORMAL", "TITIP", "SITA", "JUAL", "RILIS"].map((v) => ({
   label: v,
   value: v,
 }));
+const handleSearch = () => {
+  getData();
+}
+const loadTable = ref(false);
 const getData = async () => {
+  loadTable.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
     api: `collateral_report?pos=${dynamicSearch.pos}&loan_number=${dynamicSearch.loan_number}&nama=${dynamicSearch.nama}&nopol=${dynamicSearch.nopol}&status=${dynamicSearch.nopol}`,
     token: userToken,
   });
-if (!response.ok) {
+  if (!response.ok) {
     message.error('ERROR API');
   } else {
     dataTable.value = response.data;
+    loadTable.value = false;
   }
 };
 const renderIcon = (icon) => {
