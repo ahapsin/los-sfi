@@ -1,5 +1,5 @@
 <template>
-    <n-card title="laporan Listing Beban">
+    <n-card title="Laporan Listing Beban" :segmented="true">
         <TabListBan :data="dataListBan" :columns="convertObjectToArray(dataListBan)" :load="loadListingBeban"
             :page-size="10" @filter-form="handleRange" />
     </n-card>

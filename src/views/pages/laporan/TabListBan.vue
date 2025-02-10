@@ -2,9 +2,11 @@
   <div>
     <n-space vertical :size="12" class="pt-4">
       <n-space>
-
-        <n-date-picker v-model:formatted-value="rangeDate" :default-value="Date.now()" clearable format="yyyy-MM"
-                       type="month"/>
+<n-form-item label="tanggal akhir">
+        <n-date-picker v-model:formatted-value="rangeDate" :default-value="Date.now()" clearable format="yyyy-MM-dd"
+                      />
+</n-form-item>
+        <n-form-item label="cabang">
         <n-select
             :loading="loadingBranch"
             filterable
@@ -15,12 +17,17 @@
             :options="dataBranch"
             v-model:value="selectBranch"
         />
+        </n-form-item>
+        <n-form-item>
         <n-button @click="handleSubmit" type="success">
           Cari
         </n-button>
+        </n-form-item>
+        <n-form-item>
         <json-excel :data="showData" name="Detail Beban" :fields="json_fields" :stringifyLongNum="true">
           <n-button type="success" secondary>Download</n-button>
         </json-excel>
+        </n-form-item>
       </n-space>
       <n-data-table ref="tableRef" :max-height="300"
                     virtual-scroll

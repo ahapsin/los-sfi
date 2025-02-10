@@ -2,37 +2,35 @@
   <div id="drawer-target">
     <n-space vertical>
       <n-card :title="`Tabel ${$route.name}`" :segmented="{
-        content: true,
-        footer: 'soft',
-      }">
+                content: true,
+                footer: 'soft',
+            }">
         <template #header-extra>
           <n-space>
-            <n-popover trigger="click" placement="bottom-end">
-              <template #trigger>
-                <n-button :circle="width <= 520 ? true : false">
-                  <n-icon>
-                    <search-icon/>
-                  </n-icon>
-                  <span v-if="width >= 520">Cari</span>
-                </n-button>
-              </template>
-              <n-space vertical>
-                <n-input autofocus="true" clearable placeholder="cari disini.."
-                         v-model:value="searchBox"/>
-                <n-date-picker :default-value="[Date.now(), Date.now()]"
-                               :update-value-on-close="updateValueOnClose" type="daterange"
-                               @update:value="onConfirmDate"/>
-              </n-space>
-            </n-popover>
+            <!-- <n-popover trigger="click" placement="bottom-end">
+   <template #trigger>
+    <n-button :circle="width <= 520 ? true : false">
+      <n-icon>
+        <search-icon/>
+      </n-icon>
+      <span v-if="width >= 520">Cari</span>
+    </n-button>
+  </template>
+<n-space vertical>
+<n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
+<n-date-picker :default-value="[Date.now(), Date.now()]" :update-value-on-close="updateValueOnClose"
+type="daterange" @update:value="onConfirmDate" />
+</n-space>
+</n-popover> -->
 
-            <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
-              <template #icon>
-                <n-icon>
-                  <download-file/>
-                </n-icon>
-              </template>
-              <span v-if="width >= 520">Download</span>
-            </n-button>
+            <!-- <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
+  <template #icon>
+    <n-icon>
+      <download-file/>
+    </n-icon>
+  </template>
+  <span v-if="width >= 520">Download</span>
+</n-button> -->
             <n-dropdown trigger="click" :options="optFilter" @select="handleSelect">
               <n-button>
                 <template #icon>
@@ -53,7 +51,23 @@
           </n-space>
         </template>
         <n-space vertical :size="12" class="pt-4">
-          <!-- <pre>{{ showData }}</pre> -->
+          <div class="flex flex-col md:flex-row gap-2 pt-4 pr-4 ps-4">
+            <n-form-item label="NO  ORDER" class="w-full">
+              <n-input v-model:value="dynamicSearch.no_order" type="text" placeholder="NO ORDER"
+                       clearable/>
+            </n-form-item>
+            <n-form-item label="ATAS NAMA" class="w-full">
+              <n-input v-model:value="dynamicSearch.atas_nama" type="text" placeholder="ATAS NAMA"
+                       clearable/>
+            </n-form-item>
+            <n-form-item label="TANGGAL" class="w-full">
+              <n-date-picker v-model:formatted-value="dynamicSearch.tanggal" :default-value="Date.now()" clearable format="yyyy-MM-dd"
+                             placeholder="TANGGAL" class="w-full"/>
+            </n-form-item>
+            <n-form-item class="w-full">
+              <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+            </n-form-item>
+          </div>
           <n-data-table size="small" ref="tableRef" triped :scroll-x="1000" :columns="columns"
                         :data="showData" :pagination="pagination" :loading="loadData"/>
         </n-space>
@@ -91,25 +105,25 @@
       </n-grid>
       <n-divider/>
       <!-- <n-upload list-type="image" multiple :data="{ type: 'berkas pencairan' }" :custom-request="handleImagePost"
-  :max="5">
-  <n-upload-dragger>
-    <div style="margin-bottom: 12px">
-      <n-icon size="48" :depth="3">
-        <file-upload />
-      </n-icon>
-    </div>
-    <n-text style="font-size: 16px">
-      Klik atau seret file ke area ini untuk diunggah
-    </n-text>
-  </n-upload-dragger>
+:max="5">
+<n-upload-dragger>
+<div style="margin-bottom: 12px">
+<n-icon size="48" :depth="3">
+  <file-upload />
+</n-icon>
+</div>
+<n-text style="font-size: 16px">
+Klik atau seret file ke area ini untuk diunggah
+</n-text>
+</n-upload-dragger>
 </n-upload> -->
       <n-space>
         <file-upload title="Surat Pernyataan" endpoint="image_upload_prospect" :type="`sp`"
                      :idapp="selectedData.id" :def_value="findDocByType(selectedData.attachment, 'sp')"/>
-        <file-upload title="PK" endpoint="image_upload_prospect" :type="`pk`"
-                     :idapp="selectedData.id" :def_value="findDocByType(selectedData.attachment, 'pk')"/>
-        <file-upload title="Dokumentasi" endpoint="image_upload_prospect" :type="`dok`"
-                     :idapp="selectedData.id" :def_value="findDocByType(selectedData.attachment, 'dok')"/>
+        <file-upload title="PK" endpoint="image_upload_prospect" :type="`pk`" :idapp="selectedData.id"
+                     :def_value="findDocByType(selectedData.attachment, 'pk')"/>
+        <file-upload title="Dokumentasi" endpoint="image_upload_prospect" :type="`dok`" :idapp="selectedData.id"
+                     :def_value="findDocByType(selectedData.attachment, 'dok')"/>
       </n-space>
 
       <div class="pt-4 flex justify-end">
@@ -129,18 +143,21 @@ import {useLoadingBar} from "naive-ui";
 
 const loadingBar = useLoadingBar();
 import {
-  SearchOutlined as SearchIcon,
+
   ImageFilled as UploadIcon,
-  FileDownloadOutlined as DownloadFile,
+
   FilterAltOutlined as FilterIcon,
 } from "@vicons/material";
-import {useWindowSize} from "@vueuse/core";
 import _ from "lodash";
 
+
+const dynamicSearch = reactive({
+  no_order: null,
+  atas_nama: null,
+  tanggal: null
+});
 const message = useMessage();
 const tableRef = ref();
-const downloadCsv = () =>
-    tableRef.value?.downloadCsv({fileName: "export-data-fpk"});
 const showModal = ref(false);
 const dataTable = ref([]);
 const searchBox = ref();
@@ -150,7 +167,6 @@ const loadingRef = reactive({
   type: "loading",
   messagePost: null,
 });
-const {width} = useWindowSize();
 const userToken = localStorage.getItem("token");
 const handleSelesai = () => {
   getData();
@@ -163,8 +179,8 @@ const findDocByType = (c, e) => {
 };
 const columns = [
   {
-    title: "Tanggal",
-    width: 100,
+    title: "TANGGAL",
+
     sorter: "default",
     key: "visit_date",
     render(row) {
@@ -172,8 +188,8 @@ const columns = [
     },
   },
   {
-    title: "Order",
-    width: 100,
+    title: "NO ORDER",
+
     ellipsis: {
       tooltip: true,
     },
@@ -181,15 +197,13 @@ const columns = [
     key: "order_number",
   },
   {
-    title: "Nama",
-    width: 100,
+    title: "ATAS NAMA",
+
     sorter: "default",
     key: "nama_debitur",
   },
   {
-    title: "Plafond",
-    align: 'right',
-    width: 100,
+    title: "PLAFON",
     sorter: "default",
     key: "plafond",
     render(row) {
@@ -197,9 +211,7 @@ const columns = [
     },
   },
   {
-    title: "Tipe",
-    align: 'right',
-    width: 100,
+    title: "TIPE",
     sorter: "default",
     key: "jenis_angsuran",
     render(row) {
@@ -207,9 +219,9 @@ const columns = [
     },
   },
   {
-    title: "Status",
+    title: "STATUS",
     sorter: "default",
-    width: 100,
+
     key: "status",
     render(row) {
       return h(
@@ -289,7 +301,7 @@ const columns = [
     },
   },
   {
-    title: "Action",
+    title: "ACTION",
     align: "right",
     fixed: 'right',
     key: "more",
@@ -416,15 +428,18 @@ const handleAction = (e, data) => {
 const handlePrePrint = (row) => {
   router.push({name: "pre print pk", params: {idapplication: row.order_number}});
 };
+const handleSearch = () => {
+  getData();
+}
 const getData = async () => {
   loadData.value = true;
   const response = await useApi({
     method: "GET",
-    api: "kunjungan_admin",
+    api: `kunjungan_admin?no_order=${dynamicSearch.no_order == null ? '':dynamicSearch.no_order }&nama=${dynamicSearch.atas_nama == null ? '':dynamicSearch.atas_nama }&tgl_order=${dynamicSearch.tanggal == null ? '':dynamicSearch.tanggal }`,
     token: userToken,
   });
   if (!response.ok) {
-   message.error('ERROR API');
+    message.error('ERROR API');
   } else {
     loadingBar.finish();
     loadData.value = false;
@@ -469,7 +484,6 @@ const handleClose = () => {
   filterData.value = "";
   searchBox.value = "";
 }
-
 
 
 </script>

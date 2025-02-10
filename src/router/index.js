@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/transaction",
     name: "transaction",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "payment",
@@ -68,11 +68,11 @@ const routes = [
   {
     path: "/task",
     name: "task",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "apply-credit",
-        name: "Pengajuan Kredit",
+        name: "Order",
         component: () => import("../views/pages/task/FpkPage.vue"),
       },
       {
@@ -155,7 +155,7 @@ const routes = [
   {
     path: "/master",
     name: "master",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "admin_fee",
@@ -187,6 +187,11 @@ const routes = [
         path: "employees",
         name: "karyawan",
         component: () => import("../views/pages/master/EmployeesPage.vue"),
+      },
+      {
+        path: "master_jaminan",
+        name: "Jaminan",
+        component: () => import("../views/pages/master/jaminan/JaminanPage.vue"),
       },
       {
         path: "employee-action",
@@ -304,7 +309,7 @@ const routes = [
   {
     path: "/laporan",
     name: "laporan",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "inq_pinjaman",

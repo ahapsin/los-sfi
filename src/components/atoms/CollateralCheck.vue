@@ -18,9 +18,8 @@
   </n-modal>
 </template>
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import {  onMounted, ref } from "vue";
 import RepayPage from "../../views/pages/transaction/repayPage.vue";
-import { useApi } from "../../helpers/axios";
 import { TextBulletListSquareWarning20Regular as WarningIcon } from "@vicons/fluent";
 
 const showModal=ref(false);

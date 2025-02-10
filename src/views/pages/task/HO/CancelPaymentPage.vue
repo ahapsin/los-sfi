@@ -2,6 +2,7 @@
   <n-card>
     <template #header>Batal Pembayaran</template>
     <div>
+      <pre>{{props.data}}</pre>
       <n-data-table striped size="small" :row-key="(row) => row.loan_number" :columns="columns" :data="props.data"
                     :max-height="300" class="pb-2" :pagination="pagination"/>
     </div>
