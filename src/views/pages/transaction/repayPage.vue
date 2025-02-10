@@ -548,31 +548,30 @@ const handleProses = async () => {
       postDynamic();
     },
   });
-
-
 };
 const postDynamic = async () => {
-  let userToken = localStorage.getItem("token");
-  modalProsesPayment.value = true;
-  loadProses.value = true;
-  const response = await useApi({
-    method: "POST",
-    api: "payment_pelunasan",
-    data: pelunasan,
-    token: userToken,
-  });
-  if (!response.ok) {
-    loadProses.value = false;
-    responseProsesPayment.value = { status: "error", res: null };
-  } else {
-    responseProsesPayment.value = {
-      status: response.data.STATUS == 'PAID' ? 'success' : 'info',
-      res: response.data
-    };
-    loadProses.value = false;
-    paymentData.value = response.data;
-    dialogProses.value = true;
-  }
+  console.log(pelunasan);
+  // let userToken = localStorage.getItem("token");
+  // modalProsesPayment.value = true;
+  // loadProses.value = true;
+  // const response = await useApi({
+  //   method: "POST",
+  //   api: "payment_pelunasan",
+  //   data: pelunasan,
+  //   token: userToken,
+  // });
+  // if (!response.ok) {
+  //   loadProses.value = false;
+  //   responseProsesPayment.value = { status: "error", res: null };
+  // } else {
+  //   responseProsesPayment.value = {
+  //     status: response.data.STATUS == 'PAID' ? 'success' : 'info',
+  //     res: response.data
+  //   };
+  //   loadProses.value = false;
+  //   paymentData.value = response.data;
+  //   dialogProses.value = true;
+  // }
 };
 
 const modalProsesPayment = ref(false);
