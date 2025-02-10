@@ -147,7 +147,7 @@
             <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
                             v-model:value="pelunasan.JUMLAH_DISKON" :show-button="false" :parse="parse" :format="format"
                             clearable
-                            @blur="pushJumlahUang" class="w-full" readonly>
+                            class="w-full" readonly>
             </n-input-number>
           </n-form-item>
           <n-form-item label="Pembulatan" class="w-full">
@@ -652,6 +652,14 @@ const getDataPelunasan = async (e) => {
 };
 const pushJumlahUang = async () => {
   pelunasan.PEMBULATAN = 0;
+  pelunasan.BAYAR_POKOK = 0;
+  pelunasan.BAYAR_BUNGA = 0;
+  pelunasan.BAYAR_PINALTI = 0;
+  pelunasan.BAYAR_DENDA = 0;
+  pelunasan.DISKON_POKOK = 0;
+  pelunasan.DISKON_PINALTI = 0;
+  peluansan.DISKON_BUNGA = 0;
+  pelunasan.DISKON_DENDA = 0;
 };
 const handleExpand = () => {
   const fullPage = router.resolve({name: "expand transaction"});

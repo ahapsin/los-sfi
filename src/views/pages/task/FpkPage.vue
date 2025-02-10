@@ -435,7 +435,7 @@ const getData = async () => {
   loadData.value = true;
   const response = await useApi({
     method: "GET",
-    api: `kunjungan_admin?no_order=${dynamicSearch.no_order == null ? '':dynamicSearch.no_order }&nama=${dynamicSearch.nama == null ? '':dynamicSearch.nama }&tgl_order=${dynamicSearch.tanggal == null ? '':dynamicSearch.tanggal }`,
+    api: `kunjungan_admin?no_order=${dynamicSearch.no_order == null ? '':dynamicSearch.no_order }&nama=${dynamicSearch.atas_nama == null ? '':dynamicSearch.atas_nama }&tgl_order=${dynamicSearch.tanggal == null ? '':dynamicSearch.tanggal }`,
     token: userToken,
   });
   if (!response.ok) {

@@ -106,7 +106,7 @@ const GetMe = async () => {
         token: userToken,
     });
     if (!response.ok) {
-      message.error('ERROR API');
+      message.info('SESI BERAKHIR');
     } else {
         dataUser.value = response.data.response;
         me.storeMe(response.data.response);
@@ -123,7 +123,7 @@ const LogOut = async () => {
     if (response.ok) {
         localStorage.removeItem("token");
         message.success("logout berhasil");
-        router.push("/");
+        router.go();
     }
 };
 onMounted(() => GetMe());

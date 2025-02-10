@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/transaction",
     name: "transaction",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "payment",
@@ -68,7 +68,7 @@ const routes = [
   {
     path: "/task",
     name: "task",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "apply-credit",
@@ -155,7 +155,7 @@ const routes = [
   {
     path: "/master",
     name: "master",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "admin_fee",
@@ -309,7 +309,7 @@ const routes = [
   {
     path: "/laporan",
     name: "laporan",
-    component: () => import("../views/pages/DashboardPage.vue"),
+    component: () => import("../views/pages/layout/DashboardLayout.vue"),
     children: [
       {
         path: "inq_pinjaman",
