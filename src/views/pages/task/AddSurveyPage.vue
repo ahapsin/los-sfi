@@ -108,7 +108,7 @@
                                 </n-radio>
                                 <n-divider vertical />
                                 <n-radio name="tenor" value="12">
-                                    2 x 12 bulan<n-text code>
+                                    2 x 6 bulan<n-text code>
                                         {{
                                         skemaAngsuran.length == null
                                         ? ` /
@@ -119,7 +119,7 @@
                                 </n-radio>
                                 <n-divider vertical />
                                 <n-radio name="tenor" value="18">
-                                    3 x 18 bulan<n-text code>
+                                    3 x 6 bulan<n-text code>
                                         {{
                                         skemaAngsuran.length == null
                                         ? ` /

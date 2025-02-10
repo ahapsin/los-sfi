@@ -75,7 +75,7 @@
           </n-button>
 
           <n-button type="info" @click="uploadState = !uploadState" v-show="bodyModal.STATUS == 'PAID'"
-                    >
+          >
             <n-space>
               <n-icon>
                 <upload-icon/>
@@ -109,162 +109,162 @@
             :y-offset="28"
             :rotate="-15"
         >
-        <div class="p-2">
-          <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
-            <div class="flex gap-2 items-center">
-              <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
-              <div class="flex flex-col">
-                <span class="text-xl font-bold">KSPDJAYA</span>
-                <n-text strong class="text-md"> POS: {{ bodyModal.cabang }}</n-text>
+          <div class="p-2">
+            <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
+              <div class="flex gap-2 items-center">
+                <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
+                <div class="flex flex-col">
+                  <span class="text-xl font-bold">KSPDJAYA</span>
+                  <n-text strong class="text-md"> POS: {{ bodyModal.cabang }}</n-text>
+                </div>
+              </div>
+              <div class="text-lg font-bold hidden md:flex">KWITANSI {{
+                  bodyModal.payment_type ==
+                  'pelunasan' ? 'PELUNASAN' : 'PEMBAYARAN'
+                }}
               </div>
             </div>
-            <div class="text-lg font-bold hidden md:flex">KWITANSI {{
-                bodyModal.payment_type ==
-                'pelunasan' ? 'PELUNASAN' : 'PEMBAYARAN'
-              }}
-            </div>
-          </div>
-          <div class="flex justify-between">
-            <n-text strong class="text-md"> {{ bodyModal.tgl_transaksi }}</n-text>
-            <n-text strong class="text-md"> {{ bodyModal.payment_method == 'cash' ? 'TUNAI' : 'TRANSFER' }}</n-text>
+            <div class="flex justify-between">
+              <n-text strong class="text-md"> {{ bodyModal.tgl_transaksi }}</n-text>
+              <n-text strong class="text-md"> {{ bodyModal.payment_method == 'cash' ? 'TUNAI' : 'TRANSFER' }}</n-text>
 
-          </div>
-          <div class="flex justify-between border-b border-dashed border-black"
-               :class="width > 850 ? 'flex-row' : 'flex-col'">
-            <div class="flex flex-col py-4">
-              <small class="text-reg">No Transaksi : </small>
-              <n-text class="text-reg font-bold"> {{ bodyModal.no_transaksi }}</n-text>
-              <small class="text-reg">No Kontrak : </small>
-              <n-text class="text-reg font-bold"> {{ bodyModal.cust_code }}</n-text>
             </div>
-            <div class="flex flex-col py-4">
-              <small class="text-reg">Terima dari (No Pelanggan) : </small>
-              <n-text class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
-              <small class="text-reg">({{ bodyModal.no_fasilitas }})</small>
-            </div>
-          </div>
-
-          <div class="grid border-b border-dashed border-black pb-2"
-               :class="width > 850 ? 'grid-cols-5 gap-4' : 'grid-cols-1 '"
-               v-if="bodyModal.payment_type != 'pelunasan'">
-            <div class="flex flex-col">
-              <small class="text-reg">JML. ANGS</small>
-              <n-text strong class="text-md"> {{
-                  bodyModal.bayar_angsuran.toLocaleString('US') ?
-                      bodyModal.bayar_angsuran.toLocaleString('US') : 'n/a'
-                }}
-              </n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">JML. DENDA</small>
-              <n-text strong class="text-md">
-                {{ bodyModal.bayar_denda.toLocaleString() }}
-              </n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">CUST. BAYAR</small>
-              <n-text strong class="text-md"> {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">PEMBULATAN</small>
-              <n-text strong class="text-md"> {{ bodyModal.pembulatan.toLocaleString() }}</n-text>
+            <div class="flex justify-between border-b border-dashed border-black"
+                 :class="width > 850 ? 'flex-row' : 'flex-col'">
+              <div class="flex flex-col py-4">
+                <small class="text-reg">No Transaksi : </small>
+                <n-text class="text-reg font-bold"> {{ bodyModal.no_transaksi }}</n-text>
+                <small class="text-reg">No Kontrak : </small>
+                <n-text class="text-reg font-bold"> {{ bodyModal.cust_code }}</n-text>
+              </div>
+              <div class="flex flex-col py-4">
+                <small class="text-reg">Terima dari (No Pelanggan) : </small>
+                <n-text class="text-lg font-bold"> {{ bodyModal.nama }}</n-text>
+                <small class="text-reg">({{ bodyModal.no_fasilitas }})</small>
+              </div>
             </div>
 
-            <div class="flex flex-col">
-              <small class="text-reg">KEMBALIAN</small>
-              <td>
-                <n-text strong class="text-md"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text>
-              </td>
-            </div>
+            <div class="grid border-b border-dashed border-black pb-2"
+                 :class="width > 850 ? 'grid-cols-5 gap-4' : 'grid-cols-1 '"
+                 v-if="bodyModal.payment_type != 'pelunasan'">
+              <div class="flex flex-col">
+                <small class="text-reg">JML. ANGS</small>
+                <n-text strong class="text-md"> {{
+                    bodyModal.bayar_angsuran.toLocaleString('US') ?
+                        bodyModal.bayar_angsuran.toLocaleString('US') : 'n/a'
+                  }}
+                </n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">JML. DENDA</small>
+                <n-text strong class="text-md">
+                  {{ bodyModal.bayar_denda.toLocaleString() }}
+                </n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">CUST. BAYAR</small>
+                <n-text strong class="text-md"> {{ bodyModal.jumlah_uang.toLocaleString("US") }}</n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">PEMBULATAN</small>
+                <n-text strong class="text-md"> {{ bodyModal.pembulatan.toLocaleString() }}</n-text>
+              </div>
 
-          </div>
-          <div class="grid border-b border-dashed border-black pb-2"
-               :class="width > 850 ? 'grid-cols-5 gap-4' : 'grid-cols-1 '" v-else>
-            <div class="flex flex-col">
-              <small class="text-reg">Total Pelunasan</small>
-              <n-text class="text-md font-bold"> {{
-                  bodyModal.total_bayar.toLocaleString('US') ?
-                      bodyModal.total_bayar.toLocaleString('US') : 'n/a'
-                }}
-              </n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">Pembulatan</small>
-              <n-text class="text-md font-bold"> {{ bodyModal.pembulatan }}</n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">Cust. Bayar</small>
-              <n-text class="text-md font-bold"> {{
-                  bodyModal.jumlah_uang.toLocaleString("US")
-                }}
-              </n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">Diskon</small>
-              <n-text class="text-md font-bold"> {{
-                  (bodyModal.total_bayar - bodyModal.jumlah_uang).toLocaleString("US")
-                }}
-              </n-text>
-            </div>
-            <div class="flex flex-col">
-              <small class="text-reg">Metode Pembayaran</small>
-              <n-text class="text-md font-bold"> {{ bodyModal.payment_method }}
-                {{ bodyModal.payment_type == 'pelunasan' ? '/ pelunasan' : '' }}
-              </n-text>
-            </div>
-          </div>
-        </div>
-        <div class="px-3">
+              <div class="flex flex-col">
+                <small class="text-reg">KEMBALIAN</small>
+                <td>
+                  <n-text strong class="text-md"> {{ bodyModal.kembalian.toLocaleString("US") }}</n-text>
+                </td>
+              </div>
 
-          <table width="100%" class="border border-black" v-if="bodyModal.payment_type != 'pelunasan'">
-            <tr>
-              <th class="border border-black">ANGS. KE</th>
-              <th class="border border-black">TANGGAL JT.</th>
-              <th class="border border-black">BYR. ANGS</th>
-              <th class="border border-black">BYR. DENDA</th>
-              <th class="border border-black">DISKON</th>
-              <!--              <th class="border border-black">Jumlah</th>-->
-            </tr>
-            <tr v-for="angs in bodyModal.struktur" :key="angs.id">
-              <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
-              <td class="border  border-black text-center">{{ angs.tgl_angsuran }}</td>
-              <td class="border pe-2 border-black text-right">{{
-                  parseInt(angs.bayar_angsuran).toLocaleString('US')
-                }}
-              </td>
-              <td class="border pe-2 border-black text-right">{{
-                  parseInt(angs.bayar_denda).toLocaleString('US')
-                }}
-              </td>
-              <td align="right" class="border pe-2 border-black text-right">
-                {{
-                  (angs.diskon_denda).toLocaleString(('US'))
-                }}
-              </td>
-              <!--              <td class="border pe-2 border-black text-right">-->
-              <!--                {{ (parseInt(angs.bayar_denda) + parseInt(angs.bayar_pokok + angs.bayar_bunga)+parseInt(angs.diskon_pokok) +-->
-              <!--                  parseInt(angs.diskon_bunga) + parseInt(angs.diskon_denda)).toLocaleString('US') }}-->
+            </div>
+            <div class="grid border-b border-dashed border-black pb-2"
+                 :class="width > 850 ? 'grid-cols-5 gap-4' : 'grid-cols-1 '" v-else>
+              <div class="flex flex-col">
+                <small class="text-reg">Total Pelunasan</small>
+                <n-text class="text-md font-bold"> {{
+                    bodyModal.total_bayar.toLocaleString('US') ?
+                        bodyModal.total_bayar.toLocaleString('US') : 'n/a'
+                  }}
+                </n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">Pembulatan</small>
+                <n-text class="text-md font-bold"> {{ bodyModal.pembulatan }}</n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">Cust. Bayar</small>
+                <n-text class="text-md font-bold"> {{
+                    bodyModal.jumlah_uang.toLocaleString("US")
+                  }}
+                </n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">Diskon</small>
+                <n-text class="text-md font-bold"> {{
+                    (bodyModal.total_bayar - bodyModal.jumlah_uang).toLocaleString("US")
+                  }}
+                </n-text>
+              </div>
+              <div class="flex flex-col">
+                <small class="text-reg">Metode Pembayaran</small>
+                <n-text class="text-md font-bold"> {{ bodyModal.payment_method }}
+                  {{ bodyModal.payment_type == 'pelunasan' ? '/ pelunasan' : '' }}
+                </n-text>
+              </div>
+            </div>
+          </div>
+          <div class="px-3">
+
+            <table width="100%" class="border border-black" v-if="bodyModal.payment_type != 'pelunasan'">
+              <tr>
+                <th class="border border-black">ANGS. KE</th>
+                <th class="border border-black">TANGGAL JT.</th>
+                <th class="border border-black">BYR. ANGS</th>
+                <th class="border border-black">BYR. DENDA</th>
+                <th class="border border-black">DISKON</th>
+                <!--              <th class="border border-black">Jumlah</th>-->
+              </tr>
+              <tr v-for="angs in bodyModal.struktur" :key="angs.id">
+                <td class="border text-center border-black">{{ angs.angsuran_ke }}</td>
+                <td class="border  border-black text-center">{{ angs.tgl_angsuran }}</td>
+                <td class="border pe-2 border-black text-right">{{
+                    parseInt(angs.bayar_angsuran).toLocaleString('US')
+                  }}
+                </td>
+                <td class="border pe-2 border-black text-right">{{
+                    parseInt(angs.bayar_denda).toLocaleString('US')
+                  }}
+                </td>
+                <td align="right" class="border pe-2 border-black text-right">
+                  {{
+                    (angs.diskon_denda).toLocaleString(('US'))
+                  }}
+                </td>
+                <!--              <td class="border pe-2 border-black text-right">-->
+                <!--                {{ (parseInt(angs.bayar_denda) + parseInt(angs.bayar_pokok + angs.bayar_bunga)+parseInt(angs.diskon_pokok) +-->
+                <!--                  parseInt(angs.diskon_bunga) + parseInt(angs.diskon_denda)).toLocaleString('US') }}-->
+                <!--              </td>-->
+
+              </tr>
+              <!--            <tr>-->
+              <!--              <td><strong>Total</strong></td>-->
+              <!--              <td colspan="5" align="right" class="pe-2">-->
+              <!--                <strong>{{ bodyModal.total_bayar.toLocaleString("US") }}</strong>-->
               <!--              </td>-->
-
-            </tr>
-            <!--            <tr>-->
-            <!--              <td><strong>Total</strong></td>-->
-            <!--              <td colspan="5" align="right" class="pe-2">-->
-            <!--                <strong>{{ bodyModal.total_bayar.toLocaleString("US") }}</strong>-->
-            <!--              </td>-->
-            <!--            </tr>-->
-          </table>
-        </div>
-        <div class="flex flex-col border-b border-dashed border-black pb-4 ms-3">
-          <div class="flex gap-4">
-            <div class="border-b border-black pt-20 px-4">
-              <n-text strong class="text-md font-bold"> {{ bodyModal.created_by }}</n-text>
-            </div>
-            <div class="border-b border-black pt-20 px-4">
-              <n-text strong class="text-md font-bold"> {{ bodyModal.nama }}</n-text>
+              <!--            </tr>-->
+            </table>
+          </div>
+          <div class="flex flex-col border-b border-dashed border-black pb-4 ms-3">
+            <div class="flex gap-4">
+              <div class="border-b border-black pt-20 px-4">
+                <n-text strong class="text-md font-bold"> {{ bodyModal.created_by }}</n-text>
+              </div>
+              <div class="border-b border-black pt-20 px-4">
+                <n-text strong class="text-md font-bold"> {{ bodyModal.nama }}</n-text>
+              </div>
             </div>
           </div>
-        </div>
         </n-watermark>
       </div>
       <div v-else>
@@ -391,12 +391,11 @@ const bodyCancel = reactive({
 
 const handleCancelPayment = (e) => {
   const date = e.split(" ");
-  if (date[0] != thisDays) {
-    message.error('Pengajuan pembatalan pembayaran melebihi batas hari');
-  }else {
-
+  if (date[0] == thisDays.value) {
     confCancelModal.value = true;
     bodyCancel.no_invoice = bodyModal.value.no_transaksi;
+  } else {
+    message.error('pengajuan batal melebihi batas hari');
   }
 }
 
