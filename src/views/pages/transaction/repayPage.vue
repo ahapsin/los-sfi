@@ -343,7 +343,6 @@ import router from "../../../router";
 import {
   CheckCircleRound as checkIcon,
   ChevronLeftRound as backIcon,
-  OpenInFullRound as fullIcon,
 } from "@vicons/material";
 import {
   NIcon,
@@ -357,7 +356,6 @@ import {computed, reactive, ref, h, onMounted} from "vue";
 import {useVueToPrint} from "vue-to-print";
 
 const searchField = ref(false);
-const valOptSearch = ref(null);
 const checkedRowCredit = ref([]);
 const spinnerShow = ref(true);
 const dialogProses = ref(false);
@@ -430,38 +428,6 @@ const createColumns = () => {
     // },
   ];
 };
-const createColumnsEmbed = () => {
-  return [
-    {
-      title: "No Kontrak",
-      key: "loan_number",
-      sorter: "default",
-    },
-    {
-      title: "Nama",
-      key: "nama",
-      sorter: "default",
-      fixed: "left",
-    },
-    {
-      title: "No Polisi",
-      key: "no_polisi",
-      sorter: "default",
-    },
-    {
-      title: "Alamat",
-      key: "alamat",
-      sorter: "default",
-    },
-    {
-      title: "Angsuran",
-      key: "angsuran",
-      render(row) {
-        return h("div", row.angsuran.toLocaleString("US"));
-      },
-    },
-  ];
-};
 const printReceiptRef = ref();
 const selectedFasilitas = ref();
 const rowProps = (row) => {
@@ -490,12 +456,7 @@ const rowProps = (row) => {
     },
   };
 };
-const handleDone = () => {
-  dialogProses.value = false;
-  router.push({name: "pembayaran"});
-  searchField.value = false;
-  valOptSearch.value = null;
-};
+
 const parse = (input) => {
   const nums = input.replace(/,/g, "").trim();
   if (/^\d+(\.(\d+)?)?$/.test(nums)) return Number(nums);
@@ -550,28 +511,27 @@ const handleProses = async () => {
   });
 };
 const postDynamic = async () => {
-  console.log(pelunasan);
-  // let userToken = localStorage.getItem("token");
-  // modalProsesPayment.value = true;
-  // loadProses.value = true;
-  // const response = await useApi({
-  //   method: "POST",
-  //   api: "payment_pelunasan",
-  //   data: pelunasan,
-  //   token: userToken,
-  // });
-  // if (!response.ok) {
-  //   loadProses.value = false;
-  //   responseProsesPayment.value = { status: "error", res: null };
-  // } else {
-  //   responseProsesPayment.value = {
-  //     status: response.data.STATUS == 'PAID' ? 'success' : 'info',
-  //     res: response.data
-  //   };
-  //   loadProses.value = false;
-  //   paymentData.value = response.data;
-  //   dialogProses.value = true;
-  // }
+  let userToken = localStorage.getItem("token");
+  modalProsesPayment.value = true;
+  loadProses.value = true;
+  const response = await useApi({
+    method: "POST",
+    api: "payment_pelunasan",
+    data: pelunasan,
+    token: userToken,
+  });
+  if (!response.ok) {
+    loadProses.value = false;
+    responseProsesPayment.value = { status: "error", res: null };
+  } else {
+    responseProsesPayment.value = {
+      status: response.data.STATUS == 'PAID' ? 'success' : 'info',
+      res: response.data
+    };
+    loadProses.value = false;
+    paymentData.value = response.data;
+    dialogProses.value = true;
+  }
 };
 
 const modalProsesPayment = ref(false);
@@ -745,10 +705,6 @@ const pushJumlahUang = async () => {
   pelunasan.DISKON_PINALTI = 0;
   pelunasan.DISKON_BUNGA = 0;
   pelunasan.DISKON_DENDA = 0;
-};
-const handleExpand = () => {
-  const fullPage = router.resolve({name: "expand transaction"});
-  window.open(fullPage.href, "_blank");
 };
 const props = defineProps({
   embed: Boolean,
