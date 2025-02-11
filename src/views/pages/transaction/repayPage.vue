@@ -147,7 +147,7 @@
             <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
                             v-model:value="pelunasan.JUMLAH_DISKON" :show-button="false" :parse="parse" :format="format"
                             clearable
-                            class="w-full" readonly>
+                            class="w-full" disabled>
             </n-input-number>
           </n-form-item>
           <n-form-item label="Pembulatan" class="w-full">
