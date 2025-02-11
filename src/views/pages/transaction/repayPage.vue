@@ -673,38 +673,40 @@ const getDataPelunasan = async (e) => {
 };
 const pushJumlahUang = async () => {
     Object.assign(pelunasan, formPelunasan);
-    let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
-    if (bayarPokok >= 0) {
+    let sisaBayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
+    if (sisaBayarPokok >= 0) {
         pelunasan.BAYAR_POKOK = pelunasan.SISA_POKOK;
         pelunasan.DISKON_POKOK = 0;
-        let bayarBunga = bayarPokok - pelunasan.TUNGGAKAN_BUNGA;
-        if (bayarBunga > 0) {
+        let sisaBayarBunga = sisaBayarPokok - pelunasan.TUNGGAKAN_BUNGA;
+        if (sisaBayarBunga > 0) {
             pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
             pelunasan.DISKON_BUNGA = 0;
-            let bayarPinalti = bayarBunga - pelunasan.PINALTI;
-            if (bayarPinalti > 0) {
+            let sisaBayarPinalti = sisaBayarBunga - pelunasan.PINALTI;
+            if (sisaBayarPinalti > 0) {
                 pelunasan.BAYAR_PINALTI = pelunasan.PINALTI;
                 pelunasan.DISKON_PINALTI = 0;
-                let bayarDenda = bayarPinalti - pelunasan.DENDA;
-                if (bayarDenda > 0) {
+                let sisaBayarDenda = sisaBayarPinalti - pelunasan.DENDA;
+                if (sisaBayarDenda > 0) {
                     pelunasan.BAYAR_DENDA = pelunasan.DENDA;
                     pelunasan.DISKON_DENDA = 0;
                 } else {
-                    pelunasan.BAYAR_DENDA = bayarDenda + pelunasan.DENDA;
+                    pelunasan.BAYAR_DENDA = sisaBayarDenda + pelunasan.DENDA;
                     pelunasan.DISKON_DENDA = pelunasan.DENDA - pelunasan.BAYAR_DENDA;
                 }
             } else {
-                pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
-                pelunasan.DISKON_PINALTI =
-                    pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
+                pelunasan.BAYAR_PINALTI = sisaBayarPinalti + pelunasan.PINALTI;
+                pelunasan.DISKON_PINALTI = pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
+                pelunasan.DISKON_DENDA = pelunasan.DENDA;
             }
         } else {
-            pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA + bayarBunga;
+            pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA + sisaBayarBunga;
             pelunasan.DISKON_POKOK = 0;
-            pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
+            pelunasan.DISKON_BUNGA = Math.abs(sisaBayarBunga);
+            pelunasan.DISKON_DENDA = pelunasan.DENDA;
+            pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
         }
     } else {
-        pelunasan.BAYAR_POKOK = bayarPokok + pelunasan.SISA_POKOK;
+        pelunasan.BAYAR_POKOK = sisaBayarPokok + pelunasan.SISA_POKOK;
         pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK - pelunasan.UANG_PELANGGAN;
         pelunasan.DISKON_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
         pelunasan.DISKON_DENDA = pelunasan.DENDA;
@@ -716,8 +718,8 @@ const props = defineProps({
     atr: String,
 });
 const clearUangPelaanggan = () => {
-    Object.assign(pelunasan,formPelunasan);
-    pelunasan.UANG_PELANGGAN=0;
+    Object.assign(pelunasan, formPelunasan);
+    pelunasan.UANG_PELANGGAN = 0;
 }
 onMounted(() => {
     if (props.embed) {
