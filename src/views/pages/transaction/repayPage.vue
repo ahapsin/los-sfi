@@ -139,8 +139,8 @@
           <n-form-item path="nestedValue.path2" label="Uang Pelanggan" class="w-full">
             <n-input-number v-bind:dir="isRtl ? 'rtl' : 'ltr'" placeholder="Jumlah Pembayaran"
                             v-model:value="pelunasan.UANG_PELANGGAN" :show-button="false" :parse="parse"
-                            :format="format" clearable
-                            @blur="pushJumlahUang" class="w-full">
+                            :format="format" clearable @clear="clearUangPelaanggan" @blur="pushJumlahUang"
+                            class="w-full">
             </n-input-number>
           </n-form-item>
           <n-form-item path="nestedValue.path2" label="Jumlah Diskon" class="w-full">
@@ -336,6 +336,7 @@
       </n-result>
     </n-card>
   </n-modal>
+  {{ pelunasan }}
 </template>
 <script setup>
 import {useApi} from "../../../helpers/axios";
@@ -522,7 +523,7 @@ const postDynamic = async () => {
   });
   if (!response.ok) {
     loadProses.value = false;
-    responseProsesPayment.value = { status: "error", res: null };
+    responseProsesPayment.value = {status: "error", res: null};
   } else {
     responseProsesPayment.value = {
       status: response.data.STATUS == 'PAID' ? 'success' : 'info',
@@ -582,45 +583,7 @@ const pelunasan = reactive({
   PINALTI: 0,
 
   UANG_PELANGGAN: 0,
-  DISKON: computed(() => {
-    let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
-    if (bayarPokok >= 0) {
-      pelunasan.BAYAR_POKOK = pelunasan.SISA_POKOK;
-      pelunasan.DISKON_POKOK = 0;
-      let bayarBunga = bayarPokok - pelunasan.TUNGGAKAN_BUNGA;
-      if (bayarBunga > 0) {
-        pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
-        pelunasan.DISKON_BUNGA = 0;
-        let bayarPinalti = bayarBunga - pelunasan.PINALTI;
-        if (bayarPinalti > 0) {
-          pelunasan.BAYAR_PINALTI = pelunasan.PINALTI;
-          pelunasan.DISKON_PINALTI = 0;
-          let bayarDenda = bayarPinalti - pelunasan.DENDA;
-          if (bayarDenda > 0) {
-            pelunasan.BAYAR_DENDA = pelunasan.DENDA;
-            pelunasan.DISKON_DENDA = 0;
-          } else {
-            pelunasan.BAYAR_DENDA = bayarDenda + pelunasan.DENDA;
-            pelunasan.DISKON_DENDA = pelunasan.DENDA - pelunasan.BAYAR_DENDA;
-          }
-        } else {
-          pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
-          pelunasan.DISKON_PINALTI =
-              pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
-        }
-      } else {
-        pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA + bayarBunga;
-        pelunasan.DISKON_POKOK = 0;
-        pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
-      }
-    } else {
-      pelunasan.BAYAR_POKOK = bayarPokok + pelunasan.SISA_POKOK;
-      pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK - pelunasan.UANG_PELANGGAN;
-      pelunasan.DISKON_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
-      pelunasan.DISKON_DENDA = pelunasan.DENDA;
-      pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
-    }
-  }),
+  DISKON: 0,
   BAYAR_POKOK: 0,
   BAYAR_BUNGA: 0,
   BAYAR_PINALTI: 0,
@@ -695,21 +658,59 @@ const getDataPelunasan = async (e) => {
     loadingAngsuran.value = false;
   }
 };
-const pushJumlahUang = async () => {
-  pelunasan.PEMBULATAN = 0;
-  pelunasan.BAYAR_POKOK = 0;
-  pelunasan.BAYAR_BUNGA = 0;
-  pelunasan.BAYAR_PINALTI = 0;
-  pelunasan.BAYAR_DENDA = 0;
-  pelunasan.DISKON_POKOK = 0;
-  pelunasan.DISKON_PINALTI = 0;
-  pelunasan.DISKON_BUNGA = 0;
-  pelunasan.DISKON_DENDA = 0;
-};
+const pushJumlahUang = computed(async () => {
+  let bayarPokok = pelunasan.UANG_PELANGGAN - pelunasan.SISA_POKOK;
+  if (bayarPokok >= 0) {
+    pelunasan.BAYAR_POKOK = pelunasan.SISA_POKOK;
+    pelunasan.DISKON_POKOK = 0;
+    let bayarBunga = bayarPokok - pelunasan.TUNGGAKAN_BUNGA;
+    if (bayarBunga > 0) {
+      pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
+      pelunasan.DISKON_BUNGA = 0;
+      let bayarPinalti = bayarBunga - pelunasan.PINALTI;
+      if (bayarPinalti > 0) {
+        pelunasan.BAYAR_PINALTI = pelunasan.PINALTI;
+        pelunasan.DISKON_PINALTI = 0;
+        let bayarDenda = bayarPinalti - pelunasan.DENDA;
+        if (bayarDenda > 0) {
+          pelunasan.BAYAR_DENDA = pelunasan.DENDA;
+          pelunasan.DISKON_DENDA = 0;
+        } else {
+          pelunasan.BAYAR_DENDA = bayarDenda + pelunasan.DENDA;
+          pelunasan.DISKON_DENDA = pelunasan.DENDA - pelunasan.BAYAR_DENDA;
+        }
+      } else {
+        pelunasan.BAYAR_PINALTI = bayarPinalti + pelunasan.PINALTI;
+        pelunasan.DISKON_PINALTI =
+            pelunasan.PINALTI - pelunasan.BAYAR_PINALTI;
+      }
+    } else {
+      pelunasan.BAYAR_BUNGA = pelunasan.TUNGGAKAN_BUNGA + bayarBunga;
+      pelunasan.DISKON_POKOK = 0;
+      pelunasan.DISKON_BUNGA = Math.abs(bayarBunga);
+    }
+  } else {
+    pelunasan.BAYAR_POKOK = bayarPokok + pelunasan.SISA_POKOK;
+    pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK - pelunasan.UANG_PELANGGAN;
+    pelunasan.DISKON_BUNGA = pelunasan.TUNGGAKAN_BUNGA;
+    pelunasan.DISKON_DENDA = pelunasan.DENDA;
+    pelunasan.DISKON_PINALTI = pelunasan.PINALTI;
+  }
+});
 const props = defineProps({
   embed: Boolean,
   atr: String,
 });
+const clearUangPelaanggan = () => {
+  pelunasan.BAYAR_POKOK = 0;
+  pelunasan.BAYAR_BUNGA = 0;
+  pelunasan.BAYAR_PINALTI = 0;
+  pelunasan.BAYAR_DENDA = 0;
+  pelunasan.DISKON_POKOK = pelunasan.SISA_POKOK;
+  pelunasan.DISKON_BUNGA = pelunasan.BAYAR_BUNGA;
+  pelunasan.DISKON_PINALTI = pelunasan.BAYAR_PINALTI;
+  pelunasan.DISKON_DENDA = pelunasan.BAYAR_DENDA;
+}
 onMounted(() => {
   if (props.embed) {
     dynamicSearch.no_kontrak = props.atr;
