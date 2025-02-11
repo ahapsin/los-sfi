@@ -279,7 +279,7 @@ const getData = async () => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error("ERROR API TRANSACTION");
+    message.error("ERROR API (J2)");
 
   } else {
     dataTable.value = response.data;

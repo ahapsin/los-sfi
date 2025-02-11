@@ -191,9 +191,7 @@ const props = defineProps({
 
 const today = new Date();
 
-onMounted(() => {
-  getBranch();
-})
+
 
 const year = today.getFullYear();
 let month = today.getMonth() + 1; // Months are zero-indexed, so add 1
@@ -207,8 +205,6 @@ const convertObjectToArray = (obj) => {
   return keys.map(key => ({title: key, key: key}));
 }
 
-month = month < 10 ? '0' + month : month;
-day = day < 10 ? '0' + day : day;
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -224,11 +220,9 @@ const compCashOut = computed(()=>{
 const compCashIn = computed(()=>{
   return _.filter(props.data.datas,['type',"CASH_IN"]);
 });
-const formatDateRange = (e) => e.join('_');
-const downloadCsv = () => tableRef.value?.downloadCsv({
-  fileName: `lkbh_${formatDateRange(rangeDate.value)}`,
-  keepOriginalData: true
-});
 
+onMounted(() => {
+  getBranch();
+})
 
 </script>

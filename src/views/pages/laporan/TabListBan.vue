@@ -2,15 +2,15 @@
   <div>
     <n-space vertical :size="12" class="pt-4">
       <n-space>
-<n-form-item label="tanggal akhir">
+<n-form-item label="TANGGAL AKHIR">
         <n-date-picker v-model:formatted-value="rangeDate" :default-value="Date.now()" clearable format="yyyy-MM-dd"
                       />
 </n-form-item>
-        <n-form-item label="cabang">
+        <n-form-item label="POS">
         <n-select
             :loading="loadingBranch"
             filterable
-            placeholder="Pilih Cabang"
+            placeholder="Pilih POS"
             label-field="nama"
             value-field="id"
             :default-value="defBranch"
@@ -24,8 +24,8 @@
         </n-button>
         </n-form-item>
         <n-form-item>
-        <json-excel :data="showData" name="Detail Beban" :fields="json_fields" :stringifyLongNum="true">
-          <n-button type="success" secondary>Download</n-button>
+        <json-excel v-if="dataListBan.length > 0" :data="dataListBan" :name="`Listing Beban_${selectBranch}_${rangeDate} `" :fields="json_fields" :stringifyLongNum="true">
+          <n-button type="success" secondary>Download </n-button>
         </json-excel>
         </n-form-item>
       </n-space>

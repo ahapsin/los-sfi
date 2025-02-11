@@ -53,8 +53,16 @@
         <n-space vertical :size="12" class="pt-4">
           <div class="flex flex-col md:flex-row gap-2 pt-4 pr-4 ps-4">
             <n-form-item label="POS" class="w-full">
-              <n-input v-model:value="dynamicSearch.pos" type="text" placeholder="POS"
-                       clearable/>
+              <n-select
+                  :loading="loadingBranch"
+                  filterable
+                  placeholder="Pilih Cabang"
+                  label-field="nama"
+                  value-field="nama"
+                  :default-value="defBranch"
+                  :options="dataBranch"
+                  v-model:value="dynamicSearch.pos"
+              />
             </n-form-item>
             <n-form-item label="NO KONTRAK" class="w-full">
               <n-input v-model:value="dynamicSearch.loan_number" type="text" placeholder="NO KONTRAK" clearable/>
@@ -75,8 +83,12 @@
               />
             </n-form-item>
 
-            <n-form-item class="w-full">
+            <n-form-item class="flex gap-2 w-full">
               <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+              <json-excel v-if="showData.length > 0" :data="showData" :name="`laporan_jaminan_${dynamicSearch.pos}`" :fields="json_fields"
+                          :stringifyLongNum="true">
+                <n-button type="success" secondary>Download</n-button>
+              </json-excel>
             </n-form-item>
           </div>
           <n-data-table
@@ -92,29 +104,17 @@
   </div>
 </template>
 <script setup>
-import {ref, onMounted, h, computed, reactive} from "vue";
+import {ref, onMounted, computed, reactive} from "vue";
 import {useApi} from "../../../helpers/axios";
 import {useSearch} from "../../../helpers/searchObject";
-import router from "../../../router";
+import {useMeStore} from "../../../stores/me";
 import {
-  useDialog,
   useMessage,
-  NDropdown,
-  NIcon,
   NButton, NInput,
 } from "naive-ui";
-import {
-  AddCircleOutlineRound as AddIcon,
-  SearchOutlined as SearchIcon,
-  FileDownloadOutlined as DownloadIcon,
-} from "@vicons/material";
-import {
-  DeleteOutlined as DeleteIcon,
-  ListAltOutlined as DetailIcon,
-} from "@vicons/material";
+import JsonExcel from "vue-json-excel3";
 
 const message = useMessage();
-const dialog = useDialog();
 const dataTable = ref([]);
 const searchBox = ref();
 const dynamicSearch = reactive({
@@ -129,6 +129,38 @@ const optStatusJaminan = ["NORMAL", "TITIP", "SITA", "JUAL", "RILIS"].map((v) =>
   label: v,
   value: v,
 }));
+
+
+const me = useMeStore();
+const loadingBranch = ref(false);
+const dataBranch = ref();
+const defBranch = ref();
+const getBranch = async () => {
+  let userToken = localStorage.getItem("token");
+  loadingBranch.value = true;
+  const response = await useApi({
+    method: "GET",
+    api: "cabang",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    loadingBranch.value = false;
+
+    if (me.me.cabang_nama != "Head Office") {
+      defBranch.value = me.me.cabang_nama;
+      dynamicSearch.pos = me.me.cabang_nama;
+    } else {
+      dynamicSearch.pos = "SEMUA POS";
+      dataBranch.value = response.data.response;
+      dataBranch.value.unshift({
+        id: "",
+        nama: "SEMUA POS"
+      });
+    }
+  }
+}
 const handleSearch = () => {
   getData();
 }
@@ -148,13 +180,6 @@ const getData = async () => {
     loadTable.value = false;
   }
 };
-const renderIcon = (icon) => {
-  return () => {
-    return h(NIcon, null, {
-      default: () => h(icon),
-    });
-  };
-};
 const convertObjectToArray = (obj) => {
   if (!Array.isArray(obj) || obj.length === 0) {
     return [];
@@ -165,7 +190,9 @@ const convertObjectToArray = (obj) => {
 const pagination = {
   pageSize: 10,
 };
-onMounted(() => getData());
+onMounted(() => {
+  getBranch();
+});
 const showData = computed(() => {
   return useSearch(dataTable.value, searchBox.value);
 });

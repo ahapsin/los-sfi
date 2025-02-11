@@ -6,7 +6,7 @@
                     :max-height="300" class="pb-2" :pagination="pagination"/>
     </div>
   </n-card>
-  <n-modal v-model:show="confModal" preset="dialog" draggable title="Konfirmasi" positive-text="Yakin"
+  <n-modal v-model:show="confModal" preset="dialog" title="Konfirmasi" positive-text="Yakin"
            negative-text="Hmm, belum yakin" @positive-click="handleCancel" @negative-click="cancelCallback">
     Jadi, kamu yakin ingin batalin pembayaran ini ?
     <n-input type="textarea" placeholder="tulis alasannya disini" v-model:value="bodyCancel.descr_ho"/>

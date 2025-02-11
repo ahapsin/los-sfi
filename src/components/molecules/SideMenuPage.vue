@@ -11,14 +11,8 @@
 </template>
   
   <script setup>
-import { defineComponent, h, onMounted, ref } from "vue";
+import { h, onMounted, ref } from "vue";
 import { NIcon } from "naive-ui";
-import {
-  Apps as AppIcon,
-  FolderOutline as FolderIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
-} from "@vicons/ionicons5";
 import { useApi } from "../../helpers/axios";
 
 function renderIcon(icon) {
@@ -97,7 +91,6 @@ function renderIcon(icon) {
 //     }
 //   ];
 const dataMenu = ref([]);
-const rawMenu = ref([]);
 const getDataMenu = async () => {
   let userToken = localStorage.getItem("token");
   try {
