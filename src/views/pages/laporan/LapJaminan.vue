@@ -2,7 +2,7 @@
   <div>
     <n-space vertical>
       <n-card :title="`Laporan data Jaminan`" :segmented="true" size="small">
-        <!--        <template #header-extra>-->
+                <template #header-extra>
         <!--          <n-space class="!gap-1">-->
         <!--            <div class="me-1 flex gap-2">-->
         <!--              <n-date-picker-->
@@ -49,7 +49,11 @@
         <!--              </n-button>-->
         <!--            </div>-->
         <!--          </n-space>-->
-        <!--        </template>-->
+                  <json-excel v-if="showData.length > 0" :data="showData" :name="`laporan_jaminan_${dynamicSearch.pos}`" :fields="json_fields"
+                              :stringifyLongNum="true">
+                    <n-button type="success">Download Xls</n-button>
+                  </json-excel>
+                </template>
         <n-space vertical :size="12" class="pt-4">
           <div class="flex flex-col md:flex-row gap-2 pt-4 pr-4 ps-4">
             <n-form-item label="POS" class="w-full">
@@ -83,12 +87,9 @@
               />
             </n-form-item>
 
-            <n-form-item class="flex gap-2 w-full">
+            <n-form-item class="flex gap-2" as="div">
               <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
-              <json-excel v-if="showData.length > 0" :data="showData" :name="`laporan_jaminan_${dynamicSearch.pos}`" :fields="json_fields"
-                          :stringifyLongNum="true">
-                <n-button type="success" secondary>Download</n-button>
-              </json-excel>
+
             </n-form-item>
           </div>
           <n-data-table

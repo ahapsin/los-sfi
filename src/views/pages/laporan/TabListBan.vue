@@ -24,9 +24,11 @@
         </n-button>
         </n-form-item>
         <n-form-item>
-        <json-excel v-if="dataListBan.length > 0" :data="dataListBan" :name="`Listing Beban_${selectBranch}_${rangeDate} `" :fields="json_fields" :stringifyLongNum="true">
-          <n-button type="success" secondary>Download </n-button>
-        </json-excel>
+          <json-excel v-if="dataListBan.length > 0" :data="dataListBan"
+                      :name="`Listing Beban_${selectBranch}_${rangeDate} `" :fields="json_fields"
+                      :stringifyLongNum="true">
+            <n-button type="success" secondary>Download</n-button>
+          </json-excel>
         </n-form-item>
       </n-space>
       <n-data-table ref="tableRef" :max-height="300"
@@ -115,7 +117,8 @@ const grabListBan = async (e) => {
     token: userToken,
   });
   if (!response.ok) {
-    message.error('ERROR API');
+    console.log(response);
+    message.error(response);
     messageReactive.destroy();
   } else {
     messageReactive.destroy();

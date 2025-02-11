@@ -4,11 +4,11 @@
     footer: 'soft',
   }">
 
-    <template #header>Pelunasan Angsuran</template>
+    <template #header>Tambah Pelunasan</template>
     <span class="hidden">{{ pelunasan }}</span>
     <template #header-extra>
       <n-space v-if="!props.embed">
-        <n-button round v-show="!searchField" strong secondary type="warning" @click="handleBack">
+        <n-button v-show="!searchField" strong type="warning" @click="handleBack">
           <template #icon>
             <n-icon>
               <back-icon/>
