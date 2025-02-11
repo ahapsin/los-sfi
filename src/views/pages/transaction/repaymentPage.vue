@@ -2,7 +2,7 @@
   <n-card content-style="padding: 0;" :segmented="{
         content: true,
         footer: 'soft',
-    }">
+    }" size="small">
     <template #header>PELUNASAN
       <!-- <n-icon v-if="width <=620">
 <phone-icon />
@@ -13,7 +13,7 @@
     </template>
     <template #header-extra>
       <n-space>
-        <n-button v-show="!searchField" strong type="success" @click="handleAddPay">
+        <n-button strong type="success" @click="handleAddPay">
           <template #icon>
             <n-icon>
               <add-icon/>
@@ -21,12 +21,21 @@
           </template>
           <span class="hidden md:flex">tambah</span>
         </n-button>
-
-
+        <n-button strong type="warning" @click="searchField=!searchField">
+          <template #icon>
+            <n-icon v-if="searchField">
+              <filter-icon/>
+            </n-icon>
+            <n-icon v-else>
+              <close-icon/>
+            </n-icon>
+          </template>
+          <span class="hidden md:flex">Filter</span>
+        </n-button>
       </n-space>
     </template>
     <div>
-      <div class="flex flex-col md:flex-row gap-2 pt-4 pr-4 ps-4">
+      <div class="flex gap-2 p-4 bg-sc-50/50 border-b" v-if="searchField">
         <n-form-item label="NO TRANSAKSI" class="w-full">
           <n-input v-model:value="dynamicSearch.no_transaksi" type="text" placeholder="NO TRANSAKSI"
                    clearable/>
@@ -38,9 +47,15 @@
           <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="NO KONTRAK" clearable/>
         </n-form-item>
         <n-form-item class="w-full">
-          <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+          <n-button type="success" secondary @click="handleSearch" class="px-4">
+            <n-icon>
+              <search-icon/>
+            </n-icon>
+            Cari
+          </n-button>
         </n-form-item>
       </div>
+
       <n-data-table ref="tableRef" striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
                     :scroll-x="870" :data="showData" :max-height="500" :on-update:checked-row-keys="handleFasilitas"
                     :loading="loadDataPayment" class="p-4" :pagination="{ pageSize: 10 }"/>
@@ -291,6 +306,9 @@ import {useSearch} from "../../../helpers/searchObject";
 import router from "../../../router";
 import {
   PlusFilled as addIcon,
+  FilterAltSharp as filterIcon,
+  CloseRound as closeIcon,
+  SearchRound as searchIcon,
   AttachFileFilled as fileIcon,
   CloudUploadOutlined as uploadIcon,
   LocalPrintshopOutlined as PrintIcon,

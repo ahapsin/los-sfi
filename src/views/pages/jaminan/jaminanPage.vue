@@ -179,13 +179,13 @@
         <div class="flex flex-col border-b border-dashed pb-4 ms-3 pt-4">
           <div class="flex gap-4">
             <div class="border-b pb-20 px-4 w-36">
-              <n-text strong class="text-md font-bold"> Admin</n-text>
+              <n-text strong class="text-md font-bold"> {{ bodyModalTrx.dari_cabang }}</n-text>
             </div>
             <div class="border-b pb-20 px-4 w-36">
-              <n-text strong class="text-md font-bold"> Kurir</n-text>
+              <n-text strong class="text-md font-bold"> {{ bodyModalTrx.kurir }}</n-text>
             </div>
             <div class="border-b pb-20 px-4 w-36">
-              <n-text strong class="text-md font-bold"> Tujuan</n-text>
+              <n-text strong class="text-md font-bold"> {{ bodyModalTrx.ke_cabang }}</n-text>
             </div>
           </div>
         </div>

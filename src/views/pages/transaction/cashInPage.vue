@@ -2,14 +2,14 @@
     <n-card :segmented="{
         content: true,
         footer: 'soft',
-    }">
+    }" size="small">
         <!-- <pre>{{ pageData }}</pre> -->
         <template #header>Tambah Penerimaan Uang</template>
         <template #header-extra>
 
             <n-space>
 
-                <n-button round v-show="!searchField" strong secondary type="warning" @click="handleBack">
+                <n-button v-show="!searchField" strong type="warning" @click="handleBack">
                     <template #icon>
                         <n-icon>
                             <back-icon />
