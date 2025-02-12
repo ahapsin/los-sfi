@@ -326,10 +326,8 @@ import {useApi} from "../../../helpers/axios";
 import {
   useMessage, NButton,
 } from "naive-ui";
-import _ from "lodash";
 import TabArusKas from "./TabArusKas.vue";
 import TabInqPinjaman from "./TabInqPinjaman.vue";
-import TabListBan from "./TabListBan.vue";
 import {useMeStore} from "../../../stores/me.js";
 import {useVueToPrint} from "vue-to-print";
 
