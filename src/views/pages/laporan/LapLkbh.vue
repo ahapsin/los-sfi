@@ -42,7 +42,7 @@
             </div>
             <div class="text-md font-bold justify-center pt-4 flex flex-col text-right">
               <n-text>LAPORAN KEUANGAN BERBASI HARIAN (LKBH)</n-text>
-              <n-text class="text-sm">tanggal : {{formatDate(dataArusKas.tgl_tarik)}}</n-text>
+              <n-text class="text-sm">tanggal : {{ formatDate(dataArusKas.tgl_tarik) }}</n-text>
 
             </div>
           </div>
@@ -64,7 +64,7 @@
             <tr>
               <td colspan="6">CASH-IN</td>
             </tr>
-            <tr v-for="cashin in compCashIn" :key="cashin.id">
+            <tr v-for="cashin in cashIn" :key="cashin.id">
               <td width="20px"></td>
               <td>{{ cashin.no }}</td>
               <td>{{ cashin.cabang }}</td>
@@ -81,13 +81,13 @@
             <tr>
               <td colspan="6">CASH-OUT</td>
             </tr>
-            <tr v-for="cashout in compCashOut" :key="cashout.id">
+            <tr v-for="cashout in cashOut" :key="cashout.id">
               <td></td>
               <td>{{ cashout.no }}</td>
               <td>{{ cashout.cabang }}</td>
-              <td>{{ cashin.tgl }}</td>
-              <td>{{ cashin.user }}</td>
-              <td>{{ cashin.position }}</td>
+              <td>{{ cashout.tgl }}</td>
+              <td>{{ cashout.user }}</td>
+              <td>{{ cashout.position }}</td>
               <td>{{ cashout.no_kontrak }}</td>
               <td>{{ cashout.nama_pelanggan }}</td>
               <td>{{ cashout.keterangan }}</td>
@@ -124,42 +124,17 @@ import {computed, ref} from "vue";
 import {useApi} from "../../../helpers/axios.js";
 import {useMeStore} from "../../../stores/me.js";
 import {
-  useMessage,
+  useMessage, useLoadingBar
 } from "naive-ui";
 import _ from "lodash";
 
 const me = useMeStore();
 const dataArusKas = ref([]);
-
-const filterJenis = ref([
-  {
-    label: 'PENCAIRAN',
-    value: 'PENCAIRAN'
-  },
-  {
-    label: 'TUNGGAKAN_POKOK',
-    value: 'TUNGGAKAN_POKOK'
-  },
-  {
-    label: 'TUNGGAKAN_BUNGA',
-    value: 'TUNGGAKAN_BUNGA'
-  },
-  {
-    label: 'BAYAR_POKOK',
-    value: 'BAYAR_POKOK'
-  },
-  {
-    label: 'BAYAR_BUNGA',
-    value: 'BAYAR_BUNGA'
-  },
-  {
-    label: 'BAYAR_LAINNYA',
-    value: 'BAYAR_LAINNYA'
-  },
-]);
+const loadingBar = useLoadingBar();
 const tarik = ref(false);
 const message = useMessage();
 const loadData = ref(false);
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -168,6 +143,9 @@ function formatDate(dateString) {
 
   return `${day}-${month}-${year}`;
 }
+
+const cashOut = ref([]);
+const cashIn = ref([]);
 const getArusKas = async (e) => {
   message.loading('memuat data LKBH');
   loadData.value = true;
@@ -185,6 +163,8 @@ const getArusKas = async (e) => {
     loadData.value = false;
     dataArusKas.value = response.data;
     tarik.value = true;
+    cashOut.value = _.filter(response.data.datas, ['type', "CASH_OUT"]);
+    cashIn.value = _.filter(response.data.datas, ['type', "CASH_IN"]);
   }
 }
 const rangeDate = ref();
@@ -218,13 +198,10 @@ const getBranch = async () => {
     }
   }
 }
-const compCashOut = computed(()=>{
-  return _.filter(dataArusKas.value.datas,['type',"CASH_OUT"]);
+onMounted(() => {
+  loadingBar.finish();
+  getBranch()
 });
-const compCashIn = computed(()=>{
-  return _.filter(dataArusKas.value.datas,['type',"CASH_IN"]);
-});
-onMounted(() => getBranch());
 const handleSubmit = () => {
   let a = {
     dari: rangeDate.value ? rangeDate.value : Date.now(),

@@ -19,11 +19,11 @@
             </n-button>
             <img
               class="h-10 md:h-10"
-              src="../../assets/logo.png"
+              :src="applogo"
               alt="logo_company"
             />
             <div class="flex flex-col items-left justify-center">
-              <span>KSPDJAYA</span>
+              <span>{{apptitle}}</span>
             <span class="text-[10px]">v. {{ appVersion}}</span>
             </div>
           </n-space>
@@ -76,13 +76,13 @@ import {
 import { useSidebar } from "../../stores/sidebar";
 import { useWindowSize } from "@vueuse/core";
 import pjson from '../../../package.json';
-
+const applogo = import.meta.env.VITE_APP_LOGO;
 const appVersion = pjson.version;
 const { width } = useWindowSize();
 
 const sideMenu = useSidebar();
 const active = ref(false);
-
+const apptitle = import.meta.env.VITE_APP_TITLE;
 const collapse = ref(false);
 const ukuran = ref(0);
 const widthScreen = () => {

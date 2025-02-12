@@ -28,7 +28,7 @@
         <n-data-table ref="tableRef" :max-height="300" virtual-scroll size="small" virtual-scroll-x
                       :scroll-x="10000" :min-row-height="48" virtual-scroll-header
                       :columns="convertObjectToArray(dataListBan)" :data="dataListBan" :pagination="{ pageSize: 10 }"
-                      :loading="loading"/>
+                      :loading="loadingData"/>
       </n-space>
     </div>
   </n-card>
@@ -37,7 +37,7 @@
 import {ref, onMounted} from "vue";
 
 import JsonExcel from "vue-json-excel3";
-import {useMessage} from "naive-ui";
+import {useLoadingBar, useMessage} from "naive-ui";
 import {useMeStore} from "../../../stores/me";
 import {useApi} from "../../../helpers/axios.js";
 
@@ -76,6 +76,7 @@ const getBranch = async () => {
 }
 const rangeDate = ref();
 let messageReactive = null;
+const loadingBar = useLoadingBar();
 const handleSubmit = () => {
 
   let a = {
@@ -86,7 +87,9 @@ const handleSubmit = () => {
   grabListBan(a);
 }
 const dataListBan = ref([]);
+const loadingData = ref(false)
 const grabListBan = async (e) => {
+  loadingData.value = true;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -102,6 +105,7 @@ const grabListBan = async (e) => {
     messageReactive.destroy();
     messageReactive = null;
     dataListBan.value = response.data;
+    loadingData.value = false;
   }
 
 }
@@ -113,6 +117,7 @@ const convertObjectToArray = (obj) => {
   return keys.map(key => ({title: key, key: key}));
 }
 onMounted(() => {
+  loadingBar.finish();
       getBranch();
       me;
     }
