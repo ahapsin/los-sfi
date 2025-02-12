@@ -7,7 +7,7 @@
 
             <n-space>
               <n-input
-                  autofocus="true"
+                  :autofocus="true"
                   clearable
                   placeholder="cari disini.."
                   v-model:value="searchBox"
@@ -68,7 +68,7 @@
         <n-pagination
             @update:page="handlePageChange"
             v-model:page="pageLocation"
-            v-model:page-size="pageSize"
+
             :page-count="countItem"
         />
       </n-space>

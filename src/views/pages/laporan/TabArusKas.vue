@@ -121,10 +121,8 @@ import _ from "lodash";
 import {useApi} from "../../../helpers/axios.js";
 import {useMessage} from "naive-ui";
 import {useMeStore} from "../../../stores/me.js";
-import JsonExcel from "vue-json-excel3";
 
 const rangeDate = ref();
-const tableRef = ref();
 const emit = defineEmits();
 const message = useMessage();
 const paginationRef = reactive({
@@ -190,21 +188,6 @@ const props = defineProps({
 });
 
 const today = new Date();
-
-
-
-const year = today.getFullYear();
-let month = today.getMonth() + 1; // Months are zero-indexed, so add 1
-let day = today.getDate();
-
-const convertObjectToArray = (obj) => {
-  if (!Array.isArray(obj) || obj.length === 0) {
-    return [];
-  }
-  const keys = Object.keys(obj[0]);
-  return keys.map(key => ({title: key, key: key}));
-}
-
 
 function formatDate(dateString) {
   const date = new Date(dateString);

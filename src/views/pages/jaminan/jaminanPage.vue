@@ -8,7 +8,10 @@
           Jaminan
         </div>
       </template>
-      <div class="flex w-full mb-2 justify-end">
+      <div class="flex w-full mb-2 justify-between px-4">
+        <n-statistic label="Jaminan tersedia di POS">
+          {{ showData.length }}
+        </n-statistic>
         <n-popover trigger="click" placement="bottom-end">
           <template #trigger>
             <n-button circle>
@@ -23,7 +26,8 @@
           </n-space>
         </n-popover>
       </div>
-      <n-data-table :columns="columns" :data="showData" size="small"/>
+
+      <n-data-table :columns="columns" :data="showData" size="small" :pagination="{pageSize:10}"/>
     </n-tab-pane>
     <n-tab-pane name="transaksi" tab="Transaksi">
       <n-data-table :columns="columnsTransaction" :data="dataTransaction" size="small"/>
@@ -48,71 +52,218 @@
   </n-modal>
   <n-modal v-model:show="showDetailModal" title="Modal">
     <n-card class="w-2/3">
-      <n-table :bordered="false" :single-line="false" size="small">
-        <thead>
-        <tr>
-          <th>Jenis</th>
-          <th>Nama Debitur</th>
-          <th>Order Number</th>
-          <th>No Jaminan</th>
-          <th>Lokasi</th>
-          <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>{{ bodyModal.type }}</td>
-          <td>{{ bodyModal.nama_debitur }}</td>
-          <td>{{ bodyModal.order_number }}</td>
-          <td>{{ bodyModal.no_jaminan }}</td>
-          <td>{{ bodyModal.lokasi }}</td>
-          <td>{{ bodyModal.status_jaminan }}</td>
-        </tr>
-        </tbody>
-      </n-table>
-      <n-table :bordered="false" :single-line="false" size="small">
-        <tbody>
-        <tr>
-          <th>BPKB NO</th>
-          <td>{{ bodyModal.no_bpkb }}</td>
-        </tr>
-        <tr>
-          <th>BPKB Atas Nama</th>
-          <td>{{ bodyModal.atas_nama }}</td>
-        </tr>
-        <tr>
-          <th>Merk/Tipe/Tahun</th>
-          <td>{{ bodyModal.merk }} / {{ bodyModal.tipe }} / {{ bodyModal.tahun }}</td>
-        </tr>
-        <tr>
-          <th>Warna/No Polisi</th>
-          <td>{{ bodyModal.warna }} /{{ bodyModal.no_polisi }}</td>
-        </tr>
-        <tr>
-          <th>No Rangka/No Mesin</th>
-          <td>{{ bodyModal.no_rangka }}/ {{ bodyModal.no_mesin }}</td>
-        </tr>
-        <tr>
-          <th>No Faktur</th>
-          <td>{{ bodyModal.no_faktur }}</td>
-        </tr>
-        <tr>
-          <th>Dokumen</th>
-          <td>
-            <n-image v-for="doc in bodyModal.document" width="64" height="64" :src="doc.PATH"
-                     :key="doc"/>
-          </td>
-        </tr>
-        </tbody>
-      </n-table>
-      <n-collapse class="p-2 rounded-xl border mt-2 shadow bg-sc-50/50">
-        <n-collapse-item title="Rilis Dokumen" name="1">
-          <div class="flex bg-white  p-2 rounded-xl flex-col gap-2">
-            <n-button type="info" dashed @click="cetakTandaTerima">Cetak Bukti Terima</n-button>
-            <file-upload title="Upload bukti terima " endpoint="image_upload_prospect" type="ktp"/>
+      <n-tabs>
+        <n-tab-pane name="detail" tab="Detail Jaminan ">
+
+          <n-table :bordered="false" :single-line="false" size="small">
+            <thead>
+            <tr>
+              <th>Jenis</th>
+              <th>Nama Debitur</th>
+              <th>Order Number</th>
+              <th>No Jaminan</th>
+              <th>Lokasi</th>
+              <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{ bodyModal.type }}</td>
+              <td>{{ bodyModal.nama_debitur }}</td>
+              <td>{{ bodyModal.order_number }}</td>
+              <td>{{ bodyModal.no_jaminan }}</td>
+              <td>{{ bodyModal.lokasi }}</td>
+              <td>{{ bodyModal.status_jaminan }}</td>
+            </tr>
+            </tbody>
+          </n-table>
+          <n-table :bordered="false" :single-line="false" size="small">
+            <tbody>
+            <tr>
+              <th>BPKB NO</th>
+              <td>{{ bodyModal.no_bpkb }}</td>
+            </tr>
+            <tr>
+              <th>BPKB Atas Nama</th>
+              <td>{{ bodyModal.atas_nama }}</td>
+            </tr>
+            <tr>
+              <th>Merk/Tipe/Tahun</th>
+              <td>{{ bodyModal.merk }} / {{ bodyModal.tipe }} / {{ bodyModal.tahun }}</td>
+            </tr>
+            <tr>
+              <th>Warna/No Polisi</th>
+              <td>{{ bodyModal.warna }} /{{ bodyModal.no_polisi }}</td>
+            </tr>
+            <tr>
+              <th>No Rangka/No Mesin</th>
+              <td>{{ bodyModal.no_rangka }}/ {{ bodyModal.no_mesin }}</td>
+            </tr>
+            <tr>
+              <th>No Faktur</th>
+              <td>{{ bodyModal.no_faktur }}</td>
+            </tr>
+            <tr>
+              <th>Dokumen</th>
+              <td>
+                <n-image v-for="doc in bodyModal.document" width="64" height="64" :src="doc.PATH"
+                         :key="doc"/>
+              </td>
+            </tr>
+            </tbody>
+          </n-table>
+
+        </n-tab-pane>
+        <n-tab-pane name="rilis" tab="Rilis Jaminan">
+          <n-result
+              v-if="bodyModal.status_kontrak === 'active'"
+              status="403"
+              title="Rilis Jaminan Tidak Tersedia"
+              description="Terdapat kredit aktif, jaminan tidak dapat diproses rilis !"
+          >
+          </n-result>
+          <div v-else>
+            <div class="bg-white border border-black p-4" ref="buktiTerimaRef">
+              <div class="flex gap-2 items-center">
+                <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
+                <div class="flex flex-col">
+                  <span class="text-xl font-bold">KSPDJAYA</span>
+                  <n-text strong class="text-md"> POS: {{ bodyModal.lokasi }}</n-text>
+                </div>
+              </div>
+              <div class="mb-4 text-center text-base">
+                <b>SURAT TANDA TERIMA DOKUMEN</b>
+              </div>
+              <div class="mb-4">yang bertanda tangan di bawah ini:</div>
+              <div class="mb-4">
+                <table>
+                  <tr>
+                    <td width="100px">Nama</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ bodyModal.nama_debitur }}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>No Jaminan</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ bodyModal.no_jaminan }}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>No Order</td>
+                    <td width="25">:</td>
+                    <td>
+                      <b class="uppercase">{{ bodyModal.order_number }}</b>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="mb-4 text-justify text-sm">
+                Pada hari ini <b>{{ dayFull.day }}</b> tanggal
+                <b>{{ dayFull.date }}</b> bulan <b>{{ dayFull.month }}</b> tahun
+                <b>{{ dayFull.year }}</b>,Dengan ini telah menerima buku kepemilikan kendaraan (BPKB)
+                dalam keadaan baik dengan rincian sebagai berikut :
+              </div>
+              <div class="text-justify pt-2">
+                Jenis Dokumen: <b> </b>
+                <table v-if="bodyModal.type.toLowerCase() == 'kendaraan'">
+                  <tr>
+                    <td>BPKB No</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.no_bpkb }}</td>
+                  </tr>
+                  <tr>
+                    <td>BPKB atas nama</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.atas_nama }}</td>
+                  </tr>
+                  <tr>
+                    <td>Merk/Type/Tahun</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.merk }}/{{ bodyModal.tipe }}/{{ bodyModal.tahun }}</td>
+                  </tr>
+                  <tr>
+                    <td>Warna/No.Polisi</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.warna }}/{{ bodyModal.no_polisi }}</td>
+                  </tr>
+                  <tr>
+                    <td>No. Rangka/Mesin</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.no_rangka }}/{{ bodyModal.no_mesin }}</td>
+                  </tr>
+                  <tr>
+                    <td>No. Faktur</td>
+                    <td width="25">:</td>
+                    <td>{{ bodyModal.no_faktur }}</td>
+                  </tr>
+                </table>
+                <table v-else>
+                  <tr>
+                    <td>No Sertifikat</td>
+                    <td width="25">:</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Atas Nama</td>
+                    <td width="25">:</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Status Kepemilikan</td>
+                    <td width="25">:</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>IMB / Luas Tanah / Luas Bangunan</td>
+                    <td width="25">:</td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Lokasi</td>
+                    <td width="25">:</td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="mb-4">
+                <!-- Selanjutnya disebut Penjamin<br /> -->
+                Dokumen tersebut telah diterima dalam keadaan baik untuk
+                ditindaklanjuti sebagaimana mestinya
+              </div>
+              <div>
+                <table class="!text-sm w-full">
+                  <tr>
+                    <td class="py-4 pr-4">
+                      Pemberi,
+                      <br/><br/><br/>
+                      <u class="uppercase">{{ me.me.nama }}</u>
+                    </td>
+                    <td class="py-4 pr-4">
+                      Penerima,
+                      <br/><br/><br/>
+                      <u class="uppercase">{{ bodyModal.nama_debitur }}</u>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <n-collapse class="p-2 rounded-xl border mt-2 shadow bg-sc-50/50" v-if="bodyModal.status_kontrak=='active'">
+              <n-collapse-item title="Rilis Dokumen" name="1">
+                <div class="flex bg-white  p-2 rounded-xl flex-col gap-2">
+                  <n-button type="info" dashed @click="cetakBuktiTerima">Cetak Bukti Terima</n-button>
+                  <file-upload title="Upload bukti terima " endpoint="image_upload_prospect" type="ktp"/>
+                </div>
+              </n-collapse-item>
+            </n-collapse>
           </div>
-        </n-collapse-item>
-      </n-collapse>
+        </n-tab-pane>
+      </n-tabs>
+
 
     </n-card>
   </n-modal>
@@ -255,7 +406,6 @@
 import {computed, h, onMounted, ref} from 'vue';
 import {NButton, useLoadingBar, useMessage} from 'naive-ui';
 import {useApi} from '../../../helpers/axios';
-import router from '../../../router';
 import FormTransaksi from './trxJaminan.vue';
 import FormUpdate from './updateJaminanPage.vue';
 import {
@@ -265,7 +415,9 @@ import {
 import {useSearch} from '../../../helpers/searchObject';
 import {reactive} from 'vue';
 import {useVueToPrint} from "vue-to-print";
+import {useMeStore} from "../../../stores/me.js";
 
+const me = useMeStore();
 const message = useMessage();
 const showModal = ref(false);
 const dataTable = ref([]);
@@ -280,11 +432,13 @@ const getData = async () => {
   });
   if (!response.ok) {
     message.error("ERROR API (J2)");
-
   } else {
     dataTable.value = response.data;
   }
 };
+
+
+const buktiTerimaRef = ref(null);
 
 const handleApprove = async () => {
   let userToken = localStorage.getItem("token");
@@ -303,6 +457,47 @@ const handleApprove = async () => {
   }
 
 }
+var dt = new Date();
+let year = dt.getFullYear();
+let day = dt.getDate().toString().padStart(2, "0");
+
+let thisMonths = (dt.getMonth() + 1).toString().padStart(2, "0");
+const thisday = `${year}-${thisMonths}-${day}`;
+const monthNames = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+const daysName = [
+  "Minggu",
+  "Senin",
+  "Selasa",
+  "Rabu",
+  "Kamis",
+  "Jum'at",
+  "Sabtu",
+];
+const dayFull = reactive({
+  day: computed(() => daysName[new Date(thisday).getDay()]),
+  date: computed(() => new Date(thisday).getDate()),
+  month: computed(() => monthNames[new Date(thisday).getMonth()]),
+  year: computed(() => new Date(thisday).getFullYear()),
+  full_date_only: computed(
+      () => `${dayFull.date} ${dayFull.month} ${dayFull.year}`
+  ),
+  full_date: computed(
+      () => `${dayFull.day}, ${dayFull.date} ${dayFull.month} ${dayFull.year}`
+  ),
+});
 const getDataTransaction = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
@@ -316,7 +511,7 @@ const getDataTransaction = async () => {
     message.info("memuat transaksi jaminan");
 
     dataTransaction.value = response.data;
-}
+  }
 };
 const loadingBar = useLoadingBar();
 const getDataTransactionApproval = async () => {
@@ -377,6 +572,11 @@ const columns = [
   {
     title: "No Kontrak",
     key: "order_number",
+    sorter: "default",
+  },
+  {
+    title: "Stts Kontrak",
+    key: "status_kontrak",
     sorter: "default",
   },
   {
@@ -543,6 +743,9 @@ const {handlePrint} = useVueToPrint({
   documentTitle: "Surat Mutasi Jaminan",
 });
 const checkedRowJaminan = ref([]);
+const cetakBuktiTerima = () => {
+  handlePrintBuktiTerima;
+}
 const modelJaminan = ref();
 const bodyApprove = reactive({
   no_surat: null,

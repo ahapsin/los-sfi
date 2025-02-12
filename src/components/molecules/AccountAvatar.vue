@@ -36,6 +36,8 @@ import {
 
 import {useApi} from "../../helpers/axios";
 import {useMeStore} from "../../stores/me";
+import {useTaskStore} from "../../stores/task";
+
 const message = useMessage();
 
 const dataUser = ref();
@@ -88,6 +90,7 @@ const options = [
   },
 ];
 const me = useMeStore();
+const task = useTaskStore();
 const approvalCenter = () => {
   router.push({name: "approval-center"})
 }
@@ -110,6 +113,7 @@ const GetMe = async () => {
   } else {
     dataUser.value = response.data.response;
     me.storeMe(response.data.response);
+    task.storeTask(response.data.response);
   }
 };
 

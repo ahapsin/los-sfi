@@ -2,7 +2,7 @@
 {
   "name": "los-app",
   "private": true,
-  "version": "2.2 (bal)",
+  "version": "2.3-lb-do (bal)",
 
   "type": "module",
   "scripts": {

@@ -46,6 +46,11 @@
         <n-form-item label="NO KONTRAK" class="w-full">
           <n-input v-model:value="dynamicSearch.no_kontrak" type="text" placeholder="NO KONTRAK" clearable/>
         </n-form-item>
+        <n-form-item label="TANGGAL" class="w-full">
+          <n-date-picker placeholder="CARI TANGGAL" v-model:formatted-value="dynamicSearch.dari"
+                         :default-value="Date.now()" clearable format="yyyy-MM-dd"
+          />
+        </n-form-item>
         <n-form-item class="w-full">
           <n-button type="success" secondary @click="handleSearch" class="px-4">
             <n-icon>
@@ -314,7 +319,7 @@ import {
   LocalPrintshopOutlined as PrintIcon,
 } from "@vicons/material";
 import {useWindowSize} from "@vueuse/core";
-import {useLoadingBar} from "naive-ui";
+import {NImage, useLoadingBar} from "naive-ui";
 
 const loadingBar = useLoadingBar();
 import {useMessage, NIcon, NTag, NButton, NInput} from "naive-ui";
@@ -326,6 +331,7 @@ const dynamicSearch = reactive({
   no_transaksi: '',
   atas_nama: '',
   no_kontrak: '',
+  dari: null,
 });
 const searchField = ref(false);
 const searchBox = ref();
@@ -419,6 +425,36 @@ const handleCancelPayment = (e) => {
 
 const createColumns = () => {
   return [
+    {
+      title: "",
+      width: 30,
+      render(row) {
+        return row.attachment ? h(
+            NImage,
+            {
+              src: row.attachment,
+              width: 20,
+              height: 20,
+            },
+            {
+              default: () => row.attachment,
+            }
+        ) : h(
+            NButton,
+            {
+              size: "small",
+              type: "error",
+              circle: true,
+              onClick: () => {
+                handleAction(row);
+              },
+            },
+            {
+              default: () => "!",
+            }
+        );
+      },
+    },
     {
       title: "NO TRANSAKSI",
       width: 150,
@@ -559,7 +595,7 @@ const getDataPayment = async () => {
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "GET",
-    api: `payment?notrx=${dynamicSearch.no_transaksi}&nama=${dynamicSearch.atas_nama}&no_kontrak=${dynamicSearch.no_kontrak}&tipe=pelunasan`,
+    api: `payment?dari=${dynamicSearch.dari}&notrx=${dynamicSearch.no_transaksi}&nama=${dynamicSearch.atas_nama}&no_kontrak=${dynamicSearch.no_kontrak}&tipe=pelunasan`,
     token: userToken,
   });
   if (!response.ok) {
