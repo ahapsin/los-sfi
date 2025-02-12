@@ -20,8 +20,8 @@ import LoadingScreen from "../src/components/organism/LoadingScreen.vue";
 import { darkTheme } from "naive-ui";
 const themeOverrides = {
   common: {
-    // primaryColor: '#213B94',
-    // primaryColorHover: "#213B94",
+    primaryColor: '#213B94',
+    primaryColorHover: "#213B94",
     borderRadius: "10px"
   },
 }

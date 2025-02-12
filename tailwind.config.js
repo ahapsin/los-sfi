@@ -57,6 +57,19 @@ module.exports = {
           "url('https://img.freepik.com/premium-photo/image-asian-family-background_296537-9927.jpg?w=360')",
       },
       colors: {
+        cf: {
+          '50': '#eff5ff',
+          '100': '#dbe9fe',
+          '200': '#bfd9fe',
+          '300': '#94c2fc',
+          '400': '#61a0f9',
+          '500': '#3c7cf5',
+          '600': '#265cea',
+          '700': '#1e49d7',
+          '800': '#1f3bae',
+          '900': '#213b94',
+          '950': '#172354',
+        },
         pr: {
           DEFAULT: "#009b4f",
           50: "#edfff5",

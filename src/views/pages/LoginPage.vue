@@ -1,7 +1,7 @@
 <template>
   <SingleSideBar v-if="logged"/>
   <div v-else
-       class="h-screen flex items-center bg-pr justify-center max-h-screen p-8 md:p-20"
+       class="h-screen flex items-center justify-center max-h-screen p-8 md:p-20 " :class="appbasecolor"
   >
     <div
         class="flex w-full md:w-3/4 h-fit md:h-full bg-white rounded-lg overflow-clip"
@@ -17,7 +17,7 @@
 </template>
 <script setup>
 import {ref, onMounted} from 'vue';
-
+const appbasecolor=import.meta.env.VITE_APP_BASE_COLOR;
 const logged = ref(false);
 onMounted(() => {
   if (localStorage.getItem("token")) {
