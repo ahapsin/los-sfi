@@ -61,7 +61,8 @@ type="daterange" @update:value="onConfirmDate" />
                        clearable/>
             </n-form-item>
             <n-form-item label="TANGGAL" class="w-full">
-              <n-date-picker v-model:formatted-value="dynamicSearch.tanggal" :default-value="Date.now()" clearable format="yyyy-MM-dd"
+              <n-date-picker v-model:formatted-value="dynamicSearch.tanggal" :default-value="Date.now()" clearable
+                             format="yyyy-MM-dd"
                              placeholder="TANGGAL" class="w-full"/>
             </n-form-item>
             <n-form-item class="w-full">
@@ -374,7 +375,7 @@ const format = (e) => {
   const toNum = parseInt(e);
   return toNum.toLocaleString("en-US");
 };
-const handleAction = (e, data) => {
+const handleAction = async (e, data) => {
   let status = e;
   const userToken = localStorage.getItem("token");
   const dynamicBody = {
@@ -382,22 +383,28 @@ const handleAction = (e, data) => {
   };
   if (status === "WADM") {
     message.create("membuat FPK, silakan tunggu !", {type: loadingRef.type});
-    useApi({
-      method: "POST",
-      data: dynamicBody,
-      api: `cr_application_generate`,
-      token: userToken,
-    }).then((res) => {
-      if (res.ok) {
-        message.success("FPK berhsil dibuat");
-        router.push({
-          name: "Form Pengajuan Kredit",
-          params: {idapplication: data.id},
-        });
-      } else {
-        message.error("FPK gagal dibuat!");
-      }
-    });
+    try {
+      await useApi({
+        method: "POST",
+        data: dynamicBody,
+        api: `cr_application_generate`,
+        token: userToken,
+      }).then((res) => {
+        if (res.ok) {
+          message.success("FPK berhsil dibuat");
+          router.push({
+            name: "Form Pengajuan Kredit",
+            params: {idapplication: data.id},
+          });
+        } else {
+          message.error("FPK gagal dibuat!");
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      message.error("FPK gagal dibuat!");
+    }
+
   } else if (status === "CROR") {
     router.push({
       name: "Form Pengajuan Kredit",
@@ -435,7 +442,7 @@ const getData = async () => {
   loadData.value = true;
   const response = await useApi({
     method: "GET",
-    api: `kunjungan_admin?no_order=${dynamicSearch.no_order == null ? '':dynamicSearch.no_order }&nama=${dynamicSearch.atas_nama == null ? '':dynamicSearch.atas_nama }&tgl_order=${dynamicSearch.tanggal == null ? '':dynamicSearch.tanggal }`,
+    api: `kunjungan_admin?no_order=${dynamicSearch.no_order == null ? '' : dynamicSearch.no_order}&nama=${dynamicSearch.atas_nama == null ? '' : dynamicSearch.atas_nama}&tgl_order=${dynamicSearch.tanggal == null ? '' : dynamicSearch.tanggal}`,
     token: userToken,
   });
   if (!response.ok) {

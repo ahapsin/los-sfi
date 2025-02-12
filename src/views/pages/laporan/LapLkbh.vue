@@ -3,21 +3,132 @@
     content: true,
     footer: 'soft',
   }">
-    <TabArusKas :data="dataArusKas" :columns="columns" :load="loadData"
-                @filter-form="handleRange"/>
+    <div>
+      <n-space vertical :size="12" class="pt-4">
+        <n-space>
+          <n-date-picker v-model:formatted-value="rangeDate" :default-value="Date.now()" clearable format="yyyy-MM-dd"
+                         start-placeholder="dari" end-placeholder="sampai"/>
+          <n-select
+              v-show="me.me.cabang_nama == 'Head Office'"
+              :loading="loadingBranch"
+              @click="getBranch"
+              filterable
+              placeholder="Pilih Cabang"
+              label-field="nama"
+              value-field="id"
+              :default-value="defBranch"
+              :options="dataBranch"
+              v-model:value="selectBranch"
+          />
+          <n-button @click="handleSubmit" type="success">
+            Cari
+          </n-button>
+          <!--        <json-excel :data="props.data.datas" :name="`LAP_LKBH_${formatDate(props.data.tgl_tarik)}`" :fields="convertObjectToArray(props.data.datas)" :stringifyLongNum="true">-->
+          <!--          <n-button type="success" secondary>Download</n-button>-->
+          <!--        </json-excel>-->
+          <!--        <n-button @click="downloadCsv" type="info">-->
+          <!--          download-->
+          <!--        </n-button>-->
+        </n-space>
+        <div class=" border p-4 border-black" v-if="tarik">
+          <div
+              class="flex items-center gap-2 justify-between">
+            <div class="flex gap-2 items-center py-4">
+              <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
+              <div class="flex flex-col">
+                <n-text class="text-xl font-bold">KSPDJAYA</n-text>
+                <n-text class="text-md font-bold">POS : {{ me.me.cabang_nama }}</n-text>
+              </div>
+            </div>
+            <div class="text-md font-bold justify-center pt-4 flex flex-col text-right">
+              <n-text>LAPORAN KEUANGAN BERBASI HARIAN (LKBH)</n-text>
+              <n-text class="text-sm">tanggal : {{formatDate(dataArusKas.tgl_tarik)}}</n-text>
+
+            </div>
+          </div>
+          <table class="w-full font-mono">
+            <thead>
+            <tr class="border-b border-t border-black border-dashed">
+              <th class="py-2" colspan="2">NO</th>
+              <th align="left">CABANG</th>
+              <th align="left">TGL</th>
+              <th align="left">USER</th>
+              <th align="left">POSITION</th>
+              <th align="left">NO KONTRAK</th>
+              <th align="left">TERIMA DARI / KE</th>
+              <th align="left">KETERANGAN</th>
+              <th align="right">AMOUNT</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td colspan="6">CASH-IN</td>
+            </tr>
+            <tr v-for="cashin in compCashIn" :key="cashin.id">
+              <td width="20px"></td>
+              <td>{{ cashin.no }}</td>
+              <td>{{ cashin.cabang }}</td>
+              <td>{{ cashin.tgl }}</td>
+              <td>{{ cashin.user }}</td>
+              <td>{{ cashin.position }}</td>
+              <td>{{ cashin.no_kontrak }}</td>
+              <td>{{ cashin.nama_pelanggan }}</td>
+              <td>{{ cashin.keterangan }}</td>
+              <td align="right">{{ cashin.amount.toLocaleString() }}</td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+              <td colspan="6">CASH-OUT</td>
+            </tr>
+            <tr v-for="cashout in compCashOut" :key="cashout.id">
+              <td></td>
+              <td>{{ cashout.no }}</td>
+              <td>{{ cashout.cabang }}</td>
+              <td>{{ cashin.tgl }}</td>
+              <td>{{ cashin.user }}</td>
+              <td>{{ cashin.position }}</td>
+              <td>{{ cashout.no_kontrak }}</td>
+              <td>{{ cashout.nama_pelanggan }}</td>
+              <td>{{ cashout.keterangan }}</td>
+              <td align="right">{{ cashout.amount.toLocaleString() }}</td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr class="border-b border-t border-black border-dashed">
+              <td colspan="9">JUMLAH</td>
+              <th align="right">{{ dataArusKas.ttl_all.toLocaleString() }}</th>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+
+        <!--      <n-data-table-->
+        <!--          ref="tableRef"-->
+        <!--          :get-csv-cell="getCsvCell"-->
+        <!--          size="small"-->
+        <!--          :columns="props.columns"-->
+        <!--          :data="props.data"-->
+        <!--          :loading="props.load"-->
+        <!--          :pagination="paginationRef"-->
+        <!--      />-->
+      </n-space>
+    </div>
   </n-card>
 </template>
 
 <script setup>
-import TabArusKas from "./TabArusKas.vue";
-import {h, ref} from "vue";
+import {computed, ref} from "vue";
 import {useApi} from "../../../helpers/axios.js";
+import {useMeStore} from "../../../stores/me.js";
 import {
   useMessage,
 } from "naive-ui";
+import _ from "lodash";
 
-
-
+const me = useMeStore();
 const dataArusKas = ref([]);
 
 const filterJenis = ref([
@@ -46,67 +157,21 @@ const filterJenis = ref([
     value: 'BAYAR_LAINNYA'
   },
 ]);
-const columns = [
-  {
-    title: "Tanggal",
-    key: "ENTRY_DATE",
-    sorter: "default",
-  },
-  {
-    title: "Metode Bayar",
-    key: "PAYMENT_METHOD",
-    sorter: "default",
-    filterOptions: [
-      {
-        label: 'CASH',
-        value: 'cash'
-      },
-      {
-        label: 'TRANSFER',
-        value: 'transfer'
-      }
-    ],
-    filter(value, row) {
-      return !!~row.PAYMENT_METHOD.indexOf(value);
-    }
-  },
-  {
-    title: "Pelanggan (Alias)",
-    key: "PELANGGAN",
-    sorter: "default",
-  },
-  {
-    title: "Jenis",
-    key: "JENIS",
-    sorter: "default",
-    filterOptions: filterJenis.value,
-    filter(value, row) {
-      return !!~row.JENIS.indexOf(value);
-    }
-  },
-  {
-    title: "Cabang",
-    key: "BRANCH",
-    sorter: "default",
-  },
-  {
-    title: "Jumlah",
-    align: "right",
-    key: "ORIGINAL_AMOUNT",
-    sorter: "default",
-    render(row) {
-      return h("div", row.ORIGINAL_AMOUNT.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }));
-    }
-  },
-];
+const tarik = ref(false);
 const message = useMessage();
 const loadData = ref(false);
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11, so we add 1
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
 const getArusKas = async (e) => {
   message.loading('memuat data LKBH');
   loadData.value = true;
+  tarik.value = false;
   let userToken = localStorage.getItem("token");
   const response = await useApi({
     method: "POST",
@@ -119,11 +184,53 @@ const getArusKas = async (e) => {
   } else {
     loadData.value = false;
     dataArusKas.value = response.data;
+    tarik.value = true;
   }
 }
+const rangeDate = ref();
+const dataBranch = ref([]);
+const selectBranch = ref();
+const defBranch = ref();
+const userToken = localStorage.getItem("token");
+const loadingBranch = ref(false);
+const getBranch = async () => {
+  loadingBranch.value = true;
+  const response = await useApi({
+    method: "GET",
+    api: "cabang",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.error("ERROR API");
+  } else {
+    loadingBranch.value = false;
 
-const handleRange = (value) => {
-  getArusKas(value);
+    if (me.me.cabang_nama != "Head Office") {
+      defBranch.value = me.me.cabang_nama;
+      selectBranch.value = me.me.cabang_id;
+    } else {
+      selectBranch.value = "SEMUA CABANG";
+      dataBranch.value = response.data.response;
+      dataBranch.value.unshift({
+        id: "SEMUA CABANG",
+        nama: "SEMUA CABANG"
+      });
+    }
+  }
+}
+const compCashOut = computed(()=>{
+  return _.filter(dataArusKas.value.datas,['type',"CASH_OUT"]);
+});
+const compCashIn = computed(()=>{
+  return _.filter(dataArusKas.value.datas,['type',"CASH_IN"]);
+});
+onMounted(() => getBranch());
+const handleSubmit = () => {
+  let a = {
+    dari: rangeDate.value ? rangeDate.value : Date.now(),
+    cabang_id: selectBranch.value ? selectBranch.value : null
+  }
+  getArusKas(a);
 }
 
 </script>
