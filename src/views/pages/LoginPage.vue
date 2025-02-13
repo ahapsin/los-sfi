@@ -1,10 +1,11 @@
 <template>
   <SingleSideBar v-if="logged"/>
   <div v-else
-       class="h-screen flex items-center justify-center max-h-screen p-8 md:p-20 " :class="appbasecolor"
+       :style="`background-color: ${appAccentColor}`"
+       :class="`h-screen flex items-center  justify-center max-h-screen p-8 md:p-20`"
   >
     <div
-        class="flex w-full md:w-3/4 h-fit md:h-full bg-white rounded-lg overflow-clip"
+        class="flex w-full md:w-3/4 h-fit md:h-full bg-white shadow rounded-lg overflow-clip"
     >
       <div class="items-center flex w-full md:w-1/2 p-8 md:p-10 h-full">
         <LoginForm/>
@@ -17,9 +18,10 @@
 </template>
 <script setup>
 import {ref, onMounted} from 'vue';
-const appbasecolor=import.meta.env.VITE_APP_BASE_COLOR;
+const appAccentColor = import.meta.env.VITE_APP_ACCENT_COLOR;
 const logged = ref(false);
 onMounted(() => {
+  appAccentColor;
   if (localStorage.getItem("token")) {
     logged.value = true;
   }

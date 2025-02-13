@@ -9,7 +9,7 @@
       <div class="flex items-center gap-4">
                 <span class="flex flex-col items-end">
                     <strong>{{ dataUser?.nama }}</strong>
-                    <small class="text-pr hidden md:flex uppercase"> POS :{{ dataUser?.cabang_nama }}</small>
+                    <small class="text-primary hidden md:flex uppercase"> POS :{{ dataUser?.cabang_nama }}</small>
                 </span>
         <n-avatar round size="medium" class="aspect-square" :src="dataUser
                     ? dataUser.PHOTO_URL
@@ -121,7 +121,7 @@ const LogOut = async () => {
 
   localStorage.removeItem("token");
   message.success("logout berhasil");
-  router.push({path: "/"});
+  router.go();
   // }
 };
 onMounted(() => {

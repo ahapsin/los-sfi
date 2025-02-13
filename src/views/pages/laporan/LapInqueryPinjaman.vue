@@ -111,7 +111,7 @@
               </div>
             </div>
             <template #footer>
-              <n-button type="success" @click="handlePrintKartu">Cetak Kartu Piutang</n-button>
+              <n-button type="primary" @click="handlePrintKartu">Cetak Kartu Piutang</n-button>
             </template>
           </n-card>
         </n-tab-pane>

@@ -18,12 +18,20 @@
 import { ref,onMounted } from "vue";
 import LoadingScreen from "../src/components/organism/LoadingScreen.vue";
 import { darkTheme } from "naive-ui";
+
+const appcolor = import.meta.env.VITE_APP_BASE_COLOR;
+const appAccentColor = import.meta.env.VITE_APP_ACCENT_COLOR;
 const themeOverrides = {
   common: {
-    primaryColor: '#213B94',
-    primaryColorHover: "#213B94",
-    borderRadius: "10px"
+    primaryColor: appcolor,
+    primaryColorHover: appAccentColor,
+    borderRadius: "10px",
+    infoColor: appAccentColor,
   },
+  Button:{
+    primaryColor: appcolor,
+
+  }
 }
 const isLoading = ref(true);
 onMounted(() => {

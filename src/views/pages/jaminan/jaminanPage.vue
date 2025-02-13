@@ -37,7 +37,7 @@
     </n-tab-pane>
     <template #suffix>
       <n-dropdown trigger="hover" :options="options" @select="handleSelect" v-if="addButtonDisplay">
-        <n-button type="success">Tambah Transaksi</n-button>
+        <n-button type="primary">Tambah Transaksi</n-button>
       </n-dropdown>
     </template>
   </n-tabs>
@@ -270,7 +270,7 @@
   <n-modal v-model:show="modalTrx" title="Modal">
     <n-card class="w-2/3" title="Data Surat">
       <template #header-extra>
-        <n-button type="success" @click="handlePrint">
+        <n-button type="primary" @click="handlePrint">
           <n-space>
             <n-icon>
               <print-icon/>

@@ -7,7 +7,7 @@
     </template>
     <template #header-extra>
       <n-space>
-        <n-button strong type="success" @click="handleAddPay">
+        <n-button strong type="primary" @click="handleAddPay">
           <template #icon>
             <n-icon>
               <add-icon/>
@@ -46,7 +46,7 @@
           />
         </n-form-item>
         <n-form-item class="w-full">
-          <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+          <n-button type="primary" @click="handleSearch" class="px-4"> Cari</n-button>
         </n-form-item>
       </div>
       <n-data-table ref="tableRef" striped size="small" :row-key="(row) => row.loan_number" :columns="columns"
@@ -103,7 +103,7 @@
       </template>
       <div ref="printReceiptRef" class="flex flex-col" :class="width > 850 ? 'p-4' : 'p-0'" v-if="!uploadState">
         <n-watermark
-            content="KSP DJAYA"
+            :content="apptitle"
             cross
             selectable
             :font-size="16"
@@ -117,9 +117,9 @@
           <div class="p-2">
             <div class="flex items-center gap-2 pb-2 justify-between border-b border-dashed border-black">
               <div class="flex gap-2 items-center">
-                <img class="h-10 md:h-10" src="../../../assets/logo.png" alt="logo_company"/>
+                <img class="h-10 md:h-10" :src="applogo" alt="logo_company"/>
                 <div class="flex flex-col">
-                  <span class="text-xl font-bold">KSPDJAYA</span>
+                  <span class="text-xl font-bold">{{apptitle}}</span>
                   <n-text strong class="text-md"> POS: {{ bodyModal.cabang }}</n-text>
                 </div>
               </div>
@@ -294,6 +294,7 @@
 import {useApi} from "../../../helpers/axios";
 import {useSearch} from "../../../helpers/searchObject";
 import router from "../../../router";
+
 import {
   PlusFilled as addIcon,
   FilterAltSharp as filterIcon,
@@ -310,7 +311,8 @@ const loadingBar = useLoadingBar();
 import {useMessage, NIcon, NTag, NButton, NInput, NImage} from "naive-ui";
 import {computed, onMounted, reactive, ref, h} from "vue";
 import {useVueToPrint} from "vue-to-print";
-
+const apptitle = import.meta.env.VITE_APP_TITLE;
+const applogo = import.meta.env.VITE_APP_LOGO;
 const uploadState = ref(false);
 const dynamicSearch = reactive({
   no_transaksi: '',

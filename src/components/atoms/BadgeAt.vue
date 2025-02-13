@@ -27,7 +27,7 @@ const variantBadge = computed(() => {
     if (props.variant === "danger") {
         return VarDan
     }
-    if (props.variant === "success") {
+    if (props.variant === "primary") {
         return VarSuc
     }
     if (props.variant === "disabled") {

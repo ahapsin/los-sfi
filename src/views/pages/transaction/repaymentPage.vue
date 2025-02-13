@@ -13,7 +13,7 @@
     </template>
     <template #header-extra>
       <n-space>
-        <n-button strong type="success" @click="handleAddPay">
+        <n-button strong type="primary" @click="handleAddPay">
           <template #icon>
             <n-icon>
               <add-icon/>
@@ -52,7 +52,7 @@
           />
         </n-form-item>
         <n-form-item class="w-full">
-          <n-button type="success" secondary @click="handleSearch" class="px-4">
+          <n-button type="primary" secondary @click="handleSearch" class="px-4">
             <n-icon>
               <search-icon/>
             </n-icon>

@@ -16,11 +16,11 @@
             :options="dataBranch"
             v-model:value="selectBranch"
         />
-        <n-button @click="handleSubmit" type="success">
+        <n-button @click="handleSubmit" type="primary">
           Cari
         </n-button>
 <!--        <json-excel :data="props.data.datas" :name="`LAP_LKBH_${formatDate(props.data.tgl_tarik)}`" :fields="convertObjectToArray(props.data.datas)" :stringifyLongNum="true">-->
-<!--          <n-button type="success" secondary>Download</n-button>-->
+<!--          <n-button type="primary" secondary>Download</n-button>-->
 <!--        </json-excel>-->
         <!--        <n-button @click="downloadCsv" type="info">-->
         <!--          download-->

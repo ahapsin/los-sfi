@@ -98,7 +98,7 @@
           positive-text="konfirmasi" negative-text="reject"
           @negative-click="handleNegativeClick(bodyModal.no_transaksi)">
           <template #activator>
-            <n-button :loading="loadingConf" type="success" v-show="bodyModal.STATUS == 'PENDING'">Konfirmasi</n-button>
+            <n-button :loading="loadingConf" type="primary" v-show="bodyModal.STATUS == 'PENDING'">Konfirmasi</n-button>
           </template>
           <n-input type="textarea" placeholder="keterangan" v-model:value="keterangan"></n-input>
         </n-popconfirm>

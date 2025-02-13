@@ -75,6 +75,18 @@ class="flex gap-2 border-t p-4 justify-end"
     <div class="flex bg-slate-100 justify-center overflow-auto p-2" v-show="prosesPK">
       <div class="flex flex-col min-w-[900px] p-10" ref="pk">
         <div ref="areaPrintRef">
+          <n-watermark
+              :content="apptitle"
+              cross
+              selectable
+              :font-size="16"
+              :line-height="16"
+              :width="192"
+              :height="128"
+              :x-offset="12"
+              :y-offset="28"
+              :rotate="-15"
+          >
           <div class="bg-white max-w-[900px]  p-8" v-show="optPrint.pkPage">
             <kop-header :alamat_cabang="`${pkData.alamat_kantor} ${pkData.kota}`" :cabang="pkData.cabang"/>
             <table border="1" class="mb-10">
@@ -197,7 +209,7 @@ class="flex gap-2 border-t p-4 justify-end"
               </tr>
               <tr>
                 <td>
-                  <div class="text-justify pt-2" v-for="jaminan, in dataJaminan" :key="jaminan">
+                  <div class="text-justify pt-2" v-for="jaminan in dataJaminan" :key="jaminan">
                     Jenis Dokumen: <b> {{ jaminan.type.toUpperCase() }}</b>
                     <table v-if="jaminan.type.toLowerCase() == 'kendaraan'">
                       <tr>
@@ -435,6 +447,7 @@ class="flex gap-2 border-t p-4 justify-end"
               </div>
             </div>
           </div>
+          </n-watermark>
         </div>
         <div class="mt-2" v-show="optPrint.skalaPage">
           <div class="bg-white max-w-[900px] shadow-lg p-8">
@@ -836,6 +849,7 @@ import {useApi} from "../../../helpers/axios";
 import router from "../../../router";
 import {useVueToPrint} from "vue-to-print";
 // import CollateralCheck from "../../../components/atoms/CollateralCheck.vue";
+const apptitle = import.meta.env.VITE_APP_TITLE;
 const prosesPK = ref(false);
 const pageData = ref([]);
 const pk = ref();
@@ -1054,34 +1068,6 @@ const handlePrintAction = async (e) => {
   }
 
 };
-
-
-function convertObject(object) {
-  return object.map(obj => [{
-    margin: [20, 10, 0, 0],
-    layout: 'noBorders',
-    table: obj.type === "kendaraan" ? {
-      body: [
-        ['JENIS DOKUMEN', ":", obj.type],
-        ['BPKB NO', ":", obj.atr.no_bpkb],
-        ['BPKB Atas Nama', ":", obj.atr.atas_nama],
-        ['Merk/Type/Tahun', ":", `${obj.atr.merk}/${obj.atr.tipe}/${obj.atr.tahun}`],
-        ['Warna/ No. Polisi', ":", `${obj.atr.warna}/${obj.atr.no_polisi}`],
-        ['No. Rangka/No. Mesin', ":", `${obj.atr.no_rangka}/${obj.atr.no_mesin}/`],
-        ['No. Faktur', ":", obj.atr.no_faktur],
-      ]
-    } : {
-      body: [
-        ['Jenis Dokumen', ":", obj.type],
-        ['No Sertifikat', ":", obj.atr.no_sertifikat],
-        ['Atas Nama', ":", obj.atr.atas_nama],
-        ['Status Kepemilikan', ":", obj.atr.status_kepemilikan],
-        ['IMB/Luas Tanah/Luas Bangunan', ":", `${obj.atr.imb}/${obj.atr.luas_tanah}/${obj.atr.luas_bangunan}`],
-        ['Lokasi', ":", obj.atr.lokasi],
-      ]
-    },
-  }]);
-}
 
 const upCase = (e) => {
   return e;

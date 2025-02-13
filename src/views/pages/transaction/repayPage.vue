@@ -329,7 +329,7 @@
         </n-scrollbar>
         <template #footer>
           <div class="flex gap-4 justify-center">
-            <n-button type="success" v-if="responseProsesPayment.status == 'success'"
+            <n-button type="primary" v-if="responseProsesPayment.status == 'success'"
                       @click="handleCetakKwitansi">Cetak Kwitansi
             </n-button>
             <n-button type="warning" @click="backPayment">Tutup</n-button>

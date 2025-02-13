@@ -266,7 +266,7 @@
       </div>
       <template #action>
         <n-space>
-          <n-button type="success">Cetak</n-button>
+          <n-button type="primary">Cetak</n-button>
           <n-button @click="handleDone">Selesai</n-button>
         </n-space>
       </template>

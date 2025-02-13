@@ -30,10 +30,10 @@
         </n-form>
         <template #action>
             <n-space>
-                <n-button :loading="loading" type="success" @click="handleSave" v-if="props.type === 'pengiriman'">
+                <n-button :loading="loading" type="primary" @click="handleSave" v-if="props.type === 'pengiriman'">
                     <span v-if="!param">Simpan Pengiriman</span>
                 </n-button>
-              <n-button :loading="loading" type="success" @click="handleSavePerminataan" v-else>
+              <n-button :loading="loading" type="primary" @click="handleSavePerminataan" v-else>
                     <span v-if="!param">Simpan Permintaan</span>
                 </n-button>
                 <n-button type="error" @click="handleCancel">
