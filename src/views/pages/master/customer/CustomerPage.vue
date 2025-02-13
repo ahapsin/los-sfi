@@ -12,7 +12,7 @@
                   placeholder="cari disini.."
                   v-model:value="searchBox"
               />
-              <n-button type="success" @click="handleSearch">cari</n-button>
+              <n-button type="primary" @click="handleSearch">cari</n-button>
             </n-space>
 
           </div>
@@ -216,7 +216,7 @@
               </div>
             </template>
           </n-dynamic-input>
-            <n-button @click="handleSubmit" type="success">
+            <n-button @click="handleSubmit" type="primary">
               Ubah
             </n-button>
         </n-scrollbar>

@@ -73,7 +73,7 @@
     </n-form-item>
     <template #action>
       <n-space>
-        <n-button :loading="loading" type="success" @click="handleSave">
+        <n-button :loading="loading" type="primary" @click="handleSave">
           <span v-if="!param">Simpan</span>
         </n-button>
         <n-button type="error" @click="handleCancel"> Batal </n-button>

@@ -18,7 +18,7 @@
                        clearable/>
             </n-form-item>
             <n-form-item class="w-full">
-              <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+              <n-button type="primary" @click="handleSearch" class="px-4"> Cari</n-button>
             </n-form-item>
           </div>
           <n-data-table size="small" :columns="columns" :data="dataTable"
@@ -70,7 +70,7 @@
         </n-form-item>
       </div>
       <n-form-item path="nama" class="w-full">
-        <n-button type="success" @click="handleUbah">Ubah</n-button>
+        <n-button type="primary" @click="handleUbah">Ubah</n-button>
       </n-form-item>
     </n-card>
   </n-modal>

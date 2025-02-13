@@ -216,7 +216,7 @@
                 :title="`Jumlah Jaminan : ${jaminanStore.listJaminan.length}, Total Nilai : ${sumJaminan.toLocaleString('US')}`">
               <div class=" flex w-60 gap-2">
                 <n-select v-model:value="jenisJaminan" :options="optJaminan" placeholder="jenis jaminan" />
-                <n-button circle type="success" @click="addJaminan">
+                <n-button circle type="primary" @click="addJaminan">
                   <n-icon>
                     <add-icon />
                   </n-icon>
@@ -325,8 +325,8 @@
                 <template #footer>
                     <n-space>
 
-                        <n-button type="success" @click="ubahJaminan(jenisJaminan)" v-if="dataProp">ubah</n-button>
-                        <n-button type="success" @click="pushJaminan(jenisJaminan)" v-else
+                        <n-button type="primary" @click="ubahJaminan(jenisJaminan)" v-if="dataProp">ubah</n-button>
+                        <n-button type="primary" @click="pushJaminan(jenisJaminan)" v-else
                             :disabled="!receivedData.nilai">tambah</n-button>
                         <n-button type="warning" @click="showModal = false">batal</n-button>
                     </n-space>

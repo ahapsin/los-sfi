@@ -7,7 +7,7 @@
           <div class="flex w-full  justify-end gap-2">
             <n-popover trigger="click">
               <template #trigger>
-                <n-button type="success">Konfirmasi</n-button>
+                <n-button type="primary">Konfirmasi</n-button>
               </template>
               <template #header>
                 <n-text strong depth="1">

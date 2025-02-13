@@ -30,7 +30,7 @@
           <!--              </n-popover>-->
           <!--            </div>-->
           <!--            <div>-->
-          <!--              <n-button type="success" secondary>-->
+          <!--              <n-button type="primary" secondary>-->
           <!--                <template #icon>-->
           <!--                  <n-icon>-->
           <!--                    <download-icon />-->
@@ -52,7 +52,7 @@
           <json-excel v-if="showData.length > 0" :data="showData" :name="`laporan_jaminan_${dynamicSearch.pos}`"
                       :fields="json_fields"
                       :stringifyLongNum="true">
-            <n-button type="success">Download Xls</n-button>
+            <n-button type="primary">Download Xls</n-button>
           </json-excel>
         </template>
         <n-space vertical :size="12" class="pt-4">
@@ -75,7 +75,7 @@
             </n-form-item>
 
             <n-form-item class="flex gap-2" as="div">
-              <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+              <n-button type="primary" @click="handleSearch" class="px-4"> Cari</n-button>
             </n-form-item>
           </div>
           <n-data-table

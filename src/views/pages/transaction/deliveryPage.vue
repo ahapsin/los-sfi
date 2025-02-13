@@ -14,7 +14,7 @@
               </template>
               <n-input autofocus="true" clearable placeholder="cari disini.." v-model:value="searchBox" />
             </n-popover>
-            <n-button secondary @click="handleAdd" type="success" v-show="dataMe.me.USERNAME == 'admin'">
+            <n-button secondary @click="handleAdd" type="primary" v-show="dataMe.me.USERNAME == 'admin'">
               <template #icon>
                 <n-icon>
                   <send-icon />
@@ -100,7 +100,7 @@
           <n-popconfirm :show-icon="false" @positive-click="handlePositiveClick()" positive-text="konfirmasi"
             ponegative-text="reject" @negative-click="handleNegativeClick">
             <template #activator>
-              <n-button secondary type="success"
+              <n-button secondary type="primary"
                 v-show="dataMe.me.USERNAME == 'ho' && selectedData.status == 'SENDING'">Konfirmasi
               </n-button>
             </template>

@@ -27,7 +27,7 @@
               </n-popover>
             </div>
             <div>
-              <n-button type="success" secondary @click="downloadCsv"
+              <n-button type="primary" secondary @click="downloadCsv"
                         :circle="width <= 520 ? true : false">
                 <template #icon>
                   <n-icon>
@@ -187,10 +187,10 @@ const statusTag = (e) => {
     return "warning";
   }
   if (e === "CROR") {
-    return "success";
+    return "primary";
   }
   if (e === "APKPS") {
-    return "success";
+    return "primary";
   }
   if (e === "WAKPS") {
     return "info";
@@ -199,7 +199,7 @@ const statusTag = (e) => {
     return "info";
   }
   if (e === "APHO") {
-    return "success";
+    return "primary";
   }
   if (e === "REORKPS") {
     return "error";

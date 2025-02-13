@@ -36,7 +36,7 @@
         </n-tab-pane>
         <template #suffix>
             <n-dropdown trigger="hover" :options="options" @select="handleSelect" v-if="addButtonDisplay">
-                <n-button type="success">Tambah Transaksi</n-button>
+                <n-button type="primary">Tambah Transaksi</n-button>
             </n-dropdown>
         </template>
     </n-tabs>

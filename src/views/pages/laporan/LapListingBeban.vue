@@ -13,7 +13,7 @@
                       v-model:value="selectBranch"/>
           </n-form-item>
           <n-form-item>
-            <n-button @click="handleSubmit" type="success">
+            <n-button @click="handleSubmit" type="primary">
               Cari
             </n-button>
           </n-form-item>
@@ -21,7 +21,7 @@
             <json-excel v-if="dataListBan.length > 0" :data="dataListBan"
                         :name="`Listing Beban_${selectBranch}_${rangeDate} `"
                         :stringifyLongNum="false">
-              <n-button type="success" secondary>Download</n-button>
+              <n-button type="primary" secondary>Download</n-button>
             </json-excel>
           </n-form-item>
         </n-space>

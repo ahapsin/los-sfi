@@ -861,7 +861,7 @@
         </div>
       </n-tab-pane>
       <template #suffix>
-        <n-button :loading="loading" type="success" @click="handleSave"
+        <n-button :loading="loading" type="primary" @click="handleSave"
           >Simpan</n-button
         >
       </template>

@@ -14,7 +14,7 @@
         <n-alert type="warning" :show-icon="false">
           <div class="flex justify-between items-center">
             <div class="text-xl">{{ csvData.length }} baris data</div>
-            <n-button type="success" @click="importData">update data</n-button>
+            <n-button type="primary" @click="importData">update data</n-button>
           </div>
         </n-alert>
         <table class="table table-striped">

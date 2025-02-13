@@ -349,7 +349,7 @@
                             <div class="flex w-60 gap-2" v-show="!viewMode">
                                 <n-select v-model:value="jenisJaminan" :options="optJaminan"
                                     placeholder="jenis jaminan" />
-                                <n-button circle type="success" @click="addJaminan">
+                                <n-button circle type="primary" @click="addJaminan">
                                     <n-icon>
                                         <add-icon />
                                     </n-icon>
@@ -473,9 +473,9 @@
         <component :is="JaminanEmas" v-if="jenisJaminan == 'emas'" @childData="handleChildData" /> -->
                             <template #footer>
                                 <n-space v-if="!viewMode">
-                                    <n-button type="success" @click="ubahJaminan(jenisJaminan)"
+                                    <n-button type="primary" @click="ubahJaminan(jenisJaminan)"
                                         v-if="dataProp">ubah</n-button>
-                                    <n-button type="success" @click="pushJaminan(jenisJaminan)" v-else>tambah</n-button>
+                                    <n-button type="primary" @click="pushJaminan(jenisJaminan)" v-else>tambah</n-button>
 
                                 </n-space>
                             </template>
@@ -559,7 +559,7 @@
                     <n-divider title-placement="left" v-show="!viewMode">
 
                         <div class="flex items-center gap-2">
-                            <n-button class="hover:shadow" secondary type="success" @click="addPenjamin">
+                            <n-button class="hover:shadow" secondary type="primary" @click="addPenjamin">
                                 <n-icon><add-icon /></n-icon>
                                 Penjamin
                             </n-button>
@@ -570,7 +570,7 @@
                         <div class="flex items-center text-lg p-2 border-b justify-between">
                             <label class="ps-2">Penjamin {{ i + 1 }}</label>
                             <div class="flex gap-2" v-if="!viewMode">
-                                <n-button circle type="success" secondary class="hover:shadow" @click="addPenjamin">
+                                <n-button circle type="primary" secondary class="hover:shadow" @click="addPenjamin">
                                     <n-icon><add-icon /></n-icon>
                                 </n-button>
                                 <n-popconfirm @positive-click="removePenjamin({ id: penjamin.id })" positive-text="ya"

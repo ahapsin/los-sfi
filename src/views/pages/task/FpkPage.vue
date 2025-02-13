@@ -23,7 +23,7 @@ type="daterange" @update:value="onConfirmDate" />
 </n-space>
 </n-popover> -->
 
-            <!-- <n-button type="success" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
+            <!-- <n-button type="primary" secondary @click="downloadCsv" :circle="width <= 520 ? true : false">
   <template #icon>
     <n-icon>
       <download-file/>
@@ -66,7 +66,7 @@ type="daterange" @update:value="onConfirmDate" />
                              placeholder="TANGGAL" class="w-full"/>
             </n-form-item>
             <n-form-item class="w-full">
-              <n-button type="success" @click="handleSearch" class="px-4"> Cari</n-button>
+              <n-button type="primary" @click="handleSearch" class="px-4"> Cari</n-button>
             </n-form-item>
           </div>
           <n-data-table size="small" ref="tableRef" triped :scroll-x="1000" :columns="columns"
@@ -128,7 +128,7 @@ Klik atau seret file ke area ini untuk diunggah
       </n-space>
 
       <div class="pt-4 flex justify-end">
-        <n-button @click="handleSelesai" secondary type="success" round>Selesai</n-button>
+        <n-button @click="handleSelesai" secondary type="primary" round>Selesai</n-button>
       </div>
     </n-card>
   </n-modal>
@@ -279,7 +279,7 @@ const columns = [
           typeUpload = "error";
         } else {
           classType = "animate";
-          typeUpload = "success";
+          typeUpload = "primary";
         }
         return h(
             NButton,
@@ -336,10 +336,10 @@ const statusTag = (e) => {
     return "info";
   }
   if (e === "APKPS") {
-    return "success";
+    return "primary";
   }
   if (e === "APHO") {
-    return "success";
+    return "primary";
   }
   if (e === "REORHO") {
     return "error";

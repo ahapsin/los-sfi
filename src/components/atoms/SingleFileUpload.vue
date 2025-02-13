@@ -14,7 +14,7 @@
       <n-upload @change="beforeUpload" :show-file-list="false">
         <div class="flex flex-col">
             <!-- <n-gradient-text :size="24"> {{ props.title }}</n-gradient-text> -->
-            <n-button tertiary type="success"> {{ props.title }}</n-button>
+            <n-button tertiary type="primary"> {{ props.title }}</n-button>
         </div>
       </n-upload>
   </div>
