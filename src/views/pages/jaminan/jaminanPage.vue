@@ -116,7 +116,7 @@
         </n-tab-pane>
         <n-tab-pane name="rilis" tab="Rilis Jaminan">
           <n-result
-              v-if="bodyModal.status_kontrak === 'active'"
+              v-if="bodyModal.status_kontrak != 'active'"
               status="403"
               title="Rilis Jaminan Tidak Tersedia"
               description="Terdapat kredit aktif, jaminan tidak dapat diproses rilis !"

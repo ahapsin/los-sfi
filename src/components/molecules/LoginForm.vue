@@ -1,10 +1,13 @@
 <template>
-  <div class="w-full" >
+  <div class="w-full">
 
     <n-form :model="dynamicForm" ref="formRef">
       <div class="flex flex-col md:flex-row gap-4 items-center pb-8">
         <img class="h-14 md:h-16 " :src="applogo" alt="logo_company">
-        <span class="md:text-2xl font-bold">{{apptitle}}</span>
+        <div class="flex flex-col">
+          <span class="font-bold">LOAN ORIGINATION SYSTEM</span>
+          <span class="md:text-2xl font-bold">{{ apptitle }}</span>
+        </div>
       </div>
       <div class=" h-full flex flex-col py-4">
         <n-form-item label="username" path="username" :rule="rules.username">
@@ -32,6 +35,7 @@ import {useMessage} from "naive-ui";
 import router from '../../router';
 import {useApi} from "../../helpers/axios";
 import pjson from '../../../package.json';
+
 const apptitle = import.meta.env.VITE_APP_TITLE;
 const applogo = import.meta.env.VITE_APP_LOGO;
 const appVersion = pjson.version;
