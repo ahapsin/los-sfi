@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ loader: true, fadeout: !isLoading }" class=" w-full h-full z-50">
+  <div :class="{ loader: true, fadeout: true }" class=" w-full h-full z-50">
     <div class="flex flex-col gap-4 items-center justify-center bg-white h-full">
       <img :src="applogo" width="64px" height="64px" class="animate-pulse"/>
       <n-spin size="small" :stroke="appAccentColor"/>

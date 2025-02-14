@@ -51,7 +51,7 @@ class="flex gap-2 border-t p-4 justify-end"
     <div class="sticky flex bottom-0 w-full" v-if="colCheck">
       <CollateralCheck :coll_data="payloadCheck()" @coll_val="handleCollCheck"/>
     </div>
-    <div class="sticky b bg-white flex gap-2 top-0 w-full justify-end p-2">
+    <div class="sticky b bg-white flex gap-2 top-0 w-full justify-end p-2" v-if="prosesPK">
       <n-button :type="pkData.flag == 1 ? 'warning' : 'primary'" class="gap-2" @click="handlePrintAction(pkData.flag)">
         <n-icon>
           <print-icon/>
@@ -919,110 +919,66 @@ const dynamicForm = reactive({
   order_number: null,
 });
 
-// const dayFull = () => computed(() => {
-//     let dayPick = new Date(dynamicForm.awal).getDay();
-//     dynamicForm.day_pk = daysName[dayPick];
-//     let tglPk = new Date(dynamicForm.awal).getDate();
-//     dynamicForm.tgl_pk = tglPk;
-//     let monthPick = new Date(dynamicForm.awal).getMonth();
-//     dynamicForm.month_pk = monthNames[monthPick];
-//     dynamicForm.year_pk = new Date(dynamicForm.awal).getFullYear();
-// });
-
-// useApi({
-//     method: "get",
-//     api: `cr_application/${idApp}`,
-//     token: userToken,
-// }).then((res) => {
-//     if (res.ok) {
-//         pageData.value = res.data.response;
-//         dataPelanggan.value = pageData.value.pelanggan;
-//         Object.assign(dataPelanggan.value, pageData.value.pekerjaan);
-//         // console.log(pageData.value.order_number)
-//         // console.log(dynamicForm.order_number)
-//         Object.assign(dynamicForm, {
-//             order_number: pageData.value.order_number,
-//             angsuran: pageData.value.angsuran,
-//         });
-//     }
-// });
-
 const dataPasangan = ref([]);
 const dataPenjamin = ref([]);
 const message = useMessage();
 const noPerjanjian = ref();
+
 const getPrePK = async () => {
+  prosesPK.value = false;
   const bodySend = {
     order_number: idApp,
     tgl_awal: tgl_cetaks.value,
   };
-  await useApi({
+  const response = await useApi({
     method: "POST",
     data: bodySend,
     api: `pk`,
     token: userToken,
-  }).then((res) => {
-    if (!res.ok) {
-      prosesPK.value = false;
-      console.log(res);
-      message.error('error API');
-    } else {
-
-      prosesPK.value = true;
-      pkData.value = res.data;
-
-      if (res.data.no_perjanjian != null) {
-        noPerjanjian.value = res.data.no_perjanjian;
-      }
-      if (res.data.tgl_cetak) {
-        tgl_cetak.value = res.data.tgl_cetak;
-      } else {
-        tgl_cetak.value = thisday;
-      }
-
-      dataPasangan.value = res.data.pasangan;
-      dataPenjamin.value = res.data.penjamin;
-      dataJaminan.value = res.data.jaminan;
-      pihak1.value = res.data.pihak_1;
-      pihak2.value = res.data.pihak_2;
-      struktur.value = [];
-      struktur.value.push([
-        "Angsuran ke",
-        "Jatuh Tempo",
-        "Pokok",
-        "Bunga",
-        "Angsuran",
-        "Baki Debet",
-      ]);
-      pkData.value.struktur.forEach((v) => {
-        struktur.value.push([
-          v.angsuran_ke,
-          v.tgl_angsuran,
-          v.pokok,
-          v.bunga,
-          v.total_angsuran,
-          v.baki_debet,
-        ]);
-      });
-    }
   });
+  if (!response.ok) {
+    prosesPK.value = false;
+    message.error('error API');
+  } else {
+    prosesPK.value = true;
+    pkData.value = response.data;
+
+    if (response.data.no_perjanjian != null) {
+      noPerjanjian.value = response.data.no_perjanjian;
+    }
+
+    if (response.data.tgl_cetak) {
+      tgl_cetak.value = response.data.tgl_cetak;
+    } else {
+      tgl_cetak.value = thisday;
+    }
+
+    dataPasangan.value = response.data.pasangan;
+    dataPenjamin.value = response.data.penjamin;
+    dataJaminan.value = response.data.jaminan;
+    pihak1.value = response.data.pihak_1;
+    pihak2.value = response.data.pihak_2;
+    struktur.value = [];
+    struktur.value.push([
+      "Angsuran ke",
+      "Jatuh Tempo",
+      "Pokok",
+      "Bunga",
+      "Angsuran",
+      "Baki Debet",
+    ]);
+    pkData.value.struktur.forEach((v) => {
+      struktur.value.push([
+        v.angsuran_ke,
+        v.tgl_angsuran,
+        v.pokok,
+        v.bunga,
+        v.total_angsuran,
+        v.baki_debet,
+      ]);
+    });
+  }
 };
-// const jaminanFetch = computed(() => {
-//   let a =dataJaminan.value.map(item => {
-//     if (item.type === 'kendaraan') {
-//       return {
-//         type: item.type,
-//         no_bpkb: item.atr.no_bpkb
-//       };
-//     } else if (item.type === 'sertifikat') {
-//       return {
-//         type: item.type,
-//         no_sertifikat: item.atr.no_sertifikat
-//       };
-//     }
-//   });
-//   return a;
-// });
 
 const dayFull = reactive({
   print_date: computed(() => {
@@ -1072,10 +1028,6 @@ const handlePrintAction = async (e) => {
 const upCase = (e) => {
   return e;
 };
-// optPrint.skalaPage ? skalaAngsuranPage.value : "",
-//         optPrint.ktpaPage ? creditTanpaAsuransiPage.value : "",
-//         optPrint.pasanganPage ? persetujuanPasangan.value : "",
-//         optPrint.penjaminPage ? pernyataanPenjaminPage.value : "",
 const colCheck = ref(true);
 const handleCollCheck = (data) => {
   colCheck.value = data;
