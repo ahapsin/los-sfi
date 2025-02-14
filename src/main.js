@@ -1,5 +1,4 @@
 import "./style.css";
-
 import * as HIIcons from "oh-vue-icons/icons/hi";
 import * as RIcons from "oh-vue-icons/icons/ri";
 

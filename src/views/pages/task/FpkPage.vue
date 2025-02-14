@@ -382,26 +382,25 @@ const handleAction = async (e, data) => {
     cr_prospect_id: data.id,
   };
   if (status === "WADM") {
+
     message.create("membuat FPK, silakan tunggu !", {type: loadingRef.type});
     try {
-      await useApi({
+      const response = await useApi({
         method: "POST",
         data: dynamicBody,
         api: `cr_application_generate`,
         token: userToken,
-      }).then((res) => {
-        if (res.ok) {
-          message.success("FPK berhsil dibuat");
-          router.push({
-            name: "Form Pengajuan Kredit",
-            params: {idapplication: data.id},
-          });
-        } else {
-          message.error("FPK gagal dibuat!");
-        }
       });
+      if (!response.ok) {
+        message.success("FPK berhsil dibuat");
+        router.push({
+          name: "Form Pengajuan Kredit",
+          params: {idapplication: data.id},
+        });
+      } else {
+        message.error("FPK gagal dibuat!");
+      }
     } catch (e) {
-      console.log(e);
       message.error("FPK gagal dibuat!");
     }
 

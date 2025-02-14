@@ -8,7 +8,7 @@
     <n-dropdown trigger="hover" :options="options">
       <div class="flex items-center gap-4">
                 <span class="flex flex-col items-end">
-                    <strong>{{ dataUser?.nama }}</strong>
+                  <n-text type="primary"><strong>{{ dataUser?.nama }}</strong></n-text>
                     <small class="text-primary hidden md:flex uppercase"> POS :{{ dataUser?.cabang_nama }}</small>
                 </span>
         <n-avatar round size="medium" class="aspect-square" :src="dataUser
