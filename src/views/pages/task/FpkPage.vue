@@ -312,8 +312,6 @@ const columns = [
           {
             secondary: false,
             size: "small",
-            loading: loadAction,
-            disabled: disabledAction,
             type: statusTag(row.status_code),
             onClick: () => {
               handleAction(row.status_code, row);
