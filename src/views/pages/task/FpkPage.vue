@@ -312,7 +312,7 @@ const columns = [
           {
             secondary: false,
             size: "small",
-            loading:loadAction,
+            loading: loadAction,
             disabled: disabledAction,
             type: statusTag(row.status_code),
             onClick: () => {
@@ -388,7 +388,7 @@ const handleAction = async (e, data) => {
     cr_prospect_id: data.id,
   };
   if (status === "WADM") {
-    message.create("membuat FPK, silakan tunggu !", {type: loadingRef.type});
+    try {
       const response = await useApi({
         method: "POST",
         data: dynamicBody,
@@ -396,18 +396,18 @@ const handleAction = async (e, data) => {
         token: userToken,
       });
       if (!response.ok) {
-        loadAction.value = false;
-        disabledAction.value = false;
-        disabledAction.value = false;
         message.error("FPK gagal dibuat!");
       } else {
-        loadAction.value = false;
-        message.success("FPK berhasil dibuat");
+        message.success("FPK berhsil dibuat");
         router.push({
           name: "Form Pengajuan Kredit",
           params: {idapplication: data.id},
         });
       }
+    } catch (e) {
+      console.log(e);
+      message.error("FPK gagal dibuat!");
+    }
   } else if (status === "CROR") {
     router.push({
       name: "Form Pengajuan Kredit",
