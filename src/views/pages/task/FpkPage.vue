@@ -312,6 +312,8 @@ const columns = [
           {
             secondary: false,
             size: "small",
+            loading:loadAction,
+            disabled: disabledAction,
             type: statusTag(row.status_code),
             onClick: () => {
               handleAction(row.status_code, row);
@@ -324,6 +326,8 @@ const columns = [
     },
   },
 ];
+const loadAction = ref(false);
+const disabledAction = ref(false);
 const statusTag = (e) => {
 
   if (e === "REORKPS") {
@@ -376,15 +380,15 @@ const format = (e) => {
   return toNum.toLocaleString("en-US");
 };
 const handleAction = async (e, data) => {
+  loadAction.value = true;
+  disabledAction.value = true;
   let status = e;
   const userToken = localStorage.getItem("token");
   const dynamicBody = {
     cr_prospect_id: data.id,
   };
   if (status === "WADM") {
-
     message.create("membuat FPK, silakan tunggu !", {type: loadingRef.type});
-    try {
       const response = await useApi({
         method: "POST",
         data: dynamicBody,
@@ -392,18 +396,18 @@ const handleAction = async (e, data) => {
         token: userToken,
       });
       if (!response.ok) {
-        message.success("FPK berhsil dibuat");
+        loadAction.value = false;
+        disabledAction.value = false;
+        disabledAction.value = false;
+        message.error("FPK gagal dibuat!");
+      } else {
+        loadAction.value = false;
+        message.success("FPK berhasil dibuat");
         router.push({
           name: "Form Pengajuan Kredit",
           params: {idapplication: data.id},
         });
-      } else {
-        message.error("FPK gagal dibuat!");
       }
-    } catch (e) {
-      message.error("FPK gagal dibuat!");
-    }
-
   } else if (status === "CROR") {
     router.push({
       name: "Form Pengajuan Kredit",
