@@ -598,7 +598,6 @@ const pelunasan = reactive({
   TUNGGAKAN_BUNGA: 0,
   DENDA: 0,
   PINALTI: 0,
-
   UANG_PELANGGAN: 0,
   DISKON: 0,
   BAYAR_POKOK: 0,
