@@ -1,12 +1,13 @@
 <template>
   <div class="flex justify-center p-0 md:p-8 bg-gradient-to-tr from-blue-800 to-orange-500">
     <div
-        class="p-8 h-screen border shadow rounded-none md:rounded-2xl w-[500px] flex bg-white justify-between flex-col">
+        class="p-8 h-screen border shadow rounded-none md:rounded-2xl w-1/2 flex bg-white justify-between flex-col">
       <div class=" flex justify-between h-20 ">
         <div class="text-2xl flex items-center pb-8">
           chat<span :class="indikator ? 'animate-bounce':'animate-none'"><b>GPU</b></span>
         </div>
-        <n-button @click="activate('bottom')" type="error" secondary round class="animate-bounce" v-if="pushedErrorInvoice.length > 0">
+        <n-button @click="activate('bottom')" type="error" secondary round class="animate-bounce"
+                  v-if="pushedErrorInvoice.length > 0">
           cek disini yang error
         </n-button>
         <n-drawer v-model:show="active" :width="502" :placement="placement">
@@ -35,26 +36,29 @@
           </div>
         </div>
       </div>
+
       <div class="">
         <div class="flex flex-col p-2 shadow-md border rounded-2xl">
     <textarea v-model="textArea" style="resize:none" class="p-2 focus:outline-none"
               placeholder="no invoice dipisahkan dengan koma" @focus="indikator = true" @blur="indikator=!indikator">
     </textarea>
-          <div class="flex justify-between">
-
-            <div v-if="noInvoice != null" class="border items-center font-bold flex w-fit px-4 rounded-full shadow">
-              {{ noInvoice != null ? noInvoice.length : null }} Invoices
+          <div class="flex justify-between items-center gap-2">
+            <div v-if="noInvoice != null" class="border  items-center flex w-full p-1 rounded-lg shadow">
+              {{ noInvoice != null ? noInvoice.length : null }} data
             </div>
             <div v-else></div>
-            <div class="flex gap-2">
+            <n-select v-model:value="optVal" :options="optType"/>
+            <div class="flex ">
               <div v-if="textArea != null" @click="textArea = null"
                    class="bg-slate-200  cursor-pointer font-bold flex w-fit p-2 rounded-full ">
                 <n-icon>
                   <close-icon/>
                 </n-icon>
               </div>
+
               <div @click="eksekusi(noInvoice)"
                    class="bg-pr cursor-pointer font-bold flex w-fit p-2 rounded-full text-white">
+
                 <n-icon>
                   <up-icon/>
                 </n-icon>
@@ -63,7 +67,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -71,6 +74,7 @@
 import {useMessage} from 'naive-ui';
 import {useApi} from '../../helpers/axios';
 import {ArrowUpwardRound as UpIcon, CloseRound as CloseIcon} from "@vicons/material";
+import router from "../../router/index.js";
 
 const message = useMessage();
 const textArea = ref();
@@ -85,10 +89,25 @@ const activate = (place) => {
   active.value = true;
   placement.value = place;
 };
+const optVal = ref("kwitansi");
+const optType = ref([
+  {
+    label: 'kwitansi',
+    value: 'kwitansi'
+  },
+  {
+    label: 'order',
+    value: 'order'
+  },
+  {
+    label: 'pelunasan',
+    value: 'pelunasan',
+    disabled: true,
+  },]);
 const count = ref(0);
 const indikator = ref(false);
 const eksekusi = async (e) => {
-  textArea.value=null;
+  textArea.value = null;
   for (let invoice of e) {
     const response = await useApi({
       method: "POST",
@@ -114,6 +133,26 @@ const eksekusi = async (e) => {
 
   }
 }
+// const handleGenerateOrder = async (e) => {
+//   const bodySend = {
+//     tgl_awal: tgl_cetaks.value,
+//     order_number: idApp,
+//     angsuran: dynamicForm.angsuran,
+//     flag: e == 0 ? 'yes' : 'no',
+//   };
+//   const response = await useApi({
+//     method: "post",
+//     api: "pk",
+//     data: bodySend,
+//     token: userToken,
+//   });
+//   if (!response.ok) {
+//     message.error('ERROR API');
+//   } else {
+//     router.push({name: "Order"});
+//     handlePrint();
+//   }
+// };
 const dateFormat = (e) => {
   var date = new Date(e * 1000);
 
