@@ -221,7 +221,7 @@ const repayment = async (e) => {
         } else {
             Object.assign(pelunasan, response.data);
             pushJumlahUang();
-            proPel(invoice);
+            proPel(pelunasan);
         }
 
     }
