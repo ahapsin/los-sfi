@@ -17,7 +17,7 @@ const routes = [
         path: "/test-view",
         name: "testview",
         component: () => import("../views/pages/TestView.vue"),
-    },{
+    }, {
         path: "/pass-pk",
         name: "pass pk",
         component: () => import("../views/pages/PassPKView.vue"),
@@ -83,10 +83,10 @@ const routes = [
                 path: "apply-credit",
                 name: "Order",
                 component: () => import("../views/pages/task/FpkPage.vue"),
-            },{
+            }, {
                 path: "analisa",
                 name: "analisa",
-                component: () => import("../views/pages/task/analisa/FormAnalisaPage.vue"),
+                component: () => import("../views/pages/task/analisa/AnalisaForm.vue"),
             },
             {
                 path: "apply-credit/:idapplication",

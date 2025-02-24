@@ -116,6 +116,22 @@ const GetMe = async () => {
     task.storeTask(response.data.response);
   }
 };
+const GetPayment = async () => {
+  let userToken = localStorage.getItem("token");
+  const response = await useApi({
+    method: "GET",
+    api: "me",
+    token: userToken,
+  });
+  if (!response.ok) {
+    message.info('SESI BERAKHIR');
+  } else {
+    dataUser.value = response.data.response;
+    me.storeMe(response.data.response);
+    task.storeTask(response.data.response);
+  }
+};
+
 
 const LogOut = async () => {
 
